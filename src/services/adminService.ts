@@ -1,27 +1,5 @@
+import apiClient from "./apiClient";
 import type { Admin, AdminStats } from "@/types/type";
-
-// --- MOCK DATA ---
-const MOCK_ADMINS: Admin[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `admin-${i}`,
-  name: `Admin ${
-    i === 0 ? "Kevin" : i === 1 ? "Budi" : i === 2 ? "Sarah" : `User ${i}`
-  }`,
-  username: `admin_${i}`,
-  email: `admin${i}@shortlink.com`,
-  avatarUrl:
-    i % 3 === 0 ? `/avatars/avatar-1.webp` : "",
-  role: i === 0 ? "super-admin" : "admin",
-  status: i % 7 === 0 ? "suspended" : "active",
-  joinedAt: new Date(Date.now() - i * 50000000).toISOString(),
-  lastLogin: new Date(
-    Date.now() - Math.floor(Math.random() * 5 * 24 * 60 * 60 * 1000)
-  ).toISOString(),
-  stats: {
-    usersManaged: Math.floor(Math.random() * 500),
-    withdrawalsProcessed: Math.floor(Math.random() * 200),
-    linksBlocked: Math.floor(Math.random() * 100),
-  },
-}));
 
 interface GetAdminsParams {
   page?: number;
@@ -30,101 +8,95 @@ interface GetAdminsParams {
   role?: string;
 }
 
+/**
+ * Get admins list with pagination and filters
+ */
 export async function getAdmins(
   params: GetAdminsParams
 ): Promise<{ data: Admin[]; totalPages: number; totalCount: number }> {
-  await new Promise((r) => setTimeout(r, 600));
+  try {
+    const response = await apiClient.get("/super-admin/admins", {
+      params: {
+        page: params.page || 1,
+        per_page: 10,
+        search: params.search || undefined,
+        status: params.status !== "all" ? params.status : undefined,
+        role: params.role !== "all" ? params.role : undefined,
+      },
+    });
 
-  let filtered = [...MOCK_ADMINS];
-
-  // Search
-  if (params.search) {
-    const s = params.search.toLowerCase();
-    filtered = filtered.filter(
-      (a) =>
-        a.name.toLowerCase().includes(s) ||
-        a.email.toLowerCase().includes(s) ||
-        a.username.toLowerCase().includes(s)
-    );
+    const result = response.data;
+    return {
+      data: result.data || [],
+      totalPages: result.meta?.last_page || 1,
+      totalCount: result.meta?.total || 0,
+    };
+  } catch (error) {
+    console.error("Failed to fetch admins:", error);
+    throw error;
   }
-
-  // Filter by status
-  if (params.status && params.status !== "all") {
-    filtered = filtered.filter((a) => a.status === params.status);
-  }
-
-  // Filter by role
-  if (params.role && params.role !== "all") {
-    filtered = filtered.filter((a) => a.role === params.role);
-  }
-
-  const itemsPerPage = 8;
-  const page = params.page || 1;
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
-  const data = filtered.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
-  return { data, totalPages, totalCount: filtered.length };
 }
 
+/**
+ * Get admin statistics
+ */
 export async function getAdminStats(): Promise<AdminStats> {
-  await new Promise((r) => setTimeout(r, 500));
-
-  return {
-    totalAdmins: { count: MOCK_ADMINS.length, trend: 5.2 },
-    activeToday: { count: Math.floor(MOCK_ADMINS.length * 0.9), trend: 3.1 },
-    suspendedAdmins: {
-      count: MOCK_ADMINS.filter((a) => a.status === "suspended").length,
-      trend: -1.2,
-    },
-  };
+  try {
+    const response = await apiClient.get("/super-admin/admins/stats");
+    return response.data?.data || response.data;
+  } catch (error) {
+    console.error("Failed to fetch admin stats:", error);
+    throw error;
+  }
 }
 
+/**
+ * Create a new admin
+ */
 export async function createAdmin(data: {
   username: string;
   email: string;
   password: string;
   name?: string;
 }): Promise<Admin> {
-  await new Promise((r) => setTimeout(r, 1000));
-
-  const newAdmin: Admin = {
-    id: `admin-${Date.now()}`,
-    name: data.name || data.username,
-    username: data.username,
-    email: data.email,
-    avatarUrl: "",
-    role: "admin",
-    status: "active",
-    joinedAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    stats: {
-      usersManaged: 0,
-      withdrawalsProcessed: 0,
-      linksBlocked: 0,
-    },
-  };
-
-  MOCK_ADMINS.unshift(newAdmin);
-  return newAdmin;
+  try {
+    const response = await apiClient.post("/super-admin/admins", {
+      name: data.name || data.username,
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    });
+    return response.data?.data || response.data;
+  } catch (error) {
+    console.error("Failed to create admin:", error);
+    throw error;
+  }
 }
 
+/**
+ * Update admin status (suspend/unsuspend)
+ */
 export async function updateAdminStatus(
   id: string,
   status: "active" | "suspended"
 ): Promise<void> {
-  await new Promise((r) => setTimeout(r, 500));
-
-  const admin = MOCK_ADMINS.find((a) => a.id === id);
-  if (admin) {
-    admin.status = status;
+  try {
+    // Use toggle-status endpoint
+    await apiClient.patch(`/super-admin/admins/${id}/toggle-status`);
+  } catch (error) {
+    console.error("Failed to update admin status:", error);
+    throw error;
   }
 }
 
+/**
+ * Delete an admin
+ */
 export async function deleteAdmin(id: string): Promise<void> {
-  await new Promise((r) => setTimeout(r, 800));
-
-  const idx = MOCK_ADMINS.findIndex((a) => a.id === id);
-  if (idx !== -1) {
-    MOCK_ADMINS.splice(idx, 1);
+  try {
+    await apiClient.delete(`/super-admin/admins/${id}`);
+  } catch (error) {
+    console.error("Failed to delete admin:", error);
+    throw error;
   }
 }

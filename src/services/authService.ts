@@ -314,6 +314,20 @@ export const getCurrentUser = async () => {
   return response.data;
 };
 
+/**
+ * Update Password
+ */
+export interface UpdatePasswordData {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export const updatePassword = async (data: UpdatePasswordData) => {
+  const response = await apiClient.put("/user/password", data);
+  return response.data;
+};
+
 // Export default object
 const authService = {
   login,
@@ -321,6 +335,7 @@ const authService = {
   googleLogin,
   logout,
   getCurrentUser,
+  updatePassword,
   setToken,
   getToken,
   removeToken,

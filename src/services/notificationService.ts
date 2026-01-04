@@ -1,10 +1,14 @@
 // src/services/notificationService.ts
-import type {
-  NotificationItem,
-  Role,
-  NotificationCategory,
-} from "@/types/type";
+import type { NotificationItem, NotificationCategory } from "@/types/type";
 import apiClient from "./apiClient";
+
+/**
+ * Response type from notifications API
+ */
+export interface NotificationsResponse {
+  pinned: NotificationItem[];
+  notifications: NotificationItem[];
+}
 
 /**
  * Map backend notification to frontend NotificationItem type
@@ -26,36 +30,46 @@ function mapNotification(notification: any): NotificationItem {
 
   return {
     id: notification.id,
-    title: data.title || "Notification",
-    message: data.message || "",
+    title: data.title || data.body || "Notification",
+    message: data.message || data.body || "",
     type: typeMap[data.type] || "info",
     category: category,
     isRead: notification.read_at !== null,
     timestamp: notification.created_at,
     actionUrl: data.url || undefined,
+    isGlobal: data.is_global || false,
   };
 }
 
 /**
  * Get all notifications for the logged-in user
- * @param category - Filter by category (system, payment, link, account, event) or "all" for no filter
+ * Returns { pinned, notifications } where pinned are global notifications
  */
-export async function getNotifications(
-  category?: string
-): Promise<NotificationItem[]> {
+export async function getNotifications(): Promise<NotificationsResponse> {
   try {
-    const params = category && category !== "all" ? { category } : {};
-    const response = await apiClient.get("/notifications", { params });
+    const response = await apiClient.get("/notifications");
 
-    // Handle both array response (new) and paginated response (old)
-    const notifications = Array.isArray(response.data.data)
-      ? response.data.data
-      : response.data.data?.data || [];
+    // DEBUG: Log raw response to see structure
+    console.log("🔔 Notifications API raw response:", response.data);
 
-    return notifications.map(mapNotification);
+    // Handle new response format with pinned + notifications
+    const pinnedRaw = response.data.data?.pinned || [];
+    const notificationsRaw = response.data.data?.notifications || [];
+
+    console.log(
+      "🔔 Pinned count:",
+      pinnedRaw.length,
+      "Notifications count:",
+      notificationsRaw.length
+    );
+
+    return {
+      pinned: pinnedRaw.map(mapNotification),
+      notifications: notificationsRaw.map(mapNotification),
+    };
   } catch (error) {
     console.error("Failed to fetch notifications:", error);
-    return [];
+    return { pinned: [], notifications: [] };
   }
 }
 

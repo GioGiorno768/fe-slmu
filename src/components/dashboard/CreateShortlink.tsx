@@ -20,6 +20,7 @@ import {
   Twitter,
   Send,
   Megaphone,
+  Sparkles,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type {
@@ -85,9 +86,9 @@ export default function CreateShortlink({
   // Set default adsLevel when API loads
   useEffect(() => {
     if (adLevelsFromApi.length > 0 && formData.adsLevel === "level1") {
-      // Set to first level from API (or find a "medium" level as default)
+      // Find level with is_default: true, fallback to first level
       const defaultLevel =
-        adLevelsFromApi.find((l) => l.slug === "medium") || adLevelsFromApi[0];
+        adLevelsFromApi.find((l) => l.is_default) || adLevelsFromApi[0];
       setFormData((prev) => ({
         ...prev,
         adsLevel: defaultLevel.slug as AdLevel,
@@ -112,6 +113,14 @@ export default function CreateShortlink({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Alias validation: only alphanumeric, no spaces/symbols, max 20 chars
+  const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+      .replace(/[^a-zA-Z0-9]/g, "") // Remove non-alphanumeric
+      .slice(0, 20); // Max 20 characters
+    setFormData({ ...formData, alias: value });
   };
 
   const handleAdLevelChange = (level: AdLevel) => {
@@ -200,14 +209,19 @@ export default function CreateShortlink({
   return (
     <div className="space-y-6">
       {/* FORM CARD */}
-      <div className="bg-white p-6 rounded-xl shadow-sm shadow-slate-500/50">
+      <div className="bg-white p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-100">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-[1.8em] font-semibold text-shortblack tracking-tight">
-            {t("createShortlink")}
-          </h3>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-bluelight to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
+              <LinkIcon className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-[1.8em] font-bold text-shortblack tracking-tight">
+              {t("createShortlink")}
+            </h3>
+          </div>
           <button
             onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-            className="flex items-center gap-2 text-[1.4em] font-medium text-bluelight bg-blue-dashboard px-4 py-2 rounded-lg hover:bg-opacity-80 transition-all"
+            className="flex items-center gap-2 text-[1.3em] font-semibold text-bluelight bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-all border border-blue-100"
           >
             {isAdvancedOpen ? (
               <Minus className="w-4 h-4" />
@@ -233,7 +247,9 @@ export default function CreateShortlink({
               type="text"
               name="alias"
               value={formData.alias}
-              onChange={handleChange}
+              onChange={handleAliasChange}
+              autoComplete="off"
+              maxLength={20}
               className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
               placeholder={t("setAlias")}
             />
@@ -251,10 +267,11 @@ export default function CreateShortlink({
                   <div className="relative">
                     <Lock className="w-4 h-4 text-grays absolute left-4 top-1/2 -translate-y-1/2" />
                     <input
-                      type="password"
+                      type="text"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
+                      autoComplete="new-password"
                       className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
                       placeholder={t("setPassword")}
                     />
@@ -348,12 +365,12 @@ export default function CreateShortlink({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-dashboard text-bluelight text-[1.6em] font-semibold py-4 rounded-xl hover:bg-bluelight hover:text-white transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 relative"
+            className="w-full bg-gradient-to-r from-bluelight to-indigo-600 text-white text-[1.5em] font-semibold py-4 rounded-2xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-200 relative"
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <LinkIcon className="w-5 h-5" />
+              <Sparkles className="w-5 h-5" />
             )}
             <span>{isLoading ? t("generating") : t("generateShortlink")}</span>
           </button>

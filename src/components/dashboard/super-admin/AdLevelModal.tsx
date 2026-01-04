@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Crown, Check } from "lucide-react";
+import { X, Check } from "lucide-react";
 import clsx from "clsx";
 import type {
   AdLevelConfig,
   AdFeature,
   GlobalFeature,
-  CountryRate,
 } from "@/services/adLevelService";
 import { formatCPM } from "@/services/adLevelService";
 import { motion, AnimatePresence } from "motion/react";
 import FeatureSelector from "./FeatureSelector";
-import CountryRateEditor from "./CountryRateEditor";
 
 interface AdLevelModalProps {
   isOpen: boolean;
@@ -21,7 +19,6 @@ interface AdLevelModalProps {
     data: Omit<AdLevelConfig, "id" | "createdAt" | "updatedAt">
   ) => Promise<void>;
   editingLevel?: AdLevelConfig | null;
-  nextLevelNumber: number;
   isSubmitting: boolean;
   globalFeatures: GlobalFeature[];
 }
@@ -62,18 +59,17 @@ export default function AdLevelModal({
   onClose,
   onSubmit,
   editingLevel,
-  nextLevelNumber,
   isSubmitting,
   globalFeatures,
 }: AdLevelModalProps) {
   const [formData, setFormData] = useState({
-    levelNumber: nextLevelNumber,
+    levelNumber: 1,
     name: "",
     description: "",
     revenueShare: 50,
-    cpcRate: 0.005,
     colorTheme: "blue" as "green" | "blue" | "orange" | "red",
     demoUrl: "",
+    isEnabled: true,
   });
 
   // Legacy features (for backward compatibility)
@@ -89,8 +85,10 @@ export default function AdLevelModal({
   // New global features selection
   const [enabledFeatures, setEnabledFeatures] = useState<string[]>([]);
 
-  // Country-specific CPC rates
-  const [countryRates, setCountryRates] = useState<CountryRate[]>([]);
+  // Per-level feature descriptions
+  const [featureValues, setFeatureValues] = useState<Record<string, string>>(
+    {}
+  );
 
   // Initialize form with editing data
   useEffect(() => {
@@ -100,45 +98,54 @@ export default function AdLevelModal({
         name: editingLevel.name,
         description: editingLevel.description,
         revenueShare: editingLevel.revenueShare,
-        cpcRate: editingLevel.cpcRate,
         colorTheme: editingLevel.colorTheme,
         demoUrl: editingLevel.demoUrl,
+        isEnabled: editingLevel.isEnabled,
       });
       setFeatures(editingLevel.features);
       setEnabledFeatures(editingLevel.enabledFeatures || []);
-      setCountryRates(editingLevel.countryRates || []);
-    } else {
-      setFormData({
-        levelNumber: nextLevelNumber,
-        name: "",
-        description: "",
-        revenueShare: 50,
-        cpcRate: 0.005,
-        colorTheme: "blue",
-        demoUrl: "",
-      });
-      setFeatures([
-        {
-          id: "1",
-          label: "Interstitial Ads",
-          included: true,
-          value: "1x per visit",
-        },
-      ]);
-      setEnabledFeatures([]);
-      setCountryRates([]);
+
+      // Initialize featureValues - migrate from legacy features if featureValues is empty
+      let initialFeatureValues = editingLevel.featureValues || {};
+
+      // If featureValues is empty, try to extract from legacy features array
+      if (
+        Object.keys(initialFeatureValues).length === 0 &&
+        editingLevel.features?.length > 0
+      ) {
+        const migratedValues: Record<string, string> = {};
+
+        // Try to match legacy features with global features by name
+        editingLevel.features.forEach((legacyFeature) => {
+          if (legacyFeature.value && typeof legacyFeature.value === "string") {
+            // Find matching global feature by name
+            const matchingGlobal = globalFeatures.find(
+              (gf) =>
+                gf.name.toLowerCase() === legacyFeature.label?.toLowerCase()
+            );
+            if (matchingGlobal) {
+              migratedValues[matchingGlobal.id] = legacyFeature.value;
+            }
+          }
+        });
+
+        initialFeatureValues = migratedValues;
+      }
+
+      setFeatureValues(initialFeatureValues);
     }
-  }, [editingLevel, nextLevelNumber, isOpen]);
+  }, [editingLevel, isOpen, globalFeatures]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const data: Omit<AdLevelConfig, "id" | "createdAt" | "updatedAt"> = {
       ...formData,
-      isPopular: false, // Popular status is now controlled via button in card, not modal
-      features, // Keep legacy features for backward compatibility
-      enabledFeatures, // New global features
-      countryRates, // Per-country CPC rates
+      cpcRate: editingLevel?.cpcRate || 0.005, // CPC is managed in Settings
+      isPopular: editingLevel?.isPopular || false,
+      features,
+      enabledFeatures,
+      featureValues,
     };
 
     await onSubmit(data);
@@ -149,6 +156,13 @@ export default function AdLevelModal({
     setEnabledFeatures((prev) =>
       prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
     );
+  };
+
+  const updateFeatureValue = (id: string, value: string) => {
+    setFeatureValues((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
   // Get current theme style
@@ -180,7 +194,7 @@ export default function AdLevelModal({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white w-full max-w-6xl rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row max-h-[90vh] font-figtree text-[10px]"
+              className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row max-h-[90vh] font-figtree text-[10px]"
             >
               {/* LEFT: Form */}
               <div
@@ -191,10 +205,10 @@ export default function AdLevelModal({
                 <div className="flex justify-between items-center mb-8">
                   <div>
                     <h2 className="text-[2.2em] font-bold text-shortblack">
-                      {editingLevel ? "Edit Ad Level" : "New Ad Level"}
+                      Edit Level {formData.levelNumber}
                     </h2>
                     <p className="text-[1.3em] text-grays mt-1">
-                      Configure monetization settings for users
+                      Configure settings for this ad level
                     </p>
                   </div>
                   <button
@@ -206,42 +220,21 @@ export default function AdLevelModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Basic Info */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2">
-                        Level #
-                      </label>
-                      <input
-                        type="number"
-                        value={formData.levelNumber}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            levelNumber: parseInt(e.target.value),
-                          })
-                        }
-                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
-                        required
-                        min="1"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
-                        placeholder="e.g., Medium"
-                        required
-                      />
-                    </div>
+                  {/* Name */}
+                  <div>
+                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
+                      placeholder="e.g., Medium"
+                      required
+                    />
                   </div>
 
                   {/* Description */}
@@ -265,64 +258,34 @@ export default function AdLevelModal({
                   </div>
 
                   {/* Revenue & CPC */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2">
-                        Revenue Share (%)
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          value={formData.revenueShare}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              revenueShare: parseInt(e.target.value),
-                            })
-                          }
-                          className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
-                          required
-                          min="0"
-                          max="100"
-                        />
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.2em] text-grays font-medium">
-                          %
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2 flex justify-between">
-                        <span>CPC Rate ($)</span>
-                        <span className="text-bluelight font-semibold">
-                          CPM: {formatCPM(formData.cpcRate)}
-                        </span>
-                      </label>
+                  {/* Revenue Share */}
+                  <div>
+                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                      Revenue Share (%)
+                    </label>
+                    <div className="relative">
                       <input
                         type="number"
-                        step="0.0001"
-                        value={formData.cpcRate}
+                        value={formData.revenueShare}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            cpcRate: parseFloat(e.target.value),
+                            revenueShare: parseInt(e.target.value),
                           })
                         }
                         className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
-                        placeholder="0.005"
                         required
                         min="0"
+                        max="100"
                       />
+                      {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.2em] text-grays font-medium">
+                        %
+                      </div> */}
                     </div>
+                    <p className="text-[1.1em] text-grays mt-2">
+                      CPC rates are configured in Settings → CPC Rates
+                    </p>
                   </div>
-
-                  {/* Country-Specific CPC Rates */}
-                  <CountryRateEditor
-                    countryRates={countryRates}
-                    onChange={setCountryRates}
-                    defaultCpcRate={formData.cpcRate}
-                    disabled={isSubmitting}
-                  />
 
                   {/* Color Theme */}
                   <div>
@@ -398,6 +361,8 @@ export default function AdLevelModal({
                         features={globalFeatures}
                         selectedIds={enabledFeatures}
                         onToggle={toggleFeature}
+                        featureValues={featureValues}
+                        onValueChange={updateFeatureValue}
                         disabled={isSubmitting}
                       />
                     </div>
@@ -410,11 +375,7 @@ export default function AdLevelModal({
                       className="w-full bg-gradient-to-r from-shortblack to-gray-800 text-white py-4 rounded-2xl font-bold text-[1.6em] hover:shadow-2xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-xl"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting
-                        ? "Saving..."
-                        : editingLevel
-                        ? "Update Level"
-                        : "Create Level"}
+                      {isSubmitting ? "Saving..." : "Update Level"}
                     </button>
                   </div>
                 </form>
@@ -426,10 +387,8 @@ export default function AdLevelModal({
                   Live Preview
                 </h3>
 
-                {/* Card Preview (matching ads-info display) */}
+                {/* Card Preview */}
                 <div className="relative w-full max-w-sm rounded-3xl p-8 transition-all duration-500 border-2 shadow-xl bg-white border-gray-100">
-                  {/* Popular Badge - Not shown in preview since it's controlled via button */}
-
                   {/* Header */}
                   <div className="text-center mb-6">
                     <div
@@ -466,9 +425,6 @@ export default function AdLevelModal({
                         Revenue
                       </span>
                     </div>
-                    <p className="text-[1.2em] text-bluelight font-medium">
-                      CPM: {formatCPM(formData.cpcRate)}
-                    </p>
                   </div>
 
                   {/* Features Preview */}

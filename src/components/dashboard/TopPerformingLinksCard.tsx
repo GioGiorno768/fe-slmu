@@ -160,71 +160,95 @@ export default function TopPerformingLinksCard({
         ) : (
           <div
             onWheel={(e) => e.stopPropagation()}
-            className="space-y-0 overflow-y-auto h-[270px] pr-2 custom-scrollbar-minimal"
+            className="space-y-0 overflow-y-auto h-[340px] pr-2 custom-scrollbar-minimal"
           >
             {sortedLinks.map((link, index) => (
               <div
                 key={link.id}
                 className={clsx(
-                  "transition-colors duration-200 border-b border-gray-50 last:border-none px-2 rounded-xl",
-                  expandedId === link.id && "bg-blues/50"
+                  "transition-all duration-200 rounded-2xl mb-2",
+                  expandedId === link.id
+                    ? "bg-gradient-to-r from-blue-50 to-indigo-50/50 shadow-sm border border-blue-100"
+                    : "hover:bg-blues/30"
                 )}
               >
                 {/* Main Row */}
                 <div
                   onClick={() => toggleAccordion(link.id)}
-                  className="flex items-center gap-4 py-4 px-2 cursor-pointer group relative z-10"
+                  className="flex items-center gap-3 p-4 cursor-pointer group"
                 >
-                  <div className="flex-shrink-0 w-8 flex justify-center">
-                    {getRankIcon(index)}
+                  {/* Rank Badge */}
+                  <div
+                    className={clsx(
+                      "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                      index === 0 && sortBy === "highest"
+                        ? "bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-yellow-200"
+                        : index === 1 && sortBy === "highest"
+                        ? "bg-gradient-to-br from-slate-300 to-slate-400 shadow-md shadow-slate-200"
+                        : index === 2 && sortBy === "highest"
+                        ? "bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-200"
+                        : "bg-blues"
+                    )}
+                  >
+                    {sortBy === "lowest" ? (
+                      <TrendingDown className="w-5 h-5 text-red-500" />
+                    ) : index === 0 ? (
+                      <Trophy className="w-5 h-5 text-white" />
+                    ) : index === 1 ? (
+                      <Medal className="w-5 h-5 text-white" />
+                    ) : index === 2 ? (
+                      <Medal className="w-5 h-5 text-white" />
+                    ) : (
+                      <Link2 className="w-4 h-4 text-bluelight" />
+                    )}
                   </div>
 
+                  {/* Link Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <p
-                        className={clsx(
-                          "text-[1.4em] font-medium truncate pr-2 transition-colors",
-                          expandedId === link.id
-                            ? "text-bluelight font-bold"
-                            : "text-shortblack group-hover:text-bluelight"
-                        )}
-                      >
-                        {link.title}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <a
-                        onClick={(e) => e.stopPropagation()}
-                        href={link.shortUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[1.4em] text-grays truncate max-w-[150px] opacity-80 hover:underline hover:text-bluelight transition-colors"
-                      >
-                        {link.shortUrl}
-                      </a>
-                    </div>
+                    <p
+                      className={clsx(
+                        "text-[1.35em] font-semibold truncate transition-colors",
+                        expandedId === link.id
+                          ? "text-bluelight"
+                          : "text-shortblack group-hover:text-bluelight"
+                      )}
+                    >
+                      {link.title}
+                    </p>
+                    <p className="text-[1.15em] text-grays truncate">
+                      {link.shortUrl}
+                    </p>
                   </div>
 
-                  <div className="flex justify-end items-center gap-4">
-                    <div className="flex justify-end items-center py-1 gap-4">
-                      <Link
-                        onClick={(e) => e.stopPropagation()}
-                        href={`/new-link?highlight=${link.id}`}
-                        className="text-bluelight hover:underline flex items-center gap-1 font-semibold text-[1.2em] group/link"
-                      >
-                        <ExternalLink className="w-4 h-4 group-hover/link:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </div>
+                  {/* Earnings Badge */}
+                  {/* <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-100 rounded-full">
+                    <Coins className="w-3.5 h-3.5 text-green-600" />
+                    <span className="text-[1.15em] font-bold text-green-700">
+                      ${link.totalEarnings.toFixed(2)}
+                    </span>
+                  </div> */}
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <a
+                      onClick={(e) => e.stopPropagation()}
+                      href={link.shortUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg hover:bg-white/80 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4 text-bluelight" />
+                    </a>
                     <ChevronDown
                       className={clsx(
-                        "w-4 h-4 text-bluelight transition-transform duration-300",
+                        "w-4 h-4 text-grays transition-transform duration-300",
                         expandedId === link.id && "rotate-180 text-bluelight"
                       )}
                     />
                   </div>
                 </div>
 
-                {/* Accordion Detail */}
+                {/* Accordion Detail - Simplified */}
                 <AnimatePresence>
                   {expandedId === link.id && (
                     <motion.div
@@ -232,49 +256,58 @@ export default function TopPerformingLinksCard({
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
                     >
-                      <div className="pb-4 pr-4 pl-4">
-                        <div className="grid sm:grid-cols-2 grid-cols-2 gap-x-8 gap-y-2 text-[1.3em] pt-1">
+                      <div className="px-4 pb-4">
+                        <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-blue-100/50">
                           {/* Views */}
-                          <div className="flex items-center gap-4">
-                            <Eye className="w-5 h-5 text-bluelight" />
-                            <div className="flex flex-col items-start py-1 border-b border-gray-100/80">
-                              <span className="text-grays">Views</span>
-                              <span className="font-medium text-shortblack">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                            <Eye className="w-4 h-4 text-bluelight" />
+                            <div className="flex flex-col">
+                              <span className="text-[1em] text-grays">
+                                Views
+                              </span>
+                              <span className="text-[1.2em] font-bold text-shortblack">
                                 {link.validViews.toLocaleString()}
                               </span>
                             </div>
                           </div>
-                          {/* Earning */}
-                          <div className="flex items-center gap-4">
-                            <Coins className="w-5 h-5 text-bluelight" />
-                            <div className="flex flex-col items-start py-1 border-b border-gray-100/80">
-                              <span className="text-grays">Earnings</span>
-                              <span className="font-medium text-shortblack">
+
+                          {/* Earnings (Mobile) */}
+                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                            <Coins className="w-4 h-4 text-green-600" />
+                            <div className="flex flex-col">
+                              <span className="text-[1em] text-grays">
+                                Earned
+                              </span>
+                              <span className="text-[1.2em] font-bold text-green-700">
                                 ${link.totalEarnings.toFixed(2)}
                               </span>
                             </div>
                           </div>
-                          {/* CPM */}
-                          <div className="flex items-center gap-4">
-                            <ChartNoAxesColumn className="w-5 h-5 text-bluelight" />
-                            <div className="flex flex-col items-start py-1 border-b border-gray-100/80">
-                              <span className="text-grays">CPM</span>
-                              <span className="font-medium text-shortblack">
-                                ${link.cpm.toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
+
                           {/* Ads Level */}
-                          <div className="flex items-center gap-4">
-                            <Megaphone className="w-5 h-5 text-bluelight" />
-                            <div className="flex flex-col items-start py-1">
-                              <span className="text-grays">Ads Level</span>
-                              <span className="font-medium text-shortblack capitalize">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                            <Megaphone className="w-4 h-4 text-purple-500" />
+                            <div className="flex flex-col">
+                              <span className="text-[1em] text-grays">
+                                Level
+                              </span>
+                              <span className="text-[1.2em] font-bold text-shortblack capitalize">
                                 {link.adsLevel}
                               </span>
                             </div>
                           </div>
+
+                          {/* View in Links */}
+                          {/* <Link
+                            onClick={(e) => e.stopPropagation()}
+                            href={`/new-link?highlight=${link.id}`}
+                            className="ml-auto flex items-center gap-1.5 px-4 py-2 bg-bluelight text-white rounded-xl text-[1.1em] font-semibold hover:bg-bluelight/90 transition-colors"
+                          >
+                            <span>Detail</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Link> */}
                         </div>
                       </div>
                     </motion.div>

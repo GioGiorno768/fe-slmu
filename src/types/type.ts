@@ -171,6 +171,7 @@ export interface AdLevelConfig {
   features: AdFeature[]; // List fitur ads (legacy, will be deprecated)
   enabledFeatures?: string[]; // IDs of enabled global features
   isPopular?: boolean; // Optional - buat badge "MOST POPULAR"
+  is_default?: boolean; // Optional - buat default selected di create link
 
   // Legacy fields (optional, mungkin dipake di bagian referral config)
   totalReferred?: number;
@@ -271,7 +272,7 @@ export interface Admin {
   username: string;
   email: string;
   avatarUrl: string;
-  role: "admin" | "super-admin"; // Admin atau Super Admin
+  role: "admin" | "super-admin" | "super_admin"; // Admin atau Super Admin (backend uses underscore)
   status: "active" | "suspended";
   joinedAt: string;
   lastLogin: string;
@@ -297,6 +298,7 @@ export interface NotificationItem {
   isRead: boolean;
   timestamp: string;
   actionUrl?: string; // (Opsional) Kalo diklik lari kemana
+  isGlobal?: boolean; // (Opsional) True jika ini global notification
 }
 
 export interface LevelConfig {

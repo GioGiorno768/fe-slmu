@@ -1,59 +1,34 @@
-"use client";
-"use client";
-import { options } from "@/lib/types";
-// --- UBAH BARIS INI ---
+// Server Component - SEO friendly
+import { Link2, Mail, MessageCircle, FileText, Youtube, YoutubeIcon, Send } from "lucide-react";
 import { Link } from "@/i18n/routing";
-// --- DARI INI ---
-import { useEffect, useState } from "react";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-  const [time, setTime] = useState("");
-  useEffect(() => {
-    const updateClock = () => {
-      const now = new Date();
-      const options: options = {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Jakarta", // GMT+7
-      };
-      const formatted = new Intl.DateTimeFormat("en-US", options).format(now);
-      setTime(`${formatted} GMT+7`);
-    };
-
-    updateClock();
-    const interval = setInterval(updateClock, 1000); // update tiap detik
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <footer className="max-w-[155em] font-figtree m-auto relative text-[9px] sm:text-[10px] bg-bluelight ">
-      <div className="max-w-[130em] px-[1.6em] md:px-[2.4em] lg:px-[4em] py-[5em] md:py-[6em] mx-auto space-y-[5em]">
-        <div className="flex flex-col md:flex-row justify-between gap-[5em]">
-          {/* Logo Section */}
-          <div className="flex flex-col sm:items-start items-center sm:justify-start justify-start sm:text-start text-center">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <div className="w-4 h-4 bg-primary rounded-full"></div>
+    <footer className="bg-slate-900 pt-20 pb-10 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-16">
+          {/* Logo & Description */}
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="size-8 rounded bg-bluelight flex items-center justify-center text-white">
+                <Link2 className="w-4 h-4" />
               </div>
-              <span className="text-[2.4em] font-bold text-white">
-                Shortlinkmu
-              </span>
+              <span className="text-xl font-bold text-white">ShortLinkmu</span>
             </div>
-            <p className="text-purple-200 text-[1.6em] w-[60%]">
-              Easiest and most trusted link shortener
+            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+              The most reliable URL shortener service for publishers. Shorten,
+              share and track your links with ease in a clean, modern
+              environment.
             </p>
           </div>
 
-          <div className="flex flex-wrap md:flex-nowrap lg:gap-[20em] justify-center items-start  gap-[5em]">
-            {/* Discover */}
-            <div className="w-fit">
-              <h3 className="font-semibold mb-[1em] text-[2em] text-white ">
-                Discover
-              </h3>
-              <ul className="space-y-2 text-[1.6em] font-semibold  text-bluefooter">
+          <div className="flex flex-col md:flex-row gap-20">
+            {/* Platform Links */}
+            <div>
+              <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">
+                Platform
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-400">
                 <li>
                   <Link
                     href="/payout-rates"
@@ -72,36 +47,27 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="https://subs4unlock.id"
-                    target="_blank"
+                    href="/contact"
                     className="hover:text-white transition-colors"
                   >
-                    subs4unlock
+                    Contact
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Resource */}
-            <div className="w-fit">
-              <h3 className="font-semibold mb-[1em] text-[2em] text-white">
-                Resource
-              </h3>
-              <ul className="space-y-2 text-[1.6em] font-semibold  text-bluefooter">
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-white transition-colors"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
+            {/* Company Links */}
+            <div>
+              <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">
+                Company
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-400">
                 <li>
                   <Link
                     href="/terms-of-service"
                     className="hover:text-white transition-colors"
                   >
-                    Term Of Services
+                    Terms of Service
                   </Link>
                 </li>
                 <li>
@@ -125,12 +91,31 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-blue-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-blue-200">
-            © {currentYear} Shortut. All Rights Reserved
+        {/* Bottom */}
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-500 text-sm">
+            © 2024 ShortLinkmu. All rights reserved.
           </p>
-          <p className="text-sm text-blue-200">{time}</p>
+          <div className="flex gap-3">
+            <a
+              href="#"
+              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+            >
+              <span className="meteor-icons--whatsapp w-5 h-5 bg-slate-400 group-hover:bg-white" />
+            </a>
+            <a
+              href="#"
+              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+            >
+              <span className="iconoir--telegram w-6 h-6 bg-slate-400 group-hover:bg-white" />
+            </a>
+            <a
+              href="#"
+              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+            >
+              <span className="mynaui--youtube w-6 h-6 bg-slate-400 group-hover:bg-white" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

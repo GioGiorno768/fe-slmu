@@ -65,11 +65,9 @@ export default function ManageUsersPage() {
 
       {/* 3. Bulk Action Bar */}
       <UserSelectionBar
-        selectedCount={selectedCount} // <--- Use calculated count
+        selectedCount={selectedIds.size}
         onClear={clearSelection}
         onSendMessage={() => setIsModalOpen(true)}
-        onSelectAll={selectAll}
-        isAllSelected={isAllSelected} // <--- Pass Prop (Update UserSelectionBar if needed, but logic is handled by count)
       />
 
       {/* 4. Send Message Modal */}

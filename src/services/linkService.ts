@@ -250,11 +250,13 @@ export const toggleLinkStatus = async (
 // --- GUEST SERVICES ---
 
 export const createGuestLink = async (
-  originalUrl: string
+  originalUrl: string,
+  alias?: string
 ): Promise<GeneratedLinkData> => {
   try {
     const response = await apiClient.post("/links", {
       original_url: originalUrl,
+      alias: alias || undefined,
       is_guest: true, // Force guest mode even if logged in
       // Backend handles rate limiting automatically
     });
@@ -274,12 +276,20 @@ export const createGuestLink = async (
       earnPerClick: data.earn_per_click,
     };
   } catch (error: any) {
-    // Handle specific backend errors
+    // Handle specific backend errors - use message from backend
     if (error.response && error.response.status === 429) {
-      // Rate limit hit
-      throw new Error(
-        "Guest limit reached (100 links/3 days). Please register to create more."
-      );
+      // Rate limit hit - use backend message which has dynamic limit info
+      const message =
+        error.response?.data?.message ||
+        "Guest limit reached. Please register to create more.";
+      throw new Error(message);
+    }
+    if (error.response && error.response.status === 403) {
+      // Guest creation disabled
+      const message =
+        error.response?.data?.message ||
+        "Guest link creation is disabled. Please register.";
+      throw new Error(message);
     }
     throw error;
   }
@@ -305,5 +315,51 @@ export const validateContinueToken = async (
   } catch (error: any) {
     // Pass the specific error for handling (e.g. 401 password required)
     throw error;
+  }
+};
+
+// --- MASS CREATE SERVICE ---
+
+export interface MassCreateResult {
+  original_url: string;
+  short_url?: string;
+  code?: string;
+  error?: string;
+}
+
+export interface MassCreateParams {
+  urls: string[]; // Array of URLs
+  adLevel?: AdLevel; // Optional ad level (applies to all)
+  password?: string; // Not supported by backend, but kept for future
+  expiresAt?: string; // Not supported by backend, but kept for future
+}
+
+export const massCreateLinks = async (
+  params: MassCreateParams
+): Promise<MassCreateResult[]> => {
+  try {
+    // Backend expects: urls (string, newline separated), ad_level (int)
+    const payload = {
+      urls: params.urls.join("\n"), // Convert array to newline separated string
+      ad_level: params.adLevel ? getAdLevelId(params.adLevel) : undefined,
+    };
+
+    const response = await apiClient.post("/links/mass", payload);
+    const results = response.data.data;
+
+    // Map backend response to frontend format
+    return results.map((result: any) => ({
+      original_url: result.original_url,
+      short_url: result.short_url?.replace(
+        "http://localhost:8000",
+        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+      ),
+      code: result.code,
+      error: result.error,
+    }));
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to create mass links"
+    );
   }
 };

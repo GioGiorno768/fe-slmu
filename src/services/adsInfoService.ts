@@ -33,6 +33,7 @@ interface ApiAdLevel {
   color_theme: string;
   revenue_share: number;
   is_popular: boolean;
+  is_default: boolean;
   features: { label: string; value: string | boolean; included: boolean }[];
   display_order: number;
 }
@@ -71,6 +72,7 @@ export async function getAdLevels(): Promise<AdLevelConfig[]> {
       demoUrl: level.demo_url || "",
       colorTheme: level.color_theme as "green" | "blue" | "orange" | "red",
       isPopular: level.is_popular,
+      is_default: level.is_default,
       features: level.features,
     }));
   } catch (error) {

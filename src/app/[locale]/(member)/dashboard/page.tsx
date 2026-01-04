@@ -5,7 +5,7 @@ import DashboardSlider from "@/components/dashboard/DashboardSlider";
 import MilestoneCard from "@/components/dashboard/MilestoneCard";
 import LinkAnalyticsCard from "@/components/dashboard/LinkAnalyticsCard";
 import TopPerformingLinksCard from "@/components/dashboard/TopPerformingLinksCard";
-import TopTrafficCard from "@/components/dashboard/TopTrafficCard";
+import TopCountriesCard from "@/components/dashboard/TopCountriesCard";
 import ReferralCard from "@/components/dashboard/ReferralCard";
 import { useDashboard } from "@/hooks/useDashboard"; // <--- Import Hook
 
@@ -15,7 +15,7 @@ export default function DashboardPage() {
     slides,
     milestone,
     referralData,
-    trafficStats,
+    topCountries,
     topLinks,
     analyticsData,
     analyticsLoading,
@@ -55,10 +55,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Bottom Section: Traffic & Referral */}
+      {/* Bottom Section: Countries & Referral */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <TopTrafficCard data={trafficStats} />
+          <TopCountriesCard data={topCountries} />
         </div>
         <div>
           <ReferralCard data={referralData} />

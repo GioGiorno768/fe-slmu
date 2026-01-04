@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as adLevelService from "@/services/adLevelService";
-import type { AdLevelConfig, AdFeature } from "@/services/adLevelService";
+import type { AdLevelConfig } from "@/services/adLevelService";
 import { useAlert } from "@/hooks/useAlert";
 
 export function useAdLevels() {
@@ -26,24 +26,6 @@ export function useAdLevels() {
     fetchLevels();
   }, []);
 
-  // Create new level
-  const handleCreate = async (
-    data: Omit<AdLevelConfig, "id" | "createdAt" | "updatedAt">
-  ) => {
-    setIsSubmitting(true);
-    try {
-      const newLevel = await adLevelService.createAdLevel(data);
-      setLevels((prev) => [...prev, newLevel]);
-      showAlert("Ad level created successfully", "success");
-      return newLevel;
-    } catch (error) {
-      showAlert("Failed to create ad level", "error");
-      throw error;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   // Update existing level
   const handleUpdate = async (
     id: string,
@@ -51,12 +33,10 @@ export function useAdLevels() {
   ) => {
     setIsSubmitting(true);
     try {
-      const updated = await adLevelService.updateAdLevel(id, data);
-      setLevels((prev) =>
-        prev.map((level) => (level.id === id ? updated : level))
-      );
+      await adLevelService.updateAdLevel(id, data);
+      // Refetch to get updated data
+      await fetchLevels();
       showAlert("Ad level updated successfully", "success");
-      return updated;
     } catch (error) {
       showAlert("Failed to update ad level", "error");
       throw error;
@@ -65,33 +45,72 @@ export function useAdLevels() {
     }
   };
 
-  // Delete level
-  const handleDelete = async (id: string) => {
+  // Toggle enable/disable
+  const handleToggleEnabled = async (id: string) => {
     try {
-      await adLevelService.deleteAdLevel(id);
-      setLevels((prev) => prev.filter((level) => level.id !== id));
-      showAlert("Ad level deleted successfully", "success");
+      const result = await adLevelService.toggleAdLevelEnabled(id);
+      // Update local state
+      setLevels((prev) =>
+        prev.map((level) =>
+          level.id === id ? { ...level, isEnabled: result.isEnabled } : level
+        )
+      );
+      showAlert(
+        result.isEnabled
+          ? `"${result.name}" is now enabled`
+          : `"${result.name}" is now disabled`,
+        "success"
+      );
     } catch (error) {
-      showAlert("Failed to delete ad level", "error");
+      showAlert("Failed to toggle ad level", "error");
       throw error;
     }
   };
 
-  // Get next level number
-  const getNextLevelNumber = (): number => {
-    if (levels.length === 0) return 1;
-    const maxLevel = Math.max(...levels.map((l) => l.levelNumber));
-    return maxLevel + 1;
+  // Set level as default
+  const handleSetDefault = async (id: string) => {
+    try {
+      const result = await adLevelService.setAdLevelDefault(id);
+      // Update local state - remove default from all, add to this one
+      setLevels((prev) =>
+        prev.map((level) => ({
+          ...level,
+          isDefault: level.id === id,
+        }))
+      );
+      showAlert(`"${result.name}" set as default level`, "success");
+    } catch (error) {
+      showAlert("Failed to set default level", "error");
+      throw error;
+    }
+  };
+
+  // Set level as recommended
+  const handleSetRecommended = async (id: string) => {
+    try {
+      const result = await adLevelService.setAdLevelRecommended(id);
+      // Update local state - remove recommended from all, add to this one
+      setLevels((prev) =>
+        prev.map((level) => ({
+          ...level,
+          isRecommended: level.id === id,
+        }))
+      );
+      showAlert(`"${result.name}" set as recommended level`, "success");
+    } catch (error) {
+      showAlert("Failed to set recommended level", "error");
+      throw error;
+    }
   };
 
   return {
     levels,
     isLoading,
     isSubmitting,
-    handleCreate,
     handleUpdate,
-    handleDelete,
-    getNextLevelNumber,
+    handleToggleEnabled,
+    handleSetDefault,
+    handleSetRecommended,
     refreshLevels: fetchLevels,
   };
 }

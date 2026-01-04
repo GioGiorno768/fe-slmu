@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, ArrowRight, ShieldCheck, Lock } from "lucide-react";
 import * as linkService from "@/services/linkService";
 import { useAlert } from "@/hooks/useAlert";
+import { useFingerprint } from "@/hooks/useFingerprint";
 
 interface SessionData {
   code: string;
@@ -21,6 +22,9 @@ export default function ContinuePage() {
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { showAlert } = useAlert();
+
+  // 🛡️ Device Fingerprinting for Self-Click Detection
+  const { visitorId } = useFingerprint();
 
   const sessionId = searchParams.get("s");
 
@@ -106,7 +110,8 @@ export default function ContinuePage() {
       const originalUrl = await linkService.validateContinueToken(
         sessionData.code,
         sessionData.token,
-        password || undefined
+        password || undefined,
+        visitorId || undefined // 🛡️ Pass fingerprint for self-click detection
       );
 
       // Success! Redirect to destination (open in new tab)

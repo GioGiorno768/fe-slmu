@@ -16,14 +16,56 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 interface WithdrawalStatsCardProps {
   stats: WithdrawalStats | null;
   onOpenModal: () => void;
+  minWithdrawal?: number; // USD - from withdrawal settings
 }
 
 export default function WithdrawalStatsCard({
   stats,
   onOpenModal,
+  minWithdrawal = 2, // Default $2 if not passed
 }: WithdrawalStatsCardProps) {
   // 💱 Use global currency context
-  const { format: formatCurrency, symbol } = useCurrency();
+  const { format: formatCurrency, symbol, currency } = useCurrency();
+
+  // 🔄 Round minimum withdrawal up to a clean number per currency
+  const roundMinimumUp = (amountUSD: number): number => {
+    // First convert USD to local currency using formatCurrency internals
+    // formatCurrency already handles conversion, so we need to get the converted value
+    // For simplicity, we'll import the conversion function
+    const { convertFromUSD } = require("@/utils/currency");
+    const convertedAmount = convertFromUSD(amountUSD, currency);
+
+    switch (currency) {
+      case "IDR":
+        // Round up to nearest 1000 (e.g., 16695 → 17000)
+        return Math.ceil(convertedAmount / 1000) * 1000;
+      case "MYR":
+      case "SGD":
+        // Round up to nearest 1 (e.g., 8.15 → 9)
+        return Math.ceil(convertedAmount);
+      case "EUR":
+      case "GBP":
+        // Round up to nearest 0.5 (e.g., 1.84 → 2)
+        return Math.ceil(convertedAmount * 2) / 2;
+      default:
+        // USD: Keep as is
+        return convertedAmount;
+    }
+  };
+
+  // Get the rounded minimum in local currency
+  const displayMinWithdrawal = roundMinimumUp(minWithdrawal);
+
+  // Format with symbol based on currency
+  const formatLocalAmount = (amount: number): string => {
+    if (currency === "IDR") {
+      return `Rp ${Math.round(amount).toLocaleString("id-ID")}`;
+    }
+    return `${symbol}${amount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  };
 
   return (
     <motion.div
@@ -77,7 +119,7 @@ export default function WithdrawalStatsCard({
             <p className="text-[1.3em] text-grays opacity-80">
               Minimum payout threshold:{" "}
               <span className="font-semibold text-shortblack">
-                {formatCurrency(2)}
+                {formatLocalAmount(displayMinWithdrawal)}
               </span>
             </p>
           </div>

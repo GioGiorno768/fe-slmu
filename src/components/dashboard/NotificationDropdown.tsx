@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useLocale } from "next-intl";
 // ... (Import Icon dll sama kayak file lama)
 import {
   Link2,
@@ -35,10 +36,12 @@ export default function NotificationDropdown({
   onClose,
   role = "member",
 }: NotificationDropdownProps) {
+  const locale = useLocale();
   const { showAlert } = useAlert();
 
   // Panggil Hook - now using category filter
   const {
+    pinnedNotifications,
     notifications,
     unreadCount,
     isLoading,
@@ -115,8 +118,10 @@ export default function NotificationDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // No frontend filtering needed - backend already filtered
-  const filteredNotifications = notifications;
+  // Limit personal notifications to 7 for dropdown
+  const filteredNotifications = notifications.slice(0, 7);
+  const hasMoreNotifications = notifications.length > 7;
+  const totalCount = pinnedNotifications.length + notifications.length;
 
   const handleItemClick = (notif: NotificationItem) => {
     if (!notif.isRead) markRead(notif.id);
@@ -237,17 +242,23 @@ export default function NotificationDropdown({
                   </div>
                 </div>
                 {/* Footer Detail */}
-                <div className="p-4 border-t border-gray-100 bg-slate-50 flex justify-between items-center flex-shrink-0">
-                  <button
-                    onClick={() => {
-                      removeNotification(selectedNotif.id);
-                      setSelectedNotif(null);
-                      showAlert("Notifikasi dihapus.", "info");
-                    }}
-                    className="text-[1.3em] font-medium text-red-500 hover:bg-red-50 px-4 py-2 rounded-lg flex items-center gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" /> Hapus
-                  </button>
+                <div className="p-4 border-t border-gray-100 bg-slate-50 flex justify-between items-center shrink-0">
+                  {selectedNotif.isGlobal ? (
+                    <p className="text-[1.2em] text-gray-400 italic">
+                      📌 Pengumuman dari Admin
+                    </p>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        removeNotification(selectedNotif.id);
+                        setSelectedNotif(null);
+                        showAlert("Notifikasi dihapus.", "info");
+                      }}
+                      className="text-[1.3em] font-medium text-red-500 hover:bg-red-50 px-4 py-2 rounded-lg flex items-center gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" /> Hapus
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ) : (
@@ -348,7 +359,8 @@ export default function NotificationDropdown({
                 >
                   {isLoading ? (
                     <Spinner />
-                  ) : filteredNotifications.length === 0 ? (
+                  ) : pinnedNotifications.length === 0 &&
+                    filteredNotifications.length === 0 ? (
                     <div className="p-8 text-center flex flex-col items-center gap-3 mt-10">
                       <p className="text-grays text-[1.4em]">
                         Tidak ada notifikasi.
@@ -356,6 +368,49 @@ export default function NotificationDropdown({
                     </div>
                   ) : (
                     <div className="divide-y divide-gray-50">
+                      {/* Pinned (Global) Notifications */}
+                      {pinnedNotifications.length > 0 && (
+                        <>
+                          <div className="px-5 py-2 bg-purple-50 border-b border-purple-100">
+                            <span className="text-[1.1em] font-bold text-purple-600 uppercase tracking-wide flex items-center gap-1">
+                              📌 Pengumuman
+                            </span>
+                          </div>
+                          {pinnedNotifications.map((item) => (
+                            <div
+                              key={item.id}
+                              className="p-5 hover:bg-purple-50/50 transition-colors cursor-pointer bg-purple-50/30"
+                              onClick={() => handleItemClick(item)}
+                            >
+                              <div className="flex gap-4">
+                                <div
+                                  className={clsx(
+                                    "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
+                                    getBgColor(item.type)
+                                  )}
+                                >
+                                  <div className="scale-75">
+                                    {getIcon(item.type)}
+                                  </div>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-[1.4em] font-bold leading-tight text-shortblack truncate">
+                                    {item.title}
+                                  </h4>
+                                  <p className="text-[1.3em] text-grays leading-snug mb-1 line-clamp-2">
+                                    {item.message}
+                                  </p>
+                                  <span className="text-[1.1em] text-gray-400 font-medium">
+                                    {formatTime(item.timestamp)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      )}
+
+                      {/* Personal Notifications */}
                       {filteredNotifications.map((item) => (
                         <div
                           key={item.id}
@@ -412,12 +467,23 @@ export default function NotificationDropdown({
                 </div>
                 {/* Footer List */}
                 <div className="p-3 bg-slate-50 border-t border-gray-100 text-center flex-shrink-0">
-                  <button
-                    onClick={onClose}
-                    className="text-[1.3em] font-semibold text-shortblack hover:text-bluelight transition-colors w-full py-1"
-                  >
-                    Tutup
-                  </button>
+                  {hasMoreNotifications ? (
+                    <a
+                      href={`/${locale}${
+                        role === "member" ? "" : `/${role}`
+                      }/notifications`}
+                      className="text-[1.3em] font-semibold text-bluelight hover:text-blue-700 transition-colors w-full py-1 block"
+                    >
+                      Lihat Semua ({notifications.length})
+                    </a>
+                  ) : (
+                    <button
+                      onClick={onClose}
+                      className="text-[1.3em] font-semibold text-shortblack hover:text-bluelight transition-colors w-full py-1"
+                    >
+                      Tutup
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}

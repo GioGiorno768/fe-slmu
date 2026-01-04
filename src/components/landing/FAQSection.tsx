@@ -1,118 +1,110 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Minus } from "lucide-react";
+import { ChevronDown, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(1);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
     {
-      question: "Is it safe to use this shortlink service?",
+      question: "Apakah layanan shortlink ini aman digunakan?",
       answer:
-        "Yes, absolutely! Our platform uses industry-standard security measures to protect your links and data. All links are scanned for malware and suspicious content before being shortened.",
+        "Ya, tentu! Platform kami menggunakan standar keamanan industri untuk melindungi link dan data Anda. Semua link dipindai untuk malware dan konten mencurigakan sebelum dipersingkat.",
     },
     {
-      question: "How can I earn money from shortened links?",
+      question: "Bagaimana cara menghasilkan uang dari shortened links?",
       answer:
-        "Every time someone clicks your shortlink, you earn based on CPM (cost per 1000 views). With our high CPM rates, your links can generate more income compared to other platforms.",
+        "Setiap kali seseorang mengklik shortlink Anda, Anda mendapatkan penghasilan berdasarkan CPM (cost per 1000 views). Dengan rate CPM tinggi kami, link Anda dapat menghasilkan lebih banyak pendapatan dibandingkan platform lain.",
     },
     {
-      question: "What is the minimum payout amount?",
+      question: "Berapa minimum payout yang bisa ditarik?",
       answer:
-        "Our minimum payout threshold is very low, starting from just $5. This means you can withdraw your earnings faster without long waiting times.",
+        "Minimum payout kami sangat rendah, mulai dari $2 saja. Ini berarti Anda dapat menarik penghasilan lebih cepat tanpa waktu tunggu yang lama.",
     },
     {
-      question: "How do referral links work?",
+      question: "Bagaimana cara kerja referral links?",
       answer:
-        "Share your unique referral link with friends and earn extra rewards when they sign up and start using the service. You'll earn a percentage of their earnings as a bonus.",
+        "Bagikan link referral unik Anda kepada teman dan dapatkan bonus ekstra saat mereka mendaftar dan mulai menggunakan layanan. Anda akan mendapatkan persentase dari penghasilan mereka sebagai bonus permanen.",
     },
     {
-      question: "Can I customize my shortlinks?",
+      question: "Bisakah saya mengkustomisasi shortlinks?",
       answer:
-        "Yes! You can create custom, branded shortlinks with your own aliases. This makes your links more memorable and professional.",
+        "Ya! Anda dapat membuat custom shortlink dengan alias sendiri, password protection, expiry date, dan pilihan level iklan. Ini membuat link Anda lebih mudah diingat dan profesional.",
     },
     {
-      question: "How fast are payouts processed?",
+      question: "Seberapa cepat proses payout?",
       answer:
-        "Payouts are typically processed within 24-48 hours after your withdrawal request. We support multiple payment methods including PayPal, bank transfer, and cryptocurrency.",
+        "Payout biasanya diproses dalam 1-7 hari kerja setelah permintaan withdrawal Anda. Kami mendukung berbagai metode pembayaran termasuk PayPal, transfer bank, dan cryptocurrency.",
     },
   ];
 
   return (
-    <section
-      id="faq"
-      className="max-w-[155em] font-figtree m-auto relative text-[9px] sm:text-[10px] bg-white "
-    >
-      <div className="max-w-[140em] px-[1.6em] md:px-[2.4em] lg:px-[4em] py-[10em] md:py-[15em] mx-auto space-y-[12em] ">
+    <section id="faq" className="py-24 md:py-32 bg-slate-50/50 font-figtree">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-[8em]">
+        <div className="text-center mb-16">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-block mb-[2em]"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-bluelight text-xs font-bold uppercase tracking-wider mb-6"
           >
-            <span className="bg-bluelight text-[1.6em] text-white px-[2em] rounded-full py-[.5em] w-fit">
-              FAQ
-            </span>
+            <HelpCircle className="w-4 h-4" />
+            FAQ
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+            className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4"
           >
-            Frequently ask question
+            Pertanyaan yang Sering Diajukan
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-gray-600 m-auto lg:w-[45%] xl:w-[35%] md:w-[50%] sm:w-[60%] w-full"
+            className="text-slate-600 text-lg max-w-2xl mx-auto"
           >
-            Packed with simple yet powerful tools to make every link cleaner,
-            smarter, and more useful.
+            Jawaban untuk pertanyaan umum tentang layanan shortlink kami
           </motion.p>
         </div>
 
         {/* FAQ Items */}
-        <div className="space-y-4 w-full md:w-[70%] m-auto">
+        <div className="space-y-4">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-2xl shadow-md overflow-hidden"
+              transition={{ delay: index * 0.05 }}
+              className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-[3em] py-[2em] flex items-center justify-between text-left gap-[2em] hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-5 flex items-center justify-between text-left gap-4 hover:bg-slate-50/50 transition-colors"
               >
-                <div className="flex items-center gap-[2.5em]">
-                  <div className="w-[3.5em] h-[3.5em] bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-bluelight font-bold text-[1.5em]">
-                      ?
-                    </span>
-                  </div>
-                  <span className="text-shortblack font-medium text-[2em] font-figtree">
-                    {faq.question}
-                  </span>
-                </div>
-                <div className="flex-shrink-0">
-                  {openIndex === index ? (
-                    <Minus className="w-5 h-5 text-primary" />
-                  ) : (
-                    <Plus className="w-5 h-5 text-gray-400" />
-                  )}
-                </div>
+                <span className="text-slate-900 font-semibold text-base md:text-lg">
+                  {faq.question}
+                </span>
+                <motion.div
+                  animate={{ rotate: openIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="shrink-0"
+                >
+                  <ChevronDown
+                    className={`w-5 h-5 ${
+                      openIndex === index ? "text-bluelight" : "text-slate-400"
+                    }`}
+                  />
+                </motion.div>
               </button>
 
               <AnimatePresence>
@@ -124,8 +116,8 @@ export default function FAQSection() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-[3em] py-[2em]">
-                      <p className="text-grays leading-relaxed text-[1.6em]">
+                    <div className="px-6 pb-5 pt-0">
+                      <p className="text-slate-600 leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>

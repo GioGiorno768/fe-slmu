@@ -44,6 +44,21 @@ export default function middleware(request: NextRequest) {
       "new-link",
       "ads-info",
       "my-links",
+      "notifications",
+      "profile",
+      // Landing pages
+      "about",
+      "contact",
+      "payout-rates",
+      "terms-of-service",
+      "privacy-policy",
+      "report-abuse",
+      "faq",
+      // Auth pages
+      "forgot-password",
+      "reset-password",
+      "verify-email",
+      "verification-pending",
     ].includes(potentialCode);
 
     if (!isLocale && !isSpecial) {

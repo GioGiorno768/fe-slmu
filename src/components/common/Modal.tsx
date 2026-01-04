@@ -11,6 +11,8 @@ interface ModalProps {
   title: string;
   message: string;
   type?: "error" | "warning" | "info";
+  buttonLabel?: string;
+  onButtonClick?: () => void;
 }
 
 export default function Modal({
@@ -19,6 +21,8 @@ export default function Modal({
   title,
   message,
   type = "error",
+  buttonLabel = "Mengerti",
+  onButtonClick,
 }: ModalProps) {
   // Close on ESC key
   useEffect(() => {
@@ -104,10 +108,10 @@ export default function Modal({
 
               {/* Button */}
               <button
-                onClick={onClose}
+                onClick={onButtonClick ?? onClose}
                 className={`w-full ${config.buttonBg} text-white text-[1.6em] font-semibold py-[1.2em] rounded-full transition-colors`}
               >
-                Mengerti
+                {buttonLabel}
               </button>
             </motion.div>
           </motion.div>

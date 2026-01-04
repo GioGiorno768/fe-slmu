@@ -30,23 +30,37 @@ apiClient.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response;
 
+      // 401: Token expired, deleted account, or unauthenticated
       if (status === 401) {
-        // Token expired or invalid
-        // removeToken(); // Optional: Auto logout? Careful with loop
-        // window.location.href = "/auth/login"; // Optional
+        removeToken();
+        if (typeof window !== "undefined") {
+          // Redirect to login with message
+          window.location.href = "/login?expired=true";
+        }
       }
 
-      // 🔥 Detect banned user (while logged in making API calls)
-      if (status === 403 && data?.error === "Account Banned") {
-        // Dispatch custom event for global banned popup
-        if (typeof window !== "undefined") {
-          const banEvent = new CustomEvent("user:banned", {
-            detail: {
-              message: data?.message || "Akun Anda telah di-suspend.",
-              reason: data?.ban_reason || "Pelanggaran Terms of Service",
-            },
-          });
-          window.dispatchEvent(banEvent);
+      // 🔥 Detect banned/suspended user (while logged in making API calls)
+      if (status === 403) {
+        // User account banned
+        if (data?.error === "Account Banned") {
+          if (typeof window !== "undefined") {
+            const banEvent = new CustomEvent("user:banned", {
+              detail: {
+                message: data?.message || "Akun Anda telah di-suspend.",
+                reason: data?.ban_reason || "Pelanggaran Terms of Service",
+              },
+            });
+            window.dispatchEvent(banEvent);
+          }
+        }
+
+        // Admin account suspended
+        if (data?.error === "Account Suspended" || data?.suspended === true) {
+          removeToken();
+          if (typeof window !== "undefined") {
+            // Redirect to login with suspended message
+            window.location.href = "/login?suspended=true";
+          }
         }
       }
     }

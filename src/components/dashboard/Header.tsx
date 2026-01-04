@@ -35,6 +35,7 @@ export default function Header({
   const pathname = usePathname();
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [showLangDropdown, setShowLangDropdown] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
   // Determine if user is admin/super-admin first
@@ -195,29 +196,73 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-1 custom:gap-[2em]">
-          <div className="custom:flex hidden items-center bg-blue-dashboard rounded-full p-[0.5em] border border-bluelight/10">
+          {/* === LANGUAGE SWITCHER DROPDOWN (DESKTOP) === */}
+          <div className="custom:block hidden relative">
             <button
-              onClick={() => switchLanguage("en")}
+              onClick={() => setShowLangDropdown(!showLangDropdown)}
               disabled={isPending}
-              className={`px-[1.2em] py-[0.5em] rounded-full text-[1.4em] font-semibold transition-all ${
-                locale === "en"
-                  ? "bg-bluelight text-white shadow-md"
-                  : "text-grays hover:text-bluelight"
-              }`}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
             >
-              EN
+              <svg
+                className="w-5 h-5 text-slate-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10" strokeWidth="1.5" />
+                <path
+                  strokeWidth="1.5"
+                  d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
+              </svg>
+              <span className="text-[1.4em] font-medium text-slate-700">
+                {locale.toUpperCase()}
+              </span>
             </button>
-            <button
-              onClick={() => switchLanguage("id")}
-              disabled={isPending}
-              className={`px-[1.2em] py-[0.5em] rounded-full text-[1.4em] font-semibold transition-all ${
-                locale === "id"
-                  ? "bg-bluelight text-white shadow-md"
-                  : "text-grays hover:text-bluelight"
-              }`}
-            >
-              ID
-            </button>
+
+            {/* Dropdown Menu */}
+            {showLangDropdown && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowLangDropdown(false)}
+                />
+                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-100 py-2 min-w-[120px] z-50">
+                  <button
+                    onClick={() => {
+                      switchLanguage("en");
+                      setShowLangDropdown(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 hover:bg-slate-50 transition-colors ${
+                      locale === "en"
+                        ? "text-bluelight font-semibold"
+                        : "text-slate-600"
+                    }`}
+                  >
+                    {locale === "en" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-bluelight" />
+                    )}
+                    English
+                  </button>
+                  <button
+                    onClick={() => {
+                      switchLanguage("id");
+                      setShowLangDropdown(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 hover:bg-slate-50 transition-colors ${
+                      locale === "id"
+                        ? "text-bluelight font-semibold"
+                        : "text-slate-600"
+                    }`}
+                  >
+                    {locale === "id" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-bluelight" />
+                    )}
+                    Indonesia
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
           <button

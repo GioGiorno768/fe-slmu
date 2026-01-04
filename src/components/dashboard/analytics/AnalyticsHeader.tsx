@@ -5,17 +5,17 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { BarChart3, ChevronDown, Check, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import type { AnalyticsRange } from "@/hooks/useAnalytics";
+import type { StatsRange } from "@/hooks/useAnalytics";
 
 interface AnalyticsHeaderProps {
-  range: AnalyticsRange;
-  onRangeChange: (range: AnalyticsRange) => void;
+  range: StatsRange;
+  onRangeChange: (range: StatsRange) => void;
   onRefresh: () => void;
   isRefetching: boolean;
 }
 
 type FilterOption = {
-  value: AnalyticsRange;
+  value: StatsRange;
   label: string;
 };
 
@@ -29,7 +29,9 @@ export default function AnalyticsHeader({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // 🔧 Added 'lifetime' option for All Time
   const filterOptions: FilterOption[] = [
+    { value: "lifetime", label: t("allTime") },
     { value: "perWeek", label: t("perWeek") },
     { value: "perMonth", label: t("perMonth") },
     { value: "perYear", label: t("perYear") },

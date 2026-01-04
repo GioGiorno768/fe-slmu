@@ -13,7 +13,9 @@ import type {
   AnalyticsData,
   TimeRange,
   StatType,
+  CountryStat,
 } from "@/types/type";
+import { getTopCountries } from "@/services/analyticsService";
 
 // Query keys for cache management
 export const dashboardKeys = {
@@ -22,6 +24,7 @@ export const dashboardKeys = {
   referral: () => [...dashboardKeys.all, "referral"] as const,
   traffic: () => [...dashboardKeys.all, "traffic"] as const,
   topLinks: () => [...dashboardKeys.all, "topLinks"] as const,
+  topCountries: () => [...dashboardKeys.all, "topCountries"] as const,
   analytics: (range: TimeRange, stat: StatType) =>
     [...dashboardKeys.all, "analytics", range, stat] as const,
 };
@@ -64,7 +67,14 @@ export function useDashboard() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // 6. Analytics Data Query (depends on filters)
+  // 6. Top Countries Query (for dashboard)
+  const { data: topCountries } = useQuery({
+    queryKey: dashboardKeys.topCountries(),
+    queryFn: () => getTopCountries(5), // Top 5 for dashboard
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // 7. Analytics Data Query (depends on filters)
   const { data: analyticsData, isLoading: analyticsLoading } = useQuery({
     queryKey: dashboardKeys.analytics(analyticsRange, analyticsStat),
     queryFn: () => dashboardService.getAnalytics(analyticsRange, analyticsStat),
@@ -83,6 +93,7 @@ export function useDashboard() {
     referralData: referralData ?? null,
     trafficStats: trafficStats ?? null,
     topLinks: topLinks ?? null,
+    topCountries: topCountries ?? null,
     analyticsData: analyticsData ?? null,
 
     // Analytics Controls

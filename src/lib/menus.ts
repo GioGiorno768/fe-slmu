@@ -9,7 +9,6 @@ import {
   Settings,
   LineChart,
   UserCog,
-  ServerCog,
   ClipboardList,
   Database,
   Link2,
@@ -20,6 +19,7 @@ import {
   History,
   Crown,
   DollarSign,
+  Group,
 } from "lucide-react";
 import type { Role, NavItem } from "@/types/type";
 
@@ -93,11 +93,11 @@ export const getAdminMenu = (role: Role = "admin"): NavItem[] => {
       label: "Manage Levels",
       href: "/super-admin/manage-levels",
     },
-    {
-      icon: ClipboardList,
-      label: "Audit Logs",
-      href: "/super-admin/audit-logs",
-    },
+    // {
+    //   icon: ClipboardList,
+    //   label: "Audit Logs",
+    //   href: "/super-admin/audit-logs",
+    // },
   ];
 
   // LOGIC PENGGABUNGAN:

@@ -40,36 +40,55 @@ export default function RegisterForm() {
   // 🎁 Referrer name state
   const [referrerName, setReferrerName] = useState<string>("");
 
-  // 🔖 Check if user has ever registered on this browser
+  // 🛡️ Anti-Fraud: Check eligibility via API when referral code exists
   useEffect(() => {
-    // Only redirect if user has registered before AND coming from referral link
-    // This prompts existing users to login instead of creating duplicate account
-    // Normal register page (no ref) is always accessible for new accounts
-    if (hasEverRegistered() && referralCode) {
-      router.push("/login");
-    }
-  }, [router, referralCode]);
-
-  // 🎁 Fetch referrer name if referral code exists
-  useEffect(() => {
-    const fetchReferrerName = async () => {
+    const checkEligibility = async () => {
       if (!referralCode) return;
+
+      // Wait for fingerprint to be ready
+      if (!visitorId) {
+        // Fallback: cek localStorage kalau fingerprint belum ready
+        if (hasEverRegistered()) {
+          router.replace("/register");
+        }
+        return;
+      }
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/referral/info?code=${referralCode}`
+          `${process.env.NEXT_PUBLIC_API_URL}/referral/check-eligibility`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              visitor_id: visitorId,
+              referral_code: referralCode,
+            }),
+          }
         );
+
         const data = await response.json();
-        if (data.success && data.data?.name) {
-          setReferrerName(data.data.name);
+
+        if (data.status === "success" && data.data) {
+          if (!data.data.eligible) {
+            // Not eligible - redirect to normal register
+            router.replace("/register");
+          } else {
+            // Eligible - set referrer name for banner
+            setReferrerName(data.data.referrer_name || "");
+          }
         }
       } catch (error) {
-        console.error("Failed to fetch referrer info:", error);
+        console.error("Failed to check eligibility:", error);
+        // Fallback: cek localStorage
+        if (hasEverRegistered()) {
+          router.replace("/register");
+        }
       }
     };
 
-    fetchReferrerName();
-  }, [referralCode]);
+    checkEligibility();
+  }, [referralCode, visitorId, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -104,7 +123,8 @@ export default function RegisterForm() {
         visitor_id: visitorId || undefined, // 🛡️ Anti-Fraud
       });
 
-      // Redirect based on user role
+      // [DEV MODE] Redirect to dashboard (email auto-verified)
+      // TODO: Change to "/verification-pending" for production
       const redirectPath = authService.getRedirectPath();
       router.push(redirectPath);
     } catch (err: any) {

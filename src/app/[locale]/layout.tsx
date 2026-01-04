@@ -47,7 +47,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="scroll-smooth">
+    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       {/* ... (Isi body sama aja) ... */}
       <body
         className={`${figtree.variable} ${manrope.variable} font-figtree antialiased`}

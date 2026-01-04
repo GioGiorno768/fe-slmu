@@ -3,40 +3,45 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { CreditCard, Link2, Users, Settings2, Megaphone } from "lucide-react";
+import {
+  CreditCard,
+  Link2,
+  Users,
+  Settings2,
+  Megaphone,
+  Bell,
+  DollarSign,
+  Shield,
+} from "lucide-react";
 import clsx from "clsx";
 
 // Section Components
 import WithdrawalSettingsSection from "@/components/dashboard/super-admin/settings/WithdrawalSettingsSection";
+import ReferralSettingsSection from "@/components/dashboard/super-admin/settings/ReferralSettingsSection";
+import SecuritySettingsSection from "@/components/dashboard/super-admin/settings/SecuritySettingsSection";
+import GeneralSettingsSection from "@/components/dashboard/super-admin/settings/GeneralSettingsSection";
+import SelfClickSettings from "@/components/dashboard/admin/settings/SelfClickSettings";
+import TokenSettings from "@/components/dashboard/admin/settings/TokenSettings";
+import CpcRatesSettings from "@/components/dashboard/admin/settings/CpcRatesSettings";
+import GlobalNotificationSection from "@/components/dashboard/super-admin/settings/GlobalNotificationSection";
 import GlobalAlert from "@/components/dashboard/GlobalAlert";
 
 // Tab Config
 const TABS = [
   { id: "withdrawal", label: "Withdrawal", icon: CreditCard, disabled: false },
-  { id: "links", label: "Links", icon: Link2, disabled: true },
-  { id: "referral", label: "Referral", icon: Users, disabled: true },
-  {
-    id: "announcements",
-    label: "Announcements",
-    icon: Megaphone,
-    disabled: true,
-  },
-  { id: "general", label: "General", icon: Settings2, disabled: true },
+  { id: "links", label: "Links", icon: Link2, disabled: false },
+  { id: "cpc-rates", label: "CPC Rates", icon: DollarSign, disabled: false },
+  { id: "referral", label: "Referral", icon: Users, disabled: false },
+  { id: "notification", label: "Notification", icon: Bell, disabled: false },
+  { id: "security", label: "Security", icon: Shield, disabled: false },
+  { id: "general", label: "General", icon: Settings2, disabled: false },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
 export default function SuperAdminSettingsPage() {
-  // Get initial tab from URL hash
-  const getInitialTab = (): TabId => {
-    if (typeof window !== "undefined") {
-      const hash = window.location.hash.slice(1);
-      if (TABS.some((t) => t.id === hash && !t.disabled)) return hash as TabId;
-    }
-    return "withdrawal";
-  };
-
-  const [activeTab, setActiveTab] = useState<TabId>(getInitialTab);
+  // Use consistent default to prevent hydration mismatch
+  const [activeTab, setActiveTab] = useState<TabId>("withdrawal");
 
   // Sync URL hash with active tab
   const handleTabChange = (tabId: TabId) => {
@@ -46,17 +51,17 @@ export default function SuperAdminSettingsPage() {
     window.history.replaceState(null, "", `#${tabId}`);
   };
 
-  // Listen for hash changes
+  // Read URL hash on mount (client-side only)
   useEffect(() => {
-    const initialHash = window.location.hash.slice(1);
-    if (initialHash && TABS.some((t) => t.id === initialHash && !t.disabled)) {
-      setActiveTab(initialHash as TabId);
+    const hash = window.location.hash.slice(1);
+    if (hash && TABS.some((t) => t.id === hash && !t.disabled)) {
+      setActiveTab(hash as TabId);
     }
 
     const handleHashChange = () => {
-      const hash = window.location.hash.slice(1);
-      if (TABS.some((t) => t.id === hash && !t.disabled)) {
-        setActiveTab(hash as TabId);
+      const newHash = window.location.hash.slice(1);
+      if (TABS.some((t) => t.id === newHash && !t.disabled)) {
+        setActiveTab(newHash as TabId);
       }
     };
     window.addEventListener("hashchange", handleHashChange);
@@ -74,7 +79,7 @@ export default function SuperAdminSettingsPage() {
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* SIDEBAR (STICKY) */}
-        <div className="w-full lg:w-[280px] flex-shrink-0 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 z-20 sticky sm:top-[15em] top-[10em]">
+        <div className="w-full lg:w-[280px] shrink-0 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 z-20 sticky sm:top-[15em] top-[10em]">
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -115,35 +120,29 @@ export default function SuperAdminSettingsPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100"
+              className={
+                activeTab === "links"
+                  ? "space-y-6"
+                  : "bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100"
+              }
             >
               {activeTab === "withdrawal" && <WithdrawalSettingsSection />}
 
               {activeTab === "links" && (
-                <div className="text-center py-12">
-                  <Link2 className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                  <p className="text-[1.6em] font-semibold text-gray-400">
-                    Link Settings
-                  </p>
-                  <p className="text-[1.3em] text-gray-300 mt-1">
-                    Coming soon...
-                  </p>
-                </div>
+                <>
+                  <SelfClickSettings />
+                  <TokenSettings />
+                </>
               )}
 
-              {activeTab === "referral" && (
-                <div className="text-center py-12">
-                  <Users className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                  <p className="text-[1.6em] font-semibold text-gray-400">
-                    Referral Settings
-                  </p>
-                  <p className="text-[1.3em] text-gray-300 mt-1">
-                    Coming soon...
-                  </p>
-                </div>
-              )}
+              {activeTab === "cpc-rates" && <CpcRatesSettings />}
 
-              {activeTab === "announcements" && (
+              {activeTab === "referral" && <ReferralSettingsSection />}
+
+              {activeTab === "notification" && <GlobalNotificationSection />}
+
+              {activeTab === "security" && <SecuritySettingsSection />}
+              {/* {activeTab === "announcements" && (
                 <div className="text-center py-12">
                   <Megaphone className="w-12 h-12 mx-auto text-gray-300 mb-4" />
                   <p className="text-[1.6em] font-semibold text-gray-400">
@@ -153,19 +152,9 @@ export default function SuperAdminSettingsPage() {
                     Coming soon...
                   </p>
                 </div>
-              )}
+              )} */}
 
-              {activeTab === "general" && (
-                <div className="text-center py-12">
-                  <Settings2 className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                  <p className="text-[1.6em] font-semibold text-gray-400">
-                    General Settings
-                  </p>
-                  <p className="text-[1.3em] text-gray-300 mt-1">
-                    Coming soon...
-                  </p>
-                </div>
-              )}
+              {activeTab === "general" && <GeneralSettingsSection />}
             </motion.div>
           </AnimatePresence>
         </div>

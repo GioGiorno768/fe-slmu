@@ -107,6 +107,7 @@ export default function WithdrawalPage() {
           <WithdrawalStatsCard
             stats={stats}
             onOpenModal={() => setIsRequestModalOpen(true)}
+            minWithdrawal={settings?.minWithdrawal ?? 2}
           />
         </div>
         <div className="lg:col-span-2">

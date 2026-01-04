@@ -3,11 +3,16 @@
 
 import { useState } from "react";
 import CreateShortlink from "@/components/dashboard/CreateShortlink";
+import MassLinkCreator from "@/components/dashboard/MassLinkCreator";
 import LinkList from "@/components/dashboard/links/LinkList";
 import EditLinkModal from "@/components/dashboard/EditLinkModal";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import { useLinks } from "@/hooks/useLinks";
 import type { Shortlink } from "@/types/type";
+import clsx from "clsx";
+import { Link as LinkIcon, Layers } from "lucide-react";
+
+type CreateMode = "single" | "mass";
 
 export default function NewLinkPage() {
   const {
@@ -25,6 +30,8 @@ export default function NewLinkPage() {
     updateLink,
     toggleLinkStatus,
   } = useLinks();
+
+  const [createMode, setCreateMode] = useState<CreateMode>("single");
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<Shortlink | null>(null);
@@ -57,12 +64,45 @@ export default function NewLinkPage() {
 
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree space-y-6 pb-10">
-      <CreateShortlink
-        generatedLink={generatedLink}
-        isLoading={isMutating}
-        error={null}
-        onSubmit={createLink}
-      />
+      {/* Tab Toggle */}
+      <div className="bg-white p-2 rounded-xl shadow-sm shadow-slate-500/50 inline-flex gap-2">
+        <button
+          onClick={() => setCreateMode("single")}
+          className={clsx(
+            "flex items-center gap-2 px-6 py-3 rounded-lg text-[1.4em] font-semibold transition-all",
+            createMode === "single"
+              ? "bg-bluelight text-white shadow-lg shadow-blue-200"
+              : "text-grays hover:bg-blues hover:text-shortblack"
+          )}
+        >
+          <LinkIcon className="w-5 h-5" />
+          Single Link
+        </button>
+        <button
+          onClick={() => setCreateMode("mass")}
+          className={clsx(
+            "flex items-center gap-2 px-6 py-3 rounded-lg text-[1.4em] font-semibold transition-all",
+            createMode === "mass"
+              ? "bg-bluelight text-white shadow-lg shadow-blue-200"
+              : "text-grays hover:bg-blues hover:text-shortblack"
+          )}
+        >
+          <Layers className="w-5 h-5" />
+          Mass Link
+        </button>
+      </div>
+
+      {/* Conditional Render based on mode */}
+      {createMode === "single" ? (
+        <CreateShortlink
+          generatedLink={generatedLink}
+          isLoading={isMutating}
+          error={null}
+          onSubmit={createLink}
+        />
+      ) : (
+        <MassLinkCreator />
+      )}
 
       <LinkList
         links={links}

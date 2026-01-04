@@ -12,23 +12,24 @@ const NOTIFICATIONS_KEY = ["notifications"];
  * Notification hook with React Query for shared caching
  * - All components using this hook share the same cache
  * - Mutations auto-invalidate cache so changes sync everywhere
+ * - Returns pinned (global) and personal notifications separately
  */
 export function useNotifications() {
   const queryClient = useQueryClient();
   const [category, setCategory] = useState<string>("all");
 
   // Fetch all notifications with React Query (shared cache)
-  const {
-    data: allNotifications = [],
-    isLoading,
-    refetch,
-  } = useQuery<NotificationItem[]>({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: NOTIFICATIONS_KEY,
     queryFn: () => notifService.getNotifications(),
     staleTime: 30 * 1000, // 30 seconds
   });
 
-  // Filter client-side (INSTANT - no API call)
+  // Extract pinned and notifications from response
+  const pinnedNotifications = data?.pinned || [];
+  const allNotifications = data?.notifications || [];
+
+  // Filter personal notifications by category (client-side, instant)
   const filteredNotifications =
     category === "all"
       ? allNotifications
@@ -53,12 +54,19 @@ export function useNotifications() {
       // Optimistic update
       await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_KEY });
       const previous =
-        queryClient.getQueryData<NotificationItem[]>(NOTIFICATIONS_KEY);
+        queryClient.getQueryData<notifService.NotificationsResponse>(
+          NOTIFICATIONS_KEY
+        );
 
-      queryClient.setQueryData<NotificationItem[]>(
+      queryClient.setQueryData<notifService.NotificationsResponse>(
         NOTIFICATIONS_KEY,
-        (old) =>
-          old?.map((n) => (n.id === id ? { ...n, isRead: true } : n)) ?? []
+        (old) => ({
+          pinned: old?.pinned || [],
+          notifications:
+            old?.notifications.map((n) =>
+              n.id === id ? { ...n, isRead: true } : n
+            ) || [],
+        })
       );
 
       return { previous };
@@ -78,11 +86,17 @@ export function useNotifications() {
       // Optimistic update
       await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_KEY });
       const previous =
-        queryClient.getQueryData<NotificationItem[]>(NOTIFICATIONS_KEY);
+        queryClient.getQueryData<notifService.NotificationsResponse>(
+          NOTIFICATIONS_KEY
+        );
 
-      queryClient.setQueryData<NotificationItem[]>(
+      queryClient.setQueryData<notifService.NotificationsResponse>(
         NOTIFICATIONS_KEY,
-        (old) => old?.map((n) => ({ ...n, isRead: true })) ?? []
+        (old) => ({
+          pinned: old?.pinned || [],
+          notifications:
+            old?.notifications.map((n) => ({ ...n, isRead: true })) || [],
+        })
       );
 
       return { previous };
@@ -100,11 +114,16 @@ export function useNotifications() {
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: NOTIFICATIONS_KEY });
       const previous =
-        queryClient.getQueryData<NotificationItem[]>(NOTIFICATIONS_KEY);
+        queryClient.getQueryData<notifService.NotificationsResponse>(
+          NOTIFICATIONS_KEY
+        );
 
-      queryClient.setQueryData<NotificationItem[]>(
+      queryClient.setQueryData<notifService.NotificationsResponse>(
         NOTIFICATIONS_KEY,
-        (old) => old?.filter((n) => n.id !== id) ?? []
+        (old) => ({
+          pinned: old?.pinned || [],
+          notifications: old?.notifications.filter((n) => n.id !== id) || [],
+        })
       );
 
       return { previous };
@@ -120,13 +139,15 @@ export function useNotifications() {
   const markAllRead = () => markAllReadMutation.mutate();
   const removeNotification = (id: string) => removeMutation.mutate(id);
 
+  // Only count personal notifications as unread (pinned don't have read status)
   const unreadCount = allNotifications.filter(
     (n: NotificationItem) => !n.isRead
   ).length;
 
   return {
-    notifications: filteredNotifications, // Already filtered
-    allNotifications, // Raw data if needed
+    pinnedNotifications, // Global notifications (always show at top)
+    notifications: filteredNotifications, // Personal notifications (filtered)
+    allNotifications, // Raw personal notifications
     unreadCount,
     isLoading,
     category,

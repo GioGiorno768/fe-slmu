@@ -1,122 +1,69 @@
-"use client";
-
-import { motion } from "motion/react";
-import { Link2 } from "lucide-react";
-import Link from "next/link";
+// Server Component - SEO friendly, no "use client"
+import { Wallet, Bitcoin, Building2, CreditCard } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import CTAClient from "./CTAClient";
 
 export default function CTASection() {
+  const paymentMethods = [
+    { icon: Wallet, label: "PayPal" },
+    { icon: Bitcoin, label: "Bitcoin" },
+    { icon: Building2, label: "Bank Transfer" },
+    { icon: CreditCard, label: "Payoneer" },
+  ];
+
   return (
-    <section className="max-w-[155em] font-figtree m-auto relative text-[9px] sm:text-[10px] bg-white">
-      {/* Floating Icons */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, 0],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-[5em] left-[15em] w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center"
-        >
-          <Link2 className="w-10 h-10 text-blue-600" />
-        </motion.div>
-
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-            rotate: [0, -10, 0],
-          }}
-          transition={{
-            duration: 3.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.5,
-          }}
-          className="absolute top-[5em] right-[15em] w-24 h-24 bg-yellow-100 rounded-2xl flex items-center justify-center"
-        >
-          <Link2 className="w-12 h-12 text-yellow-600" />
-        </motion.div>
-
-        <motion.div
-          animate={{
-            y: [0, -15, 0],
-            rotate: [0, 3, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="absolute bottom-[10em] left-[25em] w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center"
-        >
-          <Link2 className="w-8 h-8 text-pink-600" />
-        </motion.div>
-
-        <motion.div
-          animate={{
-            y: [0, 25, 0],
-            rotate: [0, 5, 0],
-          }}
-          transition={{
-            duration: 3.2,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1.5,
-          }}
-          className="absolute bottom-[10em] right-[25em] w-20 h-20 bg-purple-100 rounded-2xl flex items-center justify-center"
-        >
-          <Link2 className="w-10 h-10 text-purple-600" />
-        </motion.div>
-      </div>
-
-      <div className="max-w-[140em] px-[1.6em] md:px-[2.4em] lg:px-[4em] py-[10em] md:py-[15em] mx-auto space-y-[12em] ">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="space-y-8 text-center"
-        >
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-bluetitle border border-bluelight px-4 py-2 rounded-full">
-            <div className="flex -space-x-2">
-              <div className="w-6 h-6 rounded-full bg-bluelight flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                A
-              </div>
-              <div className="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                B
-              </div>
-              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                C
-              </div>
-            </div>
-            <span className="text-primary font-medium text-sm">Let's Join</span>
-          </div>
-
-          {/* Heading */}
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
-            Shorten Links, Grow Your <br />
-            <span className="text-primary">Earnings</span>
-          </h2>
-
-          {/* Description */}
-          <p className="text-lg text-gray-600 md:max-w-[50%] lg:max-w-[35%] mx-auto">
-            Create clean, secure links you can share anywhere and get paid for
-            every click.
+    <div className="flex flex-col font-figtree">
+      {/* Payment Providers */}
+      <div className="py-16 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold uppercase text-slate-400 mb-10 tracking-[0.2em]">
+            Trusted Payment Providers
           </p>
-
-          {/* CTA Button */}
-          <Link
-            href="/register"
-            className="inline-block bg-bluelight text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-primary-dark transition-all transform hover:scale-105"
-          >
-            Get Started
-          </Link>
-        </motion.div>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            {paymentMethods.map((method, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 text-xl font-bold text-slate-800"
+              >
+                <method.icon className="w-8 h-8" />
+                {method.label}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </section>
+
+      {/* Main CTA */}
+      <CTAClient>
+        <div className="relative py-24 overflow-hidden bg-white">
+          <div className="absolute inset-0 bg-gradient-to-br from-bluelight via-blue-700 to-purple-800"></div>
+          <div className="absolute inset-0 opacity-20 brightness-100 contrast-150"></div>
+
+          <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
+              Ready to monetize your links?
+            </h2>
+            <p className="text-lg md:text-xl text-blue-100 mb-10 font-light">
+              Join over 10,000 publishers and start earning today. Sign up now
+              and get a $5 sign-up bonus!
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/register"
+                className="w-full sm:w-auto bg-white text-bluelight hover:bg-blue-50 text-lg font-bold py-4 px-10 rounded-xl shadow-xl transition-all text-center"
+              >
+                Create Free Account
+              </Link>
+              <Link
+                href="/ads-info"
+                className="w-full sm:w-auto bg-transparent border-2 border-white/30 hover:bg-white/10 text-white text-lg font-bold py-4 px-10 rounded-xl transition-all text-center"
+              >
+                View Payout Rates
+              </Link>
+            </div>
+          </div>
+        </div>
+      </CTAClient>
+    </div>
   );
 }

@@ -1,9 +1,9 @@
 // Login Form Component
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import authService from "@/services/authService";
 import ErrorAlert from "./ErrorAlert";
@@ -13,6 +13,7 @@ import { useFingerprint } from "@/hooks/useFingerprint";
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -22,9 +23,26 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
 
   // 🛡️ Device Fingerprinting
   const { visitorId } = useFingerprint();
+
+  // Check for suspended/expired query params
+  useEffect(() => {
+    const suspended = searchParams.get("suspended");
+    const expired = searchParams.get("expired");
+
+    if (suspended === "true") {
+      setWarningMessage(
+        "Akun admin Anda telah di-suspend. Silakan hubungi Super Admin."
+      );
+    } else if (expired === "true") {
+      setWarningMessage(
+        "Sesi Anda telah berakhir atau akun tidak ditemukan. Silakan login kembali."
+      );
+    }
+  }, [searchParams]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -134,6 +152,18 @@ export default function LoginForm() {
         <h1 className="text-4xl font-bold text-gray-900">Welcome Back!</h1>
         <p className="text-lg text-gray-600">Silakan login untuk melanjutkan</p>
       </div>
+
+      {/* Warning Banner for Suspended/Expired */}
+      {warningMessage && (
+        <div className="flex items-start gap-3 p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-orange-800">
+              {warningMessage}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Error Alert */}
       <ErrorAlert error={error} onClose={() => setError("")} />

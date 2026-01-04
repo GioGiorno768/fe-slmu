@@ -52,9 +52,25 @@ export default function Sidebar({
       setToastMessage("Logout berhasil!");
       setShowToast(true);
 
+      // Check if login is disabled - redirect to landing instead of login
+      let redirectPath = "/login";
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/settings/access`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          if (data.data?.disable_login) {
+            redirectPath = "/";
+          }
+        }
+      } catch {
+        // Ignore fetch error, just use default redirect
+      }
+
       // Redirect after short delay
       setTimeout(() => {
-        router.push("/login");
+        router.push(redirectPath);
       }, 800);
     } catch (error) {
       console.error("Logout error:", error);
@@ -63,7 +79,7 @@ export default function Sidebar({
       setToastMessage("Logout berhasil!");
       setShowToast(true);
       setTimeout(() => {
-        router.push("/login");
+        router.push("/");
       }, 800);
     }
   };
@@ -174,7 +190,9 @@ export default function Sidebar({
           ${sidebarBg} text-shortblack h-screen fixed left-0 top-0 
           transition-all duration-300 ease-in-out
           ${isCollapsed ? "w-20" : "w-64"}
-          ${isMobileOpen ? "translate-x-0 z-[100]" : "-translate-x-full z-[100]"}
+          ${
+            isMobileOpen ? "translate-x-0 z-[100]" : "-translate-x-full z-[100]"
+          }
           custom:translate-x-0 custom:z-40 font-figtree custom:text-[10px] text-[8px] flex flex-col justify-between
         `}
       >

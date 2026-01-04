@@ -1,22 +1,18 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { X, Send, CheckSquare } from "lucide-react";
+import { X, Send } from "lucide-react";
 
 interface UserSelectionBarProps {
   selectedCount: number;
   onClear: () => void;
   onSendMessage: () => void;
-  onSelectAll: () => void;
-  isAllSelected: boolean;
 }
 
 export default function UserSelectionBar({
   selectedCount,
   onClear,
   onSendMessage,
-  onSelectAll,
-  isAllSelected,
 }: UserSelectionBarProps) {
   return (
     <AnimatePresence>
@@ -42,13 +38,6 @@ export default function UserSelectionBar({
             </div>
 
             <div className="flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar">
-              <button
-                onClick={onSelectAll}
-                className="flex items-center gap-2 px-3 py-2 md:px-4 bg-white/10 text-white rounded-xl font-bold text-[1em] md:text-[1.2em] hover:bg-white/20 transition-colors whitespace-nowrap"
-              >
-                <CheckSquare className="w-4 h-4" />
-                {isAllSelected ? "Deselect" : "All"}
-              </button>
               <button
                 onClick={onSendMessage}
                 className="flex items-center gap-2 px-3 py-2 md:px-4 bg-white text-shortblack rounded-xl font-bold text-[1em] md:text-[1.2em] hover:bg-gray-100 transition-colors whitespace-nowrap"

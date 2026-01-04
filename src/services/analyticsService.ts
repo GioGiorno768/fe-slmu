@@ -217,3 +217,64 @@ export async function getTrafficHistory(
     };
   });
 }
+
+// =============================================
+// TOP COUNTRIES (dari aggregate table)
+// =============================================
+
+interface TopCountriesApiResponse {
+  total_views: number;
+  items: {
+    country_code: string;
+    country_name: string;
+    views: number;
+    percentage: number;
+  }[];
+}
+
+export async function getTopCountries(limit: number = 7) {
+  const response = await apiClient.get<{ data: TopCountriesApiResponse }>(
+    "/analytics/top-countries",
+    { params: { limit } }
+  );
+
+  const apiData = response.data.data;
+
+  // Transform to CountryStat format
+  return apiData.items.map((item) => ({
+    isoCode: item.country_code.toLowerCase(),
+    name: item.country_name,
+    views: item.views,
+    percentage: item.percentage,
+  }));
+}
+
+// =============================================
+// TOP REFERRERS (dari aggregate table)
+// =============================================
+
+interface TopReferrersApiResponse {
+  total_views: number;
+  items: {
+    referrer_key: string;
+    referrer_label: string;
+    views: number;
+    percentage: number;
+  }[];
+}
+
+export async function getTopReferrers(limit: number = 6) {
+  const response = await apiClient.get<{ data: TopReferrersApiResponse }>(
+    "/analytics/top-referrers",
+    { params: { limit } }
+  );
+
+  const apiData = response.data.data;
+
+  // Transform to ReferrerStat format
+  return apiData.items.map((item) => ({
+    name: item.referrer_label,
+    views: item.views,
+    percentage: item.percentage,
+  }));
+}
