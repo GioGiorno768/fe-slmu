@@ -17,6 +17,7 @@ import clsx from "clsx";
 import Toast from "@/components/common/Toast";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import { getCpcRates, saveCpcRates } from "@/services/adLevelService";
+import { useTheme } from "next-themes";
 
 // Country list with flags
 const COUNTRIES = [
@@ -82,30 +83,34 @@ const mockConfig: CpcRatesConfig = {
   ],
 };
 
-// Level color schemes
-const LEVEL_COLORS = [
+// Level color schemes - computed based on theme
+const getLevelColors = (isDark: boolean) => [
   {
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
-    text: "text-emerald-600",
+    bg: isDark ? "bg-emerald-500/10" : "bg-emerald-50",
+    border: isDark ? "border-emerald-500/30" : "border-emerald-200",
+    text: isDark ? "text-emerald-400" : "text-emerald-600",
+    labelBg: isDark ? "bg-emerald-500/20" : "bg-emerald-100",
     label: "Low",
   },
   {
-    bg: "bg-blue-50",
-    border: "border-blue-200",
-    text: "text-blue-600",
+    bg: isDark ? "bg-blue-500/10" : "bg-blue-50",
+    border: isDark ? "border-blue-500/30" : "border-blue-200",
+    text: isDark ? "text-blue-400" : "text-blue-600",
+    labelBg: isDark ? "bg-blue-500/20" : "bg-blue-100",
     label: "Medium",
   },
   {
-    bg: "bg-orange-50",
-    border: "border-orange-200",
-    text: "text-orange-600",
+    bg: isDark ? "bg-orange-500/10" : "bg-orange-50",
+    border: isDark ? "border-orange-500/30" : "border-orange-200",
+    text: isDark ? "text-orange-400" : "text-orange-600",
+    labelBg: isDark ? "bg-orange-500/20" : "bg-orange-100",
     label: "High",
   },
   {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    text: "text-red-600",
+    bg: isDark ? "bg-red-500/10" : "bg-red-50",
+    border: isDark ? "border-red-500/30" : "border-red-200",
+    text: isDark ? "text-red-400" : "text-red-600",
+    labelBg: isDark ? "bg-red-500/20" : "bg-red-100",
     label: "Extreme",
   },
 ];
@@ -114,8 +119,23 @@ export default function CpcRatesSettings() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const [defaultRates, setDefaultRates] = useState(mockConfig.defaultRates);
   const [countryRates, setCountryRates] = useState<CountryRate[]>([]);
+
+  // Track initial state for hasChanges comparison
+  const [initialRates, setInitialRates] = useState(mockConfig.defaultRates);
+  const [initialCountryRates, setInitialCountryRates] = useState<CountryRate[]>(
+    []
+  );
 
   const [showAddCountry, setShowAddCountry] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -130,6 +150,42 @@ export default function CpcRatesSettings() {
   const [deletingCountry, setDeletingCountry] = useState<CountryRate | null>(
     null
   );
+
+  // Check if there are unsaved changes
+  const hasChanges = (): boolean => {
+    // Compare default rates
+    if (
+      defaultRates.level1 !== initialRates.level1 ||
+      defaultRates.level2 !== initialRates.level2 ||
+      defaultRates.level3 !== initialRates.level3 ||
+      defaultRates.level4 !== initialRates.level4
+    ) {
+      return true;
+    }
+
+    // Compare country rates count
+    if (countryRates.length !== initialCountryRates.length) {
+      return true;
+    }
+
+    // Compare each country rate
+    for (const cr of countryRates) {
+      const initial = initialCountryRates.find(
+        (icr) => icr.countryCode === cr.countryCode
+      );
+      if (!initial) return true; // New country added
+      if (
+        cr.level1Rate !== initial.level1Rate ||
+        cr.level2Rate !== initial.level2Rate ||
+        cr.level3Rate !== initial.level3Rate ||
+        cr.level4Rate !== initial.level4Rate
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -155,6 +211,15 @@ export default function CpcRatesSettings() {
           };
         });
         setCountryRates(mappedCountryRates);
+
+        // Store initial state for hasChanges comparison
+        setInitialRates({
+          level1: data.defaultRates.level_1,
+          level2: data.defaultRates.level_2,
+          level3: data.defaultRates.level_3,
+          level4: data.defaultRates.level_4,
+        });
+        setInitialCountryRates(mappedCountryRates);
       } catch (error) {
         console.error("Failed to load CPC rates:", error);
         setToastMessage("Failed to load CPC rates");
@@ -190,6 +255,11 @@ export default function CpcRatesSettings() {
           },
         })),
       });
+
+      // Update initial state so hasChanges() returns false
+      setInitialRates({ ...defaultRates });
+      setInitialCountryRates([...countryRates]);
+
       setToastMessage("CPC rates saved successfully!");
       setToastType("success");
       setShowToast(true);
@@ -262,11 +332,11 @@ export default function CpcRatesSettings() {
     );
   };
 
-  const formatCPM = (cpc: number) => `$${(cpc * 1000).toFixed(2)}`;
+  const formatCPM = (cpc: number) => `$${(cpc * 1000).toFixed(5)}`;
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+      <div className="bg-card rounded-3xl p-8 shadow-sm shadow-shd-card/50">
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-10 h-10 animate-spin text-bluelight" />
         </div>
@@ -278,7 +348,7 @@ export default function CpcRatesSettings() {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
+      className="bg-card rounded-3xl shadow-sm shadow-shd-card/50 overflow-hidden"
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-bluelight to-blue-600 p-6 text-white">
@@ -297,9 +367,9 @@ export default function CpcRatesSettings() {
 
       <div className="p-6 space-y-8">
         {/* Info Banner */}
-        <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+        <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/30">
           <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-          <div className="text-[1.2em] text-gray-600">
+          <div className="text-[1.2em] text-grays">
             <span className="font-semibold text-blue-600">CPC</span> (Cost Per
             Click) is what you set.{" "}
             <span className="font-semibold text-blue-600">CPM</span> (CPC ×
@@ -310,11 +380,28 @@ export default function CpcRatesSettings() {
         {/* Default Rates Section */}
         <div>
           <div className="flex items-center gap-2 mb-5">
-            <Globe className="w-5 h-5 text-gray-500" />
-            <h3 className="text-[1.6em] font-bold text-shortblack">
+            <Globe
+              className={clsx(
+                "w-5 h-5",
+                isDark ? "text-gray-400" : "text-gray-500"
+              )}
+            />
+            <h3
+              className={clsx(
+                "text-[1.6em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               Default Rates
             </h3>
-            <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-[1em] rounded-full font-medium">
+            <span
+              className={clsx(
+                "px-2 py-0.5 text-[1em] rounded-full font-medium",
+                isDark
+                  ? "bg-gray-700 text-gray-400"
+                  : "bg-gray-100 text-gray-500"
+              )}
+            >
               Global
             </span>
           </div>
@@ -322,7 +409,8 @@ export default function CpcRatesSettings() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((level) => {
               const key = `level${level}` as keyof typeof defaultRates;
-              const color = LEVEL_COLORS[level - 1];
+              const levelColors = getLevelColors(isDark);
+              const color = levelColors[level - 1];
               return (
                 <motion.div
                   key={level}
@@ -341,7 +429,8 @@ export default function CpcRatesSettings() {
                     </span>
                     <span
                       className={clsx(
-                        "text-[1em] px-2 py-0.5 rounded-full bg-white/60",
+                        "text-[1em] px-2 py-0.5 rounded-full",
+                        color.labelBg,
                         color.text
                       )}
                     >
@@ -362,7 +451,12 @@ export default function CpcRatesSettings() {
                           [key]: parseFloat(e.target.value) || 0,
                         })
                       }
-                      className="w-full pl-7 pr-3 py-3 rounded-xl bg-white border border-gray-200 focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none text-[1.4em] font-semibold text-shortblack"
+                      className={clsx(
+                        "w-full pl-7 pr-3 py-3 rounded-xl bg-card border focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none text-[1.4em] font-semibold",
+                        isDark
+                          ? "border-gray-700 text-white"
+                          : "border-gray-200 text-shortblack"
+                      )}
                     />
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -381,11 +475,23 @@ export default function CpcRatesSettings() {
         <div>
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <h3 className="text-[1.6em] font-bold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.6em] font-bold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Country Overrides
               </h3>
               {countryRates.length > 0 && (
-                <span className="px-2.5 py-1 bg-purple-100 text-purple-600 text-[1.1em] rounded-full font-semibold">
+                <span
+                  className={clsx(
+                    "px-2.5 py-1 text-[1.1em] rounded-full font-semibold",
+                    isDark
+                      ? "bg-purple-500/20 text-purple-400"
+                      : "bg-purple-100 text-purple-600"
+                  )}
+                >
                   {countryRates.length}
                 </span>
               )}
@@ -395,7 +501,9 @@ export default function CpcRatesSettings() {
               className={clsx(
                 "flex items-center gap-2 px-5 py-2.5 rounded-xl text-[1.3em] font-semibold transition-all",
                 showAddCountry
-                  ? "bg-gray-100 text-gray-600"
+                  ? isDark
+                    ? "bg-gray-700 text-gray-300"
+                    : "bg-gray-100 text-gray-600"
                   : "bg-bluelight text-white hover:bg-opacity-90 shadow-lg shadow-blue-500/20"
               )}
             >
@@ -418,15 +526,32 @@ export default function CpcRatesSettings() {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="mb-5 p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
-                  <label className="block text-[1.2em] font-semibold text-shortblack mb-3">
+                <div
+                  className={clsx(
+                    "mb-5 p-5 rounded-2xl border",
+                    isDark
+                      ? "bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/30"
+                      : "bg-gradient-to-r from-purple-50 to-pink-50 border-purple-100"
+                  )}
+                >
+                  <label
+                    className={clsx(
+                      "block text-[1.2em] font-semibold mb-3",
+                      isDark ? "text-white" : "text-shortblack"
+                    )}
+                  >
                     Select a country to add custom rates
                   </label>
                   <div className="flex flex-wrap gap-3">
                     <select
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
-                      className="flex-1 min-w-[200px] px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-bluelight outline-none text-[1.3em]"
+                      className={clsx(
+                        "flex-1 min-w-[200px] px-4 py-3 rounded-xl border bg-card focus:border-bluelight outline-none text-[1.3em]",
+                        isDark
+                          ? "border-gray-700 text-white"
+                          : "border-gray-200 text-shortblack"
+                      )}
                     >
                       <option value="">Choose a country...</option>
                       {COUNTRIES.filter(
@@ -453,12 +578,27 @@ export default function CpcRatesSettings() {
 
           {/* Country Rate Cards */}
           {countryRates.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              <Globe className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <div
+              className={clsx(
+                "text-center py-12 bg-subcard rounded-2xl border-2 border-dashed",
+                isDark ? "border-gray-700" : "border-gray-200"
+              )}
+            >
+              <Globe
+                className={clsx(
+                  "w-12 h-12 mx-auto mb-3",
+                  isDark ? "text-gray-600" : "text-gray-300"
+                )}
+              />
               <p className="text-[1.4em] text-gray-400 font-medium">
                 No country overrides yet
               </p>
-              <p className="text-[1.2em] text-gray-300 mt-1">
+              <p
+                className={clsx(
+                  "text-[1.2em] mt-1",
+                  isDark ? "text-gray-600" : "text-gray-300"
+                )}
+              >
                 All countries use default rates
               </p>
             </div>
@@ -470,11 +610,19 @@ export default function CpcRatesSettings() {
                   <motion.div
                     key={country.countryCode}
                     layout
-                    className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl border border-gray-100 overflow-hidden"
+                    className={clsx(
+                      "rounded-2xl border overflow-hidden",
+                      isDark
+                        ? "bg-gradient-to-r from-gray-800/50 to-slate-800/50 border-gray-700"
+                        : "bg-gradient-to-r from-gray-50 to-slate-50 border-gray-100"
+                    )}
                   >
                     {/* Country Header */}
                     <div
-                      className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-100/50 transition-all"
+                      className={clsx(
+                        "flex items-center justify-between p-4 cursor-pointer transition-all",
+                        isDark ? "hover:bg-gray-700/50" : "hover:bg-gray-100/50"
+                      )}
                       onClick={() =>
                         setExpandedCountry(
                           isExpanded ? null : country.countryCode
@@ -483,7 +631,12 @@ export default function CpcRatesSettings() {
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{country.flag}</span>
-                        <span className="text-[1.4em] font-bold text-shortblack">
+                        <span
+                          className={clsx(
+                            "text-[1.4em] font-bold",
+                            isDark ? "text-white" : "text-shortblack"
+                          )}
+                        >
                           {country.countryName}
                         </span>
                       </div>
@@ -493,7 +646,10 @@ export default function CpcRatesSettings() {
                             e.stopPropagation();
                             handleDeleteClick(country);
                           }}
-                          className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                          className={clsx(
+                            "p-2 text-red-400 hover:text-red-600 rounded-lg transition-all",
+                            isDark ? "hover:bg-red-500/10" : "hover:bg-red-50"
+                          )}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -524,7 +680,8 @@ export default function CpcRatesSettings() {
                                 "level4Rate",
                               ] as const
                             ).map((levelKey, idx) => {
-                              const color = LEVEL_COLORS[idx];
+                              const countryLevelColors = getLevelColors(isDark);
+                              const color = countryLevelColors[idx];
                               return (
                                 <div
                                   key={levelKey}
@@ -557,7 +714,12 @@ export default function CpcRatesSettings() {
                                           parseFloat(e.target.value) || 0
                                         )
                                       }
-                                      className="w-full pl-7 pr-3 py-2.5 rounded-lg bg-white border border-gray-200 focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none text-[1.2em] font-semibold"
+                                      className={clsx(
+                                        "w-full pl-7 pr-3 py-2.5 rounded-lg bg-card border focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none text-[1.2em] font-semibold",
+                                        isDark
+                                          ? "border-gray-700 text-white"
+                                          : "border-gray-200 text-shortblack"
+                                      )}
                                     />
                                   </div>
                                   <span className="text-[1em] text-bluelight font-medium">
@@ -579,11 +741,14 @@ export default function CpcRatesSettings() {
       </div>
 
       {/* Sticky Save Button */}
-      <div className="sticky bottom-0 p-6 bg-white border-t border-gray-100 shadow-lg shadow-gray-200/50">
+      <div className={clsx(
+        "sticky bottom-0 p-6 bg-card border-t shadow-lg",
+        isDark ? "border-gray-800 shadow-none" : "border-gray-100 shadow-gray-200/50"
+      )}>
         <div className="flex justify-end">
           <button
             onClick={handleSaveClick}
-            disabled={isSaving}
+            disabled={isSaving || !hasChanges()}
             className="flex items-center gap-2 px-8 py-3.5 bg-bluelight text-white text-[1.4em] font-bold rounded-2xl 
                        hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-0.5 transition-all duration-300
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"

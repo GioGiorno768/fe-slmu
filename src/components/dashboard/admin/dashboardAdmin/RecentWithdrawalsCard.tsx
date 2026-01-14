@@ -16,6 +16,7 @@ import type { RecentWithdrawal } from "@/types/type";
 import { Link, useRouter } from "@/i18n/routing";
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 
 interface RecentWithdrawalsCardProps {
   withdrawals: RecentWithdrawal[];
@@ -37,6 +38,14 @@ export default function RecentWithdrawalsCard({
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -98,7 +107,12 @@ export default function RecentWithdrawalsCard({
 
   if (isLoading) {
     return (
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 h-[400px] animate-pulse" />
+      <div
+        className={clsx(
+          "p-8 rounded-3xl border h-[400px] animate-pulse",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      />
     );
   }
 
@@ -107,7 +121,10 @@ export default function RecentWithdrawalsCard({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm relative flex flex-col h-full text-[10px]"
+      className={clsx(
+        "p-6 md:p-8 rounded-3xl border shadow-sm relative flex flex-col h-full text-[10px]",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
     >
       <div className="flex items-center justify-between mb-6 shrink-0">
         <h3 className="text-[2em] md:text-[2em] font-bold text-shortblack">
@@ -124,7 +141,10 @@ export default function RecentWithdrawalsCard({
 
       <div
         onWheel={(e) => e.stopPropagation()}
-        className="space-y-3 overflow-y-auto pr-2 h-[400px] scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent"
+        className={clsx(
+          "space-y-3 overflow-y-auto pr-2 h-[400px] scrollbar-thin scrollbar-track-transparent",
+          isDark ? "scrollbar-thumb-gray-700" : "scrollbar-thumb-gray-200"
+        )}
       >
         {displayedWithdrawals.length === 0 ? (
           <p className="text-center text-grays py-8 text-[1.4em]">
@@ -135,7 +155,12 @@ export default function RecentWithdrawalsCard({
             <div
               key={wd.id}
               onClick={() => router.push(`/admin/withdrawals?id=${wd.id}`)}
-              className="flex items-center justify-between p-3 md:p-4 rounded-2xl hover:bg-gray-50 transition-colors group cursor-pointer border border-transparent hover:border-gray-100 relative"
+              className={clsx(
+                "flex items-center justify-between p-3 md:p-4 rounded-2xl transition-colors group cursor-pointer border border-transparent",
+                isDark
+                  ? "hover:bg-subcard hover:border-gray-800"
+                  : "hover:bg-gray-50 hover:border-gray-100"
+              )}
             >
               <div className="flex items-center gap-3 md:gap-4 min-w-0">
                 {/* Avatar with fallback */}
@@ -211,9 +236,9 @@ export default function RecentWithdrawalsCard({
                       {wd.status}
                     </span>
                   </div>
-                  {wd.processed_by && (
+                  {wd.processedByName && (
                     <span className="text-[1em] text-grays mt-0.5 hidden sm:inline-block">
-                      {t("by")} {wd.processed_by}
+                      {t("by")} {wd.processedByName}
                     </span>
                   )}
                 </div>
@@ -225,7 +250,12 @@ export default function RecentWithdrawalsCard({
 
       <Link
         href="/admin/withdrawals"
-        className="w-full mt-4 py-3 text-[1.4em] md:text-[1.6em] font-medium text-grays hover:text-bluelight hover:bg-blue-50 rounded-xl transition-all flex items-center justify-center gap-2 shrink-0"
+        className={clsx(
+          "w-full mt-4 py-3 text-[1.4em] md:text-[1.6em] font-medium rounded-xl transition-all flex items-center justify-center gap-2 shrink-0",
+          isDark
+            ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+            : "text-grays hover:text-bluelight hover:bg-blue-50"
+        )}
       >
         <span>{t("viewAll")}</span>
         <ArrowUpRight className="w-4 h-4" />

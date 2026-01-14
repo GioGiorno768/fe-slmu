@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f8fafc;
   --foreground: #171717;
   --shortblack: #25253f;
   --bluelight: #350e8f;
@@ -10,7 +10,7 @@
   --grays: #7c7c85;
   --gray-text: #979797;
   --gray-dashboard: #d1d1d1;
-  --card: #f3f7ff;
+  --card: #ffff;
   --yellowlink: #dca500;
   --purplelink: #ea20cf;
   --bluetitle: #ddebff;
@@ -22,6 +22,48 @@
   --lightred-dashboard: #ffe7f3;
   --darkpurple-dashboard: #9e30d5;
   --lightpurple-dashboard: #f6deff;
+  --blue-background-gradient: #f5f8ff;
+  --purple-background-gradient: #f5f8ff;
+  --tx-blue-dashboard: #350e8f;
+  --shd-card: #62748e;
+  --subcard: #f5f8ff;
+  --lazyload: #f1f5f9;
+}
+
+/* Deep Purple Dark Mode Theme */
+.dark {
+  --background: #10052c; /* Matches Member Sidebar */
+  --foreground: #f8fafc;
+
+  /* Container/Card Backgrounds */
+  --card: #1c133a; /* Slightly lighter than background for depth */
+  --subcard: #271a47;
+
+  /* Text Colors */
+  --shortblack: #ffffff; /* Invert text to white */
+  --grays: #90a1b9; /* Slate-400 for muted text */
+  --gray-text: #cbd5e1;
+
+  /* Dashboard Accents */
+  --blue-dashboard: #1e1b4b; /* Deep indigo for what was pale blue */
+  --lightgreen-dashboard: #064e3b; /* Dark emerald */
+  --lightred-dashboard: #450a0a; /* Dark red */
+  --lightpurple-dashboard: #3b0764; /* Dark purple */
+  --gray-dashboard: #4e4b73;
+
+  --bluelight: #8146ee;
+  --blue-background-gradient: #155dfc;
+  --purple-background-gradient: #9810fa;
+
+  --tx-blue-dashboard: #ffffff;
+
+  /* shadow */
+  --shd-card: #62638e;
+
+  /* lazyload */
+  --lazyload: #45556c;
+
+  --blues: #150f36; /* Subtle background alternation */
 }
 
 @theme inline {
@@ -46,6 +88,12 @@
   --color-lightred-dashboard: var(--lightred-dashboard);
   --color-darkpurple-dashboard: var(--darkpurple-dashboard);
   --color-lightpurple-dashboard: var(--lightpurple-dashboard);
+  --color-blue-background-gradient: var(--blue-background-gradient);
+  --color-purple-background-gradient: var(--purple-background-gradient);
+  --color-tx-blue-dashboard: var(--tx-blue-dashboard);
+  --color-lazyload: var(--lazyload);
+  --color-shd-card: var(--shd-card);
+  --color-subcard: var(--subcard);
   --font-figtree: "Figtree", sans-serif;
   /* --font-geist: "Geist", sans-serif; */
   --font-manrope: "Manrope", sans-serif;
@@ -321,7 +369,6 @@ body {
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
-
 
 /* Telegram */
 .iconoir--telegram {

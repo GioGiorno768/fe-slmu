@@ -6,9 +6,20 @@ import { motion } from "motion/react";
 import { Timer, Loader2, Check, Info } from "lucide-react";
 import { useLinkSettings } from "@/hooks/useLinkSettings";
 import Toast from "@/components/common/Toast";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 export default function TokenSettings() {
   const { settings, isLoading, updateSettings, isUpdating } = useLinkSettings();
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Local form state - use string to allow empty input while typing
   const [minWaitSeconds, setMinWaitSeconds] = useState<number | string>(
@@ -96,7 +107,12 @@ export default function TokenSettings() {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+      <div
+        className={clsx(
+          "rounded-3xl p-6 shadow-sm border",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      >
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-bluelight" />
         </div>
@@ -108,28 +124,78 @@ export default function TokenSettings() {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100"
+      className={clsx(
+        "rounded-3xl p-6 shadow-sm border",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
     >
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-        <div className="p-3 bg-orange-100 rounded-2xl">
-          <Timer className="w-6 h-6 text-orange-600" />
+      <div
+        className={clsx(
+          "flex items-center gap-4 mb-6 pb-4 border-b",
+          isDark ? "border-gray-700" : "border-gray-100"
+        )}
+      >
+        <div
+          className={clsx(
+            "p-3 rounded-2xl",
+            isDark ? "bg-orange-500/20" : "bg-orange-100"
+          )}
+        >
+          <Timer
+            className={clsx(
+              "w-6 h-6",
+              isDark ? "text-orange-400" : "text-orange-600"
+            )}
+          />
         </div>
         <div>
-          <h2 className="text-[1.8em] font-bold text-shortblack">
+          <h2
+            className={clsx(
+              "text-[1.8em] font-bold",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             Pengaturan Token
           </h2>
-          <p className="text-[1.2em] text-grays">
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
             Atur durasi tunggu dan expiry token shortlink
           </p>
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className="bg-orange-50 rounded-2xl p-4 mb-6 flex gap-3">
-        <Info className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
-        <div className="text-[1.2em] text-gray-600">
-          <p className="font-medium text-shortblack mb-1">Keterangan:</p>
+      <div
+        className={clsx(
+          "rounded-2xl p-4 mb-6 flex gap-3",
+          isDark ? "bg-orange-500/10" : "bg-orange-50"
+        )}
+      >
+        <Info
+          className={clsx(
+            "w-5 h-5 shrink-0 mt-0.5",
+            isDark ? "text-orange-400" : "text-orange-500"
+          )}
+        />
+        <div
+          className={clsx(
+            "text-[1.2em]",
+            isDark ? "text-gray-300" : "text-gray-600"
+          )}
+        >
+          <p
+            className={clsx(
+              "font-medium mb-1",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
+            Keterangan:
+          </p>
           <ul className="list-disc ml-4 space-y-1">
             <li>
               <strong>Min Wait Time:</strong> Waktu minimum visitor harus
@@ -154,13 +220,28 @@ export default function TokenSettings() {
       {/* Settings Form */}
       <div className="space-y-6">
         {/* Min Wait Seconds */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Waktu Tunggu Minimum
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Visitor harus menunggu sekian detik sebelum bisa continue (1-60)
               </p>
             </div>
@@ -182,21 +263,48 @@ export default function TokenSettings() {
                   );
                   setMinWaitSeconds(value);
                 }}
-                className="w-20 text-[1.6em] font-bold text-center text-bluelight bg-white border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-bluelight"
+                className={clsx(
+                  "w-20 text-[1.6em] font-bold text-center text-bluelight border-2 rounded-xl py-2 focus:outline-none focus:border-bluelight",
+                  isDark
+                    ? "bg-card border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
               />
-              <span className="text-[1.4em] font-medium text-grays">detik</span>
+              <span
+                className={clsx(
+                  "text-[1.4em] font-medium",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                detik
+              </span>
             </div>
           </div>
         </div>
 
         {/* Expiry Seconds */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Token Expiry
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Token akan expired setelah durasi ini (1-10 menit)
               </p>
             </div>
@@ -222,21 +330,48 @@ export default function TokenSettings() {
                   );
                   setExpirySeconds(value * 60);
                 }}
-                className="w-20 text-[1.6em] font-bold text-center text-bluelight bg-white border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-bluelight"
+                className={clsx(
+                  "w-20 text-[1.6em] font-bold text-center text-bluelight border-2 rounded-xl py-2 focus:outline-none focus:border-bluelight",
+                  isDark
+                    ? "bg-card border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
               />
-              <span className="text-[1.4em] font-medium text-grays">menit</span>
+              <span
+                className={clsx(
+                  "text-[1.4em] font-medium",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                menit
+              </span>
             </div>
           </div>
         </div>
 
         {/* Mass Link Limit */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Mass Link Limit
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Jumlah maksimal URL yang bisa dibuat sekaligus (1-100)
               </p>
             </div>
@@ -257,19 +392,37 @@ export default function TokenSettings() {
                 );
                 setMassLinkLimit(value);
               }}
-              className="w-24 text-[1.6em] font-bold text-center text-bluelight bg-white border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-bluelight"
+              className={clsx(
+                "w-24 text-[1.6em] font-bold text-center text-bluelight border-2 rounded-xl py-2 focus:outline-none focus:border-bluelight",
+                isDark ? "bg-card border-gray-700" : "bg-white border-gray-200"
+              )}
             />
           </div>
         </div>
 
         {/* Guest Link Limit */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Guest Link Limit
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Limit link untuk guest yang belum login (0 = disabled)
               </p>
             </div>
@@ -291,9 +444,19 @@ export default function TokenSettings() {
                   );
                   setGuestLinkLimit(value);
                 }}
-                className="w-16 text-[1.6em] font-bold text-center text-bluelight bg-white border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-bluelight"
+                className={clsx(
+                  "w-16 text-[1.6em] font-bold text-center text-bluelight border-2 rounded-xl py-2 focus:outline-none focus:border-bluelight",
+                  isDark
+                    ? "bg-card border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
               />
-              <span className="text-[1.3em] font-medium text-grays">
+              <span
+                className={clsx(
+                  "text-[1.3em] font-medium",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 link per
               </span>
               <input
@@ -313,9 +476,21 @@ export default function TokenSettings() {
                   );
                   setGuestLinkLimitDays(value);
                 }}
-                className="w-16 text-[1.6em] font-bold text-center text-bluelight bg-white border-2 border-gray-200 rounded-xl py-2 focus:outline-none focus:border-bluelight"
+                className={clsx(
+                  "w-16 text-[1.6em] font-bold text-center text-bluelight border-2 rounded-xl py-2 focus:outline-none focus:border-bluelight",
+                  isDark
+                    ? "bg-card border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
               />
-              <span className="text-[1.3em] font-medium text-grays">hari</span>
+              <span
+                className={clsx(
+                  "text-[1.3em] font-medium",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                hari
+              </span>
             </div>
           </div>
         </div>

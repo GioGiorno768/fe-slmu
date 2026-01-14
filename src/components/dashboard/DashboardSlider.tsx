@@ -102,7 +102,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
   // Safety check kalau data belum masuk / kosong
   if (!slides || slides.length === 0) {
     return (
-      <div className="h-full min-h-[180px] bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-center">
+      <div className="h-full min-h-[180px] bg-background p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-bluelight" />
       </div>
     );
@@ -113,7 +113,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
   const Icon = currentSlide.icon;
 
   return (
-    <div className="relative h-full min-h-[250px] rounded-3xl overflow-hidden shadow-lg group bg-white">
+    <div className="relative h-full min-h-[250px] rounded-3xl overflow-hidden shadow-lg group bg-background">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
         <motion.div
           key={currentSlide.id} // Pake ID dari data

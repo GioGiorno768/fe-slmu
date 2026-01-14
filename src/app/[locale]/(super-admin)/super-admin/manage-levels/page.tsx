@@ -1,11 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Plus, Loader2, Shield } from "lucide-react";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import GlobalAlert from "@/components/dashboard/GlobalAlert";
 import { useManageLevels } from "@/hooks/useManageLevels";
 import UserLevelCard from "@/components/dashboard/super-admin/UserLevelCard";
 import LevelFormModal from "@/components/dashboard/super-admin/LevelFormModal";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 export default function ManageLevelsPage() {
   const {
@@ -41,6 +44,15 @@ export default function ManageLevelsPage() {
     updateFormField,
   } = useManageLevels();
 
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Loading state
   if (isLoading) {
     return (
@@ -55,10 +67,20 @@ export default function ManageLevelsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-[2.8em] font-bold text-shortblack">
+          <h1
+            className={clsx(
+              "text-[2.8em] font-bold",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             Manage User Levels
           </h1>
-          <p className="text-[1.4em] text-grays mt-1">
+          <p
+            className={clsx(
+              "text-[1.4em] mt-1",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
             Configure progression levels, CPM bonuses, and benefits for users
           </p>
         </div>
@@ -73,40 +95,123 @@ export default function ManageLevelsPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center">
+        <div
+          className={clsx(
+            "rounded-2xl border p-5 text-center",
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+          )}
+        >
           <p className="text-[2.4em] font-bold text-bluelight">
             {stats.totalLevels}
           </p>
-          <p className="text-[1.2em] text-grays">Total Levels</p>
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
+            Total Levels
+          </p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center">
-          <p className="text-[2.4em] font-bold text-green-600">
+        <div
+          className={clsx(
+            "rounded-2xl border p-5 text-center",
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+          )}
+        >
+          <p
+            className={clsx(
+              "text-[2.4em] font-bold",
+              isDark ? "text-green-400" : "text-green-600"
+            )}
+          >
             {stats.maxCpmBonus}%
           </p>
-          <p className="text-[1.2em] text-grays">Max CPM Bonus</p>
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
+            Max CPM Bonus
+          </p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center">
-          <p className="text-[2.4em] font-bold text-purple-600">
+        <div
+          className={clsx(
+            "rounded-2xl border p-5 text-center",
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+          )}
+        >
+          <p
+            className={clsx(
+              "text-[2.4em] font-bold",
+              isDark ? "text-purple-400" : "text-purple-600"
+            )}
+          >
             ${stats.maxThreshold}
           </p>
-          <p className="text-[1.2em] text-grays">Max Threshold</p>
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
+            Max Threshold
+          </p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center">
-          <p className="text-[2.4em] font-bold text-orange-600">
+        <div
+          className={clsx(
+            "rounded-2xl border p-5 text-center",
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+          )}
+        >
+          <p
+            className={clsx(
+              "text-[2.4em] font-bold",
+              isDark ? "text-orange-400" : "text-orange-600"
+            )}
+          >
             {stats.totalBenefits}
           </p>
-          <p className="text-[1.2em] text-grays">Total Benefits</p>
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
+            Total Benefits
+          </p>
         </div>
       </div>
 
       {/* Levels Grid */}
       {levels.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-          <Shield className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-          <h3 className="text-[2em] font-bold text-shortblack mb-2">
+        <div
+          className={clsx(
+            "text-center py-16 rounded-2xl border",
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+          )}
+        >
+          <Shield
+            className={clsx(
+              "w-16 h-16 mx-auto mb-4",
+              isDark ? "text-gray-600" : "text-gray-300"
+            )}
+          />
+          <h3
+            className={clsx(
+              "text-[2em] font-bold mb-2",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             No Levels Yet
           </h3>
-          <p className="text-[1.4em] text-grays mb-4">
+          <p
+            className={clsx(
+              "text-[1.4em] mb-4",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
             Create your first level to get started
           </p>
           <button

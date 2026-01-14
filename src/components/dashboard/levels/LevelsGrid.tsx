@@ -46,9 +46,9 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
     <div className="mt-10">
       {/* Section Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full mb-4">
-          <Sparkles className="w-4 h-4 text-indigo-600" />
-          <span className="text-[1.2em] font-semibold text-indigo-600">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/20 rounded-full mb-4">
+          <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+          <span className="text-[1.2em] font-semibold text-indigo-600 dark:text-indigo-400">
             All Levels
           </span>
         </div>
@@ -77,10 +77,10 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 "relative rounded-3xl p-7 border-2 transition-all duration-200",
                 "hover:shadow-lg hover:-translate-y-1",
                 isCurrent
-                  ? "bg-white border-bluelight shadow-[0_4px_24px_rgba(59,130,246,0.2)]"
+                  ? "bg-card border-bluelight shadow-[0_4px_24px_rgba(59,130,246,0.2)]"
                   : isUnlocked
-                  ? "bg-white border-gray-200 shadow-md"
-                  : "bg-gray-50/50 border-gray-200/50 shadow-sm"
+                  ? "bg-card border-gray-200 dark:border-gray-dashboard/30 shadow-md"
+                  : "bg-subcard border-gray-200/50 dark:border-gray-dashboard/20 shadow-sm"
               )}
             >
               {/* Current Level Badge */}
@@ -96,7 +96,7 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
               {/* Lock Icon */}
               {!isUnlocked && (
                 <div className="absolute top-4 right-4">
-                  <div className="p-2 bg-gray-100 rounded-full">
+                  <div className="p-2 bg-gray-100 dark:bg-gray-dashboard/30 rounded-full">
                     <Lock className="w-4 h-4 text-gray-400" />
                   </div>
                 </div>
@@ -107,7 +107,9 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 <div
                   className={clsx(
                     "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 shadow-lg",
-                    isUnlocked ? level.bgColor : "bg-gray-100"
+                    isUnlocked
+                      ? level.bgColor
+                      : "bg-gray-100 dark:bg-gray-dashboard/30"
                   )}
                 >
                   <Icon
@@ -145,8 +147,8 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 className={clsx(
                   "rounded-2xl p-4 text-center mb-5 border",
                   isUnlocked
-                    ? "bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200"
-                    : "bg-gray-100/50 border-gray-200/50"
+                    ? "bg-gradient-to-br from-slate-50 to-slate-100 dark:from-subcard dark:to-subcard border-slate-200 dark:border-gray-dashboard/30"
+                    : "bg-gray-100/50 dark:bg-gray-dashboard/20 border-gray-200/50 dark:border-gray-dashboard/20"
                 )}
               >
                 <p
@@ -175,8 +177,8 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                       className={clsx(
                         "p-1 rounded-full shrink-0 mt-0.5",
                         isUnlocked
-                          ? "bg-green-100 text-green-600"
-                          : "bg-gray-200 text-gray-400"
+                          ? "bg-green-500/20 text-green-500 dark:text-green-400"
+                          : "bg-gray-200 dark:bg-gray-dashboard/30 text-gray-400"
                       )}
                     >
                       <Check className="w-3 h-3" strokeWidth={3} />

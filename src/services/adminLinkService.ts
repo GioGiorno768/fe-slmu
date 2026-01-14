@@ -112,7 +112,7 @@ export async function getLinks(
     return {
       id: String(link.id),
       title: link.title || undefined,
-      shortUrl: `localhost:3000/${link.code}`,
+      shortUrl: link.short_url || `http://localhost:8000/${link.code}`,
       originalUrl: link.original_url,
       alias: link.alias || undefined,
       owner: {

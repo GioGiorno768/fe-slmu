@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useManageAdmins } from "@/hooks/useManageAdmins";
 import CreateAdminCard from "@/components/dashboard/super-admin/CreateAdminCard";
 import SharedStatsGrid from "@/components/dashboard/SharedStatsGrid";
@@ -9,6 +9,8 @@ import AdminListCard from "@/components/dashboard/super-admin/AdminListCard";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import Pagination from "@/components/dashboard/Pagination";
 import { Loader2, Users, UserCheck, Ban } from "lucide-react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 export default function ManageAdminsPage() {
   const {
@@ -42,6 +44,15 @@ export default function ManageAdminsPage() {
     name: string;
     currentStatus: "active" | "suspended";
   } | null>(null);
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   const handleDeleteClick = (id: string, name: string) => {
     setAdminToDelete({ id, name });
@@ -107,10 +118,17 @@ export default function ManageAdminsPage() {
     <div className="space-y-8 pb-10 text-[10px]">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold text-shortblack mb-2">
+        <h1
+          className={clsx(
+            "text-3xl font-bold mb-2",
+            isDark ? "text-white" : "text-shortblack"
+          )}
+        >
           Manage Admins
         </h1>
-        <p className="text-grays text-base">
+        <p
+          className={clsx("text-base", isDark ? "text-gray-400" : "text-grays")}
+        >
           Create and manage platform administrators
         </p>
       </div>
@@ -134,7 +152,12 @@ export default function ManageAdminsPage() {
       {/* Admin List */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-shortblack">
+          <h2
+            className={clsx(
+              "text-xl font-bold",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             Administrators ({admins.length})
           </h2>
         </div>
@@ -144,9 +167,26 @@ export default function ManageAdminsPage() {
             <Loader2 className="w-10 h-10 animate-spin text-bluelight" />
           </div>
         ) : admins.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-            <p className="text-grays text-lg">No admins found.</p>
-            <p className="text-grays text-sm mt-2">
+          <div
+            className={clsx(
+              "rounded-2xl border shadow-sm p-12 text-center",
+              isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            )}
+          >
+            <p
+              className={clsx(
+                "text-lg",
+                isDark ? "text-gray-400" : "text-grays"
+              )}
+            >
+              No admins found.
+            </p>
+            <p
+              className={clsx(
+                "text-sm mt-2",
+                isDark ? "text-gray-500" : "text-grays"
+              )}
+            >
               Try adjusting your filters or create a new admin.
             </p>
           </div>

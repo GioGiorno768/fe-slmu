@@ -39,71 +39,62 @@ export default function SharedStatsGrid({
   isLoading,
   columns = 4,
 }: SharedStatsGridProps) {
-  // Helper Styles (Sama kayak sebelumnya)
+  // Helper Styles (Updated for Dark Mode with alpha-transparent colors)
   const getStyles = (color: string) => {
     switch (color) {
       case "blue":
         return {
-          text: "text-blue-600",
-          bg: "bg-blue-50",
-          border: "border-blue-100",
-          iconBg: "bg-blue-100",
+          text: "text-blue-500 dark:text-blue-400",
+          iconBg: "bg-blue-500/20",
+          border: "border-blue-500/30",
         };
       case "green":
         return {
-          text: "text-green-600",
-          bg: "bg-green-50",
-          border: "border-green-100",
-          iconBg: "bg-green-100",
+          text: "text-green-500 dark:text-green-400",
+          iconBg: "bg-green-500/20",
+          border: "border-green-500/30",
         };
       case "red":
         return {
-          text: "text-red-600",
-          bg: "bg-red-50",
-          border: "border-red-100",
-          iconBg: "bg-red-100",
+          text: "text-red-500 dark:text-red-400",
+          iconBg: "bg-red-500/20",
+          border: "border-red-500/30",
         };
       case "orange":
         return {
-          text: "text-orange-600",
-          bg: "bg-orange-50",
-          border: "border-orange-100",
-          iconBg: "bg-orange-100",
+          text: "text-orange-500 dark:text-orange-400",
+          iconBg: "bg-orange-500/20",
+          border: "border-orange-500/30",
         };
       case "emerald":
         return {
-          text: "text-emerald-600",
-          bg: "bg-emerald-50",
-          border: "border-emerald-100",
-          iconBg: "bg-emerald-100",
+          text: "text-emerald-500 dark:text-emerald-400",
+          iconBg: "bg-emerald-500/20",
+          border: "border-emerald-500/30",
         };
       case "indigo":
         return {
-          text: "text-indigo-600",
-          bg: "bg-indigo-50",
-          border: "border-indigo-100",
-          iconBg: "bg-indigo-100",
+          text: "text-indigo-500 dark:text-indigo-400",
+          iconBg: "bg-indigo-500/20",
+          border: "border-indigo-500/30",
         };
       case "amber":
         return {
-          text: "text-amber-600",
-          bg: "bg-amber-50",
-          border: "border-amber-100",
-          iconBg: "bg-amber-100",
+          text: "text-amber-500 dark:text-amber-400",
+          iconBg: "bg-amber-500/20",
+          border: "border-amber-500/30",
         };
       case "purple":
         return {
-          text: "text-purple-600",
-          bg: "bg-purple-50",
-          border: "border-purple-100",
-          iconBg: "bg-purple-100",
+          text: "text-purple-500 dark:text-purple-400",
+          iconBg: "bg-purple-500/20",
+          border: "border-purple-500/30",
         };
       default:
         return {
-          text: "text-gray-600",
-          bg: "bg-gray-50",
-          border: "border-gray-100",
-          iconBg: "bg-gray-100",
+          text: "text-gray-500 dark:text-gray-400",
+          iconBg: "bg-gray-500/20",
+          border: "border-gray-500/30",
         };
     }
   };
@@ -122,7 +113,7 @@ export default function SharedStatsGrid({
         {Array.from({ length: columns }).map((_, i) => (
           <div
             key={i}
-            className="h-[160px] bg-white rounded-3xl shadow-sm border border-gray-100 flex items-center justify-center"
+            className="h-[160px] bg-card rounded-3xl shadow-sm border border-gray-dashboard/30 flex items-center justify-center"
           >
             <Loader2 className="w-10 h-10 text-bluelight/20 animate-spin" />
           </div>
@@ -144,8 +135,9 @@ export default function SharedStatsGrid({
         const style = getStyles(card.color);
         const isPositive = card.trend && card.trend > 0;
         const TrendIcon = isPositive ? TrendingUp : TrendingDown;
-        const trendColor = isPositive ? "text-emerald-600" : "text-red-500";
-        const trendBg = isPositive ? "bg-emerald-50" : "bg-red-50";
+        const trendColor = isPositive
+          ? "text-emerald-500 dark:text-emerald-400"
+          : "text-red-500 dark:text-red-400";
 
         return (
           <motion.div
@@ -154,7 +146,7 @@ export default function SharedStatsGrid({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
             className={clsx(
-              "group bg-white p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden border",
+              "group bg-card p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden border",
               style.border
             )}
           >
@@ -166,7 +158,7 @@ export default function SharedStatsGrid({
               {card.trend !== undefined ? (
                 <div
                   className={clsx(
-                    "flex items-center gap-1 px-2 py-0.5 rounded-lg text-[1.1em] font-bold bg-white shadow-sm shadow-slate-400/50",
+                    "flex items-center gap-1 px-2 py-0.5 rounded-lg text-[1.1em] font-bold bg-subcard shadow-sm",
                     trendColor
                   )}
                 >
@@ -196,7 +188,7 @@ export default function SharedStatsGrid({
 
               <div
                 className={clsx(
-                  "w-[4.5em] h-[4.5em] rounded-full flex justify-center items-center border-[1.5px] transition-transform duration-300 group-hover:scale-110 flex-shrink-0 bg-opacity-50",
+                  "w-[4.5em] h-[4.5em] rounded-full flex justify-center items-center border-[1.5px] transition-transform duration-300 group-hover:scale-110 shrink-0",
                   style.iconBg,
                   style.border
                 )}

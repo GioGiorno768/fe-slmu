@@ -1,7 +1,7 @@
 // src/components/dashboard/notifications/NotificationHistoryItem.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AlertTriangle,
   CheckCircle,
@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 import type { NotificationItem } from "@/types/type";
 
 interface NotificationHistoryItemProps {
@@ -26,6 +27,15 @@ export default function NotificationHistoryItem({
   onDelete,
   isDeleting = false,
 }: NotificationHistoryItemProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const [isHovered, setIsHovered] = useState(false);
 
   // Helper Icon
@@ -44,8 +54,20 @@ export default function NotificationHistoryItem({
     }
   };
 
-  // Helper Color
+  // Helper Color - with dark mode support
   const getBgColor = (type: string) => {
+    if (isDark) {
+      switch (type) {
+        case "warning":
+          return "bg-orange-500/20 border-orange-500/30";
+        case "success":
+          return "bg-green-500/20 border-green-500/30";
+        case "alert":
+          return "bg-red-500/20 border-red-500/30";
+        default:
+          return "bg-blue-500/20 border-blue-500/30";
+      }
+    }
     switch (type) {
       case "warning":
         return "bg-orange-100 border-orange-200";
@@ -59,6 +81,22 @@ export default function NotificationHistoryItem({
   };
 
   const getCategoryColor = (category: string) => {
+    if (isDark) {
+      switch (category) {
+        case "payment":
+          return "bg-green-500/20 text-green-400";
+        case "link":
+          return "bg-blue-500/20 text-blue-400";
+        case "account":
+          return "bg-purple-500/20 text-purple-400";
+        case "event":
+          return "bg-orange-500/20 text-orange-400";
+        case "system":
+          return "bg-gray-500/20 text-gray-400";
+        default:
+          return "bg-gray-500/20 text-gray-400";
+      }
+    }
     switch (category) {
       case "payment":
         return "bg-green-100 text-green-700";
@@ -90,7 +128,11 @@ export default function NotificationHistoryItem({
       className={clsx(
         "relative p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer group",
         item.isRead
-          ? "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md"
+          ? isDark
+            ? "bg-card border-gray-800 hover:border-gray-700 hover:shadow-md"
+            : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md"
+          : isDark
+          ? "bg-blue-500/10 border-blue-500/30 hover:border-blue-500/50 hover:shadow-md"
           : "bg-blue-50/50 border-blue-100 hover:border-blue-200 hover:shadow-md"
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -124,7 +166,12 @@ export default function NotificationHistoryItem({
                 <span className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
               )}
             </div>
-            <span className="text-[1.2em] font-mono text-grays bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap flex-shrink-0">
+            <span
+              className={clsx(
+                "text-[1.2em] font-mono text-grays px-2 py-1 rounded-md whitespace-nowrap flex-shrink-0",
+                isDark ? "bg-gray-800" : "bg-slate-100"
+              )}
+            >
               {formatTime(item.timestamp)}
             </span>
           </div>
@@ -144,7 +191,14 @@ export default function NotificationHistoryItem({
                 {item.category}
               </span>
               {item.isGlobal && (
-                <span className="text-[1em] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700 uppercase tracking-wide">
+                <span
+                  className={clsx(
+                    "text-[1em] font-bold px-2 py-0.5 rounded uppercase tracking-wide",
+                    isDark
+                      ? "bg-purple-500/20 text-purple-400"
+                      : "bg-purple-100 text-purple-700"
+                  )}
+                >
                   📌 Global
                 </span>
               )}
@@ -165,7 +219,11 @@ export default function NotificationHistoryItem({
               className={clsx(
                 "p-2 rounded-lg transition-colors flex-shrink-0",
                 isDeleting
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  ? isDark
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : isDark
+                  ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
                   : "bg-red-50 text-red-500 hover:bg-red-100"
               )}
             >

@@ -73,10 +73,10 @@ export default function LinkItem({
   return (
     <div
       className={clsx(
-        "bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden",
+        "bg-card rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden",
         link.status === "disabled"
-          ? "border-red-200 bg-red-50/30"
-          : "border-gray-100 hover:border-blue-200"
+          ? "border-red-500/30 dark:border-red-500/30"
+          : "border-gray-dashboard/30 hover:border-bluelight/30"
       )}
     >
       {/* HEADER SECTION */}
@@ -87,8 +87,8 @@ export default function LinkItem({
             className={clsx(
               "w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center shrink-0",
               link.status === "active"
-                ? "bg-blue-100 text-bluelight"
-                : "bg-red-100 text-red-500"
+                ? "bg-blue-500/20 text-bluelight"
+                : "bg-red-500/20 text-red-500"
             )}
           >
             <LinkIcon className="w-5 h-5 md:w-6 md:h-6" />
@@ -102,8 +102,8 @@ export default function LinkItem({
                 className={clsx(
                   "px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide shrink-0",
                   link.status === "active"
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600"
+                    ? "bg-green-500/20 text-green-500 dark:text-green-400"
+                    : "bg-red-500/20 text-red-500 dark:text-red-400"
                 )}
               >
                 {link.status}
@@ -120,7 +120,7 @@ export default function LinkItem({
               </a>
               <button
                 onClick={handleCopyLink}
-                className="p-1 rounded hover:bg-gray-100 text-grays hover:text-bluelight transition-colors shrink-0"
+                className="p-1 rounded hover:bg-subcard text-grays hover:text-bluelight transition-colors shrink-0"
                 title="Copy link"
               >
                 {copied ? (
@@ -137,7 +137,7 @@ export default function LinkItem({
         <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
           {/* Password Field (Compact) */}
           {link.passwordProtected && (
-            <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5">
+            <div className="flex items-center gap-1.5 bg-subcard border border-gray-dashboard/30 rounded-lg px-2 py-1.5">
               <Lock className="w-3.5 h-3.5 text-grays" />
               <input
                 type={showPassword ? "text" : "password"}
@@ -163,19 +163,19 @@ export default function LinkItem({
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-lg bg-gray-100 text-grays hover:bg-gray-200 hover:text-shortblack transition-colors"
+              className="p-2 rounded-lg bg-subcard text-grays hover:bg-blues hover:text-shortblack transition-colors"
             >
               <MoreHorizontal className="w-5 h-5" />
             </button>
 
             {isMenuOpen && (
-              <div className="absolute top-full right-0 mt-1 p-1.5 w-36 bg-white rounded-xl shadow-lg z-20 border border-gray-100">
+              <div className="absolute top-full right-0 mt-1 p-1.5 w-36 bg-card rounded-xl shadow-lg z-20 border border-gray-dashboard/30">
                 <button
                   onClick={() => {
                     onEdit(link.id);
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 w-full text-left text-sm px-3 py-2 rounded-lg text-shortblack hover:bg-blue-50 hover:text-bluelight transition-colors"
+                  className="flex items-center gap-2 w-full text-left text-sm px-3 py-2 rounded-lg text-shortblack hover:bg-subcard hover:text-bluelight transition-colors"
                 >
                   <Pencil className="w-4 h-4" />
                   <span>Edit</span>
@@ -188,8 +188,8 @@ export default function LinkItem({
                   className={clsx(
                     "flex items-center gap-2 w-full text-left text-sm px-3 py-2 rounded-lg transition-colors",
                     link.status === "active"
-                      ? "text-red-600 hover:bg-red-50"
-                      : "text-green-600 hover:bg-green-50"
+                      ? "text-red-500 hover:bg-red-500/10"
+                      : "text-green-500 hover:bg-green-500/10"
                   )}
                 >
                   <EyeOff className="w-4 h-4" />
@@ -202,11 +202,11 @@ export default function LinkItem({
       </div>
 
       {/* STATS SECTION (Always Visible) */}
-      <div className="border-t border-gray-100 bg-blue-50/50">
+      <div className="border-t border-gray-dashboard/30 bg-subcard">
         <div className="p-4 md:p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Stat 1: Destination */}
           <div className="flex items-start gap-2.5">
-            <div className="p-2 bg-blue-100 rounded-lg text-blue-600 shrink-0">
+            <div className="p-2 bg-blue-500/20 rounded-lg text-bluelight shrink-0">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -225,7 +225,7 @@ export default function LinkItem({
 
           {/* Stat 2: Ads Level */}
           <div className="flex items-start gap-2.5">
-            <div className="p-2 bg-purple-100 rounded-lg text-purple-600 shrink-0">
+            <div className="p-2 bg-purple-500/20 rounded-lg text-purple-500 dark:text-purple-400 shrink-0">
               <Megaphone className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -238,7 +238,7 @@ export default function LinkItem({
 
           {/* Stat 3: Views */}
           <div className="flex items-start gap-2.5">
-            <div className="p-2 bg-cyan-100 rounded-lg text-cyan-600 shrink-0">
+            <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-500 dark:text-cyan-400 shrink-0">
               <Eye className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -251,19 +251,19 @@ export default function LinkItem({
 
           {/* Stat 4: Earnings */}
           <div className="flex items-start gap-2.5">
-            <div className="p-2 bg-green-100 rounded-lg text-green-600 shrink-0">
+            <div className="p-2 bg-green-500/20 rounded-lg text-green-500 dark:text-green-400 shrink-0">
               <Wallet className="w-4 h-4" />
             </div>
             <div className="min-w-0">
               <p className="text-grays text-xs mb-0.5">Earnings</p>
-              <p className="text-sm font-bold text-green-600 truncate">
+              <p className="text-sm font-bold text-green-500 dark:text-green-400 truncate">
                 {formatCurrency(link.totalEarning)}
               </p>
             </div>
           </div>
 
           {/* Footer: Created & Expires (like "Joined on" in UserListCard) */}
-          <div className="col-span-2 md:col-span-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-grays text-xs pt-3 border-t border-gray-200/50 mt-1">
+          <div className="col-span-2 md:col-span-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-grays text-xs pt-3 border-t border-gray-dashboard/30 mt-1">
             <div className="flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5" />
               <span>Created on {formatLinkDate(link.dateCreated)}</span>

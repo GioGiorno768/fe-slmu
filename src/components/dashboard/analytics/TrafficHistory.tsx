@@ -220,7 +220,7 @@ export default function TrafficHistory({ data }: TrafficHistoryProps) {
                         <BarChart3 className="w-3.5 h-3.5" />
                         <span>CPM:</span>
                         <span className="font-semibold text-shortblack">
-                          ${item.cpm.toFixed(2)}
+                          ${item.cpm.toFixed(5)}
                         </span>
                       </div>
 

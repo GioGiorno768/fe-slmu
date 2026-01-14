@@ -1,7 +1,7 @@
 // src/components/dashboard/withdrawal/WithdrawalMethodCard.tsx
 "use client";
 
-import { useState } from "react"; // Tambah useState
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
   Settings,
@@ -10,9 +10,11 @@ import {
   CreditCard,
   Wallet,
   Landmark,
-  Eye, // Icon Mata Buka
-  EyeOff, // Icon Mata Tutup
+  Eye,
+  EyeOff,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 import { Link } from "@/i18n/routing";
 import type { PaymentMethod } from "@/types/type";
 import Image from "next/image";
@@ -24,6 +26,15 @@ interface WithdrawalMethodCardProps {
 export default function WithdrawalMethodCard({
   method,
 }: WithdrawalMethodCardProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // State buat toggle visibility (Default: FALSE/Hidden)
   const [showDetail, setShowDetail] = useState(false);
 
@@ -68,11 +79,21 @@ export default function WithdrawalMethodCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="bg-white rounded-3xl p-8 shadow-sm shadow-slate-500/20 border border-gray-100 h-full flex flex-col"
+      className={clsx(
+        "rounded-3xl p-8 shadow-sm h-full flex flex-col",
+        isDark
+          ? "bg-card border border-gray-dashboard/30 shadow-black/20"
+          : "bg-white border border-gray-100 shadow-slate-500/20"
+      )}
     >
       {/* Header Kecil */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[1.8em] font-bold text-shortblack flex items-center gap-2">
+        <h3
+          className={clsx(
+            "text-[1.8em] font-bold flex items-center gap-2",
+            isDark ? "text-white" : "text-shortblack"
+          )}
+        >
           Payment Method
         </h3>
         <Link
@@ -89,7 +110,14 @@ export default function WithdrawalMethodCard({
         {method && brandInfo ? (
           <div className="flex-1 flex flex-col justify-center">
             {/* === KARTU BIRU UTAMA === */}
-            <div className="relative bg-gradient-to-br from-bluelight to-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-200 overflow-hidden group min-h-[200px] flex flex-col justify-between">
+            <div
+              className={clsx(
+                "relative bg-gradient-to-br from-bluelight to-blue-600 rounded-3xl p-8 text-white overflow-hidden group min-h-[200px] flex flex-col justify-between",
+                isDark
+                  ? "shadow-lg shadow-blue-900/40"
+                  : "shadow-xl shadow-blue-200"
+              )}
+            >
               {/* Watermark Background */}
               <div className="absolute -right-8 -bottom-12 w-48 h-48 opacity-10 rotate-12 pointer-events-none transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6">
                 <Image
@@ -168,9 +196,26 @@ export default function WithdrawalMethodCard({
             </div>
 
             {/* Info Tambahan */}
-            <div className="mt-6 flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
-              <ShieldCheck className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-              <p className="text-[1.2em] text-green-800 leading-snug">
+            <div
+              className={clsx(
+                "mt-6 flex items-start gap-3 p-4 rounded-xl",
+                isDark
+                  ? "bg-green-500/10 border border-green-500/20"
+                  : "bg-green-50 border border-green-100"
+              )}
+            >
+              <ShieldCheck
+                className={clsx(
+                  "w-5 h-5 mt-0.5 shrink-0",
+                  isDark ? "text-green-400" : "text-green-600"
+                )}
+              />
+              <p
+                className={clsx(
+                  "text-[1.2em] leading-snug",
+                  isDark ? "text-green-300" : "text-green-800"
+                )}
+              >
                 Akun terverifikasi. Pembayaran akan diproses otomatis ke
                 rekening ini.
               </p>
@@ -179,13 +224,32 @@ export default function WithdrawalMethodCard({
         ) : (
           // State Kosong (Sama kayak sebelumnya)
           <div className="flex-1 flex flex-col justify-center items-center text-center py-4">
-            <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mb-6 border border-orange-100 shadow-inner">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-orange-500">
+            <div
+              className={clsx(
+                "w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-inner",
+                isDark
+                  ? "bg-orange-500/10 border border-orange-500/20"
+                  : "bg-orange-50 border border-orange-100"
+              )}
+            >
+              <div
+                className={clsx(
+                  "w-16 h-16 rounded-full flex items-center justify-center",
+                  isDark
+                    ? "bg-orange-500/20 text-orange-400"
+                    : "bg-orange-100 text-orange-500"
+                )}
+              >
                 <AlertTriangle className="w-8 h-8" />
               </div>
             </div>
 
-            <h4 className="text-[1.8em] font-bold text-shortblack mb-2">
+            <h4
+              className={clsx(
+                "text-[1.8em] font-bold mb-2",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               No Payment Method
             </h4>
             <p className="text-[1.4em] text-grays max-w-[250px] mx-auto leading-relaxed mb-8">
@@ -194,7 +258,10 @@ export default function WithdrawalMethodCard({
 
             <Link
               href="/settings#payment"
-              className="bg-shortblack text-white px-8 py-3 rounded-xl font-semibold text-[1.4em] hover:bg-opacity-90 hover:shadow-lg transition-all w-full max-w-[200px]"
+              className={clsx(
+                "px-8 py-3 rounded-xl font-semibold text-[1.4em] hover:opacity-90 hover:shadow-lg transition-all w-full max-w-[200px]",
+                isDark ? "bg-bluelight text-white" : "bg-shortblack text-white"
+              )}
             >
               Setup Now
             </Link>

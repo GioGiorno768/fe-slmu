@@ -4,81 +4,59 @@ import type {
   TimeRange,
   AuditLog,
 } from "@/types/type";
+import apiClient from "@/services/apiClient";
 
 export async function getSuperAdminStats(): Promise<SuperAdminStats> {
-  await new Promise((r) => setTimeout(r, 600));
+  try {
+    const response = await apiClient.get("/admin/dashboard/overview");
+    const data = response.data.data;
 
-  return {
-    financial: {
-      paidToday: 1540.5, // $1,540.50
-      usersPaidToday: 45, // 45 User
-      trend: 12.5, // Naik 12.5%
-    },
-    security: {
-      blockedLinksToday: 23, // 23 Link diblokir
-      trend: -5.2, // Turun (Bagus)
-    },
-    system: {
-      staffOnline: 3,
-      totalStaff: 5,
-    },
-  };
+    return {
+      financial: {
+        paidToday: data.payments_today_amount || 0,
+        usersPaidToday: data.users_paid_today || 0,
+        trend: data.payments_trend || 0,
+        pendingTotal: data.pending_payments_total || 0, // Added field
+      },
+      security: {
+        blockedLinksToday: data.links_blocked_today || 0,
+        trend: data.blocked_trend || 0,
+      },
+      system: {
+        staffOnline: data.staff_online || 0,
+        totalStaff: data.total_staff || 0,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to fetch super admin stats:", error);
+    // Fallback mock
+    return {
+      financial: { paidToday: 0, usersPaidToday: 0, trend: 0, pendingTotal: 0 },
+      security: { blockedLinksToday: 0, trend: 0 },
+      system: { staffOnline: 0, totalStaff: 0 },
+    };
+  }
 }
 
 export async function getSuperAdminRevenueChart(
   range: TimeRange
 ): Promise<AnalyticsData> {
-  await new Promise((r) => setTimeout(r, 800)); // Simulasi loading
-
-  let categories: string[] = [];
-  let userEarnings: number[] = [];
-
-  // 1. Generate Dummy Data (User Earning)
-  if (range === "perWeek") {
-    categories = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    userEarnings = [45, 52, 38, 65, 48, 55, 70]; // Data mingguan
-  } else if (range === "perMonth") {
-    // 4 Minggu terakhir
-    categories = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    userEarnings = [350, 420, 380, 450];
-  } else {
-    // perYear (12 Bulan)
-    categories = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    userEarnings = [
-      1200, 1500, 1100, 1800, 2000, 1700, 2100, 2300, 1900, 2500, 2400, 2800,
-    ];
+  try {
+    const response = await apiClient.get("/admin/analytics/revenue-chart", {
+      params: { period: range },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Failed to fetch revenue chart:", error);
+    // Fallback to empty data
+    return {
+      categories: [],
+      series: [
+        { name: "Est. Platform Revenue (100%)", data: [] },
+        { name: "User Earnings (70%)", data: [] },
+      ],
+    };
   }
-
-  // 2. Reverse Calculation (User Share = 70% atau 0.7)
-  // Rumus: Real Revenue = User Earning / 0.7
-  const estimatedRevenue = userEarnings.map((val) => Math.round(val / 0.7));
-
-  return {
-    categories,
-    series: [
-      {
-        name: "Est. Platform Revenue (100%)",
-        data: estimatedRevenue,
-      },
-      {
-        name: "User Earnings (70%)",
-        data: userEarnings,
-      },
-    ],
-  };
 }
 
 export async function getRecentAuditLogs(): Promise<AuditLog[]> {

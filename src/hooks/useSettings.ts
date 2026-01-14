@@ -69,8 +69,46 @@ export function useSecurityLogic() {
       return true;
     } catch (error: any) {
       console.error(error);
-      const errorMsg =
-        error.response?.data?.message || "Gagal mengubah password.";
+
+      // Parse Laravel validation errors
+      const responseData = error.response?.data;
+      const errors = responseData?.errors;
+
+      let errorMsg = "Gagal mengubah password.";
+
+      if (errors) {
+        // Laravel returns errors as { field: [messages] }
+        if (errors.current_password) {
+          // Current password is incorrect
+          errorMsg = "Password saat ini salah. Periksa kembali!";
+        } else if (errors.password) {
+          // New password validation failed
+          const passwordErrors = errors.password;
+          if (Array.isArray(passwordErrors) && passwordErrors.length > 0) {
+            if (
+              passwordErrors[0].includes("confirmed") ||
+              passwordErrors[0].includes("confirmation")
+            ) {
+              errorMsg = "Konfirmasi password tidak cocok!";
+            } else if (passwordErrors[0].includes("8")) {
+              errorMsg = "Password minimal 8 karakter!";
+            } else {
+              errorMsg = passwordErrors[0];
+            }
+          }
+        } else if (errors.password_confirmation) {
+          errorMsg = "Konfirmasi password tidak cocok!";
+        } else {
+          // Get first error message from any field
+          const firstField = Object.keys(errors)[0];
+          const firstError = errors[firstField];
+          errorMsg = Array.isArray(firstError) ? firstError[0] : firstError;
+        }
+      } else if (responseData?.message) {
+        // Use general error message from response
+        errorMsg = responseData.message;
+      }
+
       showAlert(errorMsg, "error");
       return false;
     } finally {

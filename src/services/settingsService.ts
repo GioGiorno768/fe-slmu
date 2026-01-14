@@ -60,13 +60,23 @@ export async function updateUserProfile(
 // 2. SECURITY SERVICE (Ini yang tadi kurang)
 // ==========================================
 export async function getSecuritySettings(): Promise<SecuritySettings> {
-  // NANTI GANTI: fetch('/api/user/security')
-  await new Promise((r) => setTimeout(r, 500));
-  return {
-    twoFactorEnabled: false,
-    lastPasswordChange: "2025-10-01",
-    isSocialLogin: false,
-  };
+  try {
+    const response = await apiClient.get("/user/security");
+    const data = response.data.data;
+    return {
+      twoFactorEnabled: data.twoFactorEnabled || false,
+      lastPasswordChange: data.lastPasswordChange || null,
+      isSocialLogin: data.isSocialLogin || false,
+    };
+  } catch (error) {
+    console.error("Failed to fetch security settings:", error);
+    // Fallback to safe defaults (assume has password)
+    return {
+      twoFactorEnabled: false,
+      lastPasswordChange: null,
+      isSocialLogin: false,
+    };
+  }
 }
 
 export async function changePassword(
@@ -76,8 +86,8 @@ export async function changePassword(
 ): Promise<boolean> {
   const response = await apiClient.put("/user/password", {
     current_password: current,
-    new_password: newPass,
-    new_password_confirmation: confirmPass,
+    password: newPass,
+    password_confirmation: confirmPass,
   });
   return response.data.success;
 }

@@ -49,9 +49,9 @@ export default function ReferralTable({ users }: ReferralTableProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden font-figtree">
+    <div className="bg-card rounded-2xl shadow-sm border border-gray-100 dark:border-gray-dashboard/30 overflow-hidden font-figtree">
       {/* Header */}
-      <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-dashboard/30 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h3 className="text-[1.8em] font-semibold text-shortblack">
           Daftar Teman
         </h3>
@@ -64,18 +64,18 @@ export default function ReferralTable({ users }: ReferralTableProps) {
             placeholder="Cari user..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-subcard border border-gray-200 dark:border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm"
           />
         </div>
       </div>
 
       {/* List Container */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 dark:divide-gray-dashboard/30">
         {currentData.length > 0 ? (
           currentData.map((user) => (
             <div
               key={user.id}
-              className="p-4 sm:p-5 hover:bg-slate-50 transition-all group"
+              className="p-4 sm:p-5 hover:bg-subcard transition-all group"
             >
               {/* Main Content Row */}
               <div className="flex items-start sm:items-center justify-between gap-4">
@@ -98,8 +98,8 @@ export default function ReferralTable({ users }: ReferralTableProps) {
                         className={clsx(
                           "px-2 py-0.5 rounded-full text-[1em] font-medium whitespace-nowrap",
                           user.status === "active"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-500"
+                            ? "bg-green-500/20 text-green-700 dark:text-green-400"
+                            : "bg-gray-100 dark:bg-gray-dashboard/30 text-gray-500 dark:text-gray-400"
                         )}
                       >
                         {user.status === "active" ? "Aktif" : "Tidak Aktif"}
@@ -135,7 +135,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
           ))
         ) : (
           <div className="p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-dashboard/30 flex items-center justify-center">
               <User className="w-8 h-8 text-gray-400" />
             </div>
             <p className="text-grays text-[1.4em]">
@@ -153,11 +153,11 @@ export default function ReferralTable({ users }: ReferralTableProps) {
 
       {/* --- FOOTER PAGINATION --- */}
       {totalPages > 1 && (
-        <div className="p-4 border-t border-gray-100 flex justify-center items-center gap-2">
+        <div className="p-4 border-t border-gray-100 dark:border-gray-dashboard/30 flex justify-center items-center gap-2">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg border border-gray-200 bg-white text-shortblack hover:bg-blues disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg border border-gray-200 dark:border-gray-dashboard/30 bg-subcard text-shortblack hover:bg-blues disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -169,8 +169,8 @@ export default function ReferralTable({ users }: ReferralTableProps) {
               className={clsx(
                 "w-8 h-8 rounded-lg text-[1.2em] font-bold transition-all",
                 currentPage === page
-                  ? "bg-bluelight text-white shadow-md shadow-blue-200"
-                  : "bg-white border border-gray-200 text-shortblack hover:bg-blues"
+                  ? "bg-bluelight text-white shadow-md shadow-blue-200 dark:shadow-blue-900/30"
+                  : "bg-subcard border border-gray-200 dark:border-gray-dashboard/30 text-shortblack hover:bg-blues"
               )}
             >
               {page}
@@ -180,7 +180,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border border-gray-200 bg-white text-shortblack hover:bg-blues disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg border border-gray-200 dark:border-gray-dashboard/30 bg-subcard text-shortblack hover:bg-blues disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

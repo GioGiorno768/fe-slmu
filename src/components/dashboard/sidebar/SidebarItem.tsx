@@ -20,11 +20,24 @@ export default function SidebarItem({
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(isChildActive);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const ref = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
 
   // SAFETY CHECK: Kalau icon undefined, pake icon default (Circle)
   const Icon = item.icon || Circle;
+
+  // Calculate popup position when opened
+  useEffect(() => {
+    if (isPopupOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPopupPosition({
+        top: rect.top,
+        left: rect.right + 8, // 8px gap from button
+      });
+    }
+  }, [isPopupOpen]);
 
   // Efek buat nutup popup kalo diklik di luar
   useEffect(() => {
@@ -54,6 +67,7 @@ export default function SidebarItem({
       <div ref={ref} className="relative mb-1">
         {/* Tombol Parent */}
         <button
+          ref={buttonRef}
           onClick={() => {
             if (isCollapsed) {
               setIsPopupOpen(!isPopupOpen);
@@ -143,16 +157,20 @@ export default function SidebarItem({
           </div>
         )}
 
-        {/* Popup Flyout (Mode Collapsed) */}
+        {/* Popup Flyout (Mode Collapsed) - Fixed positioning to escape overflow */}
         <div
+          style={{
+            top: popupPosition.top,
+            left: popupPosition.left,
+          }}
           className={`
-            absolute left-full top-0 ml-[1.5em] z-50
+            fixed z-[9999]
             bg-[#10052C] shadow-lg rounded-md p-2 w-max
             transition-all duration-150 ease-out transform
             ${
               isCollapsed && isPopupOpen
                 ? "opacity-100 scale-100 visible"
-                : "opacity-0 scale-95 invisible"
+                : "opacity-0 scale-95 invisible pointer-events-none"
             }
             origin-left space-y-[1em]
           `}

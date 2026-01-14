@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Copy, Check, Share2 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 interface ReferralHeaderProps {
   referralLink: string;
@@ -15,7 +17,15 @@ export default function ReferralHeader({
   commissionRate,
 }: ReferralHeaderProps) {
   const { showAlert } = useAlert();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
@@ -45,7 +55,7 @@ export default function ReferralHeader({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-r from-[#250e60] via-90% to-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-200/50 relative overflow-hidden font-figtree"
+      className="bg-gradient-to-r from-[#250e60] via-90% to-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-200/50 dark:shadow-blue-900/30 relative overflow-hidden font-figtree"
     >
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl pointer-events-none" />
 
@@ -64,12 +74,24 @@ export default function ReferralHeader({
         </div>
 
         <div className="bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-2xl flex items-center gap-2 w-full lg:w-auto min-w-[300px] max-w-md">
-          <div className="bg-white text-shortblack px-4 py-3 rounded-xl flex-1 truncate font-medium text-[1.4em]">
+          <div
+            className={clsx(
+              "px-4 py-3 rounded-xl flex-1 truncate font-medium text-[1.4em]",
+              isDark
+                ? "bg-slate-800/80 text-white border border-white/10"
+                : "bg-white text-shortblack"
+            )}
+          >
             {referralLink}
           </div>
           <button
             onClick={handleCopy}
-            className="p-3 bg-white text-bluelight rounded-xl hover:bg-blue-50 transition-colors"
+            className={clsx(
+              "p-3 rounded-xl transition-colors",
+              isDark
+                ? "bg-slate-700 text-blue-400 hover:bg-slate-600 border border-white/10"
+                : "bg-white text-bluelight hover:bg-blue-50"
+            )}
             title="Copy Link"
           >
             {isCopied ? (

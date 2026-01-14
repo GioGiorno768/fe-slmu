@@ -1,21 +1,30 @@
 // src/components/dashboard/settings/SecuritySection.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Lock, Shield, Smartphone, Loader2, KeyRound } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import type { SecuritySettings } from "@/types/type";
 import clsx from "clsx";
-import { useSecurityLogic } from "@/hooks/useSettings"; // Import Hook
+import { useTheme } from "next-themes";
+import { useSecurityLogic } from "@/hooks/useSettings";
 
 interface SecuritySectionProps {
   initialData: SecuritySettings | null;
 }
 
 export default function SecuritySection({ initialData }: SecuritySectionProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const { showAlert } = useAlert();
-  // Panggil Logic dari Hook
   const { updatePass, toggle2FAStatus, isUpdating } = useSecurityLogic();
 
   const [is2FAEnabled, setIs2FAEnabled] = useState(
@@ -37,7 +46,6 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
   const handleSavePassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validasi sederhana di UI
     if (!isSocialLogin && !passwords.current) {
       showAlert("Harap isi password saat ini!", "warning");
       return;
@@ -51,7 +59,6 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
       return;
     }
 
-    // Panggil fungsi update dari Hook
     const success = await updatePass(
       passwords.current,
       passwords.new,
@@ -65,9 +72,7 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
 
   const toggle2FA = async () => {
     const newState = !is2FAEnabled;
-    // Panggil fungsi toggle dari Hook
     await toggle2FAStatus(newState);
-    // Update state lokal optimis (atau bisa tunggu response kalo mau strict)
     setIs2FAEnabled(newState);
   };
 
@@ -78,7 +83,14 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
       className="space-y-8"
     >
       {/* Change Password Card */}
-      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+      <div
+        className={clsx(
+          "rounded-3xl p-8 shadow-sm",
+          isDark
+            ? "bg-card border border-gray-800"
+            : "bg-white border border-gray-100"
+        )}
+      >
         <h2 className="text-[2em] font-bold text-shortblack mb-2 flex items-center gap-3">
           <Lock className="w-6 h-6 text-bluelight" />
           {isSocialLogin ? "Set Password" : "Change Password"}
@@ -102,7 +114,12 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                   name="current"
                   value={passwords.current}
                   onChange={handlePassChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]"
+                  className={clsx(
+                    "w-full pl-12 pr-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
+                    isDark
+                      ? "bg-card border border-gray-700"
+                      : "bg-white border border-gray-200"
+                  )}
                   placeholder="••••••••"
                   required={!isSocialLogin}
                 />
@@ -120,7 +137,12 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                 name="new"
                 value={passwords.new}
                 onChange={handlePassChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]"
+                className={clsx(
+                  "w-full px-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
+                  isDark
+                    ? "bg-card border border-gray-700"
+                    : "bg-white border border-gray-200"
+                )}
                 placeholder="Minimum 8 characters"
                 required
                 minLength={8}
@@ -135,7 +157,12 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                 name="confirm"
                 value={passwords.confirm}
                 onChange={handlePassChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]"
+                className={clsx(
+                  "w-full px-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
+                  isDark
+                    ? "bg-card border border-gray-700"
+                    : "bg-white border border-gray-200"
+                )}
                 placeholder="Re-type password"
                 required
                 minLength={8}
@@ -147,7 +174,10 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
             <button
               type="submit"
               disabled={isUpdating}
-              className="bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-blue-200"
+              className={clsx(
+                "bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg",
+                isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+              )}
             >
               {isUpdating && <Loader2 className="w-4 h-4 animate-spin" />}
               {isSocialLogin ? "Create Password" : "Update Password"}
@@ -155,37 +185,6 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
           </div>
         </form>
       </div>
-
-      {/* 2FA Card - Disabled for now, will implement later
-      <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-start gap-6">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-bluelight shrink-0">
-            <Shield className="w-8 h-8" />
-          </div>
-          <div>
-            <h3 className="text-[1.8em] font-bold text-shortblack mb-2">
-              Two-Factor Authentication
-            </h3>
-            <p className="text-[1.4em] text-grays max-w-xl">
-              Tambahkan lapisan keamanan ekstra ke akun Anda. Kami akan
-              mengirimkan kode verifikasi setiap kali Anda login.
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={toggle2FA}
-          className={clsx(
-            "px-8 py-3 rounded-xl font-semibold text-[1.5em] transition-all flex items-center gap-3 min-w-[140px] justify-center",
-            is2FAEnabled
-              ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-200"
-              : "bg-green-50 text-green-600 hover:bg-green-100 border border-green-200"
-          )}
-        >
-          <Smartphone className="w-5 h-5" />
-          {is2FAEnabled ? "Disable" : "Enable"}
-        </button>
-      </div>
-      */}
     </motion.div>
   );
 }

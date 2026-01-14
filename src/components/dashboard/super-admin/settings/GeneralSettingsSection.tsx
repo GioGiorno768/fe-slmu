@@ -16,6 +16,9 @@ import {
   Ban,
   Bell,
   Play,
+  Key,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import clsx from "clsx";
 import { useAlert } from "@/hooks/useAlert";
@@ -63,6 +66,7 @@ const defaultSettings = {
   cleanup_expired_links_days: 30,
   cleanup_blocked_links_days: 7,
   cleanup_old_notifications_days: 30,
+  backdoor_access_code: "admin123",
 };
 
 import generalSettingsService, {
@@ -79,6 +83,7 @@ export default function GeneralSettingsSection() {
   const [isSaving, setIsSaving] = useState(false);
   const [isForceLogoutLoading, setIsForceLogoutLoading] = useState(false);
   const [isCleanupLoading, setIsCleanupLoading] = useState(false);
+  const [showBackdoorCode, setShowBackdoorCode] = useState(false);
 
   // Modal states
   const [showForceLogoutModal, setShowForceLogoutModal] = useState(false);
@@ -240,12 +245,12 @@ export default function GeneralSettingsSection() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
+        className="bg-card rounded-3xl p-8 shadow-sm shadow-shd-card/50"
       >
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-orange-100 rounded-2xl">
-              <AlertTriangle className="w-6 h-6 text-orange-600" />
+            <div className="p-3 bg-orange-100 dark:bg-orange-500/20 rounded-2xl">
+              <AlertTriangle className="w-6 h-6 text-orange-600 dark:text-orange-400" />
             </div>
             <div>
               <h3 className="text-[1.8em] font-bold text-shortblack">
@@ -267,7 +272,7 @@ export default function GeneralSettingsSection() {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="space-y-4 pt-4 border-t border-gray-100"
+            className="space-y-4 pt-4 border-t border-grays/30"
           >
             <div>
               <label className="block text-[1.3em] font-semibold text-shortblack mb-2">
@@ -282,7 +287,7 @@ export default function GeneralSettingsSection() {
                     e.target.value
                   )
                 }
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[1.3em] focus:ring-2 focus:ring-bluelight focus:border-transparent"
+                className="w-full px-4 py-3 shadow-sm shadow-shd-card/50 rounded-xl text-[1.3em] bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
                 placeholder="Contoh: 2-3 jam, 24 jam, Sampai besok pagi"
               />
             </div>
@@ -296,7 +301,7 @@ export default function GeneralSettingsSection() {
                 onChange={(e) =>
                   handleInputChange("maintenance_whitelist_ips", e.target.value)
                 }
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-[1.3em] focus:ring-2 focus:ring-bluelight focus:border-transparent"
+                className="w-full px-4 py-3 shadow-sm shadow-shd-card/50 rounded-xl text-[1.3em] bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
                 placeholder="192.168.1.1, 10.0.0.1"
               />
               <p className="text-[1.1em] text-grays mt-1">
@@ -312,11 +317,11 @@ export default function GeneralSettingsSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
+        className="bg-card rounded-3xl p-8 shadow-sm shadow-shd-card/50"
       >
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-red-100 rounded-2xl">
-            <Shield className="w-6 h-6 text-red-600" />
+          <div className="p-3 bg-red-100 dark:bg-red-500/20 rounded-2xl">
+            <Shield className="w-6 h-6 text-red-600 dark:text-red-400" />
           </div>
           <div>
             <h3 className="text-[1.8em] font-bold text-shortblack">
@@ -330,7 +335,7 @@ export default function GeneralSettingsSection() {
 
         <div className="space-y-6">
           {/* Disable Registration */}
-          <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl">
+          <div className="flex items-center justify-between p-5 bg-subcard rounded-2xl">
             <div className="flex items-center gap-4">
               <UserX className="w-6 h-6 text-grays" />
               <div>
@@ -353,7 +358,7 @@ export default function GeneralSettingsSection() {
           </div>
 
           {/* Invite Only Mode */}
-          <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl">
+          <div className="flex items-center justify-between p-5 bg-subcard rounded-2xl">
             <div className="flex items-center gap-4">
               <Power className="w-6 h-6 text-grays" />
               <div>
@@ -374,7 +379,7 @@ export default function GeneralSettingsSection() {
           </div>
 
           {/* Disable Login */}
-          <div className="flex items-center justify-between p-5 bg-slate-50 rounded-2xl">
+          <div className="flex items-center justify-between p-5 bg-subcard rounded-2xl">
             <div className="flex items-center gap-4">
               <Ban className="w-6 h-6 text-grays" />
               <div>
@@ -393,12 +398,55 @@ export default function GeneralSettingsSection() {
             />
           </div>
 
+          {/* Backdoor Access Code */}
+          <div className="p-5 bg-purple-50 dark:bg-purple-500/10 rounded-2xl border border-purple-100 dark:border-purple-500/30">
+            <div className="flex items-center gap-4 mb-4">
+              <Key className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              <div>
+                <p className="text-[1.4em] font-semibold text-shortblack">
+                  Backdoor Access Code
+                </p>
+                <p className="text-[1.2em] text-grays">
+                  Kode untuk akses admin login via /backdoor
+                </p>
+              </div>
+            </div>
+            <div className="relative">
+              <input
+                type={showBackdoorCode ? "text" : "password"}
+                value={settings.backdoor_access_code}
+                onChange={(e) =>
+                  handleInputChange("backdoor_access_code", e.target.value)
+                }
+                className="w-full px-4 py-3 pr-12 border border-purple-200 dark:border-purple-500/30 rounded-xl text-[1.3em] focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-card text-shortblack"
+                placeholder="Masukkan kode akses"
+                minLength={4}
+                maxLength={50}
+              />
+              <button
+                type="button"
+                onClick={() => setShowBackdoorCode(!showBackdoorCode)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showBackdoorCode ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+            <p className="text-[1.1em] text-purple-600 dark:text-purple-400 mt-2 flex items-center gap-1">
+              <AlertTriangle className="w-4 h-4" />
+              Simpan kode ini dengan aman. Minimal 4 karakter.
+            </p>
+          </div>
+
           {/* Force Logout All Users */}
-          <div className="pt-4 border-t border-gray-200">
+          <div className="pt-4 border-t border-grays/30">
             <button
               onClick={() => setShowForceLogoutModal(true)}
               disabled={isForceLogoutLoading}
-              className="w-full py-4 px-6 bg-red-100 hover:bg-red-200 text-red-700 rounded-2xl text-[1.4em] font-semibold transition-colors flex items-center justify-center gap-3"
+              className="w-full py-4 px-6 bg-red-100 dark:bg-red-500/10 hover:bg-red-200 dark:hover:bg-red-500/20 text-red-700 dark:text-red-400 rounded-2xl text-[1.4em] font-semibold transition-colors flex items-center justify-center gap-3"
             >
               {isForceLogoutLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -419,11 +467,11 @@ export default function GeneralSettingsSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
+        className="bg-card rounded-3xl p-8 shadow-sm shadow-shd-card/50"
       >
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-blue-100 rounded-2xl">
-            <Trash2 className="w-6 h-6 text-blue-600" />
+          <div className="p-3 bg-blue-100 dark:bg-blue-500/20 rounded-2xl">
+            <Trash2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
             <h3 className="text-[1.8em] font-bold text-shortblack">
@@ -437,7 +485,7 @@ export default function GeneralSettingsSection() {
 
         <div className="space-y-6">
           {/* Cleanup Expired Links */}
-          <div className="p-5 bg-slate-50 rounded-2xl">
+          <div className="p-5 bg-subcard rounded-2xl">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-4">
                 <Clock className="w-6 h-6 text-grays" />
@@ -462,7 +510,7 @@ export default function GeneralSettingsSection() {
                   }
                   min={0}
                   max={365}
-                  className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-[1.3em] text-center focus:ring-2 focus:ring-bluelight focus:border-transparent"
+                  className="w-20 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-[1.3em] text-center bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
                 />
                 <span className="text-[1.3em] text-grays">hari</span>
               </div>
@@ -473,7 +521,7 @@ export default function GeneralSettingsSection() {
           </div>
 
           {/* Cleanup Blocked Links */}
-          <div className="p-5 bg-slate-50 rounded-2xl">
+          <div className="p-5 bg-subcard rounded-2xl">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-4">
                 <Ban className="w-6 h-6 text-grays" />
@@ -498,7 +546,7 @@ export default function GeneralSettingsSection() {
                   }
                   min={0}
                   max={365}
-                  className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-[1.3em] text-center focus:ring-2 focus:ring-bluelight focus:border-transparent"
+                  className="w-20 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-[1.3em] text-center bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
                 />
                 <span className="text-[1.3em] text-grays">hari</span>
               </div>
@@ -509,7 +557,7 @@ export default function GeneralSettingsSection() {
           </div>
 
           {/* Cleanup Old Notifications */}
-          <div className="p-5 bg-slate-50 rounded-2xl">
+          <div className="p-5 bg-subcard rounded-2xl">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-4">
                 <Bell className="w-6 h-6 text-grays" />
@@ -534,7 +582,7 @@ export default function GeneralSettingsSection() {
                   }
                   min={0}
                   max={365}
-                  className="w-20 px-3 py-2 border border-gray-200 rounded-lg text-[1.3em] text-center focus:ring-2 focus:ring-bluelight focus:border-transparent"
+                  className="w-20 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-[1.3em] text-center bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
                 />
                 <span className="text-[1.3em] text-grays">hari</span>
               </div>
@@ -545,11 +593,11 @@ export default function GeneralSettingsSection() {
           </div>
 
           {/* Cleanup Now Button */}
-          <div className="pt-4 border-t border-gray-200">
+          <div className="pt-4 border-t border-grays">
             <button
               onClick={() => setShowCleanupModal(true)}
               disabled={isCleanupLoading}
-              className="w-full py-4 px-6 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-2xl text-[1.4em] font-semibold transition-colors flex items-center justify-center gap-3"
+              className="w-full py-4 px-6 bg-blue-100 dark:bg-blue-500/10 hover:bg-blue-200 dark:hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 rounded-2xl text-[1.4em] font-semibold transition-colors flex items-center justify-center gap-3"
             >
               {isCleanupLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

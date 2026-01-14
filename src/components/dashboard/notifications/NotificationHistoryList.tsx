@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Filter, Search, ChevronDown, Check, BellOff } from "lucide-react";
+import { useTheme } from "next-themes";
 import NotificationHistoryItem from "./NotificationHistoryItem";
 import NotificationDetailModal from "./NotificationDetailModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
@@ -45,6 +46,15 @@ export default function NotificationHistoryList({
   onMarkRead,
   onDelete,
 }: NotificationHistoryListProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const { showAlert } = useAlert();
 
   // State UI lokal
@@ -148,7 +158,14 @@ export default function NotificationHistoryList({
     <>
       <div className="space-y-8 font-figtree">
         {/* --- Header: Search & Filter --- */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div
+          className={clsx(
+            "flex flex-col md:flex-row gap-4 justify-between items-start md:items-center p-6 rounded-2xl shadow-sm",
+            isDark
+              ? "bg-card border border-gray-800"
+              : "bg-white border border-gray-100"
+          )}
+        >
           {/* Search Input */}
           <div className="relative w-full md:w-72 flex-shrink-0">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
@@ -157,7 +174,12 @@ export default function NotificationHistoryList({
               placeholder="Cari notifikasi..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm"
+              className={clsx(
+                "w-full pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm",
+                isDark
+                  ? "bg-card border border-gray-700"
+                  : "bg-white border border-gray-200"
+              )}
             />
           </div>
 
@@ -165,7 +187,12 @@ export default function NotificationHistoryList({
           <div className="relative w-full md:w-auto z-20" ref={filterRef}>
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="flex items-center justify-between w-full md:w-[220px] px-4 py-3 bg-blues rounded-xl text-[1.4em] font-medium text-shortblack hover:bg-blue-100/50 transition-colors border border-transparent focus:border-bluelight focus:ring-2 focus:ring-bluelight/20"
+              className={clsx(
+                "flex items-center justify-between w-full md:w-[220px] px-4 py-3 rounded-xl text-[1.4em] font-medium text-shortblack transition-colors border focus:ring-2 focus:ring-bluelight/20",
+                isDark
+                  ? "bg-subcard border-transparent hover:bg-gray-dashboard/50 focus:border-bluelight"
+                  : "bg-blues border-transparent hover:bg-blue-100/50 focus:border-bluelight"
+              )}
             >
               <div className="flex items-center gap-3">
                 <Filter className="w-5 h-5 text-bluelight" />
@@ -186,7 +213,12 @@ export default function NotificationHistoryList({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.98 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden p-1.5 min-w-[220px]"
+                  className={clsx(
+                    "absolute top-full left-0 right-0 mt-2 rounded-xl shadow-xl overflow-hidden p-1.5 min-w-[220px]",
+                    isDark
+                      ? "bg-card border border-gray-800"
+                      : "bg-white border border-gray-100"
+                  )}
                 >
                   {filters.map((f) => (
                     <button
@@ -196,14 +228,35 @@ export default function NotificationHistoryList({
                         setIsFilterOpen(false);
                       }}
                       className={clsx(
-                        "w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-[1.3em] transition-colors text-left",
+                        "w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-[1.3em] transition-all duration-300 text-left",
                         statusFilter === f.id
-                          ? "bg-blue-50 text-bluelight font-bold"
-                          : "text-shortblack hover:bg-gray-50"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                            : "bg-bluelight/10 text-bluelight font-semibold"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                          : "text-shortblack hover:text-bluelight hover:bg-gray-50"
                       )}
                     >
-                      <span>{f.label}</span>
-                      {statusFilter === f.id && <Check className="w-4 h-4" />}
+                      {statusFilter === f.id && (
+                        <span
+                          className={clsx(
+                            "w-1.5 h-1.5 rounded-full shrink-0",
+                            isDark ? "bg-tx-blue-dashboard" : "bg-bluelight"
+                          )}
+                        />
+                      )}
+                      <span className={statusFilter !== f.id ? "ml-3.5" : ""}>
+                        {f.label}
+                      </span>
+                      {statusFilter === f.id && (
+                        <Check
+                          className={clsx(
+                            "w-4 h-4 ml-auto",
+                            isDark ? "text-tx-blue-dashboard" : "text-bluelight"
+                          )}
+                        />
+                      )}
                     </button>
                   ))}
                 </motion.div>
@@ -228,7 +281,12 @@ export default function NotificationHistoryList({
                   transition={{ delay: groupIndex * 0.1 }}
                 >
                   {/* Date Header */}
-                  <div className="sticky top-[80px] z-10 py-4 bg-slate-50/95 backdrop-blur-sm mb-4">
+                  <div
+                    className={clsx(
+                      "sticky top-[80px] z-10 py-4 backdrop-blur-sm mb-4",
+                      isDark ? "bg-background/95" : "bg-slate-50/95"
+                    )}
+                  >
                     <h3 className="text-[1.4em] font-bold text-shortblack uppercase tracking-wider flex items-center gap-3">
                       <span className="w-2 h-2 rounded-full bg-bluelight" />
                       {date}
@@ -260,7 +318,12 @@ export default function NotificationHistoryList({
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-gray-400">
+              <div
+                className={clsx(
+                  "w-24 h-24 rounded-full flex items-center justify-center mb-6 text-gray-400",
+                  isDark ? "bg-gray-800" : "bg-gray-100"
+                )}
+              >
                 <BellOff className="w-10 h-10" />
               </div>
               <h3 className="text-[2em] font-bold text-shortblack mb-2">

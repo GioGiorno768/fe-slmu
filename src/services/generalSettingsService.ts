@@ -11,6 +11,7 @@ export interface GeneralSettings {
   cleanup_expired_links_days: number;
   cleanup_blocked_links_days: number;
   cleanup_old_notifications_days: number;
+  backdoor_access_code: string;
 }
 
 export interface CleanupResult {

@@ -16,6 +16,7 @@ import {
 import clsx from "clsx";
 import apiClient from "@/services/apiClient";
 import { useAlert } from "@/hooks/useAlert";
+import { useTheme } from "next-themes";
 
 interface GlobalNotification {
   id: number;
@@ -26,23 +27,30 @@ interface GlobalNotification {
   created_at: string;
 }
 
-const TYPE_CONFIG = {
+// Type config function that uses isDark
+const getTypeConfig = (isDark: boolean) => ({
   info: {
     label: "Info",
-    color: "bg-blue-100 text-blue-600 border-blue-200",
+    color: isDark
+      ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+      : "bg-blue-100 text-blue-600 border-blue-200",
     icon: Info,
   },
   warning: {
     label: "Warning",
-    color: "bg-yellow-100 text-yellow-600 border-yellow-200",
+    color: isDark
+      ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+      : "bg-yellow-100 text-yellow-600 border-yellow-200",
     icon: AlertTriangle,
   },
   danger: {
     label: "Danger",
-    color: "bg-red-100 text-red-600 border-red-200",
+    color: isDark
+      ? "bg-red-500/20 text-red-400 border-red-500/30"
+      : "bg-red-100 text-red-600 border-red-200",
     icon: AlertCircle,
   },
-};
+});
 
 export default function GlobalNotificationSection() {
   const { showAlert } = useAlert();
@@ -51,6 +59,16 @@ export default function GlobalNotificationSection() {
   const [isSending, setIsSending] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [togglingPinId, setTogglingPinId] = useState<number | null>(null);
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+  const TYPE_CONFIG = getTypeConfig(isDark);
 
   // Form state
   const [title, setTitle] = useState("");
@@ -166,10 +184,20 @@ export default function GlobalNotificationSection() {
       </div>
 
       {/* Create Form */}
-      <div className="bg-gray-50 rounded-2xl p-6 space-y-5">
+      <div className="bg-subcard rounded-2xl p-6 space-y-5">
         <div className="flex items-center gap-3 mb-2">
-          <div className="p-2.5 bg-blue-100 rounded-xl">
-            <Bell className="w-5 h-5 text-blue-600" />
+          <div
+            className={clsx(
+              "p-2.5 rounded-xl",
+              isDark ? "bg-blue-500/20" : "bg-blue-100"
+            )}
+          >
+            <Bell
+              className={clsx(
+                "w-5 h-5",
+                isDark ? "text-blue-400" : "text-blue-600"
+              )}
+            />
           </div>
           <h3 className="text-[1.5em] font-bold text-shortblack">
             Send New Notification
@@ -187,7 +215,10 @@ export default function GlobalNotificationSection() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Judul notifikasi..."
             maxLength={100}
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-[1.3em] font-medium focus:outline-none focus:border-blue-400"
+            className={clsx(
+              "w-full px-4 py-3 bg-card border rounded-xl text-[1.3em] font-medium text-shortblack placeholder:text-gray-400 focus:outline-none focus:border-blue-400",
+              isDark ? "border-gray-700" : "border-gray-200"
+            )}
           />
         </div>
 
@@ -208,7 +239,9 @@ export default function GlobalNotificationSection() {
                     "flex items-center gap-2 px-4 py-2.5 rounded-xl text-[1.2em] font-medium border-2 transition-all",
                     type === t
                       ? config.color + " border-current"
-                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
+                      : isDark
+                      ? "bg-card text-gray-500 border-gray-700 hover:border-gray-600"
+                      : "bg-card text-gray-500 border-gray-200 hover:border-gray-300"
                   )}
                 >
                   <config.icon className="w-4 h-4" />
@@ -230,9 +263,17 @@ export default function GlobalNotificationSection() {
             placeholder="Isi notifikasi..."
             maxLength={500}
             rows={4}
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-[1.3em] font-medium focus:outline-none focus:border-blue-400 resize-none"
+            className={clsx(
+              "w-full px-4 py-3 bg-card border rounded-xl text-[1.3em] font-medium text-shortblack placeholder:text-gray-400 focus:outline-none focus:border-blue-400 resize-none",
+              isDark ? "border-gray-700" : "border-gray-200"
+            )}
           />
-          <p className="text-[1.1em] text-gray-400 text-right">
+          <p
+            className={clsx(
+              "text-[1.1em] text-right",
+              isDark ? "text-gray-500" : "text-gray-400"
+            )}
+          >
             {body.length}/500
           </p>
         </div>
@@ -245,7 +286,7 @@ export default function GlobalNotificationSection() {
             "flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-[1.4em] font-semibold transition-all",
             title.trim() && body.trim()
               ? "bg-bluelight text-white hover:bg-blue-600 shadow-md"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-bluelight/40 text-white/50 cursor-not-allowed"
           )}
         >
           {isSending ? (
@@ -268,12 +309,22 @@ export default function GlobalNotificationSection() {
             <Loader2 className="w-6 h-6 text-bluelight animate-spin" />
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-10 bg-gray-50 rounded-2xl">
-            <Bell className="w-10 h-10 mx-auto text-gray-300 mb-3" />
+          <div className="text-center py-10 bg-subcard rounded-2xl">
+            <Bell
+              className={clsx(
+                "w-10 h-10 mx-auto mb-3",
+                isDark ? "text-gray-600" : "text-gray-300"
+              )}
+            />
             <p className="text-[1.4em] font-medium text-gray-400">
               No global notifications
             </p>
-            <p className="text-[1.2em] text-gray-300 mt-1">
+            <p
+              className={clsx(
+                "text-[1.2em] mt-1",
+                isDark ? "text-gray-600" : "text-gray-300"
+              )}
+            >
               Send your first notification above
             </p>
           </div>
@@ -284,7 +335,10 @@ export default function GlobalNotificationSection() {
               return (
                 <div
                   key={notification.id}
-                  className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm"
+                  className={clsx(
+                    "bg-card rounded-xl p-4 border shadow-sm",
+                    isDark ? "border-gray-800" : "border-gray-100"
+                  )}
                 >
                   <div className="flex items-start gap-3">
                     <div
@@ -369,11 +423,28 @@ export default function GlobalNotificationSection() {
       </div>
 
       {/* Info Box */}
-      <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+      <div
+        className={clsx(
+          "flex items-start gap-3 p-4 rounded-xl border",
+          isDark
+            ? "bg-blue-500/10 border-blue-500/30"
+            : "bg-blue-50 border-blue-200"
+        )}
+      >
         <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-        <div className="text-[1.2em] text-blue-700">
+        <div
+          className={clsx(
+            "text-[1.2em]",
+            isDark ? "text-blue-300" : "text-blue-700"
+          )}
+        >
           <p className="font-semibold mb-1">Cara kerja:</p>
-          <ol className="list-decimal list-inside space-y-1 text-blue-600">
+          <ol
+            className={clsx(
+              "list-decimal list-inside space-y-1",
+              isDark ? "text-blue-400" : "text-blue-600"
+            )}
+          >
             <li>Admin kirim notification</li>
             <li>Semua user melihatnya di notification bell 🔔</li>
             <li>User baru yang register juga melihat notifications aktif</li>

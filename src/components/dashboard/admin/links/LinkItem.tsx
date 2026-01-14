@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Link as LinkIcon,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import type { AdminLink } from "@/types/type";
+import { useTheme } from "next-themes";
 
 interface LinkItemProps {
   link: AdminLink;
@@ -29,6 +31,15 @@ export default function LinkItem({
   onAction,
 }: // onMessage - kept in props for future use when message feature is enabled
 LinkItemProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("id-ID", {
       day: "numeric",
@@ -44,10 +55,14 @@ LinkItemProps) {
     <div
       onClick={() => onToggleSelect(link.id, link.status)}
       className={clsx(
-        "bg-white rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-md group relative overflow-hidden cursor-pointer",
+        "rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-md group relative overflow-hidden cursor-pointer",
         isSelected
-          ? "border-bluelight ring-2 ring-bluelight/20 bg-blue-50/30"
-          : "border-gray-100 hover:border-blue-200"
+          ? isDark
+            ? "border-bluelight ring-2 ring-bluelight/20 bg-blue-500/10"
+            : "border-bluelight ring-2 ring-bluelight/20 bg-blue-50/30"
+          : isDark
+          ? "bg-card border-gray-800 hover:border-blue-500/40"
+          : "bg-white border-gray-100 hover:border-blue-200"
       )}
     >
       {/* HEADER SECTION */}
@@ -85,9 +100,15 @@ LinkItemProps) {
                   className={clsx(
                     "px-2 py-0.5 rounded text-[1em] font-bold uppercase tracking-wide",
                     link.status === "active"
-                      ? "bg-green-100 text-green-700"
+                      ? isDark
+                        ? "bg-green-500/20 text-green-400"
+                        : "bg-green-100 text-green-700"
                       : link.status === "disabled"
-                      ? "bg-red-100 text-red-700"
+                      ? isDark
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-red-100 text-red-700"
+                      : isDark
+                      ? "bg-gray-500/20 text-gray-400"
                       : "bg-gray-100 text-gray-600"
                   )}
                 >
@@ -100,7 +121,12 @@ LinkItemProps) {
             <div className="flex items-center gap-3 shrink-0">
               {/* Selection Indicator */}
               {isSelected && (
-                <div className="p-1.5 bg-blue-50 rounded-full animate-in zoom-in duration-200">
+                <div
+                  className={clsx(
+                    "p-1.5 rounded-full animate-in zoom-in duration-200",
+                    isDark ? "bg-blue-500/20" : "bg-blue-50"
+                  )}
+                >
                   <CheckCircle2 className="w-6 h-6 text-bluelight fill-blue-50" />
                 </div>
               )}
@@ -122,10 +148,14 @@ LinkItemProps) {
                   );
                 }}
                 className={clsx(
-                  "px-3 py-1.5 rounded-lg font-medium text-sm flex items-center gap-1.5 transition-colors",
+                  "px-3 py-1.5 rounded-lg font-medium text-sm flex items-center gap-1.5 transition-colors border",
                   link.status === "active"
-                    ? "text-red-600 hover:bg-red-50 border border-red-200"
-                    : "text-green-600 hover:bg-green-50 border border-green-200"
+                    ? isDark
+                      ? "text-red-400 hover:bg-red-500/10 border-red-500/30"
+                      : "text-red-600 hover:bg-red-50 border-red-200"
+                    : isDark
+                    ? "text-green-400 hover:bg-green-500/10 border-green-500/30"
+                    : "text-green-600 hover:bg-green-50 border-green-200"
                 )}
               >
                 {link.status === "active" ? (
@@ -151,23 +181,45 @@ LinkItemProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="opacity-0 group-hover/link:opacity-100 transition-opacity p-1 hover:bg-slate-100 rounded"
+              className={clsx(
+                "opacity-0 group-hover/link:opacity-100 transition-opacity p-1 rounded",
+                isDark ? "hover:bg-gray-700" : "hover:bg-slate-100"
+              )}
             >
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
 
-          <div className="h-px bg-gray-100 w-full mb-4" />
+          <div
+            className={clsx(
+              "h-px w-full mb-4",
+              isDark ? "bg-gray-800" : "bg-gray-100"
+            )}
+          />
 
           {/* Details Row */}
           {isGuest ? (
             /* Guest Link: Simplified view - only show "Guest" label */
             <div className="flex items-center gap-3 text-[1.2em]">
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm border border-white shadow-sm">
+              <div
+                className={clsx(
+                  "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border shadow-sm",
+                  isDark
+                    ? "bg-gray-700 text-gray-400 border-gray-600"
+                    : "bg-gray-200 text-gray-500 border-white"
+                )}
+              >
                 G
               </div>
               <div className="min-w-0">
-                <p className="font-medium text-gray-500">Guest Link</p>
+                <p
+                  className={clsx(
+                    "font-medium",
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  )}
+                >
+                  Guest Link
+                </p>
                 <p className="text-grays text-[0.9em]">Created without login</p>
               </div>
             </div>
@@ -219,7 +271,7 @@ LinkItemProps) {
                 <p className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-green-500" /> Valid:{" "}
                   <b className="text-green-600">
-                    {link.validViews.toLocaleString()}
+                    {(link.validViews ?? 0).toLocaleString()}
                   </b>
                 </p>
                 {link.expiredAt && (

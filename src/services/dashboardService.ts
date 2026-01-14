@@ -107,7 +107,20 @@ export const getMilestone = async (): Promise<MilestoneData> => {
         next_level_cpm: number;
         progress_percent: number;
       };
+      levels: {
+        id: string;
+        name: string;
+        icon: string;
+        icon_color: string;
+        bg_color: string;
+        border_color: string;
+      }[];
     }>("/user/levels");
+
+    // Find current level styling from levels array
+    const currentLevelData = data.levels.find(
+      (l) => l.id.toLowerCase() === data.card.current_level.toLowerCase()
+    );
 
     return {
       icon: Star,
@@ -118,6 +131,11 @@ export const getMilestone = async (): Promise<MilestoneData> => {
       currentBonus: data.card.current_level_cpm,
       nextBonus: data.card.next_level_cpm,
       progress: data.card.progress_percent,
+      // Level styling from DB
+      iconName: currentLevelData?.icon || "star",
+      iconColor: currentLevelData?.icon_color || "text-yellow-400",
+      bgColor: currentLevelData?.bg_color || "bg-yellow-500/10",
+      borderColor: currentLevelData?.border_color || "border-yellow-500/30",
     };
   } catch (error) {
     console.error("Failed to fetch milestone data:", error);
@@ -131,6 +149,10 @@ export const getMilestone = async (): Promise<MilestoneData> => {
       currentBonus: 0,
       nextBonus: 5,
       progress: 0,
+      iconName: "star",
+      iconColor: "text-yellow-400",
+      bgColor: "bg-yellow-500/10",
+      borderColor: "border-yellow-500/30",
     };
   }
 };
@@ -258,16 +280,16 @@ export const getTopLinks = async (): Promise<TopPerformingLink[]> => {
       }[];
     }>("/dashboard/overview");
 
-    // Viewer app base URL (shortlink redirector)
-    const viewerBaseUrl =
-      process.env.NEXT_PUBLIC_VIEWER_URL || "http://localhost:3000";
+    // Shortlink base URL (backend handles shortlink resolution)
+    const shortlinkBaseUrl =
+      process.env.NEXT_PUBLIC_SHORTLINK_URL || "http://localhost:8000";
 
     let untitledCounter = 0;
     return data.top_links.slice(0, 10).map((link) => {
       // Extract code from backend URL: "http://localhost:8000/links/{code}" -> "{code}"
       const urlParts = link.short_url.split("/");
       const code = urlParts[urlParts.length - 1]; // Get last segment as code
-      const cleanShortUrl = `${viewerBaseUrl}/${code}`;
+      const cleanShortUrl = `${shortlinkBaseUrl}/${code}`;
 
       // Use title from backend, or "Untitled" with counter if no title
       let displayTitle = link.title;

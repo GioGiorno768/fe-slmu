@@ -142,7 +142,7 @@ export default function SecuritySettingsSection() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-bluelight to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-bluelight to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-purple-900/30">
           <Shield className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -157,10 +157,10 @@ export default function SecuritySettingsSection() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-50 rounded-2xl p-6 border border-slate-200"
+        className="bg-subcard rounded-2xl p-6 border border-slate-200 dark:border-gray-700"
       >
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-200">
+          <div className="w-10 h-10 rounded-xl bg-card flex items-center justify-center shadow-sm border border-slate-200 dark:border-gray-700">
             <KeyRound className="w-5 h-5 text-bluelight" />
           </div>
           <div>
@@ -188,10 +188,10 @@ export default function SecuritySettingsSection() {
                 onChange={handleChange}
                 autoComplete="current-password"
                 className={clsx(
-                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
+                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-card text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
                   errors.currentPassword
                     ? "border-red-300 focus:ring-red-300"
-                    : "border-slate-200"
+                    : "border-slate-200 dark:border-gray-700"
                 )}
                 placeholder="Enter current password"
               />
@@ -229,10 +229,10 @@ export default function SecuritySettingsSection() {
                 onChange={handleChange}
                 autoComplete="new-password"
                 className={clsx(
-                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
+                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-card text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
                   errors.newPassword
                     ? "border-red-300 focus:ring-red-300"
-                    : "border-slate-200"
+                    : "border-slate-200 dark:border-gray-700"
                 )}
                 placeholder="Enter new password"
               />
@@ -259,7 +259,7 @@ export default function SecuritySettingsSection() {
             {formData.newPassword && (
               <div className="mt-3">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className={clsx(
                         "h-full rounded-full transition-all duration-300",
@@ -300,13 +300,13 @@ export default function SecuritySettingsSection() {
                 onChange={handleChange}
                 autoComplete="new-password"
                 className={clsx(
-                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
+                  "w-full text-[1.4em] pl-12 pr-12 py-3 rounded-xl border bg-card text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight transition-all",
                   errors.confirmPassword
                     ? "border-red-300 focus:ring-red-300"
                     : formData.confirmPassword &&
                       formData.newPassword === formData.confirmPassword
                     ? "border-green-300 focus:ring-green-300"
-                    : "border-slate-200"
+                    : "border-slate-200 dark:border-gray-700"
                 )}
                 placeholder="Confirm new password"
               />
@@ -339,7 +339,7 @@ export default function SecuritySettingsSection() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-bluelight to-indigo-600 text-white text-[1.4em] font-semibold rounded-xl hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-bluelight to-indigo-600 text-white text-[1.4em] font-semibold rounded-xl hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-200 dark:shadow-purple-900/30"
             >
               {isLoading ? (
                 <>
@@ -358,14 +358,14 @@ export default function SecuritySettingsSection() {
       </motion.div>
 
       {/* Security Tips */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+      <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+          <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-[1.4em] font-semibold text-amber-800 mb-1">
+            <h4 className="text-[1.4em] font-semibold text-amber-800 dark:text-amber-300 mb-1">
               Security Tips
             </h4>
-            <ul className="text-[1.2em] text-amber-700 space-y-1">
+            <ul className="text-[1.2em] text-amber-700 dark:text-amber-400 space-y-1">
               <li>• Never share your password with anyone</li>
               <li>• Use a unique password for this account</li>
               <li>• Change your password every 3-6 months</li>

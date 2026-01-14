@@ -2,12 +2,47 @@
 "use client";
 
 import { motion } from "motion/react";
-import { TrendingUp, ChevronRight, Loader2, Lock, Star } from "lucide-react";
+import {
+  TrendingUp,
+  ChevronRight,
+  Loader2,
+  Lock,
+  Star,
+  Shield,
+  Zap,
+  Crown,
+  Gem,
+  Flame,
+  type LucideIcon,
+} from "lucide-react";
 import { Link } from "@/i18n/routing";
 import type { MilestoneData } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
 
-// Terima data lewat props
+// Icon mapping from string name to component
+const iconMap: Record<string, LucideIcon> = {
+  star: Star,
+  shield: Shield,
+  zap: Zap,
+  crown: Crown,
+  gem: Gem,
+  flame: Flame,
+};
+
+// Fallback styles for badge/progress when DB styling is not available
+const getFallbackBadgeStyle = (iconColor?: string) => {
+  // Extract color from iconColor class (e.g., "text-yellow-400" -> "yellow")
+  const colorMatch = iconColor?.match(/text-(\w+)-/);
+  const color = colorMatch?.[1] || "yellow";
+
+  return {
+    badgeBg: `bg-${color}-500/10`,
+    badgeBorder: `border-${color}-500/30`,
+    badgeText: `text-${color}-500`,
+    progressGradient: `from-${color}-400 to-${color}-500`,
+  };
+};
+
 interface MilestoneCardProps {
   data: MilestoneData | null;
 }
@@ -15,18 +50,16 @@ interface MilestoneCardProps {
 export default function MilestoneCard({ data }: MilestoneCardProps) {
   const { format: formatCurrency } = useCurrency();
 
-  // Handle Loading State (Kalau data belum ada)
+  // Handle Loading State
   if (!data) {
     return (
-      <div className="h-full min-h-[180px] bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-center">
+      <div className="h-full min-h-[180px] bg-card p-6 rounded-3xl shadow-sm flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-bluelight" />
       </div>
     );
   }
 
-  // Destructure biar kodingan di bawah lebih bersih
   const {
-    icon: Icon, // Rename jadi huruf besar biar bisa dipake sebagai Component
     currentLevel,
     nextLevel,
     currentEarnings,
@@ -34,113 +67,127 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
     currentBonus,
     nextBonus,
     progress,
+    // Styling from DB
+    iconName,
+    iconColor,
+    bgColor,
+    borderColor,
   } = data;
+
+  // Get icon component from name (fallback to Star)
+  const LevelIcon = iconMap[iconName?.toLowerCase() || "star"] || Star;
+
+  // Use DB styling or fallback
+  const fallbackStyle = getFallbackBadgeStyle(iconColor);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="relative h-full p-8 bg-white rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 shadow-slate-400/50 text-shortblack overflow-hidden flex flex-col justify-between"
+      className="relative h-full p-8 bg-card rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 shadow-slate-400/50 text-shortblack overflow-hidden flex flex-col justify-between"
     >
-      {/* Dekorasi Background */}
-      <div
-        className={`absolute top-0 right-0 w-64 h-64 ${
-          currentLevel === "Rookie"
-            ? "bg-lightgreen-dashboard/50"
-            : "bg-blue-50"
-        } rounded-full -translate-y-1/2 translate-x-1/4 blur-3xl pointer-events-none`}
-      />
-
-      {/* --- HEADER: Current Status --- */}
-      <div className="flex justify-between items-start relative z-10 ">
+      {/* === HEADER === */}
+      <div className="flex justify-between items-start relative z-10">
+        {/* Level Info */}
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-green-50 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10">
-            <Icon
-              className={`w-8 h-8 ${
-                // Cek nama komponen icon-nya (karena Icon sekarang berupa fungsi/objek)
-                // Cara paling aman di sini pake logic props data aja kalau mau styling beda
-                currentLevel === "Rookie" ? "text-green-500" : "text-yellow-300"
-              }`}
+          {/* Icon Container - Dynamic from DB */}
+          <div
+            className={`w-14 h-14 ${
+              bgColor || "bg-yellow-500/10"
+            } backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/5`}
+          >
+            <LevelIcon
+              className={`w-7 h-7 ${iconColor || "text-yellow-400"}`}
             />
           </div>
           <div>
-            <p className="text-[1.2em] text-slate-400 font-medium mb-1">
+            <p className="text-[1.4em] text-grays font-medium mb-0.5">
               Current Rank
             </p>
-            <h3 className="text-[2.4em] font-bold leading-none">
+            <h3 className={`text-[2.2em] font-bold leading-none`}>
               {currentLevel}
             </h3>
           </div>
         </div>
 
-        {/* Badge Bonus CPM */}
-        <div className="text-right hidden md:block">
-          <div className="inline-flex items-center gap-2 bg-lightgreen-dashboard border border-darkgreen-dashboard px-3 py-1.5 rounded-full text-darkgreen-dashboard font-bold text-[1.2em]">
-            <TrendingUp className="w-4 h-4" />
-            <span>+{currentBonus}% CPM Bonus</span>
-          </div>
+        {/* CPM Bonus Badge - Dynamic from DB */}
+        <div
+          className={`hidden md:inline-flex items-center gap-2 ${
+            bgColor || fallbackStyle.badgeBg
+          } border ${
+            borderColor || fallbackStyle.badgeBorder
+          } px-4 py-2 rounded-full ${
+            iconColor?.replace("text-", "text-") || fallbackStyle.badgeText
+          } font-bold text-[1.2em]`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          <span>+{currentBonus}% CPM</span>
         </div>
 
-        <div className="text-right md:hidden block">
-          <div className="flex justify-center flex-col items-center px-3 py-1.5 rounded-full text-darkgreen-dashboard font-bold text-[1.2em]">
-            <div className="text-[2.4em] flex items-center gap-2">
-              <span>+{currentBonus}%</span>
-            </div>
-            <span className="flex">CPM Bonus</span>
-          </div>
+        {/* Mobile CPM Badge */}
+        <div
+          className={`md:hidden ${
+            iconColor || fallbackStyle.badgeText
+          } font-bold text-right`}
+        >
+          <div className="text-[2em]">+{currentBonus}%</div>
+          <span className="text-[1em] opacity-80">CPM Bonus</span>
         </div>
       </div>
 
-      {/* --- BODY: Progress Bar & Target --- */}
+      {/* === PROGRESS SECTION === */}
       <div className="mt-8 relative z-10">
-        <div className="flex justify-between items-end mb-3 text-[1.3em]">
-          <span className="text-shortblack">
-            Earnings:{" "}
+        {/* Earnings Row */}
+        <div className="flex justify-between items-baseline mb-3">
+          <span className="text-[1.3em]">
+            <span className="text-grays">Earnings: </span>
             <b className="text-bluelight">{formatCurrency(currentEarnings)}</b>
           </span>
-          <span className="text-slate-400">
+          <span className="text-[1.2em] text-grays">
             Target: {formatCurrency(nextTarget)}
           </span>
         </div>
 
-        {/* Bar Container */}
-        <div className="h-4 bg-slate-600/10 rounded-full overflow-hidden relative">
-          {/* Bar Fill (Animated) */}
+        {/* Progress Bar - Dynamic gradient based on iconColor */}
+        <div className="h-3 bg-subcard rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full relative"
+            className={`h-full bg-gradient-to-r ${fallbackStyle.progressGradient} rounded-full relative`}
           >
-            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]" />
+            <div className="absolute right-0 top-0 bottom-0 w-3 bg-white/40 blur-[2px] rounded-full" />
           </motion.div>
         </div>
 
         {/* Motivation Text */}
-        <p className="mt-3 text-[1.2em] text-slate-400">
-          You need{" "}
-          <span className="text-bluelight font-bold">
+        <p className="mt-3 text-[1.2em] text-grays">
+          <span className="text-bluelight font-semibold">
             {formatCurrency(nextTarget - currentEarnings)}
           </span>{" "}
           more to unlock{" "}
-          <span className="text-yellow-400 font-bold">{nextLevel}</span>.
+          <span className={`${iconColor || "text-yellow-400"} font-bold`}>
+            {nextLevel}
+          </span>
         </p>
       </div>
 
-      {/* --- FOOTER: Next Reward Preview --- */}
-      <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-3 opacity-70">
-          <Lock className="w-5 h-5 text-slate-400" />
-          <span className="text-[1.2em] text-slate-500">
-            Next Reward:{" "}
-            <span className="text-bluelight font-bold">+{nextBonus}% CPM</span>
+      {/* === FOOTER === */}
+      <div className="mt-6 pt-4 border-t border-gray-dashboard/30 flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-2.5 opacity-70">
+          <Lock className="w-4 h-4 text-grays" />
+          <span className="text-[1.15em] text-grays">
+            Next:{" "}
+            <span className="text-bluelight font-semibold">
+              +{nextBonus}% CPM
+            </span>
           </span>
         </div>
 
         <Link
           href="/levels"
-          className="flex items-center gap-1 text-[1.2em] font-semibold text-bluelight/65 hover:text-bluelight transition-colors group"
+          className="flex items-center gap-1 text-[1.2em] font-semibold text-bluelight/70 hover:text-bluelight transition-colors group"
         >
           View Levels
           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -16,7 +16,9 @@ import { usePathname } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import type { AnalyticsData, TimeRange, StatType } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { motion, AnimatePresence } from "motion/react";
 
 // WAJIB: Import dinamis buat ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), {
@@ -56,6 +58,14 @@ export default function LinkAnalyticsCard({
   const t = useTranslations("Dashboard");
   const path = usePathname();
   const { format: formatCurrency } = useCurrency();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // State UI lokal (Dropdown Open/Close)
   const [isRangeOpen, setIsRangeOpen] = useState(false);
@@ -203,7 +213,7 @@ export default function LinkAnalyticsCard({
         enabled: true,
         shared: true,
         intersect: false,
-        theme: "light",
+        theme: isDark ? "dark" : "light",
         style: {
           fontSize: "13px",
           fontFamily: "Figtree, Inter, sans-serif",
@@ -260,7 +270,7 @@ export default function LinkAnalyticsCard({
       },
       grid: {
         show: true,
-        borderColor: "#f1f5f9",
+        borderColor: "var(--color-gray-dashboard, #e2e8f0)",
         strokeDashArray: 4,
         padding: {
           left: 10,
@@ -271,7 +281,7 @@ export default function LinkAnalyticsCard({
         show: false,
       },
     }),
-    [data, stat, range, formatCurrency]
+    [data, stat, range, formatCurrency, isDark]
   );
 
   // Close dropdown on click outside
@@ -290,7 +300,7 @@ export default function LinkAnalyticsCard({
   const StatIcon = activeStatOption?.icon || BarChart3;
 
   return (
-    <div className="bg-white p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+    <div className="bg-card p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
         <div className="flex items-center gap-3">
@@ -299,7 +309,7 @@ export default function LinkAnalyticsCard({
               "w-10 h-10 rounded-xl flex items-center justify-center shadow-lg",
               stat === "totalEarnings"
                 ? "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-200"
-                : "bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-200"
+                : "bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lightpurple-dashboard"
             )}
           >
             <StatIcon className="w-5 h-5 text-white" />
@@ -308,7 +318,7 @@ export default function LinkAnalyticsCard({
             <h3 className="text-[1.6em] font-bold text-shortblack">
               {t("clickAnalytics")}
             </h3>
-            <p className="text-[1.1em] text-grays">
+            <p className="text-[1.1em] text-bluelight">
               {stat === "totalEarnings" ? "Revenue trend" : "Traffic overview"}
             </p>
           </div>
@@ -319,7 +329,7 @@ export default function LinkAnalyticsCard({
           {path.includes("/dashboard") ? (
             <Link
               href="/analytics"
-              className="text-[1.3em] font-medium text-bluelight px-4 py-2 bg-blues rounded-xl hover:bg-blue-100 transition-all duration-300 flex items-center gap-1"
+              className="text-[1.3em] bg-blues font-medium text-bluelight px-3 py-1.5 rounded-lg hover:bg-blue-dashboard transition-all duration-300 flex items-center gap-1 group"
             >
               <span>Detail</span>
               <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -330,40 +340,63 @@ export default function LinkAnalyticsCard({
               <div className="relative" ref={statRef}>
                 <button
                   onClick={() => setIsStatOpen(!isStatOpen)}
-                  className="flex items-center gap-2 text-[1.3em] font-semibold text-shortblack bg-blues px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors duration-300"
+                  className={clsx(
+                    "flex items-center gap-2 text-[1.3em] font-semibold text-shortblack px-4 py-2 rounded-xl transition-colors duration-300 border border-transparent",
+                    isDark
+                      ? "bg-subcard hover:bg-gray-dashboard/50"
+                      : "bg-blues hover:bg-blue-100"
+                  )}
                 >
                   {statOptions.find((o) => o.key === stat)?.label}
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-300 ${
-                      isStatOpen ? "rotate-180" : ""
-                    }`}
+                    className={clsx(
+                      "w-4 h-4 transition-transform duration-300",
+                      isStatOpen && "rotate-180"
+                    )}
                   />
                 </button>
-                {isStatOpen && (
-                  <div className="absolute top-full right-0 mt-2 p-2 w-max bg-white rounded-xl shadow-xl border border-gray-100 z-[40] animate-in fade-in slide-in-from-top-2 duration-200 ">
-                    {statOptions.map((opt) => {
-                      const Icon = opt.icon;
-                      return (
-                        <button
-                          key={opt.key}
-                          onClick={() => {
-                            onChangeStat(opt.key);
-                            setIsStatOpen(false);
-                          }}
-                          className={clsx(
-                            "flex items-center gap-2 w-full text-left text-[1.3em] px-4 py-2 rounded-lg transition-colors",
-                            stat === opt.key
-                              ? "text-bluelight font-semibold bg-blue-50"
-                              : "text-shortblack hover:bg-blues"
-                          )}
-                        >
-                          <Icon className="w-4 h-4" />
-                          {opt.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {isStatOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                      transition={{ duration: 0.15 }}
+                      className={clsx(
+                        "absolute top-full right-0 mt-2 p-1.5 w-max rounded-xl shadow-xl border z-[40]",
+                        isDark
+                          ? "bg-card border-gray-800"
+                          : "bg-white border-gray-100"
+                      )}
+                    >
+                      {statOptions.map((opt) => {
+                        const Icon = opt.icon;
+                        return (
+                          <button
+                            key={opt.key}
+                            onClick={() => {
+                              onChangeStat(opt.key);
+                              setIsStatOpen(false);
+                            }}
+                            className={clsx(
+                              "flex items-center gap-2 w-full text-left text-[1.3em] px-4 py-2.5 rounded-lg transition-all duration-300",
+                              stat === opt.key
+                                ? isDark
+                                  ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                                  : "bg-bluelight/10 text-bluelight font-semibold"
+                                : isDark
+                                ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                                : "text-shortblack hover:text-bluelight hover:bg-gray-50"
+                            )}
+                          >
+                            <Icon className="w-4 h-4" />
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Dropdown 2: Range Waktu */}
@@ -371,36 +404,59 @@ export default function LinkAnalyticsCard({
                 <div className="relative" ref={rangeRef}>
                   <button
                     onClick={() => setIsRangeOpen(!isRangeOpen)}
-                    className="flex items-center gap-2 text-[1.3em] font-semibold text-shortblack bg-blues px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors duration-300"
+                    className={clsx(
+                      "flex items-center gap-2 text-[1.3em] font-semibold text-shortblack px-4 py-2 rounded-xl transition-colors duration-300 border border-transparent",
+                      isDark
+                        ? "bg-subcard hover:bg-gray-dashboard/50"
+                        : "bg-blues hover:bg-blue-100"
+                    )}
                   >
                     {timeRanges.find((o) => o.key === range)?.label}
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        isRangeOpen ? "rotate-180" : ""
-                      }`}
+                      className={clsx(
+                        "w-4 h-4 transition-transform duration-300",
+                        isRangeOpen && "rotate-180"
+                      )}
                     />
                   </button>
-                  {isRangeOpen && (
-                    <div className="absolute top-full right-0 mt-2 p-2 w-max bg-white rounded-xl shadow-xl border border-gray-100 z-20 animate-in fade-in slide-in-from-top-2 duration-200">
-                      {timeRanges.map((r) => (
-                        <button
-                          key={r.key}
-                          onClick={() => {
-                            onChangeRange(r.key);
-                            setIsRangeOpen(false);
-                          }}
-                          className={clsx(
-                            "block w-full text-left text-[1.3em] px-4 py-2 rounded-lg transition-colors",
-                            range === r.key
-                              ? "text-bluelight font-semibold bg-blue-50"
-                              : "text-shortblack hover:bg-blues"
-                          )}
-                        >
-                          {r.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {isRangeOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.15 }}
+                        className={clsx(
+                          "absolute top-full right-0 mt-2 p-1.5 w-max rounded-xl shadow-xl border z-20",
+                          isDark
+                            ? "bg-card border-gray-800"
+                            : "bg-white border-gray-100"
+                        )}
+                      >
+                        {timeRanges.map((r) => (
+                          <button
+                            key={r.key}
+                            onClick={() => {
+                              onChangeRange(r.key);
+                              setIsRangeOpen(false);
+                            }}
+                            className={clsx(
+                              "block w-full text-left text-[1.3em] px-4 py-2.5 rounded-lg transition-all duration-300",
+                              range === r.key
+                                ? isDark
+                                  ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                                  : "bg-bluelight/10 text-bluelight font-semibold"
+                                : isDark
+                                ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                                : "text-shortblack hover:text-bluelight hover:bg-gray-50"
+                            )}
+                          >
+                            {r.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
             </>
@@ -410,7 +466,7 @@ export default function LinkAnalyticsCard({
 
       {/* Summary Stats */}
       {!isLoading && !error && data && (
-        <div className="flex items-center gap-6 mb-4 pb-4 border-b border-slate-100">
+        <div className="flex items-center gap-6 mb-4 pb-4 border-b border-slate-100 dark:border-gray-dashboard">
           <div className="flex items-center gap-2">
             <span className="text-[1.1em] text-grays">Total:</span>
             <span className="text-[1.3em] font-bold text-shortblack">

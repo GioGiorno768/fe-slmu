@@ -58,6 +58,13 @@ export interface LevelFormData {
   cpmBonus: number;
   benefits: string[];
   colorTheme: string;
+  // Feature locks
+  unlockAdLevel3: boolean;
+  unlockAdLevel4: boolean;
+  unlockTopCountries: boolean;
+  unlockTopReferrers: boolean;
+  maxReferrals: number;
+  monthlyWithdrawalLimit: number;
 }
 
 const defaultFormData: LevelFormData = {
@@ -67,6 +74,13 @@ const defaultFormData: LevelFormData = {
   cpmBonus: 0,
   benefits: [""],
   colorTheme: "blue",
+  // Feature locks defaults
+  unlockAdLevel3: false,
+  unlockAdLevel4: false,
+  unlockTopCountries: false,
+  unlockTopReferrers: false,
+  maxReferrals: 10,
+  monthlyWithdrawalLimit: 100,
 };
 
 export function useManageLevels() {
@@ -121,6 +135,13 @@ export function useManageLevels() {
       cpmBonus: level.cpmBonus,
       benefits: level.benefits.length > 0 ? level.benefits : [""],
       colorTheme: theme.id,
+      // Feature locks
+      unlockAdLevel3: level.unlockAdLevel3 ?? false,
+      unlockAdLevel4: level.unlockAdLevel4 ?? false,
+      unlockTopCountries: level.unlockTopCountries ?? false,
+      unlockTopReferrers: level.unlockTopReferrers ?? false,
+      maxReferrals: level.maxReferrals ?? 10,
+      monthlyWithdrawalLimit: level.monthlyWithdrawalLimit ?? 100,
     });
     setIsModalOpen(true);
   };
@@ -142,6 +163,13 @@ export function useManageLevels() {
       iconColor: theme.iconColor,
       bgColor: theme.bgColor,
       borderColor: theme.borderColor,
+      // Feature locks
+      unlockAdLevel3: formData.unlockAdLevel3,
+      unlockAdLevel4: formData.unlockAdLevel4,
+      unlockTopCountries: formData.unlockTopCountries,
+      unlockTopReferrers: formData.unlockTopReferrers,
+      maxReferrals: formData.maxReferrals,
+      monthlyWithdrawalLimit: formData.monthlyWithdrawalLimit,
     };
 
     setIsSaving(true);

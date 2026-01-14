@@ -4,8 +4,8 @@ import SharedStatsGrid, {
   StatCardData,
 } from "@/components/dashboard/SharedStatsGrid"; // <--- REUSE DISINI
 import { useSuperAdmin } from "@/hooks/useSuperAdmin";
-import { DollarSign, Users, Ban, UserCheck } from "lucide-react";
-import RevenueEstimationChart from "@/components/dashboard/super-admin/RevenueEstimationChart";
+import { Ban, UserCheck, Clock } from "lucide-react";
+import RevenueChartPreview from "@/components/dashboard/super-admin/RevenueChartPreview";
 import AuditLogCard from "@/components/dashboard/super-admin/AuditLogCard";
 import { useState, useEffect } from "react";
 import { getRecentAuditLogs } from "@/services/superAdminService";
@@ -26,24 +26,14 @@ export default function SuperAdminDashboardPage() {
   const formatCurrency = (val: number) =>
     "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
 
-  // MAPPING DATA SUPER ADMIN (Beda Config)
+  // MAPPING DATA SUPER ADMIN - Only security & system stats
   const superAdminCards: StatCardData[] = [
     {
-      id: "paid",
-      title: "Paid Today",
-      value: stats ? formatCurrency(stats.financial.paidToday) : "...",
-      subLabel: "Total Disbursement",
-      trend: stats?.financial.trend,
-      icon: DollarSign,
-      color: "green",
-    },
-    {
-      id: "users",
-      title: "Users Paid",
-      value: stats ? stats.financial.usersPaidToday.toString() : "...",
-      subLabel: "Processed Today",
-      trend: stats?.financial.trend,
-      icon: Users,
+      id: "pending_payment",
+      title: "Total Pending",
+      value: stats ? formatCurrency(stats.financial.pendingTotal) : "...",
+      subLabel: "All Time",
+      icon: Clock,
       color: "blue",
     },
     {
@@ -51,7 +41,6 @@ export default function SuperAdminDashboardPage() {
       title: "Blocked Links",
       value: stats ? stats.security.blockedLinksToday.toString() : "...",
       subLabel: "System Block",
-      trend: stats?.security.trend,
       icon: Ban,
       color: "red",
     },
@@ -63,7 +52,7 @@ export default function SuperAdminDashboardPage() {
         : "...",
       subLabel: "Active Admins",
       icon: UserCheck,
-      color: "orange", // Warna beda buat sistem
+      color: "orange",
     },
   ];
 
@@ -73,14 +62,14 @@ export default function SuperAdminDashboardPage() {
       <SharedStatsGrid
         cards={superAdminCards}
         isLoading={isLoading}
-        columns={4}
+        columns={3}
       />
 
-      {/* 2. Revenue Chart */}
-      <RevenueEstimationChart />
+      {/* 2. Revenue Chart Preview */}
+      <RevenueChartPreview />
 
       {/* 3. Audit Logs */}
-      <AuditLogCard logs={auditLogs} isLoading={isLogsLoading} />
+      {/* <AuditLogCard logs={auditLogs} isLoading={isLogsLoading} /> */}
 
       {/* 4. Chart & Logs */}
       {/* ... (kode chart) ... */}

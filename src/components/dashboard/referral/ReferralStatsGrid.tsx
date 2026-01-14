@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
-import { DollarSign, Users, Activity, TrendingUp } from "lucide-react";
+import {
+  DollarSign,
+  Users,
+  Activity,
+  TrendingUp,
+  AlertTriangle,
+} from "lucide-react";
 import type { ReferralStats } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import clsx from "clsx";
@@ -13,6 +19,9 @@ interface ReferralStatsGridProps {
 export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
   const { format: formatCurrency } = useCurrency();
 
+  const maxReferrals = stats?.maxReferrals ?? 10;
+  const isLimitReached = stats?.isLimitReached ?? false;
+
   const statsData = [
     {
       icon: DollarSign,
@@ -20,21 +29,30 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
       value: formatCurrency(stats?.totalEarnings || 0),
       subLabel: "Total komisi",
       gradient: "from-emerald-500 to-teal-600",
-      bgLight: "bg-emerald-50",
-      shadowColor: "shadow-emerald-200",
-      textColor: "text-emerald-600",
-      borderColor: "border-emerald-100",
+      bgLight: "bg-emerald-500/20",
+      shadowColor: "shadow-emerald-200 dark:shadow-emerald-900/30",
+      textColor: "text-emerald-600 dark:text-emerald-400",
+      borderColor: "border-emerald-100 dark:border-emerald-500/30",
     },
     {
       icon: Users,
       label: "Total Diundang",
-      value: `${stats?.totalReferred || 0}`,
-      subLabel: "User terdaftar",
-      gradient: "from-blue-500 to-indigo-600",
-      bgLight: "bg-blue-50",
-      shadowColor: "shadow-blue-200",
-      textColor: "text-blue-600",
-      borderColor: "border-blue-100",
+      value: `${stats?.totalReferred || 0} / ${maxReferrals}`,
+      subLabel: isLimitReached ? "Limit tercapai!" : "User terdaftar",
+      gradient: isLimitReached
+        ? "from-amber-500 to-orange-600"
+        : "from-blue-500 to-indigo-600",
+      bgLight: isLimitReached ? "bg-amber-500/20" : "bg-blue-500/20",
+      shadowColor: isLimitReached
+        ? "shadow-amber-200 dark:shadow-amber-900/30"
+        : "shadow-blue-200 dark:shadow-blue-900/30",
+      textColor: isLimitReached
+        ? "text-amber-600 dark:text-amber-400"
+        : "text-blue-600 dark:text-blue-400",
+      borderColor: isLimitReached
+        ? "border-amber-200 dark:border-amber-500/30"
+        : "border-blue-100 dark:border-blue-500/30",
+      showWarning: isLimitReached,
     },
     {
       icon: Activity,
@@ -42,10 +60,10 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
       value: `${stats?.activeReferred || 0}`,
       subLabel: "Menghasilkan komisi",
       gradient: "from-orange-500 to-amber-600",
-      bgLight: "bg-orange-50",
-      shadowColor: "shadow-orange-200",
-      textColor: "text-orange-600",
-      borderColor: "border-orange-100",
+      bgLight: "bg-orange-500/20",
+      shadowColor: "shadow-orange-200 dark:shadow-orange-900/30",
+      textColor: "text-orange-600 dark:text-orange-400",
+      borderColor: "border-orange-100 dark:border-orange-500/30",
     },
   ];
 
@@ -60,7 +78,7 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.08, duration: 0.3 }}
             className={clsx(
-              "relative bg-white p-6 rounded-3xl shadow-sm border overflow-hidden",
+              "relative bg-card p-6 rounded-3xl shadow-sm border overflow-hidden",
               "hover:shadow-lg hover:-translate-y-1 transition-all duration-200",
               stat.borderColor
             )}
@@ -74,6 +92,16 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
                 )}
               />
             </div>
+
+            {/* Limit warning badge */}
+            {"showWarning" in stat && stat.showWarning && (
+              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <span className="text-[1em] font-medium text-amber-700 dark:text-amber-300">
+                  Upgrade level!
+                </span>
+              </div>
+            )}
 
             <div className="relative flex items-center gap-5">
               {/* Icon */}

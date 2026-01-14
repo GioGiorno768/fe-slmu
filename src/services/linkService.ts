@@ -127,10 +127,7 @@ export const getLinks = async (
     const formattedLinks: Shortlink[] = apiData.map((link: any) => ({
       id: link.id,
       title: link.title || "Untitled",
-      shortUrl: link.short_url.replace(
-        "http://localhost:8000",
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      ),
+      shortUrl: link.short_url,
       originalUrl: link.original_url,
       dateCreated: link.created_at,
       validViews: link.valid_views || 0,
@@ -172,10 +169,7 @@ export const createLink = async (
     return {
       id: link.code, // Assuming code can act as temporary ID for frontend
       title: link.title || "Untitled",
-      shortUrl: link.short_url.replace(
-        "http://localhost:8000",
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      ),
+      shortUrl: link.short_url,
       originalUrl: link.original_url,
       dateCreated: new Date().toISOString(),
       validViews: 0,
@@ -210,10 +204,7 @@ export const updateLink = async (
     return {
       id: link.id,
       title: link.title,
-      shortUrl: link.short_url.replace(
-        "http://localhost:8000",
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      ),
+      shortUrl: link.short_url,
       originalUrl: link.original_url,
       dateCreated: link.created_at,
       validViews: link.valid_views_count || 0,
@@ -266,10 +257,7 @@ export const createGuestLink = async (
     const data = response.data.data;
 
     return {
-      shortUrl: data.short_url.replace(
-        "http://localhost:8000",
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      ),
+      shortUrl: data.short_url,
       code: data.code,
       originalUrl: data.original_url || originalUrl, // fallback
       isGuest: data.is_guest,
@@ -350,10 +338,7 @@ export const massCreateLinks = async (
     // Map backend response to frontend format
     return results.map((result: any) => ({
       original_url: result.original_url,
-      short_url: result.short_url?.replace(
-        "http://localhost:8000",
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      ),
+      short_url: result.short_url,
       code: result.code,
       error: result.error,
     }));

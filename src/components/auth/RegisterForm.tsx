@@ -40,6 +40,18 @@ export default function RegisterForm() {
   // 🎁 Referrer name state
   const [referrerName, setReferrerName] = useState<string>("");
 
+  // 🔄 Loading state for eligibility check
+  const [isCheckingEligibility, setIsCheckingEligibility] = useState(
+    !!referralCode
+  );
+
+  // Reset loading state when referralCode becomes empty (after redirect)
+  useEffect(() => {
+    if (!referralCode) {
+      setIsCheckingEligibility(false);
+    }
+  }, [referralCode]);
+
   // 🛡️ Anti-Fraud: Check eligibility via API when referral code exists
   useEffect(() => {
     const checkEligibility = async () => {
@@ -55,6 +67,7 @@ export default function RegisterForm() {
       }
 
       try {
+        // 1. Check anti-fraud eligibility
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/referral/check-eligibility`,
           {
@@ -78,12 +91,36 @@ export default function RegisterForm() {
             setReferrerName(data.data.referrer_name || "");
           }
         }
+
+        // 2. Check if referrer has reached their max referrals limit
+        const referrerInfoRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/referral/info?code=${referralCode}`
+        );
+        const referrerInfo = await referrerInfoRes.json();
+
+        if (
+          referrerInfo.status === "success" &&
+          referrerInfo.data?.isLimitReached
+        ) {
+          // Referrer reached limit - redirect to normal register
+          router.replace("/register");
+          return;
+        }
+
+        // Use referrer name from this endpoint if available
+        if (referrerInfo.data?.name) {
+          setReferrerName(referrerInfo.data.name);
+        }
+
+        // Done checking - show form
+        setIsCheckingEligibility(false);
       } catch (error) {
         console.error("Failed to check eligibility:", error);
         // Fallback: cek localStorage
         if (hasEverRegistered()) {
           router.replace("/register");
         }
+        setIsCheckingEligibility(false);
       }
     };
 
@@ -189,6 +226,16 @@ export default function RegisterForm() {
       setLoading(false);
     }
   };
+
+  // 🔄 Show loading spinner while checking eligibility
+  if (isCheckingEligibility) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 space-y-4">
+        <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+        <p className="text-gray-500 text-lg">Memverifikasi undangan...</p>
+      </div>
+    );
+  }
 
   return (
     <>

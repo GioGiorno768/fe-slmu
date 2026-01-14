@@ -12,6 +12,7 @@ import PreferencesSection from "@/components/dashboard/settings/PreferencesSecti
 
 // Services
 import * as settingsService from "@/services/settingsService";
+import { useTheme } from "next-themes";
 
 // Tab Config (Admin only has Profile & Preferences)
 const TABS = [
@@ -37,6 +38,15 @@ export default function AdminSettingsPage() {
   // Data states (admin-specific)
   const [profileData, setProfileData] = useState<any>(null);
   const [preferencesData, setPreferencesData] = useState<any>(null);
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Fetch admin data on mount
   useEffect(() => {
@@ -97,7 +107,12 @@ export default function AdminSettingsPage() {
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* SIDEBAR (STICKY) */}
-        <div className="w-full lg:w-[280px] flex-shrink-0 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 z-20 sticky sm:top-[15em] top-[10em]">
+        <div className={clsx(
+            "w-full lg:w-[280px] flex-shrink-0 rounded-3xl p-4 shadow-sm z-20 sticky sm:top-[15em] top-[10em]",
+            isDark
+              ? "bg-card border border-gray-800"
+              : "bg-white border border-gray-100"
+          )}>
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;

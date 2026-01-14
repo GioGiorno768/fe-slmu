@@ -1,9 +1,11 @@
 // src/app/[locale]/(member)/withdrawal/page.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Loader2, Info } from "lucide-react";
 import { useWithdrawal } from "@/hooks/useWithdrawal";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 // Components
 import WithdrawalStatsCard from "@/components/dashboard/withdrawal/WithdrawalStatsCard";
@@ -14,6 +16,15 @@ import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
 import type { PaymentMethod } from "@/types/type";
 
 export default function WithdrawalPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Panggil Logic dari Hook
   const {
     stats,
@@ -84,9 +95,26 @@ export default function WithdrawalPage() {
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree space-y-8 pb-10">
       {/* Info Card */}
-      <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex items-start gap-4 text-blue-800 shadow-sm">
-        <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
-          <Info className="w-6 h-6 text-bluelight" />
+      <div
+        className={clsx(
+          "rounded-2xl p-6 flex items-start gap-4 shadow-sm",
+          isDark
+            ? "bg-blue-500/10 border border-blue-500/20 text-blue-300"
+            : "bg-blue-50 border border-blue-100 text-blue-800"
+        )}
+      >
+        <div
+          className={clsx(
+            "p-2 rounded-full shrink-0",
+            isDark ? "bg-blue-500/20" : "bg-blue-100"
+          )}
+        >
+          <Info
+            className={clsx(
+              "w-6 h-6",
+              isDark ? "text-blue-400" : "text-bluelight"
+            )}
+          />
         </div>
         <div className="text-[1.4em] leading-relaxed">
           <p>
@@ -94,7 +122,12 @@ export default function WithdrawalPage() {
             diproses paling lambat <strong>3-5 hari</strong> setelah permintaan
             penarikan (tidak termasuk hari libur).
           </p>
-          <p className="mt-2 text-blue-700/80 text-[0.95em]">
+          <p
+            className={clsx(
+              "mt-2 text-[0.95em]",
+              isDark ? "text-blue-400/80" : "text-blue-700/80"
+            )}
+          >
             Jika dalam waktu 3 hari status selesai tapi belum terima dana,
             silahkan hubungi kami.
           </p>

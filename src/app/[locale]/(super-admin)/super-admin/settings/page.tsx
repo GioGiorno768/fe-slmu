@@ -12,8 +12,10 @@ import {
   Bell,
   DollarSign,
   Shield,
+  AlertTriangle,
 } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 // Section Components
 import WithdrawalSettingsSection from "@/components/dashboard/super-admin/settings/WithdrawalSettingsSection";
@@ -24,6 +26,7 @@ import SelfClickSettings from "@/components/dashboard/admin/settings/SelfClickSe
 import TokenSettings from "@/components/dashboard/admin/settings/TokenSettings";
 import CpcRatesSettings from "@/components/dashboard/admin/settings/CpcRatesSettings";
 import GlobalNotificationSection from "@/components/dashboard/super-admin/settings/GlobalNotificationSection";
+import ViolationSettingsSection from "@/components/dashboard/super-admin/settings/ViolationSettingsSection";
 import GlobalAlert from "@/components/dashboard/GlobalAlert";
 
 // Tab Config
@@ -31,6 +34,12 @@ const TABS = [
   { id: "withdrawal", label: "Withdrawal", icon: CreditCard, disabled: false },
   { id: "links", label: "Links", icon: Link2, disabled: false },
   { id: "cpc-rates", label: "CPC Rates", icon: DollarSign, disabled: false },
+  {
+    id: "violations",
+    label: "Violations",
+    icon: AlertTriangle,
+    disabled: true, // Disabled: Cannot auto-detect traffic from other shortlink services
+  },
   { id: "referral", label: "Referral", icon: Users, disabled: false },
   { id: "notification", label: "Notification", icon: Bell, disabled: false },
   { id: "security", label: "Security", icon: Shield, disabled: false },
@@ -40,6 +49,15 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 export default function SuperAdminSettingsPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Use consistent default to prevent hydration mismatch
   const [activeTab, setActiveTab] = useState<TabId>("withdrawal");
 
@@ -79,7 +97,14 @@ export default function SuperAdminSettingsPage() {
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* SIDEBAR (STICKY) */}
-        <div className="w-full lg:w-[280px] shrink-0 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 z-20 sticky sm:top-[15em] top-[10em]">
+        <div
+          className={clsx(
+            "w-full lg:w-[280px] shrink-0 rounded-3xl p-4 shadow-sm z-20 sticky sm:top-[15em] top-[10em]",
+            isDark
+              ? "bg-card border border-gray-800"
+              : "bg-white border border-gray-100"
+          )}
+        >
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -92,16 +117,25 @@ export default function SuperAdminSettingsPage() {
                   className={clsx(
                     "flex items-center sm:justify-start justify-center gap-3 sm:px-5 px-4 py-3.5 rounded-2xl transition-all whitespace-nowrap text-[1.4em] font-medium w-full",
                     isActive
-                      ? "bg-bluelight text-white shadow-md shadow-blue-200"
+                      ? isDark
+                        ? "bg-bluelight text-white shadow-md shadow-purple-900/30"
+                        : "bg-bluelight text-white shadow-md shadow-blue-200"
                       : isDisabled
-                      ? "text-gray-300 cursor-not-allowed"
+                      ? isDark
+                        ? "text-gray-600 cursor-not-allowed"
+                        : "text-gray-300 cursor-not-allowed"
                       : "text-grays hover:bg-blues hover:text-shortblack"
                   )}
                 >
                   <tab.icon className="w-5 h-5" />
                   {tab.label}
                   {isDisabled && (
-                    <span className="ml-auto text-[0.8em] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full hidden sm:block">
+                    <span
+                      className={clsx(
+                        "ml-auto text-[0.8em] text-gray-400 px-2 py-0.5 rounded-full hidden sm:block",
+                        isDark ? "bg-gray-800" : "bg-gray-100"
+                      )}
+                    >
                       Soon
                     </span>
                   )}
@@ -123,7 +157,7 @@ export default function SuperAdminSettingsPage() {
               className={
                 activeTab === "links"
                   ? "space-y-6"
-                  : "bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100"
+                  : "bg-card rounded-3xl p-6 sm:p-8 shadow-sm shadow-shd-card/50"
               }
             >
               {activeTab === "withdrawal" && <WithdrawalSettingsSection />}
@@ -136,6 +170,8 @@ export default function SuperAdminSettingsPage() {
               )}
 
               {activeTab === "cpc-rates" && <CpcRatesSettings />}
+
+              {activeTab === "violations" && <ViolationSettingsSection />}
 
               {activeTab === "referral" && <ReferralSettingsSection />}
 

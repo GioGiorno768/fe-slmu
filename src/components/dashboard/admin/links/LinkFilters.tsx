@@ -5,6 +5,7 @@ import { Filter, ChevronDown, Calendar, Layers, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import clsx from "clsx";
 import type { AdminLinkFilters } from "@/types/type";
+import { useTheme } from "next-themes";
 
 interface LinkFiltersProps {
   filters: AdminLinkFilters;
@@ -16,6 +17,14 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [isAdsOpen, setIsAdsOpen] = useState(false);
   const [isOwnerOpen, setIsOwnerOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   const sortRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -103,7 +112,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+    <div
+      className={clsx(
+        "rounded-2xl border p-6 mb-6",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
+    >
       <div className="flex flex-col gap-5">
         {/* Title Row */}
         <div className="flex items-center justify-between">
@@ -124,7 +138,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] text-shortblack transition-all"
+              className={clsx(
+                "w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] transition-all",
+                isDark
+                  ? "bg-subcard border-gray-700 text-white placeholder:text-gray-500"
+                  : "bg-white border-gray-200 text-shortblack"
+              )}
             />
           </div>
 
@@ -136,10 +155,20 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsStatusOpen(false);
                 setIsAdsOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[150px] justify-between"
+              className={clsx(
+                "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[150px] justify-between",
+                isDark
+                  ? "bg-subcard border-gray-700 hover:bg-gray-700"
+                  : "bg-white border-gray-200 hover:bg-slate-50"
+              )}
             >
               <Calendar className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
+              <span
+                className={clsx(
+                  "font-medium",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {getSortLabel()}
               </span>
               <ChevronDown
@@ -155,7 +184,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 mt-2 w-full bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className={clsx(
+                    "absolute top-full left-0 mt-2 w-full rounded-xl border shadow-lg z-20 overflow-hidden",
+                    isDark
+                      ? "bg-card border-gray-700"
+                      : "bg-white border-gray-200"
+                  )}
                 >
                   {sortOptions.map((opt) => (
                     <button
@@ -165,10 +199,14 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsSortOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] transition-colors",
                         filters.sort === opt.value
-                          ? "bg-blues text-bluelight font-medium"
-                          : "text-shortblack"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-medium"
+                            : "bg-blues text-bluelight font-medium"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                          : "text-shortblack hover:bg-blues"
                       )}
                     >
                       {opt.label}
@@ -187,10 +225,20 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsAdsOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className={clsx(
+                "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[140px] justify-between",
+                isDark
+                  ? "bg-subcard border-gray-700 hover:bg-gray-700"
+                  : "bg-white border-gray-200 hover:bg-slate-50"
+              )}
             >
               <Filter className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
+              <span
+                className={clsx(
+                  "font-medium",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {getStatusLabel()}
               </span>
               <ChevronDown
@@ -206,7 +254,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className={clsx(
+                    "absolute top-full right-0 mt-2 w-40 rounded-xl border shadow-lg z-20 overflow-hidden",
+                    isDark
+                      ? "bg-card border-gray-700"
+                      : "bg-white border-gray-200"
+                  )}
                 >
                   {statusOptions.map((opt) => (
                     <button
@@ -216,10 +269,14 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsStatusOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] transition-colors",
                         filters.status === opt.value
-                          ? "bg-blues text-bluelight font-medium"
-                          : "text-shortblack"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-medium"
+                            : "bg-blues text-bluelight font-medium"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                          : "text-shortblack hover:bg-blues"
                       )}
                     >
                       {opt.label}
@@ -238,10 +295,20 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsStatusOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className={clsx(
+                "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[140px] justify-between",
+                isDark
+                  ? "bg-subcard border-gray-700 hover:bg-gray-700"
+                  : "bg-white border-gray-200 hover:bg-slate-50"
+              )}
             >
               <Layers className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
+              <span
+                className={clsx(
+                  "font-medium",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {getAdsLabel()}
               </span>
               <ChevronDown
@@ -257,7 +324,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className={clsx(
+                    "absolute top-full right-0 mt-2 w-40 rounded-xl border shadow-lg z-20 overflow-hidden",
+                    isDark
+                      ? "bg-card border-gray-700"
+                      : "bg-white border-gray-200"
+                  )}
                 >
                   {adsOptions.map((opt) => (
                     <button
@@ -267,10 +339,14 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsAdsOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] transition-colors",
                         filters.adsLevel === opt.value
-                          ? "bg-blues text-bluelight font-medium"
-                          : "text-shortblack"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-medium"
+                            : "bg-blues text-bluelight font-medium"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                          : "text-shortblack hover:bg-blues"
                       )}
                     >
                       {opt.label}
@@ -290,10 +366,20 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsStatusOpen(false);
                 setIsAdsOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className={clsx(
+                "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[140px] justify-between",
+                isDark
+                  ? "bg-subcard border-gray-700 hover:bg-gray-700"
+                  : "bg-white border-gray-200 hover:bg-slate-50"
+              )}
             >
               <Filter className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
+              <span
+                className={clsx(
+                  "font-medium",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {getOwnerLabel()}
               </span>
               <ChevronDown
@@ -309,7 +395,12 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className={clsx(
+                    "absolute top-full right-0 mt-2 w-40 rounded-xl border shadow-lg z-20 overflow-hidden",
+                    isDark
+                      ? "bg-card border-gray-700"
+                      : "bg-white border-gray-200"
+                  )}
                 >
                   {ownerOptions.map((opt) => (
                     <button
@@ -319,10 +410,14 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsOwnerOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] transition-colors",
                         filters.ownerType === opt.value
-                          ? "bg-blues text-bluelight font-medium"
-                          : "text-shortblack"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-medium"
+                            : "bg-blues text-bluelight font-medium"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                          : "text-shortblack hover:bg-blues"
                       )}
                     >
                       {opt.label}

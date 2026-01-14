@@ -3,7 +3,6 @@
 import { useAlert } from "@/hooks/useAlert";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
-import { useEffect } from "react";
 
 export default function GlobalAlert() {
   const { isOpen, message, title, type, hideAlert } = useAlert();
@@ -12,27 +11,23 @@ export default function GlobalAlert() {
   const alertConfig = {
     success: {
       icon: <CheckCircle className="w-6 h-6 text-green-500" />,
-      bgColor: "bg-white",
       borderColor: "border-l-4 border-green-500",
-      titleColor: "text-green-700",
+      titleColor: "text-green-600 dark:text-green-400",
     },
     error: {
       icon: <XCircle className="w-6 h-6 text-red-500" />,
-      bgColor: "bg-white",
       borderColor: "border-l-4 border-red-500",
-      titleColor: "text-red-700",
+      titleColor: "text-red-600 dark:text-red-400",
     },
     warning: {
       icon: <AlertTriangle className="w-6 h-6 text-yellow-500" />,
-      bgColor: "bg-white",
       borderColor: "border-l-4 border-yellow-500",
-      titleColor: "text-yellow-700",
+      titleColor: "text-yellow-600 dark:text-yellow-400",
     },
     info: {
       icon: <Info className="w-6 h-6 text-blue-500" />,
-      bgColor: "bg-white",
       borderColor: "border-l-4 border-blue-500",
-      titleColor: "text-blue-700",
+      titleColor: "text-blue-600 dark:text-blue-400",
     },
   };
 
@@ -51,10 +46,10 @@ export default function GlobalAlert() {
           <div
             className={`
               pointer-events-auto flex items-center gap-4 p-4 rounded-lg shadow-2xl 
-              ${config.bgColor} ${config.borderColor} border border-gray-100 w-full
+              bg-subcard ${config.borderColor} border border-gray-dashboard/30 w-full
             `}
           >
-            <div className="flex-shrink-0 mt-0.5">{config.icon}</div>
+            <div className="shrink-0 mt-0.5">{config.icon}</div>
             <div className="flex-1 min-w-0">
               {title && (
                 <h3
@@ -63,13 +58,11 @@ export default function GlobalAlert() {
                   {title}
                 </h3>
               )}
-              <p className="text-[1.6em] text-gray-600 leading-snug">
-                {message}
-              </p>
+              <p className="text-[1.6em] text-grays leading-snug">{message}</p>
             </div>
             <button
               onClick={hideAlert}
-              className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+              className="shrink-0 text-grays hover:text-shortblack transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

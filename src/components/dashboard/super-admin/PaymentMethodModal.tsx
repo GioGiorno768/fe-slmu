@@ -14,6 +14,7 @@ import {
   CURRENCIES,
   getInputTypesForPaymentType,
 } from "@/services/paymentTemplateAdminService";
+import { useTheme } from "next-themes";
 
 interface PaymentMethodModalProps {
   isOpen: boolean;
@@ -56,6 +57,15 @@ export default function PaymentMethodModal({
     is_active: true,
     sort_order: 0,
   });
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Initialize form with editing data
   useEffect(() => {
@@ -129,30 +139,61 @@ export default function PaymentMethodModal({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto font-figtree text-[10px]"
+              className={clsx(
+                "w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto font-figtree text-[10px]",
+                isDark ? "bg-card" : "bg-white"
+              )}
             >
               {/* Header */}
-              <div className="flex justify-between items-center px-8 py-6 border-b border-gray-100">
+              <div
+                className={clsx(
+                  "flex justify-between items-center px-8 py-6 border-b",
+                  isDark ? "border-gray-700" : "border-gray-100"
+                )}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-bluelight/10 flex items-center justify-center">
+                  <div
+                    className={clsx(
+                      "w-10 h-10 rounded-xl flex items-center justify-center",
+                      isDark ? "bg-bluelight/20" : "bg-bluelight/10"
+                    )}
+                  >
                     <TypeIcon className="w-5 h-5 text-bluelight" />
                   </div>
                   <div>
-                    <h2 className="text-[2em] font-bold text-shortblack">
+                    <h2
+                      className={clsx(
+                        "text-[2em] font-bold",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       {editingTemplate
                         ? "Edit Payment Method"
                         : "Add Payment Method"}
                     </h2>
-                    <p className="text-[1.2em] text-grays">
+                    <p
+                      className={clsx(
+                        "text-[1.2em]",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    >
                       Configure payment method template for users
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                  className={clsx(
+                    "p-2 rounded-full transition-colors",
+                    isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                  )}
                 >
-                  <X className="w-5 h-5 text-grays" />
+                  <X
+                    className={clsx(
+                      "w-5 h-5",
+                      isDark ? "text-gray-400" : "text-grays"
+                    )}
+                  />
                 </button>
               </div>
 
@@ -164,7 +205,12 @@ export default function PaymentMethodModal({
               >
                 {/* Provider Name */}
                 <div>
-                  <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                  <label
+                    className={clsx(
+                      "block text-[1.3em] font-bold mb-2",
+                      isDark ? "text-white" : "text-shortblack"
+                    )}
+                  >
                     Provider Name
                   </label>
                   <input
@@ -173,7 +219,12 @@ export default function PaymentMethodModal({
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em]"
+                    className={clsx(
+                      "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
+                      isDark
+                        ? "bg-subcard text-white placeholder:text-gray-500 focus:bg-card"
+                        : "bg-gray-50 focus:bg-white"
+                    )}
                     placeholder="e.g., GoPay, BCA, Bitcoin"
                     required
                   />
@@ -183,7 +234,12 @@ export default function PaymentMethodModal({
                 <div className="grid grid-cols-2 gap-4">
                   {/* Payment Type */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Payment Type
                     </label>
                     <select
@@ -194,7 +250,12 @@ export default function PaymentMethodModal({
                           type: e.target.value as any,
                         })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em] cursor-pointer"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                     >
                       {PAYMENT_TYPES.map((pt) => (
                         <option key={pt.value} value={pt.value}>
@@ -206,7 +267,12 @@ export default function PaymentMethodModal({
 
                   {/* Currency */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Currency
                     </label>
                     <select
@@ -214,7 +280,12 @@ export default function PaymentMethodModal({
                       onChange={(e) =>
                         setFormData({ ...formData, currency: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em] cursor-pointer"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                     >
                       {CURRENCIES.map((c) => (
                         <option key={c.value} value={c.value}>
@@ -229,7 +300,12 @@ export default function PaymentMethodModal({
                 <div className="grid grid-cols-2 gap-4">
                   {/* Input Type */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Input Type
                     </label>
                     <select
@@ -240,7 +316,12 @@ export default function PaymentMethodModal({
                           input_type: e.target.value as any,
                         })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em] cursor-pointer"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                     >
                       {availableInputTypes.map((it) => (
                         <option key={it.value} value={it.value}>
@@ -248,14 +329,24 @@ export default function PaymentMethodModal({
                         </option>
                       ))}
                     </select>
-                    <p className="text-[1.1em] text-grays mt-1">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-1",
+                        isDark ? "text-gray-500" : "text-grays"
+                      )}
+                    >
                       Type of input user will fill
                     </p>
                   </div>
 
                   {/* Input Label */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Input Label
                     </label>
                     <input
@@ -267,11 +358,21 @@ export default function PaymentMethodModal({
                           input_label: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em]"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
+                        isDark
+                          ? "bg-subcard text-white placeholder:text-gray-500 focus:bg-card"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                       placeholder="e.g., Nomor HP GoPay"
                       required
                     />
-                    <p className="text-[1.1em] text-grays mt-1">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-1",
+                        isDark ? "text-gray-500" : "text-grays"
+                      )}
+                    >
                       Label shown to user
                     </p>
                   </div>
@@ -279,7 +380,12 @@ export default function PaymentMethodModal({
 
                 {/* Fee */}
                 <div>
-                  <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                  <label
+                    className={clsx(
+                      "block text-[1.3em] font-bold mb-2",
+                      isDark ? "text-white" : "text-shortblack"
+                    )}
+                  >
                     Fee (USD)
                   </label>
                   <input
@@ -293,20 +399,45 @@ export default function PaymentMethodModal({
                         fee: parseFloat(e.target.value) || 0,
                       })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white outline-none transition-all text-[1.3em]"
+                    className={clsx(
+                      "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
+                      isDark
+                        ? "bg-subcard text-white focus:bg-card"
+                        : "bg-gray-50 focus:bg-white"
+                    )}
                   />
-                  <p className="text-[1.1em] text-grays mt-1">
+                  <p
+                    className={clsx(
+                      "text-[1.1em] mt-1",
+                      isDark ? "text-gray-500" : "text-grays"
+                    )}
+                  >
                     Admin fee charged to user for each withdrawal
                   </p>
                 </div>
 
                 {/* Active Toggle */}
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div
+                  className={clsx(
+                    "flex items-center justify-between p-4 rounded-xl",
+                    isDark ? "bg-subcard" : "bg-gray-50"
+                  )}
+                >
                   <div>
-                    <p className="text-[1.3em] font-bold text-shortblack">
+                    <p
+                      className={clsx(
+                        "text-[1.3em] font-bold",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Active Status
                     </p>
-                    <p className="text-[1.1em] text-grays">
+                    <p
+                      className={clsx(
+                        "text-[1.1em]",
+                        isDark ? "text-gray-500" : "text-grays"
+                      )}
+                    >
                       Users can select this payment method
                     </p>
                   </div>
@@ -320,7 +451,11 @@ export default function PaymentMethodModal({
                     }
                     className={clsx(
                       "w-14 h-7 rounded-full transition-all relative",
-                      formData.is_active ? "bg-green-500" : "bg-gray-300"
+                      formData.is_active
+                        ? "bg-green-500"
+                        : isDark
+                        ? "bg-gray-600"
+                        : "bg-gray-300"
                     )}
                   >
                     <div
@@ -336,7 +471,12 @@ export default function PaymentMethodModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-shortblack to-gray-800 text-white py-4 rounded-2xl font-bold text-[1.5em] hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={clsx(
+                    "w-full py-4 rounded-2xl font-bold text-[1.5em] hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed",
+                    isDark
+                      ? "bg-bluelight text-white"
+                      : "bg-linear-to-r from-shortblack to-gray-800 text-white"
+                  )}
                 >
                   {isSubmitting
                     ? "Saving..."

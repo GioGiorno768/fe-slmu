@@ -30,6 +30,8 @@ import type {
 } from "@/types/type";
 import { Link } from "@/i18n/routing";
 import { useAdsInfo } from "@/hooks/useAdsInfo";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
+import { useTheme } from "next-themes";
 
 // Definisi Props
 interface CreateShortlinkProps {
@@ -49,6 +51,15 @@ export default function CreateShortlink({
 
   // Fetch ad levels from API
   const { levels: adLevelsFromApi, isLoading: isLoadingLevels } = useAdsInfo();
+  const { isAdLevelUnlocked } = useFeatureLocks();
+  const { theme } = useTheme();
+
+  // Prevent hydration mismatch - wait for client-side
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isDark = mounted && theme === "dark";
 
   // Helper Timezone Local
   const getMinDateTimeLocal = () => {
@@ -77,10 +88,12 @@ export default function CreateShortlink({
 
   const adsLevelRef = useRef<HTMLDivElement>(null);
 
-  // Map API data to dropdown options
-  const adLevels = adLevelsFromApi.map((level) => ({
+  // Map API data to dropdown options with lock status
+  const adLevels = adLevelsFromApi.map((level, index) => ({
     key: level.slug as AdLevel,
     label: level.name,
+    isLocked: !isAdLevelUnlocked(index + 1),
+    requiredLevel: index === 2 ? "Elite" : index === 3 ? "Pro" : "",
   }));
 
   // Set default adsLevel when API loads
@@ -209,10 +222,16 @@ export default function CreateShortlink({
   return (
     <div className="space-y-6">
       {/* FORM CARD */}
-      <div className="bg-white p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-100">
+      <div className="bg-card p-7 rounded-3xl shadow-sm shadow-slate-500/50">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-bluelight to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+                isDark
+                  ? "bg-gradient-to-br from-blue-background-gradient to-purple-background-gradient shadow-lightpurple-dashboard/30"
+                  : "bg-gradient-to-br from-bluelight to-indigo-600 shadow-blue-200"
+              }`}
+            >
               <LinkIcon className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-[1.8em] font-bold text-shortblack tracking-tight">
@@ -221,7 +240,7 @@ export default function CreateShortlink({
           </div>
           <button
             onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-            className="flex items-center gap-2 text-[1.3em] font-semibold text-bluelight bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-all border border-blue-100"
+            className="flex items-center gap-2 text-[1.3em] font-semibold text-bluelight bg-subcard px-4 py-2 rounded-xl hover:bg-blues transition-all border border-gray-dashboard/30"
           >
             {isAdvancedOpen ? (
               <Minus className="w-4 h-4" />
@@ -239,7 +258,7 @@ export default function CreateShortlink({
               name="url"
               value={formData.url}
               onChange={handleChange}
-              className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
+              className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays"
               placeholder={t("pasteUrl")}
               required
             />
@@ -250,7 +269,7 @@ export default function CreateShortlink({
               onChange={handleAliasChange}
               autoComplete="off"
               maxLength={20}
-              className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
+              className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays"
               placeholder={t("setAlias")}
             />
           </div>
@@ -272,7 +291,7 @@ export default function CreateShortlink({
                       value={formData.password}
                       onChange={handleChange}
                       autoComplete="new-password"
-                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
+                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays"
                       placeholder={t("setPassword")}
                     />
                   </div>
@@ -283,7 +302,7 @@ export default function CreateShortlink({
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
-                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
+                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays"
                       placeholder={t("setTitle")}
                     />
                   </div>
@@ -294,7 +313,7 @@ export default function CreateShortlink({
                       name="expiresAt"
                       value={formData.expiresAt}
                       onChange={handleChange}
-                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues"
+                      className="w-full text-[1.6em] px-10 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays"
                       min={getMinDateTimeLocal()}
                     />
                   </div>
@@ -306,7 +325,7 @@ export default function CreateShortlink({
                       type="button"
                       onClick={() => setIsAdsLevelOpen(!isAdsLevelOpen)}
                       disabled={isLoadingLevels}
-                      className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-200 bg-blues flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight disabled:opacity-50"
+                      className="w-full text-[1.6em] px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight disabled:opacity-50"
                     >
                       {isLoadingLevels ? (
                         <span className="text-grays flex items-center gap-2">
@@ -331,20 +350,32 @@ export default function CreateShortlink({
                           initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -5 }}
-                          className="absolute top-full right-0 mt-2 p-2 w-full bg-white rounded-lg shadow-lg z-20 border border-gray-100"
+                          className="absolute top-full right-0 mt-2 p-2 w-full bg-card rounded-lg shadow-lg z-20 border border-gray-dashboard/30"
                         >
                           {adLevels.map((level) => (
                             <button
                               key={level.key}
                               type="button"
-                              onClick={() => handleAdLevelChange(level.key)}
-                              className={`block w-full text-left text-[1.4em] px-3 py-2 rounded-md ${
-                                formData.adsLevel === level.key
-                                  ? "text-bluelight font-semibold bg-blue-dashboard"
-                                  : "text-shortblack hover:bg-blues"
+                              onClick={() =>
+                                !level.isLocked &&
+                                handleAdLevelChange(level.key)
+                              }
+                              disabled={level.isLocked}
+                              className={`w-full text-left text-[1.4em] px-3 py-2 rounded-md flex items-center justify-between gap-2 ${
+                                level.isLocked
+                                  ? "text-gray-400 cursor-not-allowed"
+                                  : formData.adsLevel === level.key
+                                  ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                                  : "text-shortblack hover:bg-subcard"
                               }`}
                             >
-                              {level.label}
+                              <span>{level.label}</span>
+                              {level.isLocked && (
+                                <span className="flex items-center gap-1 text-[0.85em] text-gray-400">
+                                  <Lock className="w-3 h-3" />
+                                  <span>{level.requiredLevel}</span>
+                                </span>
+                              )}
                             </button>
                           ))}
                         </motion.div>
@@ -352,7 +383,7 @@ export default function CreateShortlink({
                     </AnimatePresence>
                     <Link
                       href={"/ads-info"}
-                      className="relative px-[1.5em] rounded-lg bg-blue-dashboard flex items-center justify-center"
+                      className="relative px-[1.5em] rounded-lg bg-subcard flex items-center justify-center hover:bg-blues transition-colors"
                     >
                       <Megaphone className="w-6 h-6 text-bluelight" />
                     </Link>
@@ -365,7 +396,11 @@ export default function CreateShortlink({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-bluelight to-indigo-600 text-white text-[1.5em] font-semibold py-4 rounded-2xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-blue-200 relative"
+            className={`w-full text-white text-[1.5em] font-semibold py-4 rounded-2xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg relative ${
+              isDark
+                ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient shadow-lightpurple-dashboard/50"
+                : "bg-gradient-to-r from-bluelight to-indigo-600 shadow-blue-200"
+            }`}
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -401,9 +436,9 @@ export default function CreateShortlink({
             className="grid grid-cols-1 custom:grid-cols-3 gap-4"
           >
             {/* Short Link */}
-            <div className="bg-white p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3">
+            <div className="bg-card p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3 border border-gray-dashboard/30">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-blue-dashboard flex-shrink-0 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-subcard flex-shrink-0 flex items-center justify-center">
                   <LinkIcon className="w-5 h-5 text-bluelight" />
                 </div>
                 <div className="min-w-0">
@@ -429,14 +464,14 @@ export default function CreateShortlink({
             </div>
 
             {/* Share */}
-            <div className="bg-white p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3">
+            <div className="bg-card p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3 border border-gray-dashboard/30">
               <div className="flex items-center gap-2">
                 {socialPlatforms.map((platform) => (
                   <button
                     key={platform.name}
                     onClick={() => handleSocialShare(platform)}
                     title={`Share to ${platform.name}`}
-                    className="w-9 h-9 flex items-center justify-center rounded-full bg-blues hover:bg-blue-dashboard transition-colors"
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-subcard hover:bg-blues transition-colors"
                   >
                     {platform.icon}
                   </button>
@@ -452,9 +487,9 @@ export default function CreateShortlink({
             </div>
 
             {/* Original Link */}
-            <div className="bg-white p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3">
+            <div className="bg-card p-4 rounded-xl shadow-sm shadow-slate-500/50 flex items-center justify-between gap-3 border border-gray-dashboard/30">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-blue-dashboard flex-shrink-0 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-subcard flex-shrink-0 flex items-center justify-center">
                   <LinkIcon className="w-5 h-5 text-bluelight" />
                 </div>
                 <div className="min-w-0">

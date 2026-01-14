@@ -54,7 +54,7 @@ export default function AnalyticsHeader({
   }, []);
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 font-figtree">
+    <div className="bg-card rounded-3xl shadow-sm border border-gray-dashboard/30 p-6 md:p-8 font-figtree">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Left: Title & Description */}
         <div>
@@ -91,7 +91,7 @@ export default function AnalyticsHeader({
             whileTap={{ scale: 0.95 }}
             onClick={onRefresh}
             disabled={isRefetching}
-            className="flex items-center justify-center w-12 h-12 rounded-xl bg-gray-50 hover:bg-bluelight/10 border border-gray-200 hover:border-bluelight/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center w-12 h-12 rounded-xl bg-subcard hover:bg-blues border border-gray-dashboard/30 hover:border-bluelight/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             title="Refresh data"
           >
             <motion.div
@@ -116,7 +116,7 @@ export default function AnalyticsHeader({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-3 text-[1.4em] font-semibold text-shortblack bg-gray-50 hover:bg-bluelight/10 px-6 py-3.5 rounded-2xl transition-all duration-300 border border-gray-200 hover:border-bluelight/30"
+              className="flex items-center gap-3 text-[1.4em] font-semibold text-shortblack bg-subcard hover:bg-blues px-6 py-3.5 rounded-2xl transition-all duration-300 border border-gray-dashboard/30 hover:border-bluelight/30"
             >
               <span>{currentLabel}</span>
               <motion.div
@@ -135,7 +135,7 @@ export default function AnalyticsHeader({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute top-full right-0 mt-3 p-2.5 w-max min-w-[160px] bg-white rounded-2xl shadow-xl shadow-gray-200/60 border border-gray-100 z-20"
+                  className="absolute top-full right-0 mt-3 p-2.5 w-max min-w-[160px] bg-card rounded-2xl shadow-xl border border-gray-dashboard/30 z-20"
                 >
                   {filterOptions.map((option, index) => (
                     <motion.button
@@ -143,25 +143,28 @@ export default function AnalyticsHeader({
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      whileHover={{ x: 4, backgroundColor: "#f8fafc" }}
                       onClick={() => {
                         onRangeChange(option.value);
                         setIsOpen(false);
                       }}
-                      className={`flex items-center justify-between w-full text-left text-[1.3em] px-4 py-3 rounded-xl transition-colors duration-150 ${
+                      className={`flex items-center gap-2 w-full text-left text-[1.3em] px-4 py-3 rounded-xl transition-all duration-300 ${
                         range === option.value
-                          ? "text-bluelight font-semibold bg-blue-50"
-                          : "text-shortblack"
+                          ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient bg-bluelight/10 text-bluelight dark:text-tx-blue-dashboard font-semibold"
+                          : "text-shortblack dark:text-grays hover:text-bluelight hover:dark:text-tx-blue-dashboard hover:bg-subcard"
                       }`}
                     >
+                      {range === option.value && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-bluelight dark:bg-tx-blue-dashboard shrink-0" />
+                      )}
                       <span>{option.label}</span>
                       {range === option.value && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ type: "spring", stiffness: 500 }}
+                          className="ml-auto"
                         >
-                          <Check className="w-4 h-4 text-bluelight" />
+                          <Check className="w-4 h-4 text-bluelight dark:text-tx-blue-dashboard" />
                         </motion.div>
                       )}
                     </motion.button>

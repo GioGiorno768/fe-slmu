@@ -6,10 +6,21 @@ import { motion } from "motion/react";
 import { MousePointerClick, Loader2, Check, Info } from "lucide-react";
 import { useSelfClickSettings } from "@/hooks/useSelfClickSettings";
 import Toast from "@/components/common/Toast";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 export default function SelfClickSettings() {
   const { settings, isLoading, updateSettings, isUpdating } =
     useSelfClickSettings();
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Local form state
   const [enabled, setEnabled] = useState(settings.enabled);
@@ -57,7 +68,12 @@ export default function SelfClickSettings() {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+      <div
+        className={clsx(
+          "rounded-3xl p-6 shadow-sm border",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      >
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-8 h-8 animate-spin text-bluelight" />
         </div>
@@ -69,28 +85,73 @@ export default function SelfClickSettings() {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100"
+      className={clsx(
+        "rounded-3xl p-6 shadow-sm border",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
     >
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-        <div className="p-3 bg-purple-100 rounded-2xl">
-          <MousePointerClick className="w-6 h-6 text-purple-600" />
+      <div
+        className={clsx(
+          "flex items-center gap-4 mb-6 pb-4 border-b",
+          isDark ? "border-gray-700" : "border-gray-100"
+        )}
+      >
+        <div
+          className={clsx(
+            "p-3 rounded-2xl",
+            isDark ? "bg-purple-500/20" : "bg-purple-100"
+          )}
+        >
+          <MousePointerClick
+            className={clsx(
+              "w-6 h-6",
+              isDark ? "text-purple-400" : "text-purple-600"
+            )}
+          />
         </div>
         <div>
-          <h2 className="text-[1.8em] font-bold text-shortblack">
+          <h2
+            className={clsx(
+              "text-[1.8em] font-bold",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             Pengaturan Self-Click
           </h2>
-          <p className="text-[1.2em] text-grays">
+          <p
+            className={clsx(
+              "text-[1.2em]",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
             Atur batas dan earning untuk klik link sendiri
           </p>
         </div>
       </div>
 
       {/* Info Banner */}
-      <div className="bg-blue-50 rounded-2xl p-4 mb-6 flex gap-3">
+      <div
+        className={clsx(
+          "rounded-2xl p-4 mb-6 flex gap-3",
+          isDark ? "bg-blue-500/10" : "bg-blue-50"
+        )}
+      >
         <Info className="w-5 h-5 text-bluelight shrink-0 mt-0.5" />
-        <div className="text-[1.2em] text-gray-600">
-          <p className="font-medium text-shortblack mb-1">Cara Kerja:</p>
+        <div
+          className={clsx(
+            "text-[1.2em]",
+            isDark ? "text-gray-300" : "text-gray-600"
+          )}
+        >
+          <p
+            className={clsx(
+              "font-medium mb-1",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
+            Cara Kerja:
+          </p>
           <ul className="list-disc ml-4 space-y-1">
             <li>
               Self-click terdeteksi jika IP DAN Fingerprint sama dengan owner
@@ -106,37 +167,69 @@ export default function SelfClickSettings() {
       {/* Settings Form */}
       <div className="space-y-6">
         {/* Enable Toggle */}
-        <div className="flex items-center justify-between p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "flex items-center justify-between p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div>
-            <h3 className="text-[1.4em] font-semibold text-shortblack">
+            <h3
+              className={clsx(
+                "text-[1.4em] font-semibold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               Aktifkan Self-Click Earning
             </h3>
-            <p className="text-[1.2em] text-grays">
+            <p
+              className={clsx(
+                "text-[1.2em]",
+                isDark ? "text-gray-400" : "text-grays"
+              )}
+            >
               Izinkan user mendapat earning dari klik link sendiri
             </p>
           </div>
           <button
             onClick={() => setEnabled(!enabled)}
-            className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${
-              enabled ? "bg-bluelight" : "bg-gray-300"
-            }`}
+            className={clsx(
+              "relative w-14 h-7 rounded-full transition-colors duration-300",
+              enabled ? "bg-bluelight" : isDark ? "bg-gray-600" : "bg-gray-300"
+            )}
           >
             <div
-              className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${
+              className={clsx(
+                "absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300",
                 enabled ? "left-8" : "left-1"
-              }`}
+              )}
             />
           </button>
         </div>
 
         {/* CPC Percentage */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Persentase CPC Self-Click
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Berapa % dari rate normal yang didapat dari self-click
               </p>
             </div>
@@ -151,10 +244,18 @@ export default function SelfClickSettings() {
             step="5"
             value={cpcPercentage}
             onChange={(e) => setCpcPercentage(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-bluelight"
+            className={clsx(
+              "w-full h-2 rounded-lg appearance-none cursor-pointer accent-bluelight",
+              isDark ? "bg-gray-700" : "bg-gray-200"
+            )}
             disabled={!enabled}
           />
-          <div className="flex justify-between text-[1.1em] text-grays mt-1">
+          <div
+            className={clsx(
+              "flex justify-between text-[1.1em] mt-1",
+              isDark ? "text-gray-500" : "text-grays"
+            )}
+          >
             <span>0%</span>
             <span>50%</span>
             <span>100%</span>
@@ -162,13 +263,28 @@ export default function SelfClickSettings() {
         </div>
 
         {/* Daily Limit */}
-        <div className="p-4 bg-blues rounded-2xl">
+        <div
+          className={clsx(
+            "p-4 rounded-2xl",
+            isDark ? "bg-subcard" : "bg-blues"
+          )}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-[1.4em] font-semibold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.4em] font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Limit Harian Per User
               </h3>
-              <p className="text-[1.2em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Maksimal self-click yang dapat earning per hari
               </p>
             </div>
@@ -176,17 +292,34 @@ export default function SelfClickSettings() {
               <button
                 onClick={() => setDailyLimit(Math.max(1, dailyLimit - 1))}
                 disabled={!enabled || dailyLimit <= 1}
-                className="w-10 h-10 rounded-xl bg-white border border-gray-200 text-shortblack font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                className={clsx(
+                  "w-10 h-10 rounded-xl border font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors",
+                  isDark
+                    ? "bg-card border-gray-700 text-white hover:bg-gray-700"
+                    : "bg-white border-gray-200 text-shortblack hover:bg-gray-50"
+                )}
               >
                 -
               </button>
-              <div className="w-16 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-[1.6em] font-bold text-bluelight">
+              <div
+                className={clsx(
+                  "w-16 h-10 rounded-xl border flex items-center justify-center text-[1.6em] font-bold text-bluelight",
+                  isDark
+                    ? "bg-card border-gray-700"
+                    : "bg-white border-gray-200"
+                )}
+              >
                 {dailyLimit}
               </div>
               <button
                 onClick={() => setDailyLimit(Math.min(100, dailyLimit + 1))}
                 disabled={!enabled || dailyLimit >= 100}
-                className="w-10 h-10 rounded-xl bg-white border border-gray-200 text-shortblack font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                className={clsx(
+                  "w-10 h-10 rounded-xl border font-bold text-xl disabled:opacity-50 disabled:cursor-not-allowed transition-colors",
+                  isDark
+                    ? "bg-card border-gray-700 text-white hover:bg-gray-700"
+                    : "bg-white border-gray-200 text-shortblack hover:bg-gray-50"
+                )}
               >
                 +
               </button>

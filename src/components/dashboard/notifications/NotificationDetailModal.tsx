@@ -1,7 +1,7 @@
 // src/components/dashboard/notifications/NotificationDetailModal.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
@@ -12,6 +12,7 @@ import {
   Trash2,
 } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 import type { NotificationItem } from "@/types/type";
 
 interface NotificationDetailModalProps {
@@ -29,6 +30,15 @@ export default function NotificationDetailModal({
   onDelete,
   isDeleting = false,
 }: NotificationDetailModalProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Close on ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -60,6 +70,18 @@ export default function NotificationDetailModal({
   };
 
   const getBgColor = (type: string) => {
+    if (isDark) {
+      switch (type) {
+        case "warning":
+          return "bg-orange-500/20";
+        case "success":
+          return "bg-green-500/20";
+        case "alert":
+          return "bg-red-500/20";
+        default:
+          return "bg-blue-500/20";
+      }
+    }
     switch (type) {
       case "warning":
         return "bg-orange-50";
@@ -111,16 +133,29 @@ export default function NotificationDetailModal({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col"
+            className={clsx(
+              "rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col",
+              isDark ? "bg-card" : "bg-white"
+            )}
           >
             {/* Header */}
-            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
+            <div
+              className={clsx(
+                "px-6 py-5 flex items-center justify-between",
+                isDark
+                  ? "bg-card border-b border-gray-800"
+                  : "bg-white border-b border-gray-100"
+              )}
+            >
               <h2 className="text-[1.8em] font-bold text-shortblack">
                 Detail Notifikasi
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-slate-100 text-grays transition-colors"
+                className={clsx(
+                  "p-2 rounded-full text-grays transition-colors",
+                  isDark ? "hover:bg-gray-800" : "hover:bg-slate-100"
+                )}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -147,7 +182,11 @@ export default function NotificationDetailModal({
                       className={clsx(
                         "text-[1em] font-bold px-2 py-0.5 rounded mt-1 inline-block",
                         notification.isRead
-                          ? "bg-gray-100 text-gray-600"
+                          ? isDark
+                            ? "bg-gray-700 text-gray-400"
+                            : "bg-gray-100 text-gray-600"
+                          : isDark
+                          ? "bg-blue-500/20 text-blue-400"
                           : "bg-blue-100 text-blue-700"
                       )}
                     >
@@ -161,13 +200,25 @@ export default function NotificationDetailModal({
                   <h3 className="text-[2em] font-bold text-shortblack leading-tight mb-2">
                     {notification.title}
                   </h3>
-                  <span className="text-[1.1em] font-bold px-3 py-1 rounded-full bg-slate-100 text-grays uppercase tracking-wide">
+                  <span
+                    className={clsx(
+                      "text-[1.1em] font-bold px-3 py-1 rounded-full uppercase tracking-wide",
+                      isDark
+                        ? "bg-gray-700 text-gray-300"
+                        : "bg-slate-100 text-grays"
+                    )}
+                  >
                     {getCategoryLabel(notification.category)}
                   </span>
                 </div>
 
                 {/* Message */}
-                <div className="bg-slate-50 rounded-2xl p-5">
+                <div
+                  className={clsx(
+                    "rounded-2xl p-5",
+                    isDark ? "bg-subcard" : "bg-slate-50"
+                  )}
+                >
                   <p className="text-[1.4em] text-shortblack leading-relaxed whitespace-pre-wrap">
                     {notification.message}
                   </p>
@@ -176,7 +227,14 @@ export default function NotificationDetailModal({
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-100 bg-slate-50 flex justify-between items-center">
+            <div
+              className={clsx(
+                "px-6 py-4 flex justify-between items-center",
+                isDark
+                  ? "bg-subcard border-t border-gray-800"
+                  : "bg-slate-50 border-t border-gray-100"
+              )}
+            >
               {notification.isGlobal ? (
                 <p className="text-[1.2em] text-gray-400 italic">
                   📌 Pengumuman dari Admin
@@ -188,7 +246,11 @@ export default function NotificationDetailModal({
                   className={clsx(
                     "text-[1.3em] font-medium px-4 py-2 rounded-lg flex items-center gap-2 transition-colors",
                     isDeleting
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      ? isDark
+                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : isDark
+                      ? "text-red-400 hover:bg-red-500/10"
                       : "text-red-500 hover:bg-red-50"
                   )}
                 >

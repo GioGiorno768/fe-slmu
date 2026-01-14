@@ -1,10 +1,11 @@
 // src/components/dashboard/notifications/DeleteConfirmationModal.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { AlertTriangle, X } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -23,6 +24,15 @@ export default function DeleteConfirmationModal({
   title = "Hapus Notifikasi?",
   message = "Notifikasi yang sudah dihapus tidak dapat dikembalikan.",
 }: DeleteConfirmationModalProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Close on ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -57,11 +67,26 @@ export default function DeleteConfirmationModal({
             transition={{ duration: 0.15 }}
             className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           >
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div
+              className={clsx(
+                "rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden",
+                isDark ? "bg-card" : "bg-white"
+              )}
+            >
               {/* Header */}
               <div className="p-6 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                  <AlertTriangle className="w-8 h-8 text-red-500" />
+                <div
+                  className={clsx(
+                    "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center",
+                    isDark ? "bg-red-500/20" : "bg-red-100"
+                  )}
+                >
+                  <AlertTriangle
+                    className={clsx(
+                      "w-8 h-8",
+                      isDark ? "text-red-400" : "text-red-500"
+                    )}
+                  />
                 </div>
                 <h3 className="text-[1.8em] font-bold text-shortblack mb-2">
                   {title}
@@ -79,7 +104,11 @@ export default function DeleteConfirmationModal({
                   className={clsx(
                     "flex-1 py-3 rounded-xl text-[1.4em] font-semibold transition-colors",
                     isDeleting
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      ? isDark
+                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : isDark
+                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
                       : "bg-slate-100 text-shortblack hover:bg-slate-200"
                   )}
                 >

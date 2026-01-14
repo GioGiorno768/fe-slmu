@@ -90,7 +90,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
                 </div>
                 <div className="px-6 py-4 flex items-center">
                   <span className="text-lg font-bold text-bluelight">
-                    ${rate.cpm.toFixed(2)}
+                    ${rate.cpm.toFixed(5)}
                   </span>
                 </div>
               </div>

@@ -11,6 +11,8 @@ import UserDetailTabs from "@/components/dashboard/admin/users/UserDetailTabs";
 import { ArrowLeft } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -25,6 +27,14 @@ export default function SuperAdminUserDetailPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   useEffect(() => {
     if (id) {
@@ -100,10 +110,25 @@ export default function SuperAdminUserDetailPage({ params }: PageProps) {
   if (error || !data) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <div className="bg-red-50 p-4 rounded-full mb-4">
-          <AlertCircle className="w-10 h-10 text-red-500" />
+        <div
+          className={clsx(
+            "p-4 rounded-full mb-4",
+            isDark ? "bg-red-500/20" : "bg-red-50"
+          )}
+        >
+          <AlertCircle
+            className={clsx(
+              "w-10 h-10",
+              isDark ? "text-red-400" : "text-red-500"
+            )}
+          />
         </div>
-        <h2 className="text-2xl font-bold text-shortblack mb-2">
+        <h2
+          className={clsx(
+            "text-2xl font-bold mb-2",
+            isDark ? "text-white" : "text-shortblack"
+          )}
+        >
           {error || t("userNotFound")}
         </h2>
         <Link
@@ -122,26 +147,48 @@ export default function SuperAdminUserDetailPage({ params }: PageProps) {
       <div className="mb-8">
         <Link
           href="/super-admin/manage-user"
-          className="inline-flex items-center gap-2 text-grays hover:text-shortblack transition-colors font-medium text-[1.2em] mb-4"
+          className={clsx(
+            "inline-flex items-center gap-2 transition-colors font-medium text-[1.2em] mb-4",
+            isDark
+              ? "text-gray-400 hover:text-white"
+              : "text-grays hover:text-shortblack"
+          )}
         >
           <ArrowLeft className="w-5 h-5" /> {t("backToUsers")}
         </Link>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-[2.5em] font-bold text-shortblack">
+            <h1
+              className={clsx(
+                "text-[2.5em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {t("title")}
             </h1>
-            <p className="text-[1.4em] text-grays">{t("subtitle")}</p>
+            <p
+              className={clsx(
+                "text-[1.4em]",
+                isDark ? "text-gray-400" : "text-grays"
+              )}
+            >
+              {t("subtitle")}
+            </p>
           </div>
 
           {/* Suspend/Unsuspend Button */}
           <button
             onClick={handleSuspendClick}
-            className={
+            className={clsx(
+              "px-6 py-3 rounded-xl text-[1.4em] font-medium transition-colors flex items-center gap-2",
               data.status === "suspended"
-                ? "px-6 py-3 bg-green-100 text-green-700 hover:bg-green-200 rounded-xl text-[1.4em] font-medium transition-colors flex items-center gap-2"
-                : "px-6 py-3 bg-red-100 text-red-700 hover:bg-red-200 rounded-xl text-[1.4em] font-medium transition-colors flex items-center gap-2"
-            }
+                ? isDark
+                  ? "bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+                : isDark
+                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                : "bg-red-100 text-red-700 hover:bg-red-200"
+            )}
           >
             {data.status === "suspended" ? (
               <>

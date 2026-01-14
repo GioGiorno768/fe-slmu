@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { DollarSign, Users, Trophy, TrendingUp, Loader2 } from "lucide-react";
 import clsx from "clsx";
 import type { AdminWithdrawalStats } from "@/types/type";
+import { useTheme } from "next-themes";
 
 interface Props {
   stats: AdminWithdrawalStats | null;
@@ -11,6 +13,15 @@ interface Props {
 }
 
 export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const formatCurrency = (val: number) =>
     "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
 
@@ -43,31 +54,31 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
     switch (color) {
       case "blue":
         return {
-          text: "text-blue-600",
-          bg: "bg-blue-50",
-          border: "border-blue-100",
-          iconBg: "bg-blue-100",
+          text: isDark ? "text-blue-400" : "text-blue-600",
+          bg: isDark ? "bg-blue-500/10" : "bg-blue-50",
+          border: isDark ? "border-blue-500/20" : "border-blue-100",
+          iconBg: isDark ? "bg-blue-500/20" : "bg-blue-100",
         };
       case "emerald":
         return {
-          text: "text-emerald-600",
-          bg: "bg-emerald-50",
-          border: "border-emerald-100",
-          iconBg: "bg-emerald-100",
+          text: isDark ? "text-emerald-400" : "text-emerald-600",
+          bg: isDark ? "bg-emerald-500/10" : "bg-emerald-50",
+          border: isDark ? "border-emerald-500/20" : "border-emerald-100",
+          iconBg: isDark ? "bg-emerald-500/20" : "bg-emerald-100",
         };
       case "amber":
         return {
-          text: "text-amber-600",
-          bg: "bg-amber-50",
-          border: "border-amber-100",
-          iconBg: "bg-amber-100",
+          text: isDark ? "text-amber-400" : "text-amber-600",
+          bg: isDark ? "bg-amber-500/10" : "bg-amber-50",
+          border: isDark ? "border-amber-500/20" : "border-amber-100",
+          iconBg: isDark ? "bg-amber-500/20" : "bg-amber-100",
         };
       default:
         return {
-          text: "text-gray-600",
-          bg: "bg-gray-50",
-          border: "border-gray-100",
-          iconBg: "bg-gray-100",
+          text: isDark ? "text-gray-400" : "text-gray-600",
+          bg: isDark ? "bg-gray-500/10" : "bg-gray-50",
+          border: isDark ? "border-gray-500/20" : "border-gray-100",
+          iconBg: isDark ? "bg-gray-500/20" : "bg-gray-100",
         };
     }
   };
@@ -78,7 +89,10 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-[120px] bg-white rounded-2xl border border-gray-100 shadow-sm flex items-center justify-center"
+            className={clsx(
+              "h-[120px] rounded-2xl border shadow-sm flex items-center justify-center",
+              isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            )}
           >
             <Loader2 className="w-6 h-6 animate-spin text-bluelight/30" />
           </div>
@@ -99,7 +113,8 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
             className={clsx(
-              "relative p-6 rounded-2xl bg-white border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group",
+              "relative p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group",
+              isDark ? "bg-card" : "bg-white",
               style.border
             )}
           >

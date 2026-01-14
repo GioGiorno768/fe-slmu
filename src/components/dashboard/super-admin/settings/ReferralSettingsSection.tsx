@@ -15,6 +15,7 @@ import {
 import clsx from "clsx";
 import apiClient from "@/services/apiClient";
 import { useAlert } from "@/hooks/useAlert";
+import { useTheme } from "next-themes";
 
 interface ReferralSettings {
   percentage: number;
@@ -38,6 +39,15 @@ export default function ReferralSettingsSection() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Fetch settings on mount
   useEffect(() => {
@@ -115,6 +125,8 @@ export default function ReferralSettingsSection() {
               "flex items-center gap-2 px-5 py-2.5 rounded-xl text-[1.3em] font-semibold transition-all",
               hasChanges
                 ? "bg-bluelight text-white hover:bg-blue-600 shadow-md"
+                : isDark
+                ? "bg-gray-800 text-gray-400 cursor-not-allowed"
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             )}
           >
@@ -131,10 +143,20 @@ export default function ReferralSettingsSection() {
       {/* Settings Sections */}
       <div className="grid gap-6">
         {/* 1. Commission Settings */}
-        <div className="bg-gray-50 rounded-2xl p-6 space-y-5">
+        <div className="bg-subcard rounded-2xl p-6 space-y-5">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-blue-100 rounded-xl">
-              <Percent className="w-5 h-5 text-blue-600" />
+            <div
+              className={clsx(
+                "p-2.5 rounded-xl",
+                isDark ? "bg-blue-500/20" : "bg-blue-100"
+              )}
+            >
+              <Percent
+                className={clsx(
+                  "w-5 h-5",
+                  isDark ? "text-blue-400" : "text-blue-600"
+                )}
+              />
             </div>
             <div>
               <h3 className="text-[1.5em] font-bold text-shortblack">
@@ -160,13 +182,21 @@ export default function ReferralSettingsSection() {
                 onChange={(e) =>
                   updateSetting("percentage", Number(e.target.value))
                 }
-                className="w-full px-4 py-3 pr-10 bg-white border border-gray-200 rounded-xl text-[1.3em] font-medium focus:outline-none focus:border-blue-400"
+                className={clsx(
+                  "w-full px-4 py-3 pr-10 bg-card border rounded-xl text-[1.3em] font-medium text-shortblack focus:outline-none focus:border-blue-400",
+                  isDark ? "border-gray-700" : "border-gray-200"
+                )}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-grays">
                 %
               </span>
             </div>
-            <p className="text-[1.1em] text-gray-400">
+            <p
+              className={clsx(
+                "text-[1.1em]",
+                isDark ? "text-gray-500" : "text-gray-400"
+              )}
+            >
               Contoh: User withdraw $100 → Referrer dapat $
               {((100 * settings.percentage) / 100).toFixed(0)}
             </p>
@@ -174,10 +204,20 @@ export default function ReferralSettingsSection() {
         </div>
 
         {/* 2. Signup Bonus */}
-        <div className="bg-gray-50 rounded-2xl p-6 space-y-5">
+        <div className="bg-subcard rounded-2xl p-6 space-y-5">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-purple-100 rounded-xl">
-              <Gift className="w-5 h-5 text-purple-600" />
+            <div
+              className={clsx(
+                "p-2.5 rounded-xl",
+                isDark ? "bg-purple-500/20" : "bg-purple-100"
+              )}
+            >
+              <Gift
+                className={clsx(
+                  "w-5 h-5",
+                  isDark ? "text-purple-400" : "text-purple-600"
+                )}
+              />
             </div>
             <div>
               <h3 className="text-[1.5em] font-bold text-shortblack">
@@ -206,10 +246,18 @@ export default function ReferralSettingsSection() {
                 onChange={(e) =>
                   updateSetting("signup_bonus", Number(e.target.value))
                 }
-                className="w-full px-4 py-3 pl-8 bg-white border border-gray-200 rounded-xl text-[1.3em] font-medium focus:outline-none focus:border-purple-400"
+                className={clsx(
+                  "w-full px-4 py-3 pl-8 bg-card border rounded-xl text-[1.3em] font-medium text-shortblack focus:outline-none focus:border-purple-400",
+                  isDark ? "border-gray-700" : "border-gray-200"
+                )}
               />
             </div>
-            <p className="text-[1.1em] text-gray-400">
+            <p
+              className={clsx(
+                "text-[1.1em]",
+                isDark ? "text-gray-500" : "text-gray-400"
+              )}
+            >
               {settings.signup_bonus > 0
                 ? "Bonus langsung masuk ke balance user"
                 : "Set ke 0 untuk menonaktifkan signup bonus"}
@@ -218,11 +266,28 @@ export default function ReferralSettingsSection() {
 
           {/* Info Box */}
           {settings.signup_bonus > 0 && (
-            <div className="flex items-start gap-3 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+            <div
+              className={clsx(
+                "flex items-start gap-3 p-4 rounded-xl border",
+                isDark
+                  ? "bg-purple-500/10 border-purple-500/30"
+                  : "bg-purple-50 border-purple-200"
+              )}
+            >
               <Info className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
-              <div className="text-[1.2em] text-purple-700">
+              <div
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-purple-300" : "text-purple-700"
+                )}
+              >
                 <p className="font-semibold mb-1">Cara kerja Signup Bonus:</p>
-                <ol className="list-decimal list-inside space-y-1 text-purple-600">
+                <ol
+                  className={clsx(
+                    "list-decimal list-inside space-y-1",
+                    isDark ? "text-purple-400" : "text-purple-600"
+                  )}
+                >
                   <li>User signup via link referral</li>
                   <li>User lolos anti-fraud check</li>
                   <li>Bonus langsung masuk ke balance</li>
@@ -233,10 +298,20 @@ export default function ReferralSettingsSection() {
         </div>
 
         {/* 3. Anti-Fraud Settings */}
-        <div className="bg-gray-50 rounded-2xl p-6 space-y-5">
+        <div className="bg-subcard rounded-2xl p-6 space-y-5">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2.5 bg-orange-100 rounded-xl">
-              <Shield className="w-5 h-5 text-orange-600" />
+            <div
+              className={clsx(
+                "p-2.5 rounded-xl",
+                isDark ? "bg-orange-500/20" : "bg-orange-100"
+              )}
+            >
+              <Shield
+                className={clsx(
+                  "w-5 h-5",
+                  isDark ? "text-orange-400" : "text-orange-600"
+                )}
+              />
             </div>
             <h3 className="text-[1.5em] font-bold text-shortblack">
               Anti-Fraud Settings
@@ -246,12 +321,22 @@ export default function ReferralSettingsSection() {
           {/* Protection Toggles */}
           <div className="grid sm:grid-cols-2 gap-4">
             {/* Fingerprint Check Toggle */}
-            <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200">
+            <div
+              className={clsx(
+                "flex items-center justify-between p-4 bg-card rounded-xl border",
+                isDark ? "border-gray-700" : "border-gray-200"
+              )}
+            >
               <div>
                 <p className="text-[1.3em] font-semibold text-shortblack">
                   Device Fingerprint Check
                 </p>
-                <p className="text-[1.1em] text-gray-400">
+                <p
+                  className={clsx(
+                    "text-[1.1em]",
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  )}
+                >
                   Blokir device yang sudah pernah register
                 </p>
               </div>
@@ -273,12 +358,22 @@ export default function ReferralSettingsSection() {
             </div>
 
             {/* IP Limit Toggle */}
-            <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200">
+            <div
+              className={clsx(
+                "flex items-center justify-between p-4 bg-card rounded-xl border",
+                isDark ? "border-gray-700" : "border-gray-200"
+              )}
+            >
               <div>
                 <p className="text-[1.3em] font-semibold text-shortblack">
                   IP Address Limit
                 </p>
-                <p className="text-[1.1em] text-gray-400">
+                <p
+                  className={clsx(
+                    "text-[1.1em]",
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  )}
+                >
                   Batasi jumlah akun per IP
                 </p>
               </div>
@@ -311,9 +406,17 @@ export default function ReferralSettingsSection() {
                 onChange={(e) =>
                   updateSetting("max_accounts_per_ip", Number(e.target.value))
                 }
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-[1.3em] font-medium focus:outline-none focus:border-orange-400"
+                className={clsx(
+                  "w-full px-4 py-3 bg-card border rounded-xl text-[1.3em] font-medium text-shortblack focus:outline-none focus:border-orange-400",
+                  isDark ? "border-gray-700" : "border-gray-200"
+                )}
               />
-              <p className="text-[1.1em] text-gray-400">
+              <p
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-500" : "text-gray-400"
+                )}
+              >
                 Max akun yang bisa signup via referral dari IP yang sama
               </p>
             </div>
@@ -322,9 +425,21 @@ export default function ReferralSettingsSection() {
           {/* Warning Box */}
           {(!settings.fingerprint_check_enabled ||
             !settings.ip_limit_enabled) && (
-            <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div
+              className={clsx(
+                "flex items-start gap-3 p-4 rounded-xl border",
+                isDark
+                  ? "bg-red-500/10 border-red-500/30"
+                  : "bg-red-50 border-red-200"
+              )}
+            >
               <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-              <p className="text-[1.2em] text-red-700">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-red-300" : "text-red-700"
+                )}
+              >
                 <b>⚠️ Warning:</b> Anti-fraud protection is disabled. Enable
                 both checks before going live to prevent abuse.
               </p>
@@ -332,9 +447,21 @@ export default function ReferralSettingsSection() {
           )}
 
           {settings.fingerprint_check_enabled && settings.ip_limit_enabled && (
-            <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div
+              className={clsx(
+                "flex items-start gap-3 p-4 rounded-xl border",
+                isDark
+                  ? "bg-green-500/10 border-green-500/30"
+                  : "bg-green-50 border-green-200"
+              )}
+            >
               <Shield className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-              <p className="text-[1.2em] text-green-700">
+              <p
+                className={clsx(
+                  "text-[1.2em]",
+                  isDark ? "text-green-300" : "text-green-700"
+                )}
+              >
                 <b>✓ Protected:</b> Anti-fraud aktif. User dengan device/IP
                 duplikat akan di-redirect ke register biasa.
               </p>

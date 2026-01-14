@@ -21,13 +21,23 @@ interface HeaderProps {
   role?: Role;
 }
 
+import { useTheme } from "next-themes";
+
 export default function Header({
   isCollapsed,
   toggleSidebar,
   openMobileSidebar,
   role = "member",
 }: HeaderProps) {
-  const [isDark, setIsDark] = useState(true);
+  const { theme, setTheme } = useTheme();
+  // Ensure hydration match
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Compute isDark for UI
+  const isDark = mounted ? theme === "dark" : false;
   const t = useTranslations("Dashboard");
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
@@ -153,16 +163,16 @@ export default function Header({
         ${isCollapsed ? "custom:left-20" : "custom:left-64"}
         transition-all duration-300 ease-in-out z-50
         px-4 custom:px-8 sm:pt-6 pt-3
-        font-figtree bg-slate-50
+        font-figtree dark:bg-background
       `}
     >
-      <div className="shadow-sm shadow-slate-500/50 rounded-xl flex items-center justify-between md:px-[2em] px-[1em] lg:px-[4em] py-[1em] md:py-[2em] text-[10px] bg-white">
+      <div className="shadow-sm dark:shadow-shd-card/50 rounded-xl flex items-center justify-between md:px-[2em] px-[1em] lg:px-[4em] py-[1em] md:py-[2em] text-[10px] dark:bg-card dark:text-white">
         <div className="flex items-center gap-10">
           <button
             onClick={openMobileSidebar}
-            className="hover:text-slate-600 rounded-lg transition-colors w-[3.5em] ml-[1em] h-[3.5en] flex justify-center items-center custom:hidden"
+            className="hover:text-slate-600 dark:hover:text-slate-300 rounded-lg transition-colors w-[3.5em] ml-[1em] h-[3.5en] flex justify-center items-center custom:hidden"
           >
-            <span className="solar--hamburger-menu-broken w-[3em] h-[3em] bg-shortblack " />
+            <span className="solar--hamburger-menu-broken w-[3em] h-[3em] dark:bg-foreground " />
           </button>
 
           <div className="md:flex hidden cursor-default">
@@ -181,7 +191,7 @@ export default function Header({
                 <div className="flex gap-[1.5em] justify-start items-center">
                   {item.icon}
                   {isLoading ? (
-                    <div className="h-[2em] w-[6em] bg-gray-100 animate-pulse rounded"></div>
+                    <div className="h-[2em] w-[6em] bg-lazyload animate-pulse rounded"></div>
                   ) : (
                     <span
                       className={`text-[1.8em] font-manrope font-bold ${item.color}`}
@@ -201,10 +211,12 @@ export default function Header({
             <button
               onClick={() => setShowLangDropdown(!showLangDropdown)}
               disabled={isPending}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg group hover:bg-subcard transition-colors duration-300 ease-in-out`}
             >
               <svg
-                className="w-5 h-5 text-slate-500"
+                className={`w-6 h-6 dark:text-bluelight group-hover:dark:text-tx-blue-dashboard transition-colors duration-300 ease-in-out ${
+                  showLangDropdown && "dark:text-tx-blue-dashboard"
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -215,7 +227,11 @@ export default function Header({
                   d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
                 />
               </svg>
-              <span className="text-[1.4em] font-medium text-slate-700">
+              <span
+                className={`text-[1.4em] font-medium dark:text-bluelight group-hover:dark:text-tx-blue-dashboard transition-colors duration-300 ease-in-out ${
+                  showLangDropdown && "dark:text-tx-blue-dashboard"
+                }`}
+              >
                 {locale.toUpperCase()}
               </span>
             </button>
@@ -227,20 +243,20 @@ export default function Header({
                   className="fixed inset-0 z-40"
                   onClick={() => setShowLangDropdown(false)}
                 />
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-100 py-2 min-w-[120px] z-50">
+                <div className="absolute top-full right-0 mt-2 dark:bg-card rounded-xl shadow-sm dark:shadow-shd-card/50 border border-shd-card/10 min-w-[120px] z-50 overflow-hidden p-2">
                   <button
                     onClick={() => {
                       switchLanguage("en");
                       setShowLangDropdown(false);
                     }}
-                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 hover:bg-slate-50 transition-colors ${
+                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 rounded-lg ${
                       locale === "en"
-                        ? "text-bluelight font-semibold"
-                        : "text-slate-600"
+                        ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                        : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
                     }`}
                   >
                     {locale === "en" && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-bluelight" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-tx-blue-dashboard" />
                     )}
                     English
                   </button>
@@ -249,10 +265,10 @@ export default function Header({
                       switchLanguage("id");
                       setShowLangDropdown(false);
                     }}
-                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 hover:bg-slate-50 transition-colors ${
+                    className={`w-full px-4 py-2 text-left text-[1.4em] flex items-center gap-2 rounded-lg ${
                       locale === "id"
-                        ? "text-bluelight font-semibold"
-                        : "text-slate-600"
+                        ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                        : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
                     }`}
                   >
                     {locale === "id" && (
@@ -266,11 +282,11 @@ export default function Header({
           </div>
 
           <button
-            onClick={() => setIsDark(!isDark)}
+            onClick={() => setTheme(isDark ? "light" : "dark")}
             className="custom:w-[5em] custom:h-[5em] w-[4em] h-[4em] flex justify-center items-center rounded-full custom:hover:-translate-y-1 transition-all duration-300 ease-in-out"
           >
             {isDark ? (
-              <span className="solar--moon-stars-broken custom:w-[2.8em] custom:h-[2.8em] w-[2.5em] h-[2.5em] bg-bluelight " />
+              <span className="solar--moon-stars-broken custom:w-[2.5em] custom:h-[2.5em] w-[2.5em] h-[2.5em] bg-bluelight " />
             ) : (
               <span className="solar--sun-broken custom:w-[3em] custom:h-[3em] w-[3em] h-[3em] bg-bluelight " />
             )}
@@ -284,7 +300,7 @@ export default function Header({
               <Bell className="w-[2.8em] h-[2.8em] text-bluelight stroke-[.15em]" />
               {/* Red dot only shows when there are unread notifications */}
               {unreadCount > 0 && (
-                <span className="absolute top-2 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                <span className="absolute top-2 right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-card"></span>
               )}
             </button>
 

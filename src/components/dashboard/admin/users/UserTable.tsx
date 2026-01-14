@@ -2,13 +2,14 @@
 
 import { Search, ChevronDown, Filter, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import type { AdminUser, UserStatus } from "@/types/type";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import UserListCard from "./UserListCard";
 import Pagination from "@/components/dashboard/Pagination";
 import Spinner from "../../Spinner";
+import { useTheme } from "next-themes";
 
 interface UserTableProps {
   users: AdminUser[];
@@ -50,6 +51,16 @@ export default function UserTable({
   detailBasePath, // <--- Add this
   onSuspend, // <--- Add this
 }: UserTableProps) {
+  // Theme
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Filter Dropdown State
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -70,7 +81,12 @@ export default function UserTable({
   return (
     <div className="space-y-6 font-figtree">
       {/* HEADER & FILTERS */}
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div
+        className={clsx(
+          "rounded-3xl shadow-sm border p-8 flex flex-col md:flex-row justify-between items-center gap-6",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      >
         <h3 className="text-[1.8em] font-bold text-shortblack">
           User Management
         </h3>
@@ -80,7 +96,12 @@ export default function UserTable({
           <div className="relative" ref={filterRef}>
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-blues border border-blue-100 text-[1.4em] font-medium text-shortblack hover:bg-blue-50 transition-colors w-full sm:w-auto justify-between"
+              className={clsx(
+                "flex items-center gap-3 px-5 py-3 rounded-xl border text-[1.4em] font-medium transition-colors w-full sm:w-auto justify-between",
+                isDark
+                  ? "bg-subcard border-gray-700 text-white hover:bg-gray-700"
+                  : "bg-blues border-blue-100 text-shortblack hover:bg-blue-50"
+              )}
             >
               <div className="flex items-center gap-2">
                 <Filter className="w-5 h-5 text-bluelight" />
@@ -101,7 +122,12 @@ export default function UserTable({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full mt-2 left-0 w-full sm:w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden p-1.5 z-40"
+                  className={clsx(
+                    "absolute top-full mt-2 left-0 w-full sm:w-56 rounded-xl shadow-xl border overflow-hidden p-1.5 z-40",
+                    isDark
+                      ? "bg-card border-gray-700"
+                      : "bg-white border-gray-100"
+                  )}
                 >
                   {filterOptions.map((option) => (
                     <button
@@ -113,7 +139,11 @@ export default function UserTable({
                       className={clsx(
                         "w-full text-left px-4 py-3 rounded-lg text-[1.3em] font-medium transition-colors flex items-center justify-between",
                         statusFilter === option.value
-                          ? "bg-blue-50 text-bluelight"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard"
+                            : "bg-blue-50 text-bluelight"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
                           : "text-shortblack hover:bg-slate-50"
                       )}
                     >
@@ -136,7 +166,12 @@ export default function UserTable({
               placeholder="Cari user..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] text-shortblack transition-all"
+              className={clsx(
+                "w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] transition-all",
+                isDark
+                  ? "bg-subcard border-gray-700 text-white placeholder:text-gray-500"
+                  : "bg-white border-gray-200 text-shortblack"
+              )}
             />
           </div>
         </div>
@@ -147,7 +182,12 @@ export default function UserTable({
         {isLoading ? (
           <Spinner />
         ) : users.length === 0 ? (
-          <div className="p-12 text-center text-grays bg-white rounded-3xl border border-gray-100 text-[1.4em]">
+          <div
+            className={clsx(
+              "p-12 text-center text-grays rounded-3xl border text-[1.4em]",
+              isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            )}
+          >
             Gak nemu user yang dicari.
           </div>
         ) : (

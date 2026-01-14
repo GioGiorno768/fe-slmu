@@ -1,6 +1,7 @@
 // src/components/dashboard/withdrawal/WithdrawalStatsCard.tsx
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
   Wallet,
@@ -10,6 +11,8 @@ import {
   TrendingUp,
   Wallet2,
 } from "lucide-react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 import type { WithdrawalStats } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
 
@@ -24,6 +27,15 @@ export default function WithdrawalStatsCard({
   onOpenModal,
   minWithdrawal = 2, // Default $2 if not passed
 }: WithdrawalStatsCardProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // 💱 Use global currency context
   const { format: formatCurrency, symbol, currency } = useCurrency();
 
@@ -71,12 +83,22 @@ export default function WithdrawalStatsCard({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl shadow-sm shadow-slate-500/20 border border-gray-100 h-full flex flex-col relative overflow-hidden font-figtree"
+      className={clsx(
+        "rounded-3xl shadow-sm h-full flex flex-col relative overflow-hidden font-figtree",
+        isDark
+          ? "bg-card border border-gray-dashboard/30 shadow-black/20"
+          : "bg-white border border-gray-100 shadow-slate-500/20"
+      )}
     >
       {/* Header Section (Judul & Tombol) */}
       <div className="p-8 pb-4 flex justify-between items-start z-10">
         <div>
-          <h2 className="text-[1.8em] font-bold text-shortblack flex items-center gap-2">
+          <h2
+            className={clsx(
+              "text-[1.8em] font-bold flex items-center gap-2",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             <Wallet className="w-6 h-6 text-bluelight" />
             Finance Overview
           </h2>
@@ -88,9 +110,12 @@ export default function WithdrawalStatsCard({
         {/* Tombol Request Payout ditaruh di atas biar gampang dijangkau */}
         <button
           onClick={onOpenModal}
-          className="hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em] 
-                   hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300
-                   md:flex items-center gap-2 shadow-blue-200 shadow-md"
+          className={clsx(
+            "hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em]",
+            "hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
+            "md:flex items-center gap-2 shadow-md",
+            isDark ? "shadow-blue-900/30" : "shadow-blue-200"
+          )}
         >
           <span>Request Payout</span>
           <ArrowRight className="w-4 h-4" />
@@ -99,17 +124,43 @@ export default function WithdrawalStatsCard({
 
       {/* Main Balance Section ( Tengah - Flex Grow biar ngisi ruang kosong ) */}
       <div className="px-8  flex-1 flex flex-col justify-center z-10">
-        <div className="bg-white rounded-2xl gap-8 flex flex-col md:flex-row justify-between items-center p-6 shadow-sm shadow-slate-400/50 relative overflow-hidden">
+        <div
+          className={clsx(
+            "rounded-2xl gap-8 flex flex-col md:flex-row justify-between items-center p-6 shadow-sm relative overflow-hidden",
+            isDark
+              ? "bg-subcard shadow-black/30"
+              : "bg-white shadow-slate-400/50"
+          )}
+        >
           {/* Dekorasi blob kecil */}
-          <div className="w-24 h-24 md:order-2 bg-blue-50 rounded-full flex items-center mr-4 justify-center border border-blue-100 shadow-inner">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-bluelight">
+          <div
+            className={clsx(
+              "w-24 h-24 md:order-2 rounded-full flex items-center mr-4 justify-center shadow-inner",
+              isDark
+                ? "bg-blue-500/10 border border-blue-500/20"
+                : "bg-blue-50 border border-blue-100"
+            )}
+          >
+            <div
+              className={clsx(
+                "w-16 h-16 rounded-full flex items-center justify-center text-bluelight",
+                isDark ? "bg-blue-500/20" : "bg-blue-100"
+              )}
+            >
               <Wallet2 className="w-8 h-8" />
             </div>
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[1.4em] font-medium text-grays mb-1 flex items-center gap-2">
               Available Balance
-              <span className="bg-green-100 text-green-700 text-[0.8em] px-2 py-0.5 rounded-md font-bold flex items-center gap-1">
+              <span
+                className={clsx(
+                  "text-[0.8em] px-2 py-0.5 rounded-md font-bold flex items-center gap-1",
+                  isDark
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-green-100 text-green-700"
+                )}
+              >
                 <TrendingUp className="w-3 h-3" /> Ready
               </span>
             </p>
@@ -118,7 +169,12 @@ export default function WithdrawalStatsCard({
             </h1>
             <p className="text-[1.3em] text-grays opacity-80">
               Minimum payout threshold:{" "}
-              <span className="font-semibold text-shortblack">
+              <span
+                className={clsx(
+                  "font-semibold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {formatLocalAmount(displayMinWithdrawal)}
               </span>
             </p>
@@ -126,9 +182,12 @@ export default function WithdrawalStatsCard({
           {/* Tombol Request Payout ditaruh di atas biar gampang dijangkau */}
           <button
             onClick={onOpenModal}
-            className="md:hidden lg:hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em] 
-                   hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300
-                   flex items-center gap-2 shadow-blue-200 shadow-md"
+            className={clsx(
+              "md:hidden lg:hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em]",
+              "hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
+              "flex items-center gap-2 shadow-md",
+              isDark ? "shadow-blue-900/30" : "shadow-blue-200"
+            )}
           >
             <span>Request Payout</span>
             <ArrowRight className="w-4 h-4" />
@@ -141,29 +200,58 @@ export default function WithdrawalStatsCard({
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* Pending */}
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500 flex-shrink-0 border border-orange-100">
+            <div
+              className={clsx(
+                "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
+                isDark
+                  ? "bg-orange-500/20 text-orange-400 border border-orange-500/20"
+                  : "bg-orange-50 text-orange-500 border border-orange-100"
+              )}
+            >
               <Clock className="w-6 h-6" />
             </div>
             <div>
               <p className="text-[1.2em] text-grays uppercase font-semibold tracking-wider mb-0.5">
                 Pending
               </p>
-              <p className="text-[1.8em] font-bold text-shortblack leading-none">
+              <p
+                className={clsx(
+                  "text-[1.8em] font-bold leading-none",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {formatCurrency(stats?.pendingWithdrawn || 0)}
               </p>
             </div>
           </div>
-          <div className="w-[0.15em] bg-blue-100 rounded-full"></div>
+          <div
+            className={clsx(
+              "w-[0.15em] rounded-full",
+              isDark ? "bg-blue-500/20" : "bg-blue-100"
+            )}
+          ></div>
           {/* Total Withdrawn */}
           <div className="flex items-center gap-4 pr-10">
-            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 flex-shrink-0 border border-green-100">
+            <div
+              className={clsx(
+                "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
+                isDark
+                  ? "bg-green-500/20 text-green-400 border border-green-500/20"
+                  : "bg-green-50 text-green-600 border border-green-100"
+              )}
+            >
               <CheckCircle className="w-6 h-6" />
             </div>
             <div>
               <p className="text-[1.2em] text-grays uppercase font-semibold tracking-wider mb-0.5">
                 Withdrawn
               </p>
-              <p className="text-[1.8em] font-bold text-shortblack leading-none">
+              <p
+                className={clsx(
+                  "text-[1.8em] font-bold leading-none",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 {formatCurrency(stats?.totalWithdrawn || 0)}
               </p>
             </div>

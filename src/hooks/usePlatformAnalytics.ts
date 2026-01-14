@@ -1,38 +1,55 @@
 import { useState, useEffect } from "react";
+import apiClient from "@/services/apiClient";
+
+export type TimeFilter = "all" | "week" | "month" | "year";
 
 export interface PlatformAnalyticsStats {
+  // Platform stats
   totalUsers: number;
-  totalUsersGrowth: number; // percentage
-  activeUsers: number; // last 30 days
+  totalUsersGrowth: number;
+  activeUsers: number;
   activeUsersGrowth: number;
   totalLinks: number;
   totalLinksGrowth: number;
   totalClicks: number;
   totalClicksGrowth: number;
+  // Revenue stats
+  estRevenue: number;
+  totalPaid: number;
+  totalPending: number;
+  totalTransactions: number;
 }
 
-export function usePlatformAnalytics() {
+export function usePlatformAnalytics(timeFilter: TimeFilter = "all") {
   const [stats, setStats] = useState<PlatformAnalyticsStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
     const fetchAnalytics = async () => {
       setIsLoading(true);
       try {
-        // TODO: Replace with real API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Include time filter as query param
+        const params = timeFilter !== "all" ? { period: timeFilter } : {};
+        const response = await apiClient.get("/admin/dashboard/overview", {
+          params,
+        });
+        const data = response.data.data;
 
-        // Mock data
         setStats({
-          totalUsers: 12547,
-          totalUsersGrowth: 12.5,
-          activeUsers: 8432, // last 30 days
-          activeUsersGrowth: 8.3,
-          totalLinks: 45623,
-          totalLinksGrowth: 15.2,
-          totalClicks: 1245789,
-          totalClicksGrowth: 23.7,
+          // Platform stats
+          totalUsers: data.total_users || 0,
+          totalUsersGrowth: data.total_users_growth || 0,
+          activeUsers: data.active_users || 0,
+          activeUsersGrowth: data.active_users_growth || 0,
+          totalLinks: data.total_links || 0,
+          totalLinksGrowth: data.total_links_growth || 0,
+          totalClicks: data.total_clicks || 0,
+          totalClicksGrowth: data.total_clicks_growth || 0,
+          // Revenue stats
+          estRevenue: data.est_revenue || 0,
+          totalPaid: data.total_paid || 0,
+          totalPending: data.total_pending || 0,
+          totalTransactions: data.total_transactions || 0,
         });
       } catch (error) {
         console.error("Failed to fetch analytics:", error);
@@ -42,7 +59,7 @@ export function usePlatformAnalytics() {
     };
 
     fetchAnalytics();
-  }, []);
+  }, [timeFilter]);
 
   return {
     stats,

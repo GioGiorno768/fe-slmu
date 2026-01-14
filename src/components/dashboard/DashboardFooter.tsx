@@ -41,7 +41,7 @@ export default function DashboardFooter() {
     <footer className="mt-8 mb-4 lg:text-[10px] text-[8px] font-figtree">
       {/* Ini container card-nya, persis kayak di screenshot */}
       <div
-        className="bg-white w-full py-4 px-6 md:py-5 md:px-8
+        className="bg-card w-full py-4 px-6 md:py-5 md:px-8
                     rounded-xl shadow-sm shadow-slate-500/50 
                     flex flex-col md:flex-row items-center justify-between gap-4"
       >
@@ -67,9 +67,9 @@ export default function DashboardFooter() {
               title={social.label}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full bg-blues border border-gray-200 
+              className="w-9 h-9 rounded-full bg-blues 
                              flex items-center justify-center 
-                             hover:bg-blue-dashboard hover:border-bluelight/20 
+                             hover:bg-blue-dashboard 
                              hover:scale-110 transition-all"
             >
               {social.icon}

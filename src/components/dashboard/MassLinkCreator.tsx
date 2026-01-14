@@ -15,6 +15,7 @@ import {
   Check,
   Layers,
   Sparkles,
+  Lock,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { AdLevel } from "@/types/type";
@@ -25,6 +26,8 @@ import clsx from "clsx";
 import { useAlert } from "@/hooks/useAlert";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLinkSettings } from "@/hooks/useLinkSettings";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
+import { useTheme } from "next-themes";
 
 interface MassLinkResult extends MassCreateResult {
   status: "pending" | "success" | "error";
@@ -41,6 +44,15 @@ export default function MassLinkCreator() {
   // Fetch link settings for mass_link_limit
   const { settings: linkSettings } = useLinkSettings();
   const massLinkLimit = linkSettings.mass_link_limit ?? 20;
+  const { isAdLevelUnlocked } = useFeatureLocks();
+  const { theme } = useTheme();
+
+  // Prevent hydration mismatch - wait for client-side
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isDark = mounted && theme === "dark";
 
   // State for URLs textarea
   const [urlsText, setUrlsText] = useState("");
@@ -58,10 +70,12 @@ export default function MassLinkCreator() {
   const [isAdsLevelOpen, setIsAdsLevelOpen] = useState(false);
   const adsLevelRef = useRef<HTMLDivElement>(null);
 
-  // Map API data to dropdown options
-  const adLevels = adLevelsFromApi.map((level) => ({
+  // Map API data to dropdown options with lock status
+  const adLevels = adLevelsFromApi.map((level, index) => ({
     key: level.slug as AdLevel,
     label: level.name,
+    isLocked: !isAdLevelUnlocked(index + 1),
+    requiredLevel: index === 2 ? "Elite" : index === 3 ? "Pro" : "",
   }));
 
   // Set default adsLevel when API loads
@@ -190,10 +204,16 @@ export default function MassLinkCreator() {
   return (
     <div className="space-y-6">
       {/* FORM CARD */}
-      <div className="bg-white p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-100">
+      <div className="bg-card p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-dashboard/30">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-bluelight to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-200">
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+                isDark
+                  ? "bg-gradient-to-br from-blue-background-gradient to-purple-background-gradient shadow-lightpurple-dashboard/30"
+                  : "bg-gradient-to-br from-bluelight to-indigo-600 shadow-blue-200"
+              }`}
+            >
               <Layers className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -208,7 +228,7 @@ export default function MassLinkCreator() {
           {(urlsText || results.length > 0) && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-2 text-[1.2em] font-semibold text-red-500 hover:text-red-600 bg-red-50 px-4 py-2 rounded-xl transition-all border border-red-100"
+              className="flex items-center gap-2 text-[1.2em] font-semibold text-red-500 hover:text-red-600 bg-red-500/10 px-4 py-2 rounded-xl transition-all border border-red-500/20"
             >
               <Trash2 className="w-4 h-4" />
               Clear
@@ -238,7 +258,7 @@ export default function MassLinkCreator() {
               value={urlsText}
               onChange={(e) => setUrlsText(e.target.value)}
               placeholder={`https://example.com/page1\nhttps://example.com/page2\nhttps://example.com/page3`}
-              className="w-full text-[1.4em] px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight bg-blues min-h-[150px] resize-y font-mono"
+              className="w-full text-[1.4em] px-4 py-3 rounded-xl border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight bg-subcard text-shortblack placeholder:text-grays min-h-[150px] resize-y font-mono"
               disabled={isProcessing}
             />
           </div>
@@ -253,7 +273,7 @@ export default function MassLinkCreator() {
                 type="button"
                 onClick={() => setIsAdsLevelOpen(!isAdsLevelOpen)}
                 disabled={isLoadingLevels || isProcessing}
-                className="w-full text-[1.4em] px-4 py-3 rounded-xl border border-gray-200 bg-white flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight disabled:opacity-50"
+                className="w-full text-[1.4em] px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight disabled:opacity-50"
               >
                 {isLoadingLevels ? (
                   <span className="text-grays flex items-center gap-2">
@@ -278,20 +298,31 @@ export default function MassLinkCreator() {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="absolute top-full left-0 mt-2 p-2 w-full bg-white rounded-lg shadow-lg z-20 border border-gray-100"
+                    className="absolute top-full left-0 mt-2 p-2 w-full bg-card rounded-lg shadow-lg z-20 border border-gray-dashboard/30"
                   >
                     {adLevels.map((level) => (
                       <button
                         key={level.key}
                         type="button"
-                        onClick={() => handleAdLevelChange(level.key)}
-                        className={`block w-full text-left text-[1.3em] px-3 py-2 rounded-md ${
-                          adsLevel === level.key
-                            ? "text-bluelight font-semibold bg-blue-dashboard"
-                            : "text-shortblack hover:bg-blues"
+                        onClick={() =>
+                          !level.isLocked && handleAdLevelChange(level.key)
+                        }
+                        disabled={level.isLocked}
+                        className={`w-full text-left text-[1.3em] px-3 py-2 rounded-md flex items-center justify-between gap-2 ${
+                          level.isLocked
+                            ? "text-gray-400 cursor-not-allowed"
+                            : adsLevel === level.key
+                            ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                            : "text-shortblack hover:bg-subcard"
                         }`}
                       >
-                        {level.label}
+                        <span>{level.label}</span>
+                        {level.isLocked && (
+                          <span className="flex items-center gap-1 text-[0.85em] text-gray-400">
+                            <Lock className="w-3 h-3" />
+                            <span>{level.requiredLevel}</span>
+                          </span>
+                        )}
                       </button>
                     ))}
                   </motion.div>
@@ -300,7 +331,7 @@ export default function MassLinkCreator() {
             </div>
             <Link
               href={"/ads-info"}
-              className="px-4 py-3 rounded-xl bg-blue-dashboard flex items-center justify-center"
+              className="px-4 py-3 rounded-xl bg-subcard flex items-center justify-center hover:bg-blues transition-colors"
             >
               <Megaphone className="w-5 h-5 text-bluelight" />
             </Link>
@@ -311,7 +342,11 @@ export default function MassLinkCreator() {
             type="button"
             onClick={handleMassCreate}
             disabled={isProcessing || parsedUrls.length === 0}
-            className="w-full bg-gradient-to-r from-bluelight to-indigo-600 text-white text-[1.5em] font-semibold py-4 rounded-2xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
+            className={`w-full text-white text-[1.5em] font-semibold py-4 rounded-2xl hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg ${
+              isDark
+                ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient shadow-lightpurple-dashboard/50"
+                : "bg-gradient-to-r from-bluelight to-indigo-600 shadow-blue-200"
+            }`}
           >
             {isProcessing ? (
               <>
@@ -335,7 +370,7 @@ export default function MassLinkCreator() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-white p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-100"
+            className="bg-card p-7 rounded-3xl shadow-sm shadow-slate-500/50 border border-gray-dashboard/30"
           >
             {/* Stats Header */}
             <div className="flex items-center justify-between mb-4">
@@ -367,9 +402,17 @@ export default function MassLinkCreator() {
                   className={clsx(
                     "p-3 rounded-lg border",
                     result.status === "success" &&
-                      "bg-green-50 border-green-200",
-                    result.status === "error" && "bg-red-50 border-red-200",
-                    result.status === "pending" && "bg-gray-50 border-gray-200"
+                      (isDark
+                        ? "bg-green-900/20 border-green-700/30"
+                        : "bg-green-50 border-green-200"),
+                    result.status === "error" &&
+                      (isDark
+                        ? "bg-red-900/20 border-red-700/30"
+                        : "bg-red-50 border-red-200"),
+                    result.status === "pending" &&
+                      (isDark
+                        ? "bg-subcard border-gray-dashboard/30"
+                        : "bg-gray-50 border-gray-200")
                   )}
                 >
                   <div className="flex items-center justify-between gap-4">
@@ -397,7 +440,11 @@ export default function MassLinkCreator() {
                     {result.short_url && (
                       <button
                         onClick={() => handleCopy(result.short_url!, index)}
-                        className="p-2 rounded-lg hover:bg-green-100 transition-colors shrink-0"
+                        className={`p-2 rounded-lg transition-colors shrink-0 ${
+                          isDark
+                            ? "hover:bg-green-900/30"
+                            : "hover:bg-green-100"
+                        }`}
                       >
                         {copiedIndex === index ? (
                           <Check className="w-5 h-5 text-green-600" />

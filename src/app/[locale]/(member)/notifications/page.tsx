@@ -1,13 +1,24 @@
 // src/app/[locale]/(member)/notifications/page.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAlert } from "@/hooks/useAlert";
 import { Loader2, Bell } from "lucide-react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 import { NotificationHistoryList } from "@/components/dashboard/notifications";
 import { useNotificationHistory } from "@/hooks/useNotificationHistory";
 
 export default function NotificationsPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const { showAlert } = useAlert();
 
   const {
@@ -40,7 +51,12 @@ export default function NotificationsPage() {
       {/* Header Page */}
       <div className="mb-8">
         <h1 className="text-[2.5em] font-bold text-shortblack flex items-center gap-4">
-          <div className="p-3 bg-blue-100 rounded-2xl text-bluelight relative">
+          <div
+            className={clsx(
+              "p-3 rounded-2xl text-bluelight relative",
+              isDark ? "bg-blue-500/20" : "bg-blue-100"
+            )}
+          >
             <Bell className="w-8 h-8" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-[0.8em] font-bold flex items-center justify-center">

@@ -178,7 +178,7 @@ export default function NotificationDropdown({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 10, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="absolute right-[-1em] sm:right-0 sm:top-[8em] top-[6em] w-[320px] sm:w-[380px] bg-white rounded-2xl shadow-xl shadow-slate-500/20 border border-gray-100 overflow-hidden z-50 origin-top-right flex flex-col tall:h-[550px] tall:max-h-[80vh] h-[480px] max-h-[70vh]"
+          className="absolute right-[-1em] sm:right-0 sm:top-[8em] top-[6em] w-[320px] sm:w-[380px] bg-card rounded-2xl shadow-xl shadow-slate-500/20 dark:shadow-black/30 border border-gray-100 dark:border-gray-dashboard/30 overflow-hidden z-50 origin-top-right flex flex-col tall:h-[550px] tall:max-h-[80vh] h-[480px] max-h-[70vh]"
         >
           {/* ... (Isi Detail View & List View SAMA KAYAK FILE LAMA) ... */}
           {/* Cuma pastiin pas render list pake filteredNotifications */}
@@ -190,13 +190,13 @@ export default function NotificationDropdown({
                 initial={{ x: "100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
-                className="absolute inset-0 flex flex-col bg-white h-full"
+                className="absolute inset-0 flex flex-col bg-card h-full"
               >
                 {/* Header Detail */}
-                <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-4 bg-white flex-shrink-0">
+                <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-dashboard/30 flex items-center gap-4 bg-card shrink-0">
                   <button
                     onClick={() => setSelectedNotif(null)}
-                    className="p-2 -ml-2 rounded-full hover:bg-slate-100 text-grays"
+                    className="p-2 -ml-2 rounded-full hover:bg-subcard text-grays"
                   >
                     <ArrowLeft className="w-5 h-5" />
                   </button>
@@ -242,7 +242,7 @@ export default function NotificationDropdown({
                   </div>
                 </div>
                 {/* Footer Detail */}
-                <div className="p-4 border-t border-gray-100 bg-slate-50 flex justify-between items-center shrink-0">
+                <div className="p-4 border-t border-gray-100 dark:border-gray-dashboard/30 bg-subcard flex justify-between items-center shrink-0">
                   {selectedNotif.isGlobal ? (
                     <p className="text-[1.2em] text-gray-400 italic">
                       📌 Pengumuman dari Admin
@@ -254,7 +254,7 @@ export default function NotificationDropdown({
                         setSelectedNotif(null);
                         showAlert("Notifikasi dihapus.", "info");
                       }}
-                      className="text-[1.3em] font-medium text-red-500 hover:bg-red-50 px-4 py-2 rounded-lg flex items-center gap-2"
+                      className="text-[1.3em] font-medium text-red-500 hover:bg-red-500/10 px-4 py-2 rounded-lg flex items-center gap-2"
                     >
                       <Trash2 className="w-4 h-4" /> Hapus
                     </button>
@@ -268,10 +268,10 @@ export default function NotificationDropdown({
                 initial={{ x: "-20%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "-20%", opacity: 0 }}
-                className="absolute inset-0 flex flex-col bg-white h-full"
+                className="absolute inset-0 flex flex-col bg-card h-full"
               >
                 {/* Header List */}
-                <div className="px-6 pt-5 pb-2 bg-white flex-shrink-0 z-20">
+                <div className="px-6 pt-5 pb-2 bg-card shrink-0 z-20">
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
                       <h3 className="text-[1.8em] font-bold text-shortblack">
@@ -299,7 +299,7 @@ export default function NotificationDropdown({
                   <div className="relative pb-2" ref={filterRef}>
                     <button
                       onClick={() => setIsFilterOpen(!isFilterOpen)}
-                      className="flex items-center gap-2 px-4 py-2 bg-blues rounded-xl text-[1.3em] font-medium text-shortblack hover:bg-blue-100 transition-colors w-full justify-between border border-blue-200/50"
+                      className="flex items-center gap-2 px-4 py-2 bg-subcard rounded-xl text-[1.3em] font-medium text-shortblack hover:bg-blues transition-colors w-full justify-between border border-gray-dashboard/30"
                     >
                       <div className="flex items-center gap-2">
                         <Filter className="w-4 h-4 text-bluelight" />
@@ -320,27 +320,36 @@ export default function NotificationDropdown({
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
-                          className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg shadow-slate-200 border border-gray-100 p-2 z-30"
+                          className="absolute top-full left-0 right-0 mt-2 bg-card rounded-xl shadow-lg dark:shadow-black/30 border border-gray-100 dark:border-gray-dashboard/30 p-2 z-30"
                         >
-                          {FILTER_OPTIONS.map((option) => (
+                          {FILTER_OPTIONS.map((option, index) => (
                             <button
                               key={option.id}
                               onClick={() => handleFilterChange(option.id)}
                               className={clsx(
-                                "flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-[1.3em] transition-colors text-left",
+                                "flex items-center gap-2 w-full px-4 py-2.5 rounded-lg text-[1.3em] transition-all duration-300 text-left",
                                 activeFilter === option.id
-                                  ? "bg-blue-50 text-bluelight font-semibold"
-                                  : "text-shortblack hover:bg-gray-50"
+                                  ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient bg-bluelight/10 text-bluelight dark:text-tx-blue-dashboard font-semibold"
+                                  : "text-shortblack dark:text-grays hover:text-bluelight hover:dark:text-tx-blue-dashboard hover:bg-subcard"
                               )}
                             >
+                              {activeFilter === option.id && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-bluelight dark:bg-tx-blue-dashboard shrink-0" />
+                              )}
                               {option.icon && (
                                 <option.icon className="w-4 h-4" />
                               )}
-                              <span className={!option.icon ? "ml-7" : ""}>
+                              <span
+                                className={
+                                  !option.icon && activeFilter !== option.id
+                                    ? "ml-5"
+                                    : ""
+                                }
+                              >
                                 {option.label}
                               </span>
                               {activeFilter === option.id && (
-                                <Check className="w-4 h-4 ml-auto" />
+                                <Check className="w-4 h-4 ml-auto text-bluelight dark:text-tx-blue-dashboard" />
                               )}
                             </button>
                           ))}
@@ -350,12 +359,12 @@ export default function NotificationDropdown({
                   </div>
                 </div>
 
-                <div className="h-px bg-gray-100 w-full"></div>
+                <div className="h-px bg-gray-100 dark:bg-gray-dashboard/30 w-full"></div>
 
                 {/* Content List */}
                 <div
                   onWheel={(e) => e.stopPropagation()}
-                  className="overflow-y-auto custom-scrollbar-minimal flex-1 bg-white"
+                  className="overflow-y-auto custom-scrollbar-minimal flex-1 bg-card"
                 >
                   {isLoading ? (
                     <Spinner />
@@ -367,25 +376,25 @@ export default function NotificationDropdown({
                       </p>
                     </div>
                   ) : (
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-gray-50 dark:divide-gray-dashboard/20">
                       {/* Pinned (Global) Notifications */}
                       {pinnedNotifications.length > 0 && (
                         <>
-                          <div className="px-5 py-2 bg-purple-50 border-b border-purple-100">
-                            <span className="text-[1.1em] font-bold text-purple-600 uppercase tracking-wide flex items-center gap-1">
+                          <div className="px-5 py-2 bg-purple-500/10 border-b border-purple-500/20">
+                            <span className="text-[1.1em] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-1">
                               📌 Pengumuman
                             </span>
                           </div>
                           {pinnedNotifications.map((item) => (
                             <div
                               key={item.id}
-                              className="p-5 hover:bg-purple-50/50 transition-colors cursor-pointer bg-purple-50/30"
+                              className="p-5 hover:bg-purple-500/10 transition-colors cursor-pointer bg-purple-500/5"
                               onClick={() => handleItemClick(item)}
                             >
                               <div className="flex gap-4">
                                 <div
                                   className={clsx(
-                                    "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
+                                    "w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1",
                                     getBgColor(item.type)
                                   )}
                                 >
@@ -415,15 +424,15 @@ export default function NotificationDropdown({
                         <div
                           key={item.id}
                           className={clsx(
-                            "p-5 hover:bg-slate-50 transition-colors cursor-pointer relative group",
-                            !item.isRead ? "bg-blue-50/40" : "bg-white"
+                            "p-5 hover:bg-subcard transition-colors cursor-pointer relative group",
+                            !item.isRead ? "bg-blue-500/10" : "bg-card"
                           )}
                           onClick={() => handleItemClick(item)}
                         >
                           <div className="flex gap-4">
                             <div
                               className={clsx(
-                                "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
+                                "w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1",
                                 getBgColor(item.type)
                               )}
                             >
@@ -451,7 +460,7 @@ export default function NotificationDropdown({
                                 {item.message}
                               </p>
                               <div className="flex items-center gap-2">
-                                <span className="text-[1em] font-bold px-2 py-0.5 bg-gray-100 text-gray-500 rounded uppercase tracking-wide">
+                                <span className="text-[1em] font-bold px-2 py-0.5 bg-subcard text-grays rounded uppercase tracking-wide">
                                   {item.category}
                                 </span>
                                 <span className="text-[1.1em] text-gray-400 font-medium">
@@ -466,7 +475,7 @@ export default function NotificationDropdown({
                   )}
                 </div>
                 {/* Footer List */}
-                <div className="p-3 bg-slate-50 border-t border-gray-100 text-center flex-shrink-0">
+                <div className="p-3 bg-subcard border-t border-gray-100 dark:border-gray-dashboard/30 text-center shrink-0">
                   {hasMoreNotifications ? (
                     <a
                       href={`/${locale}${

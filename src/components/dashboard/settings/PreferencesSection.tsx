@@ -20,6 +20,7 @@ import { usePathname, useRouter } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import clsx from "clsx";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import type { UserPreferences, PrivacySettings } from "@/types/type";
 import { usePreferencesLogic } from "@/hooks/useSettings";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -49,6 +50,15 @@ export default function PreferencesSection({
   initialData,
   type = "user",
 }: PreferencesSectionProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const { showAlert } = useAlert();
   const router = useRouter();
   const pathname = usePathname();
@@ -139,7 +149,12 @@ export default function PreferencesSection({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
+        className={clsx(
+          "rounded-3xl p-8 shadow-sm",
+          isDark
+            ? "bg-card border border-gray-800"
+            : "bg-white border border-gray-100"
+        )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
           <Globe className="w-6 h-6 text-bluelight" />
@@ -161,11 +176,20 @@ export default function PreferencesSection({
                   className={clsx(
                     "flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-3 relative overflow-hidden",
                     preferences.language === lang.code
-                      ? "border-bluelight bg-blue-50 text-bluelight"
+                      ? isDark
+                        ? "border-bluelight bg-blue-500/10 text-bluelight"
+                        : "border-bluelight bg-blue-50 text-bluelight"
+                      : isDark
+                      ? "border-gray-700 text-grays hover:border-blue-200 hover:bg-subcard"
                       : "border-gray-200 text-grays hover:border-blue-200 hover:bg-slate-50"
                   )}
                 >
-                  <div className="relative w-8 h-6 shadow-sm rounded-md overflow-hidden flex-shrink-0 border border-gray-100">
+                  <div
+                    className={clsx(
+                      "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
+                      isDark ? "border-gray-700" : "border-gray-100"
+                    )}
+                  >
                     <Image
                       src={`https://flagcdn.com/${lang.countryCode}.svg`}
                       alt={lang.label}
@@ -192,9 +216,19 @@ export default function PreferencesSection({
             <div className="relative">
               <button
                 onClick={() => setIsCurrencyOpen(!isCurrencyOpen)}
-                className="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-200 bg-white text-shortblack flex items-center gap-3 hover:border-bluelight transition-all focus:ring-2 focus:ring-bluelight/50"
+                className={clsx(
+                  "w-full pl-4 pr-10 py-3 rounded-xl text-shortblack flex items-center gap-3 hover:border-bluelight transition-all focus:ring-2 focus:ring-bluelight/50",
+                  isDark
+                    ? "bg-card border border-gray-700"
+                    : "bg-white border border-gray-200"
+                )}
               >
-                <div className="relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border border-gray-100">
+                <div
+                  className={clsx(
+                    "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
+                    isDark ? "border-gray-700" : "border-gray-100"
+                  )}
+                >
                   <Image
                     src={`https://flagcdn.com/${activeCurrency.countryCode}.svg`}
                     alt={activeCurrency.code}
@@ -218,7 +252,12 @@ export default function PreferencesSection({
                     initial={{ opacity: 0, y: 5, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 5, scale: 0.98 }}
-                    className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl z-20 overflow-hidden p-1.5"
+                    className={clsx(
+                      "absolute top-full left-0 right-0 mt-2 rounded-xl shadow-xl z-20 overflow-hidden p-1.5",
+                      isDark
+                        ? "bg-card border border-gray-800"
+                        : "bg-white border border-gray-100"
+                    )}
                   >
                     {CURRENCY_OPTIONS.map((curr) => (
                       <button
@@ -240,11 +279,20 @@ export default function PreferencesSection({
                         className={clsx(
                           "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors",
                           preferences.currency === curr.code
-                            ? "bg-blue-50 text-bluelight"
+                            ? isDark
+                              ? "bg-blue-500/10 text-bluelight"
+                              : "bg-blue-50 text-bluelight"
+                            : isDark
+                            ? "text-shortblack hover:bg-subcard"
                             : "text-shortblack hover:bg-gray-50"
                         )}
                       >
-                        <div className="relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border border-gray-100">
+                        <div
+                          className={clsx(
+                            "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
+                            isDark ? "border-gray-700" : "border-gray-100"
+                          )}
+                        >
                           <Image
                             src={`https://flagcdn.com/${curr.countryCode}.svg`}
                             alt={curr.label}
@@ -273,126 +321,8 @@ export default function PreferencesSection({
               *Kurs dikonversi otomatis berdasarkan rate harian.
             </p>
           </div>
-
-          {/* Timezone Picker - DISABLED: Using Asia/Jakarta fixed timezone for now */}
-          {/* <div className="space-y-3 md:col-span-2">
-            <label className="text-[1.4em] font-medium text-grays">
-              Timezone
-            </label>
-            <div className="relative">
-              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
-              <select
-                value={preferences.timezone}
-                onChange={(e) =>
-                  setPreferences({ ...preferences, timezone: e.target.value })
-                }
-                className="w-full pl-12 pr-10 py-3 rounded-xl border border-gray-200 bg-white text-[1.5em] text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 appearance-none cursor-pointer hover:border-bluelight transition-colors"
-              >
-                <option value="UTC">UTC (Universal Time)</option>
-                <option value="Asia/Jakarta">Asia/Jakarta (WIB)</option>
-                <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
-                <option value="Asia/Jayapura">Asia/Jayapura (WIT)</option>
-                <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
-              </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays pointer-events-none" />
-            </div>
-          </div> */}
         </div>
       </motion.div>
-
-      {/* === PRIVACY & SESSION - DISABLED: Not needed for initial launch === */}
-      {/* <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
-      >
-        <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
-          <ShieldAlert className="w-6 h-6 text-bluelight" />
-          Privacy & Session
-        </h2>
-        <div className="space-y-4">
-          {[
-            {
-              key: "loginAlert",
-              title: "Login Alert",
-              desc: "Terima email notifikasi jika ada login dari perangkat baru.",
-              icon: ShieldAlert,
-            },
-            {
-              key: "cookieConsent",
-              title: "Cookie Settings",
-              desc: "Izinkan penyimpanan cookie untuk pengalaman login yang lebih cepat.",
-              icon: Cookie,
-            },
-            {
-              key: "saveLoginInfo",
-              title: "Save Login Info",
-              desc: "Ingat sesi login saya di perangkat ini (Auto-login).",
-              icon: KeyRound,
-            },
-          ].map((item) => {
-            const isActive =
-              preferences.privacy[item.key as keyof PrivacySettings];
-            return (
-              <div
-                key={item.key}
-                className="flex items-center justify-between p-4 rounded-2xl border border-gray-100 bg-slate-50/50 hover:bg-slate-100 transition-colors"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`p-2.5 rounded-xl ${
-                      isActive
-                        ? "bg-blue-100 text-bluelight"
-                        : "bg-gray-200 text-gray-500"
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-[1.5em] font-bold text-shortblack">
-                      {item.title}
-                    </h3>
-                    <p className="text-[1.3em] text-grays max-w-md leading-snug">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() =>
-                    handlePrivacyToggle(item.key as keyof PrivacySettings)
-                  }
-                  className={`relative w-14 h-8 rounded-full transition-colors duration-300 shrink-0 ${
-                    isActive ? "bg-bluelight" : "bg-gray-300"
-                  }`}
-                >
-                  <div
-                    className={`absolute top-1 left-1 bg-white w-6 h-6 rounded-full shadow-sm transition-transform duration-300 ${
-                      isActive ? "translate-x-6" : "translate-x-0"
-                    }`}
-                  />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </motion.div> */}
-
-      {/* Footer Submit */}
-      {/* <div className="flex justify-end pt-4">
-        <button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="bg-bluelight text-white px-10 py-4 rounded-xl font-bold text-[1.6em] hover:bg-opacity-90 transition-all flex items-center gap-3 disabled:opacity-50 shadow-lg shadow-blue-200 hover:-translate-y-1"
-        >
-          {isSaving ? (
-            <Loader2 className="w-6 h-6 animate-spin" />
-          ) : (
-            <Save className="w-6 h-6" />
-          )}
-          Save Preferences
-        </button>
-      </div> */}
     </div>
   );
 }

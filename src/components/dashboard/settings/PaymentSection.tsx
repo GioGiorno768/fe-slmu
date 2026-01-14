@@ -1,7 +1,7 @@
 // src/components/dashboard/settings/PaymentSection.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Save,
@@ -17,6 +17,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 import type { SavedPaymentMethod } from "@/types/type";
 import ConfirmationModal from "../ConfirmationModal";
 import { usePaymentLogic } from "@/hooks/useSettings";
@@ -37,6 +38,15 @@ const CATEGORY_CONFIG = {
 type CategoryKey = keyof typeof CATEGORY_CONFIG;
 
 export default function PaymentSection() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Hook with templates from API
   const {
     methods,
@@ -140,11 +150,23 @@ export default function PaymentSection() {
   return (
     <div className="space-y-8 font-figtree">
       {/* 1. LIST METHODS */}
-      <div className="space-y-4 p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
+      <div
+        className={clsx(
+          "space-y-4 p-8 rounded-3xl shadow-sm",
+          isDark
+            ? "bg-card border border-gray-800"
+            : "bg-white border border-gray-100"
+        )}
+      >
         <h2 className="text-[2em] font-bold text-shortblack">Saved Methods</h2>
 
         {methods.length === 0 ? (
-          <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-3xl text-grays">
+          <div
+            className={clsx(
+              "p-8 text-center border-2 border-dashed rounded-3xl text-grays",
+              isDark ? "border-gray-700" : "border-gray-200"
+            )}
+          >
             <p className="text-[1.4em]">
               Belum ada metode pembayaran yang disimpan.
             </p>
@@ -162,7 +184,11 @@ export default function PaymentSection() {
                   className={clsx(
                     "relative p-6 rounded-3xl border-2 transition-all shadow-sm",
                     method.isDefault
-                      ? "border-bluelight bg-blue-50/30"
+                      ? isDark
+                        ? "border-bluelight bg-blue-500/10"
+                        : "border-bluelight bg-blue-50/30"
+                      : isDark
+                      ? "border-gray-800 bg-card"
                       : "border-gray-100 bg-white"
                   )}
                 >
@@ -191,7 +217,14 @@ export default function PaymentSection() {
                         </h3>
                         {/* Currency Badge */}
                         {method.currency && (
-                          <span className="text-[1em] px-2 py-0.5 bg-purple-100 text-purple-600 rounded-md font-medium">
+                          <span
+                            className={clsx(
+                              "text-[1em] px-2 py-0.5 rounded-md font-medium",
+                              isDark
+                                ? "bg-purple-500/20 text-purple-400"
+                                : "bg-purple-100 text-purple-600"
+                            )}
+                          >
                             {method.currency}
                           </span>
                         )}
@@ -206,12 +239,20 @@ export default function PaymentSection() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200/50">
+                  <div
+                    className={clsx(
+                      "flex items-center justify-end gap-3 pt-4 border-t",
+                      isDark ? "border-gray-700" : "border-gray-200/50"
+                    )}
+                  >
                     {!method.isDefault && (
                       <button
                         onClick={() => setAsDefault(method.id)}
                         disabled={isProcessing}
-                        className="text-[1.3em] font-semibold text-bluelight hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className={clsx(
+                          "text-[1.3em] font-semibold text-bluelight px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2",
+                          isDark ? "hover:bg-blue-500/10" : "hover:bg-blue-50"
+                        )}
                       >
                         <CheckCircle className="w-4 h-4" /> Set Default
                       </button>
@@ -219,7 +260,10 @@ export default function PaymentSection() {
                     <button
                       onClick={() => setDeleteId(method.id)}
                       disabled={isProcessing}
-                      className="text-[1.3em] font-semibold text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+                      className={clsx(
+                        "text-[1.3em] font-semibold text-red-500 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2",
+                        isDark ? "hover:bg-red-500/10" : "hover:bg-red-50"
+                      )}
                     >
                       <Trash2 className="w-4 h-4" /> Delete
                     </button>
@@ -231,20 +275,32 @@ export default function PaymentSection() {
         )}
       </div>
 
-      <div className="h-px bg-gray-200 my-8" />
+      <div
+        className={clsx("h-px my-8", isDark ? "bg-gray-700" : "bg-gray-200")}
+      />
 
       {/* 2. ADD NEW METHOD FORM */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100"
+        className={clsx(
+          "rounded-3xl p-8 shadow-sm",
+          isDark
+            ? "bg-card border border-gray-800"
+            : "bg-white border border-gray-100"
+        )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
           <Plus className="w-6 h-6 text-bluelight" /> Add New Method
         </h2>
 
         {templates.length === 0 ? (
-          <div className="p-8 text-center border-2 border-dashed border-gray-200 rounded-3xl text-grays">
+          <div
+            className={clsx(
+              "p-8 text-center border-2 border-dashed rounded-3xl text-grays",
+              isDark ? "border-gray-700" : "border-gray-200"
+            )}
+          >
             <p className="text-[1.4em]">
               Tidak ada template pembayaran tersedia saat ini.
             </p>
@@ -265,7 +321,11 @@ export default function PaymentSection() {
                     className={clsx(
                       "p-6 rounded-2xl border-2 flex flex-col items-center gap-4 transition-all",
                       isActive
-                        ? "border-bluelight bg-blue-50 text-bluelight ring-2 ring-bluelight/20"
+                        ? isDark
+                          ? "border-bluelight bg-blue-500/10 text-bluelight ring-2 ring-bluelight/20"
+                          : "border-bluelight bg-blue-50 text-bluelight ring-2 ring-bluelight/20"
+                        : isDark
+                        ? "border-gray-800 bg-card text-grays hover:bg-subcard"
                         : "border-gray-100 bg-white text-grays hover:bg-slate-50"
                     )}
                   >
@@ -284,7 +344,14 @@ export default function PaymentSection() {
             </div>
 
             {/* Input Fields */}
-            <div className="bg-blues rounded-3xl p-8 border border-blue-100 space-y-6">
+            <div
+              className={clsx(
+                "rounded-3xl p-8 space-y-6",
+                isDark
+                  ? "bg-blues border border-blue-500/30"
+                  : "bg-blues border border-blue-100"
+              )}
+            >
               {/* Provider Select */}
               <div className="space-y-2">
                 <label className="text-[1.4em] font-bold text-shortblack">
@@ -296,7 +363,12 @@ export default function PaymentSection() {
                     onChange={(e) =>
                       setSelectedTemplateId(Number(e.target.value))
                     }
-                    className="w-full px-6 py-4 pr-12 rounded-xl border border-gray-200 bg-white text-[1.6em] font-medium text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 appearance-none cursor-pointer"
+                    className={clsx(
+                      "w-full px-6 py-4 pr-12 rounded-xl text-[1.6em] font-medium text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 appearance-none cursor-pointer",
+                      isDark
+                        ? "bg-card border border-gray-700"
+                        : "bg-white border border-gray-200"
+                    )}
                   >
                     {currentTemplates.map((t) => (
                       <option key={t.id} value={t.id}>
@@ -310,7 +382,14 @@ export default function PaymentSection() {
                 {selectedTemplate && (
                   <div className="flex items-center gap-2 mt-2 text-[1.2em] text-grays">
                     <span>Currency:</span>
-                    <span className="px-2 py-0.5 bg-purple-100 text-purple-600 rounded font-medium">
+                    <span
+                      className={clsx(
+                        "px-2 py-0.5 rounded font-medium",
+                        isDark
+                          ? "bg-purple-500/20 text-purple-400"
+                          : "bg-purple-100 text-purple-600"
+                      )}
+                    >
                       {selectedTemplate.currency}
                     </span>
                     <span className="mx-2">•</span>
@@ -319,7 +398,12 @@ export default function PaymentSection() {
                 )}
               </div>
 
-              <div className="h-px bg-blue-200/50 my-4"></div>
+              <div
+                className={clsx(
+                  "h-px my-4",
+                  isDark ? "bg-blue-500/20" : "bg-blue-200/50"
+                )}
+              ></div>
 
               {/* Account Name */}
               <div className="space-y-2">
@@ -334,7 +418,12 @@ export default function PaymentSection() {
                     onChange={(e) =>
                       setDetails({ ...details, accountName: e.target.value })
                     }
-                    className="w-full pl-14 pr-4 py-3 rounded-xl border border-gray-200 text-[1.5em] focus:outline-none focus:ring-2 focus:ring-bluelight/50"
+                    className={clsx(
+                      "w-full pl-14 pr-4 py-3 rounded-xl text-[1.5em] text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50",
+                      isDark
+                        ? "bg-card border border-gray-700"
+                        : "bg-white border border-gray-200"
+                    )}
                     placeholder="e.g. Kevin Ragil"
                     required
                   />
@@ -354,7 +443,12 @@ export default function PaymentSection() {
                   onChange={(e) =>
                     setDetails({ ...details, accountNumber: e.target.value })
                   }
-                  className="w-full px-6 py-3 rounded-xl border border-gray-200 text-[1.5em] focus:outline-none focus:ring-2 focus:ring-bluelight/50 font-mono"
+                  className={clsx(
+                    "w-full px-6 py-3 rounded-xl text-[1.5em] text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 font-mono",
+                    isDark
+                      ? "bg-card border border-gray-700"
+                      : "bg-white border border-gray-200"
+                  )}
                   placeholder={getInputPlaceholder(
                     selectedTemplate?.input_type || "text"
                   )}
@@ -368,7 +462,10 @@ export default function PaymentSection() {
               <button
                 type="submit"
                 disabled={isProcessing || !selectedTemplate}
-                className="bg-bluelight text-white px-10 py-4 rounded-xl font-bold text-[1.6em] hover:bg-opacity-90 transition-all flex items-center gap-3 disabled:opacity-50 shadow-lg shadow-blue-200"
+                className={clsx(
+                  "bg-bluelight text-white px-10 py-4 rounded-xl font-bold text-[1.6em] hover:bg-opacity-90 transition-all flex items-center gap-3 disabled:opacity-50 shadow-lg",
+                  isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+                )}
               >
                 {isProcessing ? (
                   <Loader2 className="w-6 h-6 animate-spin" />

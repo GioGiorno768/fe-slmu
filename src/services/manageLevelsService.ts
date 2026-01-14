@@ -15,6 +15,13 @@ export interface LevelConfig {
   iconColor: string;
   bgColor: string;
   borderColor: string;
+  // Feature locks
+  unlockAdLevel3: boolean;
+  unlockAdLevel4: boolean;
+  unlockTopCountries: boolean;
+  unlockTopReferrers: boolean;
+  maxReferrals: number;
+  monthlyWithdrawalLimit: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -40,6 +47,13 @@ export interface CreateLevelData {
   iconColor: string;
   bgColor: string;
   borderColor: string;
+  // Feature locks
+  unlockAdLevel3?: boolean;
+  unlockAdLevel4?: boolean;
+  unlockTopCountries?: boolean;
+  unlockTopReferrers?: boolean;
+  maxReferrals?: number;
+  monthlyWithdrawalLimit?: number;
 }
 
 export type UpdateLevelData = Partial<CreateLevelData>;

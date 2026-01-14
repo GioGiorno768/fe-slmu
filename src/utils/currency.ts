@@ -166,6 +166,7 @@ export function convertFromUSD(
 
 /**
  * Format amount in specified currency with proper locale formatting
+ * Default: 5 decimals for micro-transactions (CPC/CPM)
  */
 export function formatCurrency(
   amountUSD: number,
@@ -176,10 +177,11 @@ export function formatCurrency(
   const { locale } = CURRENCY_INFO[currency];
 
   // For IDR, we typically don't show decimals
+  // For other currencies, default to 5 decimals for micro-transactions
   const fractionDigits =
     currency === "IDR"
       ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
-      : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+      : { minimumFractionDigits: 5, maximumFractionDigits: 5 };
 
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -187,6 +189,40 @@ export function formatCurrency(
     ...fractionDigits,
     ...options,
   }).format(converted);
+}
+
+/**
+ * Format currency with 2 decimals (for display like balance, totals)
+ */
+export function formatCurrencySimple(
+  amountUSD: number,
+  currency: CurrencyCode = "USD"
+): string {
+  return formatCurrency(amountUSD, currency, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+/**
+ * Format micro amounts (CPC/CPM) - always 5 decimals
+ */
+export function formatMicroCurrency(
+  amountUSD: number,
+  currency: CurrencyCode = "USD"
+): string {
+  return formatCurrency(amountUSD, currency, {
+    minimumFractionDigits: 5,
+    maximumFractionDigits: 5,
+  });
+}
+
+/**
+ * Format USD amount directly without conversion
+ * Use for displaying raw USD values
+ */
+export function formatUSD(amount: number, decimals: number = 5): string {
+  return `$${amount.toFixed(decimals)}`;
 }
 
 /**

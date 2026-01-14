@@ -2,6 +2,24 @@
 import apiClient from "@/services/apiClient";
 import type { UserLevelProgress, LevelConfig, UserLevel } from "@/types/type";
 
+// Feature locks type
+export interface FeatureLocks {
+  unlock_ad_level_3: boolean;
+  unlock_ad_level_4: boolean;
+  unlock_top_countries: boolean;
+  unlock_top_referrers: boolean;
+  max_referrals: number;
+  monthly_withdrawal_limit: number;
+}
+
+// Unlock requirements - which level first unlocks each feature
+export interface UnlockRequirements {
+  ad_level_3: string | null;
+  ad_level_4: string | null;
+  top_countries: string | null;
+  top_referrers: string | null;
+}
+
 // API Response types
 interface LevelCardResponse {
   current_level: string;
@@ -15,6 +33,8 @@ interface LevelCardResponse {
   next_level_cpm: number;
   needed_to_next_level: number;
   progress_percent: number;
+  feature_locks: FeatureLocks;
+  unlock_requirements: UnlockRequirements;
 }
 
 interface LevelListResponse {
@@ -35,8 +55,14 @@ interface LevelsApiResponse {
   levels: LevelListResponse[];
 }
 
-// Fetch user level progress
-export async function getUserLevelProgress(): Promise<UserLevelProgress> {
+// Extended UserLevelProgress with feature locks
+export interface UserLevelProgressWithLocks extends UserLevelProgress {
+  featureLocks: FeatureLocks;
+  unlockRequirements: UnlockRequirements;
+}
+
+// Fetch user level progress (including feature locks)
+export async function getUserLevelProgress(): Promise<UserLevelProgressWithLocks> {
   const response = await apiClient.get<{ data: LevelsApiResponse }>(
     "/user/levels"
   );
@@ -47,6 +73,20 @@ export async function getUserLevelProgress(): Promise<UserLevelProgress> {
     currentEarnings: card.current_earnings,
     nextLevelEarnings: card.next_level_min,
     progressPercent: card.progress_percent,
+    featureLocks: card.feature_locks ?? {
+      unlock_ad_level_3: false,
+      unlock_ad_level_4: false,
+      unlock_top_countries: false,
+      unlock_top_referrers: false,
+      max_referrals: 10,
+      monthly_withdrawal_limit: 100,
+    },
+    unlockRequirements: card.unlock_requirements ?? {
+      ad_level_3: null,
+      ad_level_4: null,
+      top_countries: null,
+      top_referrers: null,
+    },
   };
 }
 

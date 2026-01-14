@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import TopLoadingBar from "@/components/TopLoadingBar";
 import GlobalAlert from "@/components/dashboard/GlobalAlert";
 import QueryProvider from "@/providers/QueryProvider";
+import Providers from "@/components/Providers";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -57,10 +58,12 @@ export default async function RootLayout({
         </Suspense>
         <LenisScrollProvider>
           <NextIntlClientProvider messages={messages}>
-            <QueryProvider>
-              <GlobalAlert />
-              {children}
-            </QueryProvider>
+            <Providers>
+              <QueryProvider>
+                <GlobalAlert />
+                {children}
+              </QueryProvider>
+            </Providers>
           </NextIntlClientProvider>
         </LenisScrollProvider>
       </body>

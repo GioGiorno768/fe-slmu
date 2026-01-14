@@ -1,13 +1,15 @@
 // src/components/dashboard/settings/ProfileSection.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { User, Mail, Phone, Camera, Loader2, Save } from "lucide-react";
 import type { UserProfile } from "@/types/type";
 import Image from "next/image";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import AvatarSelectionModal from "./AvatarSelectionModal";
-import { useProfileLogic } from "@/hooks/useSettings"; // Pake Hook baru
+import { useProfileLogic } from "@/hooks/useSettings";
 import { DEFAULT_AVATAR_URL } from "@/utils/avatarUtils";
 
 interface ProfileSectionProps {
@@ -19,6 +21,15 @@ export default function ProfileSection({
   initialData,
   type = "user",
 }: ProfileSectionProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   const { updateProfile, isUpdating } = useProfileLogic(type);
 
   // State Modal Avatar
@@ -51,7 +62,12 @@ export default function ProfileSection({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 font-figtree"
+        className={clsx(
+          "rounded-3xl p-8 shadow-sm font-figtree",
+          isDark
+            ? "bg-card border border-gray-800"
+            : "bg-white border border-gray-100"
+        )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8">
           Profile Information
@@ -61,7 +77,12 @@ export default function ProfileSection({
           {/* Avatar Section */}
           <div className="flex items-center gap-8">
             <div className="relative group">
-              <div className="w-32 h-32 rounded-full bg-blues border-4 border-white shadow-lg overflow-hidden relative">
+              <div
+                className={clsx(
+                  "w-32 h-32 rounded-full bg-blues border-4 shadow-lg overflow-hidden relative",
+                  isDark ? "border-card" : "border-white"
+                )}
+              >
                 <Image
                   src={formData.avatarUrl}
                   alt="Profile"
@@ -101,7 +122,12 @@ export default function ProfileSection({
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]"
+                  className={clsx(
+                    "w-full pl-12 pr-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
+                    isDark
+                      ? "bg-card border border-gray-700"
+                      : "bg-white border border-gray-200"
+                  )}
                 />
               </div>
             </div>
@@ -118,28 +144,15 @@ export default function ProfileSection({
                   value={formData.email}
                   onChange={handleChange}
                   disabled
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none text-[1.5em] text-gray-500 cursor-not-allowed"
+                  className={clsx(
+                    "w-full pl-12 pr-4 py-3 rounded-xl focus:outline-none text-[1.5em] cursor-not-allowed",
+                    isDark
+                      ? "bg-subcard border border-gray-700 text-gray-400"
+                      : "bg-gray-50 border border-gray-200 text-gray-500"
+                  )}
                 />
               </div>
             </div>
-
-            {/* Phone Number - Hidden for now since registration only uses username and email
-            <div className="space-y-2">
-              <label className="text-[1.4em] font-medium text-shortblack">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]"
-                />
-              </div>
-            </div>
-            */}
           </div>
 
           {/* Submit Button */}
@@ -147,7 +160,10 @@ export default function ProfileSection({
             <button
               type="submit"
               disabled={isUpdating}
-              className="bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg shadow-blue-200"
+              className={clsx(
+                "bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg",
+                isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+              )}
             >
               {isUpdating ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
   Pencil,
@@ -12,6 +13,7 @@ import {
 import { Shield, Star, Trophy, Gem, Rocket, Crown } from "lucide-react";
 import clsx from "clsx";
 import type { LevelConfig } from "@/services/manageLevelsService";
+import { useTheme } from "next-themes";
 
 // Icon map
 const iconMap: Record<string, LucideIcon> = {
@@ -41,29 +43,56 @@ export default function UserLevelCard({
   onDelete,
 }: UserLevelCardProps) {
   const Icon = getIcon(level.icon);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="relative bg-white rounded-3xl p-6 border-2 border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300"
+      className={clsx(
+        "relative rounded-3xl p-6 border-2 shadow-sm hover:shadow-lg transition-all duration-300",
+        isDark ? "bg-card border-gray-700" : "bg-white border-gray-100"
+      )}
     >
       {/* Actions */}
       <div className="absolute top-4 right-4 flex gap-2">
         <button
           onClick={() => onEdit(level)}
-          className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+          className={clsx(
+            "p-2 rounded-xl transition-colors",
+            isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+          )}
           title="Edit Level"
         >
-          <Pencil className="w-4 h-4 text-gray-500" />
+          <Pencil
+            className={clsx(
+              "w-4 h-4",
+              isDark ? "text-gray-400" : "text-gray-500"
+            )}
+          />
         </button>
         <button
           onClick={() => onDelete(level)}
-          className="p-2 rounded-xl hover:bg-red-50 transition-colors"
+          className={clsx(
+            "p-2 rounded-xl transition-colors",
+            isDark ? "hover:bg-red-500/20" : "hover:bg-red-50"
+          )}
           title="Delete Level"
         >
-          <Trash2 className="w-4 h-4 text-red-500" />
+          <Trash2
+            className={clsx(
+              "w-4 h-4",
+              isDark ? "text-red-400" : "text-red-500"
+            )}
+          />
         </button>
       </div>
 
@@ -77,42 +106,111 @@ export default function UserLevelCard({
         >
           <Icon className={clsx("w-8 h-8", level.iconColor)} />
         </div>
-        <h3 className="text-[2em] font-bold text-shortblack">{level.name}</h3>
-        <p className="text-[1.2em] text-grays">ID: {level.id}</p>
+        <h3
+          className={clsx(
+            "text-[2em] font-bold",
+            isDark ? "text-white" : "text-shortblack"
+          )}
+        >
+          {level.name}
+        </h3>
+        <p
+          className={clsx(
+            "text-[1.2em]",
+            isDark ? "text-gray-500" : "text-grays"
+          )}
+        >
+          ID: {level.id}
+        </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 mb-5">
-        <div className="bg-slate-50 rounded-xl p-3 text-center border border-gray-100">
-          <DollarSign className="w-4 h-4 mx-auto text-gray-400 mb-1" />
-          <p className="text-[1.6em] font-bold text-shortblack">
+        <div
+          className={clsx(
+            "rounded-xl p-3 text-center border",
+            isDark
+              ? "bg-subcard border-gray-700"
+              : "bg-slate-50 border-gray-100"
+          )}
+        >
+          <DollarSign
+            className={clsx(
+              "w-4 h-4 mx-auto mb-1",
+              isDark ? "text-gray-500" : "text-gray-400"
+            )}
+          />
+          <p
+            className={clsx(
+              "text-[1.6em] font-bold",
+              isDark ? "text-white" : "text-shortblack"
+            )}
+          >
             ${level.minEarnings}
           </p>
-          <p className="text-[1em] text-grays">Min Earnings</p>
+          <p
+            className={clsx(
+              "text-[1em]",
+              isDark ? "text-gray-500" : "text-grays"
+            )}
+          >
+            Min Earnings
+          </p>
         </div>
-        <div className="bg-slate-50 rounded-xl p-3 text-center border border-gray-100">
-          <TrendingUp className="w-4 h-4 mx-auto text-gray-400 mb-1" />
+        <div
+          className={clsx(
+            "rounded-xl p-3 text-center border",
+            isDark
+              ? "bg-subcard border-gray-700"
+              : "bg-slate-50 border-gray-100"
+          )}
+        >
+          <TrendingUp
+            className={clsx(
+              "w-4 h-4 mx-auto mb-1",
+              isDark ? "text-gray-500" : "text-gray-400"
+            )}
+          />
           <p className={clsx("text-[1.6em] font-bold", level.iconColor)}>
             +{level.cpmBonus}%
           </p>
-          <p className="text-[1em] text-grays">CPM Bonus</p>
+          <p
+            className={clsx(
+              "text-[1em]",
+              isDark ? "text-gray-500" : "text-grays"
+            )}
+          >
+            CPM Bonus
+          </p>
         </div>
       </div>
 
       {/* Benefits */}
       <div>
-        <p className="text-[1.2em] font-semibold text-grays uppercase tracking-wider mb-2">
+        <p
+          className={clsx(
+            "text-[1.2em] font-semibold uppercase tracking-wider mb-2",
+            isDark ? "text-gray-500" : "text-grays"
+          )}
+        >
           Benefits ({level.benefits.length})
         </p>
         <ul className="space-y-2">
           {level.benefits.slice(0, 4).map((benefit, i) => (
             <li key={i} className="flex items-start gap-2 text-[1.3em]">
               <Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-              <span className="text-shortblack">{benefit}</span>
+              <span className={isDark ? "text-white" : "text-shortblack"}>
+                {benefit}
+              </span>
             </li>
           ))}
           {level.benefits.length > 4 && (
-            <li className="text-[1.2em] text-grays pl-6">
+            <li
+              className={clsx(
+                "text-[1.2em] pl-6",
+                isDark ? "text-gray-500" : "text-grays"
+              )}
+            >
               +{level.benefits.length - 4} more benefits...
             </li>
           )}

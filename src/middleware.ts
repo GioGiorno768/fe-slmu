@@ -4,7 +4,95 @@ import { NextRequest, NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
+// Cache maintenance status to avoid repeated API calls
+let maintenanceCache: {
+  status: boolean;
+  estimatedTime: string;
+  timestamp: number;
+} | null = null;
+
+const CACHE_TTL = 30000; // 30 seconds
+
+async function checkMaintenanceStatus(request: NextRequest): Promise<{
+  isMaintenanceMode: boolean;
+  isWhitelisted: boolean;
+  estimatedTime: string;
+}> {
+  const now = Date.now();
+
+  // Use cached status if available and not expired
+  if (maintenanceCache && now - maintenanceCache.timestamp < CACHE_TTL) {
+    // Still need to check whitelist per-request
+    const API_URL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+    try {
+      // Forward client IP to backend
+      const clientIp =
+        request.headers.get("x-forwarded-for")?.split(",")[0] ||
+        request.headers.get("x-real-ip") ||
+        "127.0.0.1";
+
+      const response = await fetch(`${API_URL}/settings/maintenance`, {
+        headers: { "X-Forwarded-For": clientIp },
+        cache: "no-store",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          isMaintenanceMode: data.data.maintenance_mode,
+          isWhitelisted: data.data.is_whitelisted,
+          estimatedTime: data.data.estimated_time,
+        };
+      }
+    } catch {
+      // API error - assume no maintenance
+    }
+    return {
+      isMaintenanceMode: false,
+      isWhitelisted: false,
+      estimatedTime: "",
+    };
+  }
+
+  // Fetch fresh status
+  const API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+  try {
+    const clientIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] ||
+      request.headers.get("x-real-ip") ||
+      "127.0.0.1";
+
+    const response = await fetch(`${API_URL}/settings/maintenance`, {
+      headers: { "X-Forwarded-For": clientIp },
+      cache: "no-store",
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      // Update cache
+      maintenanceCache = {
+        status: data.data.maintenance_mode,
+        estimatedTime: data.data.estimated_time,
+        timestamp: now,
+      };
+
+      return {
+        isMaintenanceMode: data.data.maintenance_mode,
+        isWhitelisted: data.data.is_whitelisted,
+        estimatedTime: data.data.estimated_time,
+      };
+    }
+  } catch {
+    // API error - assume no maintenance
+  }
+
+  return { isMaintenanceMode: false, isWhitelisted: false, estimatedTime: "" };
+}
+
+export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Bypass API & Static
@@ -14,6 +102,50 @@ export default function middleware(request: NextRequest) {
     pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|mp4|webm)$/)
   ) {
     return NextResponse.next();
+  }
+
+  // 1.1. MAINTENANCE MODE CHECK
+  // Bypass paths that should always work
+  const maintenanceBypassPaths = [
+    "/backdoor", // Admin backdoor login
+    "/maintenance", // Maintenance page itself
+    "/en/backdoor",
+    "/id/backdoor",
+    "/en/maintenance",
+    "/id/maintenance",
+  ];
+
+  const isMaintenanceBypass = maintenanceBypassPaths.some(
+    (path) => pathname === path || pathname.startsWith(path + "/")
+  );
+
+  // Check if user is logged in as admin/super_admin (from cookie)
+  const maintenanceUserCookie = request.cookies.get("user_data")?.value;
+  let isAdminUser = false;
+  if (maintenanceUserCookie) {
+    try {
+      const userData = JSON.parse(decodeURIComponent(maintenanceUserCookie));
+      isAdminUser =
+        userData.role === "admin" || userData.role === "super_admin";
+    } catch {
+      isAdminUser = false;
+    }
+  }
+
+  // Only check maintenance for non-admin users and non-bypass paths
+  if (!isMaintenanceBypass && !isAdminUser) {
+    const { isMaintenanceMode, isWhitelisted } = await checkMaintenanceStatus(
+      request
+    );
+
+    if (isMaintenanceMode && !isWhitelisted) {
+      // Redirect to maintenance page
+      const url = request.nextUrl.clone();
+      const locale = pathname.split("/").filter(Boolean)[0];
+      const validLocale = locale === "en" || locale === "id" ? locale : "en";
+      url.pathname = `/${validLocale}/maintenance`;
+      return NextResponse.redirect(url);
+    }
   }
 
   // 1.5. SHORTLINK REWRITE PROXY
@@ -35,6 +167,8 @@ export default function middleware(request: NextRequest) {
       "go",
       "expired",
       "referral",
+      "backdoor", // Admin backdoor login
+      "maintenance", // Maintenance page
       // Member routes
       "analytics",
       "levels",

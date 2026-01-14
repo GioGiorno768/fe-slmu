@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   CheckCircle2,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import type { RecentWithdrawal } from "@/types/type";
+import { useTheme } from "next-themes";
 
 interface WithdrawalItemProps {
   trx: RecentWithdrawal;
@@ -36,6 +37,14 @@ export default function WithdrawalItem({
   currentUserId,
 }: WithdrawalItemProps) {
   const [copied, setCopied] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Check if current admin is the one who processed this withdrawal
   const isCurrentProcessor =
@@ -66,7 +75,12 @@ export default function WithdrawalItem({
     });
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md group relative ">
+    <div
+      className={clsx(
+        "rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-md group relative",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
+    >
       {/* HEADER SECTION */}
       <div className="p-5 flex items-start gap-4">
         {/* Status Icon Indicator */}
@@ -74,11 +88,19 @@ export default function WithdrawalItem({
           className={clsx(
             "mt-1 w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
             trx.status === "paid"
-              ? "bg-green-100 text-green-600"
+              ? isDark
+                ? "bg-green-500/20 text-green-400"
+                : "bg-green-100 text-green-600"
               : trx.status === "approved"
-              ? "bg-blue-100 text-blue-600"
+              ? isDark
+                ? "bg-blue-500/20 text-blue-400"
+                : "bg-blue-100 text-blue-600"
               : trx.status === "rejected"
-              ? "bg-red-100 text-red-600"
+              ? isDark
+                ? "bg-red-500/20 text-red-400"
+                : "bg-red-100 text-red-600"
+              : isDark
+              ? "bg-yellow-500/20 text-yellow-400"
               : "bg-yellow-100 text-yellow-600"
           )}
         >
@@ -118,11 +140,19 @@ export default function WithdrawalItem({
                   className={clsx(
                     "px-2 py-0.5 rounded text-[1em] font-bold uppercase tracking-wide",
                     trx.status === "paid"
-                      ? "bg-green-100 text-green-700"
+                      ? isDark
+                        ? "bg-green-500/20 text-green-400"
+                        : "bg-green-100 text-green-700"
                       : trx.status === "approved"
-                      ? "bg-blue-100 text-blue-700"
+                      ? isDark
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-blue-100 text-blue-700"
                       : trx.status === "rejected"
-                      ? "bg-red-100 text-red-700"
+                      ? isDark
+                        ? "bg-red-500/20 text-red-400"
+                        : "bg-red-100 text-red-700"
+                      : isDark
+                      ? "bg-yellow-500/20 text-yellow-400"
                       : "bg-yellow-100 text-yellow-700"
                   )}
                 >
@@ -214,7 +244,12 @@ export default function WithdrawalItem({
             </button>
           </div>
 
-          <div className="h-px bg-gray-100 w-full mb-4" />
+          <div
+            className={clsx(
+              "h-px w-full mb-4",
+              isDark ? "bg-gray-800" : "bg-gray-100"
+            )}
+          />
 
           {/* Details Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-[1.2em]">

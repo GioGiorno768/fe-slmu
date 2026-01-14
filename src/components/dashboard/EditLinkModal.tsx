@@ -15,6 +15,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import type { EditableLinkData, AdLevel } from "@/types/type";
 import { useAdsInfo } from "@/hooks/useAdsInfo";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
 
 interface EditLinkModalProps {
   isOpen: boolean;
@@ -43,6 +44,7 @@ export default function EditLinkModal({
 
   // Fetch ad levels from API
   const { levels: adLevelsFromApi, isLoading: isLoadingLevels } = useAdsInfo();
+  const { isAdLevelUnlocked, getRequiredLevelForAd } = useFeatureLocks();
 
   // State Form
   const [formData, setFormData] = useState<EditableLinkData>({
@@ -55,10 +57,12 @@ export default function EditLinkModal({
   // State Dropdown Ads Level
   const [isAdLevelDropdownOpen, setIsAdLevelDropdownOpen] = useState(false);
 
-  // Map API data to dropdown options
-  const adLevels = adLevelsFromApi.map((level) => ({
+  // Map API data to dropdown options with lock status
+  const adLevels = adLevelsFromApi.map((level, index) => ({
     key: level.slug as AdLevel,
     label: level.name,
+    isLocked: !isAdLevelUnlocked(index + 1),
+    requiredLevel: getRequiredLevelForAd(index + 1),
   }));
 
   // Isi form saat modal dibuka / data berubah
@@ -105,7 +109,8 @@ export default function EditLinkModal({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAdLevelChange = (level: AdLevel) => {
+  const handleAdLevelChange = (level: AdLevel, isLocked: boolean) => {
+    if (isLocked) return;
     setFormData({ ...formData, adsLevel: level });
     setIsAdLevelDropdownOpen(false);
   };
@@ -140,12 +145,12 @@ export default function EditLinkModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative flex flex-col max-h-[90vh]"
+            className="bg-card rounded-2xl shadow-2xl w-full max-w-md p-6 relative flex flex-col max-h-[90vh]"
           >
             {/* Tombol Close */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full text-grays hover:bg-blues hover:text-shortblack transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full text-grays hover:bg-subcard hover:text-shortblack transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -153,8 +158,8 @@ export default function EditLinkModal({
             {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col h-full">
               {/* Header Modal */}
-              <div className="flex items-start gap-4 mb-6 pr-8 flex-shrink-0">
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-dashboard rounded-xl flex items-center justify-center">
+              <div className="flex items-start gap-4 mb-6 pr-8 shrink-0">
+                <div className="shrink-0 w-12 h-12 bg-subcard rounded-xl flex items-center justify-center">
                   <Edit className="w-6 h-6 text-bluelight" />
                 </div>
                 <div className="overflow-hidden">
@@ -180,7 +185,7 @@ export default function EditLinkModal({
                       name="alias"
                       value={formData.alias}
                       onChange={handleChange}
-                      className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-200 bg-blues focus:bg-white focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all"
+                      className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack placeholder:text-grays"
                       placeholder="e.g., my-awesome-link"
                     />
                   </div>
@@ -198,7 +203,7 @@ export default function EditLinkModal({
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="w-full text-[1.5em] pl-12 pr-5 py-3 rounded-xl border border-gray-200 bg-blues focus:bg-white focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all"
+                      className="w-full text-[1.5em] pl-12 pr-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack placeholder:text-grays"
                       placeholder={t("setPassword")}
                     />
                   </div>
@@ -216,7 +221,7 @@ export default function EditLinkModal({
                       name="expiresAt"
                       value={formData.expiresAt}
                       onChange={handleChange}
-                      className="w-full text-[1.5em] pl-12 pr-5 py-3 rounded-xl border border-gray-200 bg-blues focus:bg-white focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all"
+                      className="w-full text-[1.5em] pl-12 pr-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack"
                       min={getMinDateTimeLocal()}
                     />
                   </div>
@@ -234,7 +239,7 @@ export default function EditLinkModal({
                     onClick={() =>
                       setIsAdLevelDropdownOpen(!isAdLevelDropdownOpen)
                     }
-                    className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-200 bg-white flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight/50 hover:border-bluelight transition-all"
+                    className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-bluelight/50 hover:border-bluelight transition-all"
                   >
                     <div className="flex items-center gap-3">
                       <Megaphone className="w-5 h-5 text-bluelight" />
@@ -263,24 +268,47 @@ export default function EditLinkModal({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.98 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute bottom-15 left-0 right-0 mt-2 bg-white rounded-xl shadow-xl z-50 border border-gray-100"
+                        className="absolute bottom-15 left-0 right-0 mt-2 bg-card rounded-xl shadow-xl z-50 border border-gray-dashboard/30"
                       >
                         <div className="custom-scrollbar-minimal p-2">
                           {adLevels.map((level) => (
                             <button
                               key={level.key}
                               type="button"
-                              onClick={() => handleAdLevelChange(level.key)}
-                              className={`flex items-center w-full text-left text-[1.4em] px-4 py-3 rounded-lg transition-colors ${
-                                formData.adsLevel === level.key
-                                  ? "bg-blue-dashboard text-bluelight font-semibold"
-                                  : "text-shortblack hover:bg-blues"
+                              onClick={() =>
+                                handleAdLevelChange(level.key, level.isLocked)
+                              }
+                              disabled={level.isLocked}
+                              className={`flex items-center justify-between w-full text-left text-[1.4em] px-4 py-3 rounded-lg transition-colors ${
+                                level.isLocked
+                                  ? "text-gray-400 cursor-not-allowed"
+                                  : formData.adsLevel === level.key
+                                  ? "bg-subcard text-bluelight font-semibold"
+                                  : "text-shortblack hover:bg-subcard"
                               }`}
                             >
-                              {formData.adsLevel === level.key && (
-                                <div className="w-1.5 h-1.5 rounded-full bg-bluelight mr-3" />
+                              <div className="flex items-center">
+                                {formData.adsLevel === level.key &&
+                                  !level.isLocked && (
+                                    <div className="w-1.5 h-1.5 rounded-full bg-bluelight mr-3" />
+                                  )}
+                                <span
+                                  className={
+                                    formData.adsLevel !== level.key ||
+                                    level.isLocked
+                                      ? "ml-4"
+                                      : ""
+                                  }
+                                >
+                                  {level.label}
+                                </span>
+                              </div>
+                              {level.isLocked && level.requiredLevel && (
+                                <span className="flex items-center gap-1 text-[0.85em] text-gray-400">
+                                  <Lock className="w-3 h-3" />
+                                  <span>{level.requiredLevel}</span>
+                                </span>
                               )}
-                              {level.label}
                             </button>
                           ))}
                         </div>
@@ -291,7 +319,7 @@ export default function EditLinkModal({
               </div>
 
               {/* Footer / Submit Button */}
-              <div className="pt-4 mt-auto border-t border-gray-100 flex-shrink-0">
+              <div className="pt-4 mt-auto border-t border-gray-dashboard/30 shrink-0">
                 <button
                   type="submit"
                   disabled={isUpdating}

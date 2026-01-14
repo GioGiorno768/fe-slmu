@@ -1,7 +1,7 @@
 // src/components/dashboard/ReferralCard.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import {
@@ -15,6 +15,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import type { ReferralCardData } from "@/types/type";
+import { useTheme } from "next-themes";
 import clsx from "clsx";
 
 // Terima data lewat props
@@ -24,6 +25,14 @@ interface ReferralCardProps {
 
 export default function ReferralCard({ data }: ReferralCardProps) {
   const t = useTranslations("Dashboard");
+  const { theme } = useTheme();
+
+  // Prevent hydration mismatch - wait for client-side
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isDark = mounted && theme === "dark";
 
   // State lokal cuma buat interaksi UI (Copy status)
   const [isCopied, setIsCopied] = useState(false);
@@ -54,27 +63,26 @@ export default function ReferralCard({ data }: ReferralCardProps) {
   // Loading State handled in render
   const isLoading = !data;
 
-  // Extract referral code from link for display
-  const referralCode = data?.referralLink?.split("ref=")[1] || "";
-
   return (
-    <div className="bg-white p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+    <div className="bg-card p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-200">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-lightpurple-dashboard">
             <Gift className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 className="text-[1.6em] font-bold text-shortblack">
               {t("referralTitle")}
             </h3>
-            <p className="text-[1.1em] text-grays">Ajak teman, dapat komisi!</p>
+            <p className="text-[1.1em] text-bluelight">
+              Ajak teman, dapat komisi!
+            </p>
           </div>
         </div>
 
         {/* User Count Badge */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full">
+        <div className="flex items-center gap-2 px-4 py-2 bg-subcard border border-gray-dashboard/30 rounded-full">
           <Users className="w-4 h-4 text-bluelight" />
           {isLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-bluelight" />
@@ -88,7 +96,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
 
       {/* Referral Link Box */}
       <div className="flex-1 flex flex-col justify-center">
-        <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 rounded-2xl p-4 border border-slate-100">
+        <div className="bg-subcard rounded-2xl p-4 border border-gray-dashboard/30">
           {isLoading ? (
             <div className="flex items-center justify-center py-4">
               <Loader2 className="w-6 h-6 animate-spin text-bluelight" />
@@ -99,7 +107,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 min-w-0">
                   <p className="text-[1em] text-grays mb-1">Link Referral</p>
-                  <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-3 border border-slate-200">
+                  <div className="flex items-center gap-2 bg-card rounded-xl px-4 py-3 border border-gray-dashboard/30">
                     <input
                       type="text"
                       readOnly
@@ -112,8 +120,8 @@ export default function ReferralCard({ data }: ReferralCardProps) {
                       className={clsx(
                         "shrink-0 p-2 rounded-lg transition-all duration-200",
                         isCopied
-                          ? "bg-green-100 text-green-600"
-                          : "bg-blues text-bluelight hover:bg-blue-100"
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-subcard text-bluelight hover:bg-gray-dashboard/50"
                       )}
                     >
                       {isCopied ? (
@@ -135,6 +143,8 @@ export default function ReferralCard({ data }: ReferralCardProps) {
                     "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[1.2em] font-semibold transition-all duration-200",
                     isCopied
                       ? "bg-green-500 text-white"
+                      : isDark
+                      ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-white hover:opacity-90 shadow-lg shadow-lightpurple-dashboard/50"
                       : "bg-bluelight text-white hover:bg-bluelight/90 shadow-lg shadow-blue-200"
                   )}
                 >
@@ -153,7 +163,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
 
                 <button
                   onClick={handleGenericShare}
-                  className="p-3 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                  className="p-3 rounded-xl bg-subcard text-grays hover:text-bluelight hover:bg-gray-dashboard/50 transition-colors"
                   title="Share"
                 >
                   <Share2 className="w-5 h-5" />
@@ -161,7 +171,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
 
                 <Link
                   href="/referral"
-                  className="p-3 rounded-xl bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
+                  className="p-3 rounded-xl bg-subcard text-grays hover:text-bluelight hover:bg-gray-dashboard/50 transition-colors"
                   title="Lihat Detail"
                 >
                   <ExternalLink className="w-5 h-5" />
@@ -172,11 +182,11 @@ export default function ReferralCard({ data }: ReferralCardProps) {
         </div>
       </div>
 
-      {/* Footer Stats */}
-      <div className="mt-4 pt-4 border-t border-slate-100">
+      {/* Footer */}
+      <div className="mt-4 pt-4 border-t border-gray-dashboard/30">
         <Link
           href="/referral"
-          className="flex items-center justify-between group"
+          className="flex items-center justify-center gap-2 group"
         >
           <span className="text-[1.2em] text-grays group-hover:text-bluelight transition-colors">
             Lihat semua detail referral

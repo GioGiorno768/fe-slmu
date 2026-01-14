@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   CheckCircle2,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import type { Admin } from "@/types/type";
+import { useTheme } from "next-themes";
 
 interface AdminListCardProps {
   admin: Admin;
@@ -24,6 +26,14 @@ export default function AdminListCard({
   onToggleStatus,
   onDelete,
 }: AdminListCardProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -53,15 +63,24 @@ export default function AdminListCard({
   return (
     <div
       className={clsx(
-        "bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300",
-        "border-gray-100 hover:border-blue-200",
+        "rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300",
+        isDark
+          ? "bg-card border-gray-800 hover:border-gray-700"
+          : "bg-white border-gray-100 hover:border-blue-200",
         "p-4 md:p-5"
       )}
     >
       {/* Main Row */}
       <div className="flex items-center gap-4">
         {/* Avatar */}
-        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-100 relative overflow-hidden border-2 border-white shadow-sm shrink-0 flex items-center justify-center text-gray-500 font-bold text-xs md:text-sm">
+        <div
+          className={clsx(
+            "w-10 h-10 md:w-12 md:h-12 rounded-full relative overflow-hidden border-2 shadow-sm shrink-0 flex items-center justify-center font-bold text-xs md:text-sm",
+            isDark
+              ? "bg-gray-700 border-gray-600 text-gray-300"
+              : "bg-gray-100 border-white text-gray-500"
+          )}
+        >
           {admin.avatarUrl ? (
             <Image
               src={admin.avatarUrl}
@@ -77,16 +96,35 @@ export default function AdminListCard({
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <h4 className="font-bold text-sm md:text-base text-shortblack truncate">
+            <h4
+              className={clsx(
+                "font-bold text-sm md:text-base truncate",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {admin.name}
             </h4>
             {admin.role === "super-admin" || admin.role === "super_admin" ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase bg-yellow-50 text-yellow-700 border border-yellow-200">
+              <span
+                className={clsx(
+                  "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase border",
+                  isDark
+                    ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                    : "bg-yellow-50 text-yellow-700 border-yellow-200"
+                )}
+              >
                 <Crown className="w-3 h-3" />
                 Super
               </span>
             ) : (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase bg-blue-50 text-blue-700 border border-blue-200">
+              <span
+                className={clsx(
+                  "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase border",
+                  isDark
+                    ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                    : "bg-blue-50 text-blue-700 border-blue-200"
+                )}
+              >
                 Admin
               </span>
             )}
@@ -94,7 +132,11 @@ export default function AdminListCard({
               className={clsx(
                 "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase",
                 admin.status === "active"
-                  ? "bg-green-50 text-green-600"
+                  ? isDark
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-green-50 text-green-600"
+                  : isDark
+                  ? "bg-red-500/20 text-red-400"
                   : "bg-red-50 text-red-600"
               )}
             >
@@ -106,7 +148,12 @@ export default function AdminListCard({
               {admin.status}
             </span>
           </div>
-          <p className="text-grays text-xs md:text-sm truncate">
+          <p
+            className={clsx(
+              "text-xs md:text-sm truncate",
+              isDark ? "text-gray-400" : "text-grays"
+            )}
+          >
             {admin.email}
           </p>
         </div>
@@ -119,7 +166,11 @@ export default function AdminListCard({
               className={clsx(
                 "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5",
                 admin.status === "suspended"
-                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                  ? isDark
+                    ? "bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                    : "bg-green-100 text-green-700 hover:bg-green-200"
+                  : isDark
+                  ? "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30"
                   : "bg-orange-100 text-orange-700 hover:bg-orange-200"
               )}
             >
@@ -141,7 +192,12 @@ export default function AdminListCard({
                 e.stopPropagation();
                 onDelete(admin.id);
               }}
-              className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className={clsx(
+                "p-1.5 rounded-lg transition-colors",
+                isDark
+                  ? "text-red-400 hover:bg-red-500/20"
+                  : "text-red-500 hover:bg-red-50"
+              )}
               title="Delete Admin"
             >
               <Trash2 className="w-4 h-4" />
@@ -157,7 +213,11 @@ export default function AdminListCard({
               className={clsx(
                 "p-2 rounded-lg transition-colors",
                 admin.status === "suspended"
-                  ? "bg-green-100 text-green-700"
+                  ? isDark
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-green-100 text-green-700"
+                  : isDark
+                  ? "bg-orange-500/20 text-orange-400"
                   : "bg-orange-100 text-orange-700"
               )}
             >
@@ -172,7 +232,14 @@ export default function AdminListCard({
       </div>
 
       {/* Footer Row - Joined & Last Login */}
-      <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 text-grays text-xs">
+      <div
+        className={clsx(
+          "flex items-center gap-4 mt-3 pt-3 border-t text-xs",
+          isDark
+            ? "border-gray-700 text-gray-500"
+            : "border-gray-100 text-grays"
+        )}
+      >
         <div className="flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />
           <span>Joined on {formatDate(admin.joinedAt)}</span>

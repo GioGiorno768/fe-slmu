@@ -20,6 +20,7 @@ import clsx from "clsx";
 import { useHeader } from "@/hooks/useHeader";
 import { Role, HeaderStats, AdminHeaderStats } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTheme } from "next-themes";
 
 interface MobileBottomBarProps {
   isSidebarOpen: boolean;
@@ -46,6 +47,14 @@ export default function MobileBottomBar({
 
   // 💱 Use global currency context
   const { format: formatWithCurrency } = useCurrency();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Helper Format Currency - uses global currency context
   const formatCurrency = (val?: number) => {
@@ -149,9 +158,21 @@ export default function MobileBottomBar({
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                className="absolute bottom-[75px] left-0 w-[180px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden pointer-events-auto"
+                className={clsx(
+                  "absolute bottom-[75px] left-0 w-[180px] rounded-2xl shadow-2xl overflow-hidden pointer-events-auto",
+                  isDark
+                    ? "bg-card border border-gray-800"
+                    : "bg-white border border-gray-100"
+                )}
               >
-                <div className="p-3 bg-gray-50 border-b border-gray-100">
+                <div
+                  className={clsx(
+                    "p-3 border-b",
+                    isDark
+                      ? "bg-subcard border-gray-800"
+                      : "bg-gray-50 border-gray-100"
+                  )}
+                >
                   <span className="text-[1.1em] font-bold text-grays uppercase tracking-wider">
                     Language
                   </span>
@@ -162,13 +183,25 @@ export default function MobileBottomBar({
                       key={l}
                       onClick={() => switchLanguage(l as "en" | "id")}
                       className={clsx(
-                        "w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all text-[1.3em] font-medium mb-1",
+                        "w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-300 text-[1.3em] font-medium mb-1",
                         locale === l
-                          ? "bg-blue-50 text-bluelight"
+                          ? isDark
+                            ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                            : "bg-blue-50 text-bluelight"
+                          : isDark
+                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
                           : "text-shortblack hover:bg-gray-50"
                       )}
                     >
                       <span className="flex items-center gap-2">
+                        {locale === l && (
+                          <span
+                            className={clsx(
+                              "w-1.5 h-1.5 rounded-full",
+                              isDark ? "bg-tx-blue-dashboard" : "bg-bluelight"
+                            )}
+                          />
+                        )}
                         {l === "en" ? "🇺🇸 English" : "🇮🇩 Indonesia"}
                       </span>
                       {locale === l && <Check className="w-3.5 h-3.5" />}
@@ -184,9 +217,21 @@ export default function MobileBottomBar({
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                className="absolute bottom-[75px] right-0 w-[240px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden pointer-events-auto"
+                className={clsx(
+                  "absolute bottom-[75px] right-0 w-[240px] rounded-2xl shadow-2xl overflow-hidden pointer-events-auto",
+                  isDark
+                    ? "bg-card border border-gray-800"
+                    : "bg-white border border-gray-100"
+                )}
               >
-                <div className="p-3 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                <div
+                  className={clsx(
+                    "p-3 border-b flex justify-between items-center",
+                    isDark
+                      ? "bg-subcard border-gray-800"
+                      : "bg-gray-50 border-gray-100"
+                  )}
+                >
                   <span className="text-[1.1em] font-bold text-grays uppercase tracking-wider">
                     {popupTitle}
                   </span>
@@ -199,7 +244,12 @@ export default function MobileBottomBar({
                     </Link>
                   )}
                 </div>
-                <div className="p-1.5 divide-y divide-gray-50">
+                <div
+                  className={clsx(
+                    "p-1.5 divide-y",
+                    isDark ? "divide-gray-800" : "divide-gray-50"
+                  )}
+                >
                   {/* Logic Loading State */}
                   {isLoading ? (
                     <div className="p-4 flex justify-center">
@@ -214,7 +264,8 @@ export default function MobileBottomBar({
                         <div className="flex items-center gap-2.5">
                           <div
                             className={clsx(
-                              "p-1.5 rounded-full bg-slate-50",
+                              "p-1.5 rounded-full",
+                              isDark ? "bg-gray-800" : "bg-slate-50",
                               item.color
                             )}
                           >
@@ -236,7 +287,14 @@ export default function MobileBottomBar({
           </AnimatePresence>
 
           {/* === THE BAR ITSELF === */}
-          <div className="w-full max-w-lg bg-white/90 backdrop-blur-md border border-white/40 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-[2.5em] p-1.5 px-6 flex items-center justify-between gap-4 pointer-events-auto relative">
+          <div
+            className={clsx(
+              "w-full max-w-lg backdrop-blur-md border shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-[2.5em] p-1.5 px-6 flex items-center justify-between gap-4 pointer-events-auto relative",
+              isDark
+                ? "bg-card/90 border-gray-800"
+                : "bg-white/90 border-white/40"
+            )}
+          >
             {/* Left Button: Language */}
             <button
               onClick={() => togglePopup("lang")}
@@ -244,13 +302,19 @@ export default function MobileBottomBar({
                 "flex flex-col items-center justify-center w-12 h-12 transition-all duration-300",
                 activePopup === "lang"
                   ? "text-bluelight scale-105"
+                  : isDark
+                  ? "text-grays hover:text-tx-blue-dashboard"
                   : "text-grays hover:text-shortblack"
               )}
             >
               <div
                 className={clsx(
                   "p-2.5 rounded-full transition-colors",
-                  activePopup === "lang" ? "bg-blue-50" : "bg-transparent"
+                  activePopup === "lang"
+                    ? isDark
+                      ? "bg-subcard"
+                      : "bg-blue-50"
+                    : "bg-transparent"
                 )}
               >
                 <Globe className="w-5 h-5" strokeWidth={2.5} />
@@ -287,13 +351,19 @@ export default function MobileBottomBar({
                 "flex flex-col items-center justify-center w-12 h-12 transition-all duration-300",
                 activePopup === "wallet"
                   ? "text-bluelight scale-105"
+                  : isDark
+                  ? "text-grays hover:text-tx-blue-dashboard"
                   : "text-grays hover:text-shortblack"
               )}
             >
               <div
                 className={clsx(
                   "p-2.5 rounded-full transition-colors",
-                  activePopup === "wallet" ? "bg-blue-50" : "bg-transparent"
+                  activePopup === "wallet"
+                    ? isDark
+                      ? "bg-subcard"
+                      : "bg-blue-50"
+                    : "bg-transparent"
                 )}
               >
                 {isAdmin ? (

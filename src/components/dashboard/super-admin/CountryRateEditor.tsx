@@ -56,7 +56,11 @@ export default function CountryRateEditor({
     const newRate: CountryRate = {
       countryCode,
       countryName,
-      cpcRate: defaultCpcRate, // Start with default rate
+      level1Rate: defaultCpcRate,
+      level2Rate: defaultCpcRate,
+      level3Rate: defaultCpcRate,
+      level4Rate: defaultCpcRate,
+      cpcRate: defaultCpcRate, // Legacy - Start with default rate
     };
     onChange([...countryRates, newRate]);
     setIsDropdownOpen(false);
@@ -166,7 +170,7 @@ export default function CountryRateEditor({
                           />
                         </div>
                         <span className="text-[1.1em] text-bluelight font-medium whitespace-nowrap">
-                          {formatCPM(rate.cpcRate)}
+                          {formatCPM(rate.cpcRate ?? rate.level1Rate)}
                         </span>
                       </div>
 

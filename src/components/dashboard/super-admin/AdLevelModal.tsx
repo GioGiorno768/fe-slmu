@@ -11,6 +11,7 @@ import type {
 import { formatCPM } from "@/services/adLevelService";
 import { motion, AnimatePresence } from "motion/react";
 import FeatureSelector from "./FeatureSelector";
+import { useTheme } from "next-themes";
 
 interface AdLevelModalProps {
   isOpen: boolean;
@@ -89,6 +90,15 @@ export default function AdLevelModal({
   const [featureValues, setFeatureValues] = useState<Record<string, string>>(
     {}
   );
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Initialize form with editing data
   useEffect(() => {
@@ -194,7 +204,10 @@ export default function AdLevelModal({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row max-h-[90vh] font-figtree text-[10px]"
+              className={clsx(
+                "w-full max-w-5xl rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto flex flex-col md:flex-row max-h-[90vh] font-figtree text-[10px]",
+                isDark ? "bg-card" : "bg-white"
+              )}
             >
               {/* LEFT: Form */}
               <div
@@ -204,25 +217,48 @@ export default function AdLevelModal({
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                   <div>
-                    <h2 className="text-[2.2em] font-bold text-shortblack">
+                    <h2
+                      className={clsx(
+                        "text-[2.2em] font-bold",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Edit Level {formData.levelNumber}
                     </h2>
-                    <p className="text-[1.3em] text-grays mt-1">
+                    <p
+                      className={clsx(
+                        "text-[1.3em] mt-1",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    >
                       Configure settings for this ad level
                     </p>
                   </div>
                   <button
                     onClick={onClose}
-                    className="p-2.5 rounded-full hover:bg-gray-100 transition-colors"
+                    className={clsx(
+                      "p-2.5 rounded-full transition-colors",
+                      isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                    )}
                   >
-                    <X className="w-6 h-6 text-grays" />
+                    <X
+                      className={clsx(
+                        "w-6 h-6",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    />
                   </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Name
                     </label>
                     <input
@@ -231,7 +267,12 @@ export default function AdLevelModal({
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card placeholder:text-gray-500"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                       placeholder="e.g., Medium"
                       required
                     />
@@ -239,7 +280,12 @@ export default function AdLevelModal({
 
                   {/* Description */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Description
                     </label>
                     <textarea
@@ -250,7 +296,12 @@ export default function AdLevelModal({
                           description: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em] resize-none"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em] resize-none",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card placeholder:text-gray-500"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                       rows={2}
                       placeholder="Brief description..."
                       required
@@ -260,7 +311,12 @@ export default function AdLevelModal({
                   {/* Revenue & CPC */}
                   {/* Revenue Share */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Revenue Share (%)
                     </label>
                     <div className="relative">
@@ -273,23 +329,35 @@ export default function AdLevelModal({
                             revenueShare: parseInt(e.target.value),
                           })
                         }
-                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
+                        className={clsx(
+                          "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]",
+                          isDark
+                            ? "bg-subcard text-white focus:bg-card"
+                            : "bg-gray-50 focus:bg-white"
+                        )}
                         required
                         min="0"
                         max="100"
                       />
-                      {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[1.2em] text-grays font-medium">
-                        %
-                      </div> */}
                     </div>
-                    <p className="text-[1.1em] text-grays mt-2">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-2",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    >
                       CPC rates are configured in Settings → CPC Rates
                     </p>
                   </div>
 
                   {/* Color Theme */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-3">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-3",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Color Theme
                     </label>
                     <div className="grid grid-cols-4 gap-3">
@@ -306,7 +374,11 @@ export default function AdLevelModal({
                           className={clsx(
                             "p-4 rounded-2xl border-2 transition-all group relative overflow-hidden",
                             formData.colorTheme === theme.value
-                              ? "border-shortblack shadow-lg scale-105"
+                              ? isDark
+                                ? "border-white shadow-lg scale-105"
+                                : "border-shortblack shadow-lg scale-105"
+                              : isDark
+                              ? "border-gray-700 hover:border-gray-600"
                               : "border-gray-200 hover:border-gray-300"
                           )}
                         >
@@ -316,12 +388,27 @@ export default function AdLevelModal({
                               theme.gradient
                             )}
                           />
-                          <p className="text-[1.2em] font-bold text-shortblack">
+                          <p
+                            className={clsx(
+                              "text-[1.2em] font-bold",
+                              isDark ? "text-white" : "text-shortblack"
+                            )}
+                          >
                             {theme.label}
                           </p>
                           {formData.colorTheme === theme.value && (
-                            <div className="absolute top-2 right-2 w-6 h-6 bg-shortblack rounded-full flex items-center justify-center">
-                              <Check className="w-4 h-4 text-white" />
+                            <div
+                              className={clsx(
+                                "absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center",
+                                isDark ? "bg-white" : "bg-shortblack"
+                              )}
+                            >
+                              <Check
+                                className={clsx(
+                                  "w-4 h-4",
+                                  isDark ? "text-shortblack" : "text-white"
+                                )}
+                              />
                             </div>
                           )}
                         </button>
@@ -331,7 +418,12 @@ export default function AdLevelModal({
 
                   {/* Article/Demo URL */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Article/Demo Page URL
                     </label>
                     <input
@@ -340,17 +432,32 @@ export default function AdLevelModal({
                       onChange={(e) =>
                         setFormData({ ...formData, demoUrl: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-bluelight focus:bg-white focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight focus:ring-2 focus:ring-bluelight/20 outline-none transition-all text-[1.3em]",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card placeholder:text-gray-500"
+                          : "bg-gray-50 focus:bg-white"
+                      )}
                       placeholder="https://artikel.shortlink.com/demo-level-1"
                     />
-                    <p className="text-[1.1em] text-grays mt-2">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-2",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    >
                       Link to article page with ads setup (separate project)
                     </p>
                   </div>
 
                   {/* Global Features Selector */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-3">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-3",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Features ({enabledFeatures.length} selected)
                     </label>
                     <div
@@ -372,7 +479,12 @@ export default function AdLevelModal({
                   <div className="pt-4">
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-shortblack to-gray-800 text-white py-4 rounded-2xl font-bold text-[1.6em] hover:shadow-2xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-xl"
+                      className={clsx(
+                        "w-full py-4 rounded-2xl font-bold text-[1.6em] hover:shadow-2xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 shadow-xl text-white",
+                        isDark
+                          ? "bg-bluelight hover:bg-blue-600"
+                          : "bg-gradient-to-r from-shortblack to-gray-800"
+                      )}
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Saving..." : "Update Level"}
@@ -382,13 +494,32 @@ export default function AdLevelModal({
               </div>
 
               {/* RIGHT: Live Preview */}
-              <div className="hidden md:flex flex-1 bg-gradient-to-br from-gray-50 to-blue-50/30 p-8 flex-col items-center justify-center border-l border-gray-200">
-                <h3 className="text-[1.5em] font-bold text-gray-400 mb-8 uppercase tracking-wider">
+              <div
+                className={clsx(
+                  "hidden md:flex flex-1 p-8 flex-col items-center justify-center border-l",
+                  isDark
+                    ? "bg-subcard border-gray-700"
+                    : "bg-gradient-to-br from-gray-50 to-blue-50/30 border-gray-200"
+                )}
+              >
+                <h3
+                  className={clsx(
+                    "text-[1.5em] font-bold mb-8 uppercase tracking-wider",
+                    isDark ? "text-gray-500" : "text-gray-400"
+                  )}
+                >
                   Live Preview
                 </h3>
 
                 {/* Card Preview */}
-                <div className="relative w-full max-w-sm rounded-3xl p-8 transition-all duration-500 border-2 shadow-xl bg-white border-gray-100">
+                <div
+                  className={clsx(
+                    "relative w-full max-w-sm rounded-3xl p-8 transition-all duration-500 border-2 shadow-xl",
+                    isDark
+                      ? "bg-card border-gray-700 shadow-black/20"
+                      : "bg-white border-gray-100"
+                  )}
+                >
                   {/* Header */}
                   <div className="text-center mb-6">
                     <div
@@ -406,22 +537,47 @@ export default function AdLevelModal({
                         {formData.levelNumber}
                       </span>
                     </div>
-                    <h3 className="text-[2.2em] font-bold text-shortblack mb-2">
+                    <h3
+                      className={clsx(
+                        "text-[2.2em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       {formData.name || "Level Name"}
                     </h3>
-                    <p className="text-[1.3em] text-grays leading-snug min-h-[3em]">
+                    <p
+                      className={clsx(
+                        "text-[1.3em] leading-snug min-h-[3em]",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    >
                       {formData.description ||
                         "Your description will appear here"}
                     </p>
                   </div>
 
                   {/* Revenue Info */}
-                  <div className="mb-6 p-4 bg-slate-50 rounded-xl text-center space-y-2">
+                  <div
+                    className={clsx(
+                      "mb-6 p-4 rounded-xl text-center space-y-2",
+                      isDark ? "bg-subcard" : "bg-slate-50"
+                    )}
+                  >
                     <div className="flex justify-center items-baseline gap-1">
-                      <span className="text-[2.8em] font-bold text-shortblack">
+                      <span
+                        className={clsx(
+                          "text-[2.8em] font-bold",
+                          isDark ? "text-white" : "text-shortblack"
+                        )}
+                      >
                         {formData.revenueShare}%
                       </span>
-                      <span className="text-[1.2em] text-grays font-medium">
+                      <span
+                        className={clsx(
+                          "text-[1.2em] font-medium",
+                          isDark ? "text-gray-400" : "text-grays"
+                        )}
+                      >
                         Revenue
                       </span>
                     </div>
@@ -429,7 +585,12 @@ export default function AdLevelModal({
 
                   {/* Features Preview */}
                   <div className="mb-4">
-                    <p className="text-[1.2em] font-semibold text-shortblack mb-3">
+                    <p
+                      className={clsx(
+                        "text-[1.2em] font-semibold mb-3",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Features
                     </p>
                     <div className="space-y-2">
@@ -441,17 +602,33 @@ export default function AdLevelModal({
                               className="flex items-center gap-2 text-[1.2em]"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                              <span className="text-shortblack">{name}</span>
+                              <span
+                                className={
+                                  isDark ? "text-white" : "text-shortblack"
+                                }
+                              >
+                                {name}
+                              </span>
                             </div>
                           ))}
                           {enabledFeatureNames.length > 3 && (
-                            <p className="text-[1.1em] text-grays italic">
+                            <p
+                              className={clsx(
+                                "text-[1.1em] italic",
+                                isDark ? "text-gray-500" : "text-grays"
+                              )}
+                            >
                               +{enabledFeatureNames.length - 3} more...
                             </p>
                           )}
                         </>
                       ) : (
-                        <p className="text-[1.2em] text-gray-400 italic">
+                        <p
+                          className={clsx(
+                            "text-[1.2em] italic",
+                            isDark ? "text-gray-500" : "text-gray-400"
+                          )}
+                        >
                           No features selected
                         </p>
                       )}

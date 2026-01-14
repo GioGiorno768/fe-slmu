@@ -17,6 +17,7 @@ import type { AdminLink } from "@/types/type";
 import { Link, useRouter } from "@/i18n/routing";
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 
 interface RecentLinksCardProps {
   links: AdminLink[];
@@ -39,6 +40,14 @@ export default function RecentLinksCard({
   const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -90,7 +99,12 @@ export default function RecentLinksCard({
 
   if (isLoading) {
     return (
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 h-[400px] animate-pulse" />
+      <div
+        className={clsx(
+          "p-8 rounded-3xl border h-[400px] animate-pulse",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      />
     );
   }
 
@@ -99,7 +113,10 @@ export default function RecentLinksCard({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.3 }}
-      className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm relative flex flex-col h-full text-[10px]"
+      className={clsx(
+        "p-6 md:p-8 rounded-3xl border shadow-sm relative flex flex-col h-full text-[10px]",
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+      )}
     >
       <div className="flex items-center justify-between mb-6 shrink-0">
         <h3 className="text-[2em] md:text-[2em] font-bold text-shortblack">
@@ -116,7 +133,10 @@ export default function RecentLinksCard({
 
       <div
         onWheel={(e) => e.stopPropagation()}
-        className="space-y-3 overflow-y-auto pr-2 h-[400px] scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent"
+        className={clsx(
+          "space-y-3 overflow-y-auto pr-2 h-[400px] scrollbar-thin scrollbar-track-transparent",
+          isDark ? "scrollbar-thumb-gray-700" : "scrollbar-thumb-gray-200"
+        )}
       >
         {displayedLinks.length === 0 ? (
           <p className="text-center text-grays py-8 text-[1.4em]">
@@ -129,10 +149,22 @@ export default function RecentLinksCard({
               onClick={() =>
                 router.push(`/admin/links?search=${link.shortUrl}`)
               }
-              className="flex md:items-center items-start md:flex-row flex-col justify-between md:p-4 rounded-2xl hover:bg-gray-50 transition-colors group cursor-pointer border border-transparent hover:border-gray-100 relative"
+              className={clsx(
+                "flex md:items-center items-start md:flex-row flex-col justify-between md:p-4 rounded-2xl transition-colors group cursor-pointer border border-transparent relative",
+                isDark
+                  ? "hover:bg-subcard hover:border-gray-800"
+                  : "hover:bg-gray-50 hover:border-gray-100"
+              )}
             >
               <div className="flex items-center gap-3 md:gap-4 min-w-0">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 overflow-hidden shrink-0">
+                <div
+                  className={clsx(
+                    "w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center overflow-hidden shrink-0",
+                    isDark
+                      ? "bg-indigo-500/20 text-indigo-400"
+                      : "bg-indigo-50 text-indigo-600"
+                  )}
+                >
                   <Link2 className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
                 <div className="min-w-0">
@@ -163,7 +195,12 @@ export default function RecentLinksCard({
                       type="text"
                       readOnly
                       value={link.originalUrl}
-                      className="flex-1 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1 text-[1.1em] text-grays focus:outline-none truncate min-w-0"
+                      className={clsx(
+                        "flex-1 border rounded-lg px-2 py-1 text-[1.1em] text-grays focus:outline-none truncate min-w-0",
+                        isDark
+                          ? "bg-subcard border-gray-800"
+                          : "bg-gray-50 border-gray-100"
+                      )}
                     />
                     <span
                       title={formatFullDate(link.createdAt)}
@@ -210,7 +247,12 @@ export default function RecentLinksCard({
 
       <Link
         href="/admin/links"
-        className="w-full mt-4 py-3 text-[1.4em] md:text-[1.6em] font-medium text-grays hover:text-bluelight hover:bg-blue-50 rounded-xl transition-all flex items-center justify-center gap-2 shrink-0"
+        className={clsx(
+          "w-full mt-4 py-3 text-[1.4em] md:text-[1.6em] font-medium rounded-xl transition-all flex items-center justify-center gap-2 shrink-0",
+          isDark
+            ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+            : "text-grays hover:text-bluelight hover:bg-blue-50"
+        )}
       >
         <span>Manage Links</span>
         <ArrowUpRight className="w-4 h-4" />

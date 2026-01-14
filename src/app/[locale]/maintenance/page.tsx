@@ -1,8 +1,33 @@
-// src/app/[locale]/maintenance/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import { Construction, Clock, Mail } from "lucide-react";
 import Link from "next/link";
 
 export default function MaintenancePage() {
+  const [estimatedTime, setEstimatedTime] = useState("Beberapa jam");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMaintenanceInfo = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/settings/maintenance`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setEstimatedTime(data.data.estimated_time || "Beberapa jam");
+        }
+      } catch (error) {
+        console.error("Failed to fetch maintenance info:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMaintenanceInfo();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
       {/* Animated background elements */}
@@ -43,7 +68,11 @@ export default function MaintenancePage() {
         <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-6 py-4 mb-8">
           <Clock className="w-5 h-5 text-amber-400" />
           <span className="text-slate-200 font-medium">
-            Estimasi: Beberapa jam
+            {isLoading ? (
+              <span className="animate-pulse">Memuat...</span>
+            ) : (
+              `Estimasi: ${estimatedTime}`
+            )}
           </span>
         </div>
 

@@ -84,6 +84,9 @@ export interface ReferralStats {
   totalEarnings: number; // Total earnings from referrals
   totalReferred: number; // Total number of referred users
   activeReferred: number; // Number of active referred users
+  commissionRate?: number; // Commission rate percentage
+  maxReferrals?: number; // Max referrals allowed by user's level
+  isLimitReached?: boolean; // Whether max referrals limit is reached
 }
 
 export interface CreateLinkFormData {
@@ -229,8 +232,8 @@ export interface UserProfile {
 
 export interface SecuritySettings {
   twoFactorEnabled: boolean;
-  lastPasswordChange: string; // tgl terakhir ganti
-  isSocialLogin: boolean; // <--- TAMBAHIN INI BROK
+  lastPasswordChange: string | null; // tgl terakhir ganti, null if never changed
+  isSocialLogin: boolean; // true if user logged in via OAuth (no password set)
 }
 
 export interface NotificationSettings {
@@ -366,15 +369,14 @@ export interface MilestoneData {
   currentBonus: number;
   nextBonus: number;
   progress: number;
+  // Level styling from DB
+  iconName?: string; // lucide icon name: "star", "shield", etc.
+  iconColor?: string; // CSS class: "text-yellow-400"
+  bgColor?: string; // CSS class: "bg-yellow-500/10"
+  borderColor?: string; // CSS class: "border-yellow-500/30"
 }
 
-// Referral Stats (for stats grid display)
-export interface ReferralStats {
-  totalEarnings: number;
-  totalReferred: number;
-  activeReferred: number;
-  commissionRate: number; // Persentase commission (misal 20 = 20%)
-}
+// ReferralStats is defined at line 83-89
 
 export interface ReferralCardData {
   referralLink: string;
@@ -706,6 +708,7 @@ export interface SuperAdminStats {
     paidToday: number; // Total uang keluar hari ini
     usersPaidToday: number; // Jumlah user yang dibayar
     trend: number; // Persentase vs kemarin
+    pendingTotal: number; // Total pending payments (All Time)
   };
   security: {
     blockedLinksToday: number; // Link yang kena ban hari ini

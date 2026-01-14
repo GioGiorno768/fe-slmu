@@ -1,6 +1,7 @@
 // src/app/[locale]/(member)/ads-info/page.tsx
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
   Check,
@@ -12,55 +13,85 @@ import {
   Flame,
   Bomb,
   Info,
+  Lock,
 } from "lucide-react";
 import clsx from "clsx";
 import { useAdsInfo } from "@/hooks/useAdsInfo";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
+import { useTheme } from "next-themes";
 
-// Helper Styles (UI Logic)
-const getThemeStyles = (theme: string) => {
-  switch (theme) {
-    case "green":
-      return {
-        border: "border-green-200",
-        bg: "bg-green-50",
-        text: "text-green-700",
-        badge: "bg-green-100 text-green-800",
-        button: "bg-green-600 hover:bg-green-700",
-        icon: ShieldCheck,
-      };
-    case "orange":
-      return {
-        border: "border-orange-200",
-        bg: "bg-orange-50",
-        text: "text-orange-700",
-        badge: "bg-orange-100 text-orange-800",
-        button: "bg-orange-600 hover:bg-orange-700",
-        icon: Flame,
-      };
-    case "red":
-      return {
-        border: "border-red-200",
-        bg: "bg-red-50",
-        text: "text-red-700",
-        badge: "bg-red-100 text-red-800",
-        button: "bg-red-600 hover:bg-red-700",
-        icon: Bomb,
-      };
-    default: // Blue (Medium)
-      return {
-        border: "border-blue-200",
-        bg: "bg-blue-50",
-        text: "text-blue-700",
-        badge: "bg-blue-100 text-blue-800",
-        button: "bg-blue-600 hover:bg-blue-700",
-        icon: Zap,
-      };
+// Helper Styles - returns different colors based on theme
+const getThemeStyles = (theme: string, isDark: boolean) => {
+  if (isDark) {
+    // Dark mode - use softer, theme-matching colors
+    switch (theme) {
+      case "green":
+        return {
+          bg: "bg-green-900/30",
+          text: "text-green-400",
+          icon: ShieldCheck,
+        };
+      case "orange":
+        return {
+          bg: "bg-orange-900/30",
+          text: "text-orange-400",
+          icon: Flame,
+        };
+      case "red":
+        return {
+          bg: "bg-red-900/30",
+          text: "text-red-400",
+          icon: Bomb,
+        };
+      default: // Blue
+        return {
+          bg: "bg-blue-900/30",
+          text: "text-blue-400",
+          icon: Zap,
+        };
+    }
+  } else {
+    // Light mode - original colors
+    switch (theme) {
+      case "green":
+        return {
+          bg: "bg-green-50",
+          text: "text-green-700",
+          icon: ShieldCheck,
+        };
+      case "orange":
+        return {
+          bg: "bg-orange-50",
+          text: "text-orange-700",
+          icon: Flame,
+        };
+      case "red":
+        return {
+          bg: "bg-red-50",
+          text: "text-red-700",
+          icon: Bomb,
+        };
+      default: // Blue
+        return {
+          bg: "bg-blue-50",
+          text: "text-blue-700",
+          icon: Zap,
+        };
+    }
   }
 };
 
 export default function AdsInfoPage() {
-  // Panggil Logic dari Hook
   const { levels, isLoading, error } = useAdsInfo();
+  const { isAdLevelUnlocked } = useFeatureLocks();
+  const { theme } = useTheme();
+
+  // Prevent hydration mismatch - wait for client-side
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isDark = mounted && theme === "dark";
 
   if (isLoading) {
     return (
@@ -78,6 +109,14 @@ export default function AdsInfoPage() {
     );
   }
 
+  const getAdLevelNumber = (levelIndex: number): number => levelIndex + 1;
+
+  const getRequiredLevel = (adLevel: number): string => {
+    if (adLevel === 3) return "Elite";
+    if (adLevel === 4) return "Pro";
+    return "";
+  };
+
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree pb-10">
       {/* Header Page */}
@@ -94,8 +133,11 @@ export default function AdsInfoPage() {
       {/* Grid Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
         {levels.map((level, index) => {
-          const theme = getThemeStyles(level.colorTheme);
-          const LevelIcon = theme.icon;
+          const themeStyle = getThemeStyles(level.colorTheme, isDark);
+          const LevelIcon = themeStyle.icon;
+          const adLevelNumber = getAdLevelNumber(index);
+          const isLocked = !isAdLevelUnlocked(adLevelNumber);
+          const requiredLevel = getRequiredLevel(adLevelNumber);
 
           return (
             <motion.div
@@ -104,28 +146,80 @@ export default function AdsInfoPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className={clsx(
-                "relative bg-white rounded-3xl p-8 flex flex-col border-2 transition-all duration-300",
-                level.isPopular
-                  ? "border-bluelight shadow-xl shadow-blue-100 scale-105 z-10"
+                "relative rounded-3xl p-8 flex flex-col border-2 transition-all duration-300 group",
+                // Background
+                isDark ? "bg-card" : "bg-white",
+                // Opacity for locked
+                isLocked && "opacity-80",
+                // Border & Shadow
+                level.isPopular && !isLocked
+                  ? isDark
+                    ? "border-bluelight shadow-xl shadow-lightpurple-dashboard/30 scale-105 z-10"
+                    : "border-bluelight shadow-xl shadow-blue-100 scale-105 z-10"
+                  : isLocked
+                  ? isDark
+                    ? "border-lightpurple-dashboard/30 shadow-sm"
+                    : "border-gray-200 shadow-sm"
+                  : isDark
+                  ? "border-gray-dashboard/50 shadow-sm hover:shadow-lg hover:-translate-y-1"
                   : "border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1"
               )}
             >
+              {/* Locked Overlay - Purple-tinted for dark mode */}
+              {isLocked && (
+                <div
+                  className={clsx(
+                    "absolute inset-0 rounded-3xl z-10 pointer-events-none",
+                    isDark
+                      ? "bg-gradient-to-b from-[#1c133a]/90 via-transparent to-transparent"
+                      : "bg-gradient-to-b from-gray-100/80 via-transparent to-transparent"
+                  )}
+                />
+              )}
+
+              {/* Locked Badge */}
+              {isLocked && (
+                <div
+                  className={clsx(
+                    "absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[1.2em] font-semibold shadow-md tracking-wide flex items-center gap-2 z-20",
+                    isDark
+                      ? "bg-lightpurple-dashboard text-white"
+                      : "bg-gray-600 text-white"
+                  )}
+                >
+                  <Lock className="w-3 h-3" />
+                  <span>Terkunci</span>
+                </div>
+              )}
+
               {/* Badge Popular */}
-              {level.isPopular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-bluelight text-white px-4 py-1 rounded-full text-[1.2em] font-semibold shadow-md tracking-wide">
+              {level.isPopular && !isLocked && (
+                <div
+                  className={clsx(
+                    "absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-[1.2em] font-semibold shadow-md tracking-wide",
+                    isDark
+                      ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient"
+                      : "bg-bluelight"
+                  )}
+                >
                   MOST POPULAR
                 </div>
               )}
 
               {/* Card Header */}
-              <div className="mb-6 text-center">
+              <div
+                className={clsx(
+                  "mb-6 text-center",
+                  isLocked && !isDark && "grayscale"
+                )}
+              >
                 <div
                   className={clsx(
                     "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4",
-                    theme.bg
+                    themeStyle.bg
                   )}
                 >
-                  <LevelIcon className={clsx("w-8 h-8", theme.text)} />
+                  <LevelIcon className={clsx("w-8 h-8", themeStyle.text)} />
                 </div>
                 <h2 className="text-[2.4em] font-bold text-shortblack mb-2">
                   {level.name}
@@ -136,7 +230,13 @@ export default function AdsInfoPage() {
               </div>
 
               {/* Revenue Info */}
-              <div className="mb-8 p-4 bg-slate-50 rounded-xl text-center">
+              <div
+                className={clsx(
+                  "mb-8 p-4 rounded-xl text-center",
+                  isDark ? "bg-subcard" : "bg-slate-50",
+                  isLocked && !isDark && "grayscale"
+                )}
+              >
                 <div className="flex justify-center items-baseline gap-1">
                   <span className="text-[3em] font-bold text-shortblack">
                     {level.revenueShare}%
@@ -148,18 +248,37 @@ export default function AdsInfoPage() {
               </div>
 
               {/* Features List */}
-              <ul className="space-y-4 mb-8 flex-1">
+              <ul
+                className={clsx(
+                  "space-y-4 mb-8 flex-1",
+                  isLocked && !isDark && "grayscale"
+                )}
+              >
                 {level.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3 text-[1.4em]">
                     {feature.included ? (
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <Check
+                        className={clsx(
+                          "w-5 h-5 flex-shrink-0 mt-0.5",
+                          isDark ? "text-green-400" : "text-green-500"
+                        )}
+                      />
                     ) : (
-                      <XIcon className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" />
+                      <XIcon
+                        className={clsx(
+                          "w-5 h-5 flex-shrink-0 mt-0.5",
+                          isDark ? "text-gray-600" : "text-gray-300"
+                        )}
+                      />
                     )}
                     <div className="flex flex-col">
                       <span
                         className={
-                          feature.included ? "text-shortblack" : "text-gray-400"
+                          feature.included
+                            ? "text-shortblack"
+                            : isDark
+                            ? "text-gray-500"
+                            : "text-gray-400"
                         }
                       >
                         {feature.label}
@@ -174,15 +293,41 @@ export default function AdsInfoPage() {
                 ))}
               </ul>
 
+              {/* Unlock Requirement */}
+              {isLocked && requiredLevel && (
+                <div
+                  className={clsx(
+                    "mb-4 py-3 px-4 rounded-xl text-center border",
+                    isDark
+                      ? "bg-lightpurple-dashboard/20 border-lightpurple-dashboard/30"
+                      : "bg-amber-50 border-amber-200"
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      "text-[1.3em] font-medium",
+                      isDark ? "text-purple-300" : "text-amber-700"
+                    )}
+                  >
+                    🔓 Unlock di Level{" "}
+                    <span className="font-bold">{requiredLevel}</span>
+                  </p>
+                </div>
+              )}
+
               {/* Demo Button */}
               <a
                 href={level.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={clsx(
-                  "w-full py-4 rounded-xl font-semibold text-[1.6em] flex items-center justify-center gap-2 transition-all",
-                  level.isPopular
-                    ? "bg-bluelight text-white hover:bg-opacity-90 shadow-lg shadow-blue-200"
+                  "w-full py-4 rounded-xl font-semibold text-[1.6em] flex items-center justify-center gap-2 transition-all relative z-20",
+                  level.isPopular && !isLocked
+                    ? isDark
+                      ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-white hover:opacity-90 shadow-lg shadow-lightpurple-dashboard/50"
+                      : "bg-bluelight text-white hover:bg-opacity-90 shadow-lg shadow-blue-200"
+                    : isDark
+                    ? "bg-subcard border-2 border-gray-dashboard/30 text-shortblack hover:border-bluelight hover:text-bluelight"
                     : "bg-white border-2 border-gray-200 text-shortblack hover:border-bluelight hover:text-bluelight"
                 )}
               >
@@ -195,7 +340,14 @@ export default function AdsInfoPage() {
       </div>
 
       {/* Info Section Bawah */}
-      <div className="mt-16 bg-blue-dashboard p-8 rounded-2xl flex items-start gap-4 border border-bluelight/20">
+      <div
+        className={clsx(
+          "mt-16 p-8 rounded-2xl flex items-start gap-4 border",
+          isDark
+            ? "bg-subcard border-gray-dashboard/30"
+            : "bg-blue-dashboard border-bluelight/20"
+        )}
+      >
         <Info className="w-8 h-8 text-bluelight flex-shrink-0 mt-1" />
         <div>
           <h3 className="text-[1.6em] font-bold text-shortblack mb-2">

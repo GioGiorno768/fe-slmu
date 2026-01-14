@@ -21,6 +21,7 @@ import type { PaymentMethod } from "@/types/type";
 import clsx from "clsx";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { convertFromUSD, getExchangeRates } from "@/utils/currency";
+import { useTheme } from "next-themes";
 
 // --- KONFIGURASI PAYMENT (Tetap di sini sesuai request lu) ---
 const PAYMENT_CONFIG = {
@@ -173,6 +174,15 @@ export default function WithdrawalRequestModal({
   onSuccess,
 }: WithdrawalRequestModalProps) {
   const { showAlert } = useAlert();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // 💱 Use global currency context
   const { format: formatCurrency, symbol, currency } = useCurrency();
 
@@ -375,12 +385,27 @@ export default function WithdrawalRequestModal({
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white w-full max-w-[50em] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className={clsx(
+              "w-full max-w-[50em] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]",
+              isDark ? "bg-card" : "bg-white"
+            )}
           >
             {/* Header */}
-            <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-white z-10">
+            <div
+              className={clsx(
+                "px-8 py-6 border-b flex justify-between items-center z-10",
+                isDark
+                  ? "border-gray-dashboard/30 bg-card"
+                  : "border-gray-100 bg-white"
+              )}
+            >
               <div>
-                <h2 className="text-[2em] font-bold text-shortblack">
+                <h2
+                  className={clsx(
+                    "text-[2em] font-bold",
+                    isDark ? "text-white" : "text-shortblack"
+                  )}
+                >
                   Request Payout
                 </h2>
                 <p className="text-[1.4em] text-grays">
@@ -390,7 +415,12 @@ export default function WithdrawalRequestModal({
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-gray-100 text-grays transition-colors"
+                className={clsx(
+                  "p-2 rounded-full transition-colors",
+                  isDark
+                    ? "hover:bg-gray-dashboard/50 text-gray-400"
+                    : "hover:bg-gray-100 text-grays"
+                )}
               >
                 <X className="w-6 h-6" />
               </button>
@@ -410,7 +440,11 @@ export default function WithdrawalRequestModal({
                       className={clsx(
                         "block p-6 rounded-2xl border-2 cursor-pointer transition-all relative",
                         useDefault
-                          ? "border-bluelight bg-blue-50/50"
+                          ? isDark
+                            ? "border-bluelight bg-blue-500/10"
+                            : "border-bluelight bg-blue-50/50"
+                          : isDark
+                          ? "border-gray-dashboard/50 hover:border-blue-500/50"
                           : "border-gray-200 hover:border-blue-200"
                       )}
                     >
@@ -423,7 +457,12 @@ export default function WithdrawalRequestModal({
                           className="w-6 h-6 text-bluelight border-gray-300 focus:ring-bluelight"
                         />
                         <div className="flex-1">
-                          <p className="text-[1.6em] font-bold text-shortblack flex items-center gap-2">
+                          <p
+                            className={clsx(
+                              "text-[1.6em] font-bold flex items-center gap-2",
+                              isDark ? "text-white" : "text-shortblack"
+                            )}
+                          >
                             <Wallet className="w-5 h-5 text-bluelight" />
                             Use Saved Method
                           </p>
@@ -441,7 +480,11 @@ export default function WithdrawalRequestModal({
                     className={clsx(
                       "block p-6 rounded-2xl border-2 cursor-pointer transition-all",
                       !useDefault
-                        ? "border-bluelight bg-white shadow-md"
+                        ? isDark
+                          ? "border-bluelight bg-subcard shadow-lg"
+                          : "border-bluelight bg-white shadow-md"
+                        : isDark
+                        ? "border-gray-dashboard/50 hover:border-blue-500/50"
                         : "border-gray-200 hover:border-blue-200"
                     )}
                   >
@@ -453,7 +496,12 @@ export default function WithdrawalRequestModal({
                         onChange={() => setUseDefault(false)}
                         className="w-6 h-6 text-bluelight border-gray-300 focus:ring-bluelight"
                       />
-                      <span className="text-[1.6em] font-bold text-shortblack">
+                      <span
+                        className={clsx(
+                          "text-[1.6em] font-bold",
+                          isDark ? "text-white" : "text-shortblack"
+                        )}
+                      >
                         Use Different Method
                       </span>
                     </div>
@@ -477,7 +525,11 @@ export default function WithdrawalRequestModal({
                                 className={clsx(
                                   "p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3",
                                   selectedOtherMethodId === method.id
-                                    ? "border-bluelight bg-blue-50"
+                                    ? isDark
+                                      ? "border-bluelight bg-blue-500/10"
+                                      : "border-bluelight bg-blue-50"
+                                    : isDark
+                                    ? "border-gray-dashboard/50 hover:border-gray-dashboard"
                                     : "border-gray-200 hover:border-gray-300"
                                 )}
                               >
@@ -486,6 +538,8 @@ export default function WithdrawalRequestModal({
                                     "w-5 h-5 rounded-full border-2 flex items-center justify-center",
                                     selectedOtherMethodId === method.id
                                       ? "border-bluelight"
+                                      : isDark
+                                      ? "border-gray-500"
                                       : "border-gray-300"
                                   )}
                                 >
@@ -494,7 +548,12 @@ export default function WithdrawalRequestModal({
                                   )}
                                 </div>
                                 <div className="flex-1">
-                                  <p className="text-[1.4em] font-semibold text-shortblack">
+                                  <p
+                                    className={clsx(
+                                      "text-[1.4em] font-semibold",
+                                      isDark ? "text-white" : "text-shortblack"
+                                    )}
+                                  >
                                     {method.provider}
                                   </p>
                                   <p className="text-[1.2em] text-grays">
@@ -585,15 +644,22 @@ export default function WithdrawalRequestModal({
                       )}`;
                     }
                     return `${pmSymbol}${amount.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
+                      minimumFractionDigits: 5,
+                      maximumFractionDigits: 5,
                     })}`;
                   };
 
                   return (
                     <div className="space-y-6">
                       {/* Currency Badge - Show which currency is being used */}
-                      <div className="flex items-center gap-2 bg-purple-50 text-purple-700 px-4 py-2 rounded-xl border border-purple-100">
+                      <div
+                        className={clsx(
+                          "flex items-center gap-2 px-4 py-2 rounded-xl border",
+                          isDark
+                            ? "bg-purple-500/10 text-purple-300 border-purple-500/20"
+                            : "bg-purple-50 text-purple-700 border-purple-100"
+                        )}
+                      >
                         <Wallet className="w-4 h-4" />
                         <span className="text-[1.2em] font-medium">
                           Amount will be processed in{" "}
@@ -603,7 +669,14 @@ export default function WithdrawalRequestModal({
                       </div>
 
                       {/* Info Saldo & Tujuan */}
-                      <div className="bg-blues p-5 rounded-2xl flex items-center justify-between border border-blue-100">
+                      <div
+                        className={clsx(
+                          "p-5 rounded-2xl flex items-center justify-between border",
+                          isDark
+                            ? "bg-blue-500/10 border-blue-500/20"
+                            : "bg-blues border-blue-100"
+                        )}
+                      >
                         <div>
                           <p className="text-[1.2em] text-grays mb-0.5 uppercase tracking-wide font-medium">
                             Available Balance
@@ -616,7 +689,12 @@ export default function WithdrawalRequestModal({
                           <p className="text-[1.2em] text-grays mb-0.5 uppercase tracking-wide font-medium">
                             Destination
                           </p>
-                          <p className="text-[1.4em] font-semibold text-shortblack truncate max-w-[200px]">
+                          <p
+                            className={clsx(
+                              "text-[1.4em] font-semibold truncate max-w-[200px]",
+                              isDark ? "text-white" : "text-shortblack"
+                            )}
+                          >
                             {useDefault && defaultMethod
                               ? defaultMethod.provider
                               : selectedOtherMethod?.provider}
@@ -631,7 +709,12 @@ export default function WithdrawalRequestModal({
 
                       {/* Input Amount */}
                       <div>
-                        <label className="block text-[1.4em] font-bold text-shortblack mb-2">
+                        <label
+                          className={clsx(
+                            "block text-[1.4em] font-bold mb-2",
+                            isDark ? "text-white" : "text-shortblack"
+                          )}
+                        >
                           Withdrawal Amount ({pmCurrency})
                         </label>
                         <div className="relative">
@@ -643,7 +726,12 @@ export default function WithdrawalRequestModal({
                             value={withdrawAmount}
                             onChange={(e) => setWithdrawAmount(e.target.value)}
                             placeholder={pmCurrency === "IDR" ? "0" : "0.00"}
-                            className="w-full pl-14 pr-5 py-3.5 rounded-2xl border-2 border-gray-200 text-[2em] font-bold text-shortblack focus:outline-none focus:border-bluelight transition-colors placeholder:text-gray-300"
+                            className={clsx(
+                              "w-full pl-14 pr-5 py-3.5 rounded-2xl border-2 text-[2em] font-bold focus:outline-none focus:border-bluelight transition-colors",
+                              isDark
+                                ? "bg-subcard border-gray-dashboard/50 text-white placeholder:text-gray-500"
+                                : "border-gray-200 text-shortblack placeholder:text-gray-300"
+                            )}
                             min={minWithdrawalPM}
                             max={maxWithdrawalPM}
                           />
@@ -658,7 +746,12 @@ export default function WithdrawalRequestModal({
                                   : minWithdrawalPM.toFixed(2)
                               )
                             }
-                            className="px-3 py-1.5 rounded-lg bg-gray-100 text-grays hover:bg-gray-200 text-[1.1em] font-medium transition-colors"
+                            className={clsx(
+                              "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
+                              isDark
+                                ? "bg-gray-dashboard/50 text-gray-300 hover:bg-gray-dashboard"
+                                : "bg-gray-100 text-grays hover:bg-gray-200"
+                            )}
                           >
                             Min ({formatPM(minWithdrawalPM)})
                           </button>
@@ -671,7 +764,12 @@ export default function WithdrawalRequestModal({
                                   : val.toFixed(2)
                               );
                             }}
-                            className="px-3 py-1.5 rounded-lg bg-gray-100 text-grays hover:bg-gray-200 text-[1.1em] font-medium transition-colors"
+                            className={clsx(
+                              "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
+                              isDark
+                                ? "bg-gray-dashboard/50 text-gray-300 hover:bg-gray-dashboard"
+                                : "bg-gray-100 text-grays hover:bg-gray-200"
+                            )}
                           >
                             50%
                           </button>
@@ -683,7 +781,12 @@ export default function WithdrawalRequestModal({
                                   : maxWithdrawalPM.toFixed(2)
                               )
                             }
-                            className="px-3 py-1.5 rounded-lg bg-blue-100 text-bluelight hover:bg-blue-200 text-[1.1em] font-medium transition-colors"
+                            className={clsx(
+                              "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
+                              isDark
+                                ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+                                : "bg-blue-100 text-bluelight hover:bg-blue-200"
+                            )}
                           >
                             Max ({formatPM(maxWithdrawalPM)})
                           </button>
@@ -691,7 +794,14 @@ export default function WithdrawalRequestModal({
                       </div>
 
                       {/* Fee & Total Breakdown */}
-                      <div className="space-y-2 pt-2 border-t border-gray-100">
+                      <div
+                        className={clsx(
+                          "space-y-2 pt-2 border-t",
+                          isDark
+                            ? "border-gray-dashboard/30"
+                            : "border-gray-100"
+                        )}
+                      >
                         <div className="flex justify-between items-center">
                           <span className="text-[1.3em] text-grays">
                             Fee Amount
@@ -701,16 +811,33 @@ export default function WithdrawalRequestModal({
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-[1.4em] font-semibold text-shortblack">
+                          <span
+                            className={clsx(
+                              "text-[1.4em] font-semibold",
+                              isDark ? "text-white" : "text-shortblack"
+                            )}
+                          >
                             Total Amount
                           </span>
-                          <span className="text-[1.6em] font-bold text-shortblack">
+                          <span
+                            className={clsx(
+                              "text-[1.6em] font-bold",
+                              isDark ? "text-white" : "text-shortblack"
+                            )}
+                          >
                             {formatPM(totalAmount)}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex gap-2 items-start p-3 bg-orange-50 rounded-xl text-orange-700 border border-orange-100">
+                      <div
+                        className={clsx(
+                          "flex gap-2 items-start p-3 rounded-xl border",
+                          isDark
+                            ? "bg-orange-500/10 text-orange-300 border-orange-500/20"
+                            : "bg-orange-50 text-orange-700 border-orange-100"
+                        )}
+                      >
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                         <p className="text-[1.1em] leading-snug">
                           Pastikan data akun sudah benar. Penarikan akan
@@ -725,12 +852,24 @@ export default function WithdrawalRequestModal({
             </div>
 
             {/* Footer Buttons */}
-            <div className="px-8 py-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-4">
+            <div
+              className={clsx(
+                "px-8 py-6 border-t flex justify-end gap-4",
+                isDark
+                  ? "border-gray-dashboard/30 bg-subcard"
+                  : "border-gray-100 bg-gray-50"
+              )}
+            >
               {step === 2 && (
                 <button
                   onClick={() => setStep(1)}
                   disabled={isLoading}
-                  className="px-6 py-3 rounded-xl text-[1.6em] font-medium text-grays hover:bg-gray-200 transition-colors"
+                  className={clsx(
+                    "px-6 py-3 rounded-xl text-[1.6em] font-medium transition-colors",
+                    isDark
+                      ? "text-gray-300 hover:bg-gray-dashboard/50"
+                      : "text-grays hover:bg-gray-200"
+                  )}
                 >
                   Back
                 </button>
@@ -747,7 +886,10 @@ export default function WithdrawalRequestModal({
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="bg-greenlight text-white px-8 py-3 rounded-xl text-[1.6em] font-bold hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg shadow-green-200"
+                  className={clsx(
+                    "bg-greenlight text-white px-8 py-3 rounded-xl text-[1.6em] font-bold hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg",
+                    isDark ? "shadow-green-900/30" : "shadow-green-200"
+                  )}
                 >
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

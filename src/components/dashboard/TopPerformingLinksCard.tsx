@@ -89,7 +89,7 @@ export default function TopPerformingLinksCard({
   };
 
   return (
-    <div className="bg-white p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
+    <div className="bg-white dark:bg-card dark:text-white p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
       {/* --- Header --- */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-[1.8em] font-semibold text-shortblack tracking-tight flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function TopPerformingLinksCard({
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 p-1 z-20 overflow-hidden"
+                className="absolute top-full right-0 mt-2 w-40 dark:bg-card rounded-xl shadow-sm dark:shadow-shd-card/50 border border-shd-card/10 p-1 z-20 overflow-hidden"
               >
                 <button
                   onClick={() => {
@@ -125,8 +125,8 @@ export default function TopPerformingLinksCard({
                   className={clsx(
                     "flex items-center gap-2 w-full text-left text-[1.3em] px-3 py-2 rounded-lg transition-colors",
                     sortBy === "highest"
-                      ? "bg-blue-50 text-bluelight font-semibold"
-                      : "text-shortblack hover:bg-blues/30"
+                      ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
                   )}
                 >
                   <ArrowUpWideNarrow className="w-4 h-4" /> Teratas
@@ -139,8 +139,8 @@ export default function TopPerformingLinksCard({
                   className={clsx(
                     "flex items-center gap-2 w-full text-left text-[1.3em] px-3 py-2 rounded-lg transition-colors",
                     sortBy === "lowest"
-                      ? "bg-blue-50 text-bluelight font-semibold"
-                      : "text-shortblack hover:bg-blues/30"
+                      ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
                   )}
                 >
                   <ArrowDownWideNarrow className="w-4 h-4" /> Terbawah
@@ -160,16 +160,16 @@ export default function TopPerformingLinksCard({
         ) : (
           <div
             onWheel={(e) => e.stopPropagation()}
-            className="space-y-0 overflow-y-auto h-[340px] pr-2 custom-scrollbar-minimal"
+            className="space-y-0 overflow-y-auto h-[340px] p-2 custom-scrollbar-minimal"
           >
             {sortedLinks.map((link, index) => (
               <div
                 key={link.id}
                 className={clsx(
-                  "transition-all duration-200 rounded-2xl mb-2",
+                  "transition-all duration-200 rounded-2xl relative z-10 mb-2",
                   expandedId === link.id
-                    ? "bg-gradient-to-r from-blue-50 to-indigo-50/50 shadow-sm border border-blue-100"
-                    : "hover:bg-blues/30"
+                    ? "bg-subcard"
+                    : "hover:bg-subcard"
                 )}
               >
                 {/* Main Row */}
@@ -235,9 +235,9 @@ export default function TopPerformingLinksCard({
                       href={link.shortUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded-lg hover:bg-white/80 transition-colors"
+                      className="p-2 rounded-lg hover:bg-card transition-colors group/p2"
                     >
-                      <ExternalLink className="w-4 h-4 text-bluelight" />
+                      <ExternalLink className="w-4 h-4 text-bluelight group-hover/p2:text-tx-blue-dashboard" />
                     </a>
                     <ChevronDown
                       className={clsx(
@@ -259,9 +259,9 @@ export default function TopPerformingLinksCard({
                       className="overflow-hidden"
                     >
                       <div className="px-4 pb-4">
-                        <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-blue-100/50">
+                        <div className="flex flex-wrap items-center gap-4 pt-2">
                           {/* Views */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
                             <Eye className="w-4 h-4 text-bluelight" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">
@@ -274,20 +274,20 @@ export default function TopPerformingLinksCard({
                           </div>
 
                           {/* Earnings (Mobile) */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
                             <Coins className="w-4 h-4 text-green-600" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">
                                 Earned
                               </span>
-                              <span className="text-[1.2em] font-bold text-green-700">
-                                ${link.totalEarnings.toFixed(2)}
+                              <span className="text-[1.2em] font-bold text-tx-blue-dashboard">
+                                ${link.totalEarnings.toFixed(5)}
                               </span>
                             </div>
                           </div>
 
                           {/* Ads Level */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-white/80 rounded-xl">
+                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
                             <Megaphone className="w-4 h-4 text-purple-500" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">

@@ -50,7 +50,7 @@ export default function DashboardLayout({
 
   return (
     <CurrencyProvider>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen dark:bg-background">
         <Sidebar
           isCollapsed={isCollapsed}
           isMobileOpen={isMobileOpen}

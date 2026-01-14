@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Edit2, DollarSign, Timer, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 interface WithdrawalLimits {
   min_amount: number;
@@ -25,6 +27,15 @@ export default function WithdrawalLimitsCard({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<WithdrawalLimits>(limits);
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Sync form with props when modal opens
   const openModal = () => {
@@ -51,17 +62,44 @@ export default function WithdrawalLimitsCard({
   return (
     <>
       {/* Card Display */}
-      <div className="bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl p-5 border border-purple-100">
+      <div
+        className={clsx(
+          "rounded-2xl p-5 border",
+          isDark
+            ? "bg-linear-to-br from-purple-500/10 to-indigo-500/10 border-purple-500/30"
+            : "bg-linear-to-br from-purple-50 to-indigo-50 border-purple-100"
+        )}
+      >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-purple-600" />
+            <div
+              className={clsx(
+                "w-10 h-10 rounded-xl flex items-center justify-center",
+                isDark ? "bg-purple-500/20" : "bg-purple-100"
+              )}
+            >
+              <DollarSign
+                className={clsx(
+                  "w-5 h-5",
+                  isDark ? "text-purple-400" : "text-purple-600"
+                )}
+              />
             </div>
             <div>
-              <h3 className="text-[1.6em] font-bold text-shortblack">
+              <h3
+                className={clsx(
+                  "text-[1.6em] font-bold",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 Withdrawal Limits
               </h3>
-              <p className="text-[1.1em] text-grays">
+              <p
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
                 Global settings for all payment methods
               </p>
             </div>
@@ -78,41 +116,129 @@ export default function WithdrawalLimitsCard({
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white rounded-xl p-3 border border-purple-100">
+          <div
+            className={clsx(
+              "bg-card rounded-xl p-3 border",
+              isDark ? "border-purple-500/30" : "border-purple-100"
+            )}
+          >
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-purple-500" />
-              <span className="text-[1.1em] text-grays">Min Withdrawal</span>
+              <DollarSign
+                className={clsx(
+                  "w-4 h-4",
+                  isDark ? "text-purple-400" : "text-purple-500"
+                )}
+              />
+              <span
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                Min Withdrawal
+              </span>
             </div>
-            <p className="text-[1.6em] font-bold text-shortblack">
+            <p
+              className={clsx(
+                "text-[1.6em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               ${limits.min_amount.toFixed(2)}
             </p>
           </div>
-          <div className="bg-white rounded-xl p-3 border border-purple-100">
+          <div
+            className={clsx(
+              "bg-card rounded-xl p-3 border",
+              isDark ? "border-purple-500/30" : "border-purple-100"
+            )}
+          >
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="w-4 h-4 text-purple-500" />
-              <span className="text-[1.1em] text-grays">Max Withdrawal</span>
+              <DollarSign
+                className={clsx(
+                  "w-4 h-4",
+                  isDark ? "text-purple-400" : "text-purple-500"
+                )}
+              />
+              <span
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                Max Withdrawal
+              </span>
             </div>
-            <p className="text-[1.6em] font-bold text-shortblack">
+            <p
+              className={clsx(
+                "text-[1.6em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {limits.max_amount > 0
                 ? `$${limits.max_amount.toFixed(2)}`
                 : "Unlimited"}
             </p>
           </div>
-          <div className="bg-white rounded-xl p-3 border border-purple-100">
+          <div
+            className={clsx(
+              "bg-card rounded-xl p-3 border",
+              isDark ? "border-purple-500/30" : "border-purple-100"
+            )}
+          >
             <div className="flex items-center gap-2 mb-1">
-              <Hash className="w-4 h-4 text-purple-500" />
-              <span className="text-[1.1em] text-grays">Limit Count</span>
+              <Hash
+                className={clsx(
+                  "w-4 h-4",
+                  isDark ? "text-purple-400" : "text-purple-500"
+                )}
+              />
+              <span
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                Limit Count
+              </span>
             </div>
-            <p className="text-[1.6em] font-bold text-shortblack">
+            <p
+              className={clsx(
+                "text-[1.6em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {limits.limit_count > 0 ? `${limits.limit_count}x` : "Unlimited"}
             </p>
           </div>
-          <div className="bg-white rounded-xl p-3 border border-purple-100">
+          <div
+            className={clsx(
+              "bg-card rounded-xl p-3 border",
+              isDark ? "border-purple-500/30" : "border-purple-100"
+            )}
+          >
             <div className="flex items-center gap-2 mb-1">
-              <Timer className="w-4 h-4 text-purple-500" />
-              <span className="text-[1.1em] text-grays">Per Days</span>
+              <Timer
+                className={clsx(
+                  "w-4 h-4",
+                  isDark ? "text-purple-400" : "text-purple-500"
+                )}
+              />
+              <span
+                className={clsx(
+                  "text-[1.1em]",
+                  isDark ? "text-gray-400" : "text-grays"
+                )}
+              >
+                Per Days
+              </span>
             </div>
-            <p className="text-[1.6em] font-bold text-shortblack">
+            <p
+              className={clsx(
+                "text-[1.6em] font-bold",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {limits.limit_days} day{limits.limit_days > 1 ? "s" : ""}
             </p>
           </div>
@@ -138,14 +264,34 @@ export default function WithdrawalLimitsCard({
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden pointer-events-auto font-figtree text-[10px]"
+                className={clsx(
+                  "w-full max-w-md rounded-3xl shadow-2xl overflow-hidden pointer-events-auto font-figtree text-[10px]",
+                  isDark ? "bg-card border border-gray-800" : "bg-card border-t"
+                )}
               >
                 {/* Header */}
-                <div className="px-6 py-5 border-b border-gray-100 bg-linear-to-r from-purple-50 to-indigo-50">
-                  <h2 className="text-[2em] font-bold text-shortblack">
+                <div
+                  className={clsx(
+                    "px-6 py-5 border-b",
+                    isDark
+                      ? "border-gray-700 bg-linear-to-r from-purple-500/10 to-indigo-500/10"
+                      : "border-gray-100 bg-linear-to-r from-purple-50 to-indigo-50"
+                  )}
+                >
+                  <h2
+                    className={clsx(
+                      "text-[2em] font-bold",
+                      isDark ? "text-white" : "text-shortblack"
+                    )}
+                  >
                     Edit Withdrawal Limits
                   </h2>
-                  <p className="text-[1.2em] text-grays">
+                  <p
+                    className={clsx(
+                      "text-[1.2em]",
+                      isDark ? "text-gray-400" : "text-grays"
+                    )}
+                  >
                     Set global limits for all withdrawals
                   </p>
                 </div>
@@ -154,7 +300,12 @@ export default function WithdrawalLimitsCard({
                 <form onSubmit={handleSubmit} className="p-6 space-y-5">
                   {/* Min Amount */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Minimum Withdrawal (USD)
                     </label>
                     <input
@@ -169,16 +320,31 @@ export default function WithdrawalLimitsCard({
                         })
                       }
                       onFocus={handleFocus}
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-purple-500 focus:bg-white outline-none transition-all text-[1.3em]"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-500 outline-none transition-all text-[1.3em]",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card"
+                          : "bg-subcard focus:bg-card text-shortblack"
+                      )}
                     />
-                    <p className="text-[1.1em] text-grays mt-1">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-1",
+                        isDark ? "text-gray-500" : "text-grays"
+                      )}
+                    >
                       User must have at least this amount to withdraw
                     </p>
                   </div>
 
                   {/* Max Amount */}
                   <div>
-                    <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                    <label
+                      className={clsx(
+                        "block text-[1.3em] font-bold mb-2",
+                        isDark ? "text-white" : "text-shortblack"
+                      )}
+                    >
                       Maximum Withdrawal (USD)
                     </label>
                     <input
@@ -193,9 +359,19 @@ export default function WithdrawalLimitsCard({
                         })
                       }
                       onFocus={handleFocus}
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-purple-500 focus:bg-white outline-none transition-all text-[1.3em]"
+                      className={clsx(
+                        "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-500 outline-none transition-all text-[1.3em]",
+                        isDark
+                          ? "bg-subcard text-white focus:bg-card"
+                          : "bg-subcard focus:bg-card text-shortblack"
+                      )}
                     />
-                    <p className="text-[1.1em] text-grays mt-1">
+                    <p
+                      className={clsx(
+                        "text-[1.1em] mt-1",
+                        isDark ? "text-gray-500" : "text-grays"
+                      )}
+                    >
                       Set to 0 for unlimited
                     </p>
                   </div>
@@ -203,7 +379,12 @@ export default function WithdrawalLimitsCard({
                   {/* Frequency Limit Row */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                      <label
+                        className={clsx(
+                          "block text-[1.3em] font-bold mb-2",
+                          isDark ? "text-white" : "text-shortblack"
+                        )}
+                      >
                         Limit Count
                       </label>
                       <input
@@ -217,14 +398,29 @@ export default function WithdrawalLimitsCard({
                           })
                         }
                         onFocus={handleFocus}
-                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-purple-500 focus:bg-white outline-none transition-all text-[1.3em]"
+                        className={clsx(
+                          "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-500 outline-none transition-all text-[1.3em]",
+                          isDark
+                            ? "bg-subcard text-white focus:bg-card"
+                            : "bg-subcard focus:bg-card text-shortblack"
+                        )}
                       />
-                      <p className="text-[1.1em] text-grays mt-1">
+                      <p
+                        className={clsx(
+                          "text-[1.1em] mt-1",
+                          isDark ? "text-gray-500" : "text-grays"
+                        )}
+                      >
                         0 = unlimited
                       </p>
                     </div>
                     <div>
-                      <label className="block text-[1.3em] font-bold text-shortblack mb-2">
+                      <label
+                        className={clsx(
+                          "block text-[1.3em] font-bold mb-2",
+                          isDark ? "text-white" : "text-shortblack"
+                        )}
+                      >
                         Per Days
                       </label>
                       <input
@@ -238,9 +434,19 @@ export default function WithdrawalLimitsCard({
                           })
                         }
                         onFocus={handleFocus}
-                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:border-purple-500 focus:bg-white outline-none transition-all text-[1.3em]"
+                        className={clsx(
+                          "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-500 outline-none transition-all text-[1.3em]",
+                          isDark
+                            ? "bg-subcard text-white focus:bg-card"
+                            : "bg-subcard focus:bg-card text-shortblack"
+                        )}
                       />
-                      <p className="text-[1.1em] text-grays mt-1">
+                      <p
+                        className={clsx(
+                          "text-[1.1em] mt-1",
+                          isDark ? "text-gray-500" : "text-grays"
+                        )}
+                      >
                         Time window
                       </p>
                     </div>
@@ -251,7 +457,12 @@ export default function WithdrawalLimitsCard({
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
-                      className="flex-1 py-3 px-4 rounded-xl border-2 border-gray-200 text-grays font-semibold text-[1.3em] hover:bg-gray-50 transition-all"
+                      className={clsx(
+                        "flex-1 py-3 px-4 rounded-xl border-2 font-semibold text-[1.3em] transition-all",
+                        isDark
+                          ? "border-gray-700 text-gray-400 hover:bg-subcard"
+                          : "border-gray-200 text-grays hover:bg-subcard"
+                      )}
                     >
                       Cancel
                     </button>

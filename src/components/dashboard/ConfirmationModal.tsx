@@ -12,6 +12,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 export type ConfirmType = "danger" | "warning" | "info" | "success";
 
@@ -42,7 +43,15 @@ export default function ConfirmationModal({
   showReasonInput = false,
   reasonPlaceholder = "Please provide a reason...",
 }: ConfirmationModalProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [reason, setReason] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   // Reset reason when modal opens/closes
   useEffect(() => {
@@ -53,27 +62,43 @@ export default function ConfirmationModal({
   const config = {
     danger: {
       icon: Trash2,
-      iconColor: "text-red-500",
-      iconBg: "bg-red-50 border-red-100",
-      btnColor: "bg-red-500 hover:bg-red-600 shadow-red-200",
+      iconColor: isDark ? "text-red-400" : "text-red-500",
+      iconBg: isDark
+        ? "bg-red-500/20 border-red-500/30"
+        : "bg-red-50 border-red-100",
+      btnColor: isDark
+        ? "bg-red-600 hover:bg-red-500 shadow-red-900/30"
+        : "bg-red-500 hover:bg-red-600 shadow-red-200",
     },
     warning: {
       icon: AlertTriangle,
-      iconColor: "text-orange-500",
-      iconBg: "bg-orange-50 border-orange-100",
-      btnColor: "bg-orange-500 hover:bg-orange-600 shadow-orange-200",
+      iconColor: isDark ? "text-orange-400" : "text-orange-500",
+      iconBg: isDark
+        ? "bg-orange-500/20 border-orange-500/30"
+        : "bg-orange-50 border-orange-100",
+      btnColor: isDark
+        ? "bg-orange-600 hover:bg-orange-500 shadow-orange-900/30"
+        : "bg-orange-500 hover:bg-orange-600 shadow-orange-200",
     },
     info: {
       icon: Info,
       iconColor: "text-bluelight",
-      iconBg: "bg-blue-50 border-blue-100",
-      btnColor: "bg-bluelight hover:bg-blue-700 shadow-blue-200",
+      iconBg: isDark
+        ? "bg-blue-500/20 border-blue-500/30"
+        : "bg-blue-50 border-blue-100",
+      btnColor: isDark
+        ? "bg-bluelight hover:bg-blue-500 shadow-blue-900/30"
+        : "bg-bluelight hover:bg-blue-700 shadow-blue-200",
     },
     success: {
       icon: CheckCircle,
-      iconColor: "text-green-500",
-      iconBg: "bg-green-50 border-green-100",
-      btnColor: "bg-green-600 hover:bg-green-700 shadow-green-200",
+      iconColor: isDark ? "text-green-400" : "text-green-500",
+      iconBg: isDark
+        ? "bg-green-500/20 border-green-500/30"
+        : "bg-green-50 border-green-100",
+      btnColor: isDark
+        ? "bg-green-600 hover:bg-green-500 shadow-green-900/30"
+        : "bg-green-600 hover:bg-green-700 shadow-green-200",
     },
   };
 
@@ -87,7 +112,7 @@ export default function ConfirmationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-shortblack/60 backdrop-blur-sm font-figtree h-screen"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm font-figtree h-screen"
           onClick={!isLoading ? onClose : undefined}
         >
           <motion.div
@@ -96,7 +121,10 @@ export default function ConfirmationModal({
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full max-w-[40em] rounded-3xl shadow-2xl overflow-hidden relative flex flex-col items-center text-center p-8"
+            className={clsx(
+              "w-full max-w-[40em] rounded-3xl shadow-2xl overflow-hidden relative flex flex-col items-center text-center p-8",
+              isDark ? "bg-card" : "bg-white"
+            )}
           >
             {/* Icon Bubble */}
             <div
@@ -109,7 +137,12 @@ export default function ConfirmationModal({
             </div>
 
             {/* Text Content */}
-            <h3 className="text-[2.2em] font-bold text-shortblack mb-3 leading-tight">
+            <h3
+              className={clsx(
+                "text-[2.2em] font-bold mb-3 leading-tight",
+                isDark ? "text-white" : "text-shortblack"
+              )}
+            >
               {title}
             </h3>
             <p className="text-[1.5em] text-grays leading-relaxed mb-8 px-4">
@@ -122,7 +155,12 @@ export default function ConfirmationModal({
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder={reasonPlaceholder}
-                  className="w-full p-4 text-[1.2em] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] resize-none"
+                  className={clsx(
+                    "w-full p-4 text-[1.2em] border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] resize-none",
+                    isDark
+                      ? "bg-subcard border-gray-dashboard/50 text-white placeholder:text-gray-500"
+                      : "border-gray-200 text-shortblack"
+                  )}
                 />
               </div>
             )}
@@ -132,7 +170,12 @@ export default function ConfirmationModal({
               <button
                 onClick={onClose}
                 disabled={isLoading}
-                className="flex-1 py-4 rounded-xl text-[1.5em] font-semibold text-shortblack bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                className={clsx(
+                  "flex-1 py-4 rounded-xl text-[1.5em] font-semibold transition-colors disabled:opacity-50",
+                  isDark
+                    ? "text-gray-300 bg-gray-dashboard/50 hover:bg-gray-dashboard"
+                    : "text-shortblack bg-gray-100 hover:bg-gray-200"
+                )}
               >
                 {cancelLabel}
               </button>

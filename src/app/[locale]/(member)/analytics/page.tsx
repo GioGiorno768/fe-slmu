@@ -10,8 +10,9 @@ import LinkAnalyticsCard from "@/components/dashboard/LinkAnalyticsCard";
 import TopCountriesCard from "@/components/dashboard/analytics/TopCountriesCard";
 import TopReferrersCard from "@/components/dashboard/analytics/TopReferrersCard";
 
-// Hook
+// Hooks
 import { useAnalytics, type ChartRange } from "@/hooks/useAnalytics";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
 import type { StatType, TimeRange } from "@/types/type";
 
 export default function AnalyticsPage() {
@@ -34,6 +35,14 @@ export default function AnalyticsPage() {
     setChartMetric,
     refetchAll,
   } = useAnalytics();
+
+  // Feature locks for analytics sections
+  const {
+    canViewTopCountries,
+    canViewTopReferrers,
+    levelForTopCountries,
+    levelForTopReferrers,
+  } = useFeatureLocks();
 
   // Map chartMetric to StatType for LinkAnalyticsCard
   const metricToStatType: Record<string, StatType> = {
@@ -94,10 +103,18 @@ export default function AnalyticsPage() {
         {/* 3. Top Countries & Referrers - From aggregate tables */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="h-[380px]">
-            <TopCountriesCard data={topCountries} />
+            <TopCountriesCard
+              data={topCountries}
+              isLocked={!canViewTopCountries}
+              requiredLevel={levelForTopCountries}
+            />
           </div>
           <div className="h-[380px]">
-            <TopReferrersCard data={topReferrers} />
+            <TopReferrersCard
+              data={topReferrers}
+              isLocked={!canViewTopReferrers}
+              requiredLevel={levelForTopReferrers}
+            />
           </div>
         </div>
       </div>

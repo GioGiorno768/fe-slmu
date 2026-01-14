@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CreditCard,
   ShieldAlert,
@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useTranslations, useFormatter } from "next-intl";
 import type { UserDetailData } from "@/types/type";
 import UserMessageHistory from "./UserMessageHistory";
+import { useTheme } from "next-themes";
 
 interface UserDetailTabsProps {
   data: UserDetailData;
@@ -29,6 +30,15 @@ const ITEMS_PER_PAGE = 5;
 export default function UserDetailTabs({ data }: UserDetailTabsProps) {
   const t = useTranslations("AdminDashboard.UserDetail");
   const format = useFormatter();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Only Finance tab is shown for now - Overview and Security hidden for MVP
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -54,9 +64,19 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
 
   return (
     <div className="lg:col-span-2">
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden min-h-[550px] h-full">
+      <div
+        className={clsx(
+          "rounded-3xl shadow-sm border overflow-hidden min-h-[550px] h-full",
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        )}
+      >
         {/* Single Tab Header - Finance Only (Overview & Security hidden for MVP) */}
-        <div className="flex border-b border-gray-100 px-8">
+        <div
+          className={clsx(
+            "flex border-b px-8",
+            isDark ? "border-gray-700" : "border-gray-100"
+          )}
+        >
           <div className="px-8 py-5 text-[1.4em] font-medium border-b-2 border-bluelight text-bluelight">
             {t("tabs.finance")}
           </div>
@@ -68,7 +88,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
             {/* Payment Methods */}
             <div>
-              <h4 className="text-[1.4em] font-bold text-shortblack mb-4 flex items-center gap-2">
+              <h4
+                className={clsx(
+                  "text-[1.4em] font-bold mb-4 flex items-center gap-2",
+                  isDark ? "text-white" : "text-shortblack"
+                )}
+              >
                 <CreditCard className="w-5 h-5 text-bluelight" />{" "}
                 {t("finance.savedMethods")}
               </h4>
@@ -77,25 +102,64 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                   {data.paymentMethods.map((pm) => (
                     <div
                       key={pm.id}
-                      className="p-5 rounded-2xl border border-gray-200 flex items-center gap-4 bg-white hover:shadow-md transition-shadow"
+                      className={clsx(
+                        "p-5 rounded-2xl border flex items-center gap-4 hover:shadow-md transition-shadow",
+                        isDark
+                          ? "bg-subcard border-gray-700"
+                          : "bg-white border-gray-200"
+                      )}
                     >
-                      <div className="p-3 bg-slate-50 rounded-xl border border-gray-100">
+                      <div
+                        className={clsx(
+                          "p-3 rounded-xl border",
+                          isDark
+                            ? "bg-gray-700 border-gray-600"
+                            : "bg-slate-50 border-gray-100"
+                        )}
+                      >
                         {pm.category === "bank" ? (
-                          <Landmark className="w-6 h-6 text-grays" />
+                          <Landmark
+                            className={clsx(
+                              "w-6 h-6",
+                              isDark ? "text-gray-400" : "text-grays"
+                            )}
+                          />
                         ) : (
-                          <Smartphone className="w-6 h-6 text-grays" />
+                          <Smartphone
+                            className={clsx(
+                              "w-6 h-6",
+                              isDark ? "text-gray-400" : "text-grays"
+                            )}
+                          />
                         )}
                       </div>
                       <div>
-                        <p className="font-bold text-shortblack text-[1.3em]">
+                        <p
+                          className={clsx(
+                            "font-bold text-[1.3em]",
+                            isDark ? "text-white" : "text-shortblack"
+                          )}
+                        >
                           {pm.provider}{" "}
                           {pm.isDefault && (
-                            <span className="text-[0.7em] bg-blue-100 text-blue-600 px-2 py-0.5 rounded ml-2 align-middle">
+                            <span
+                              className={clsx(
+                                "text-[0.7em] px-2 py-0.5 rounded ml-2 align-middle",
+                                isDark
+                                  ? "bg-blue-500/20 text-blue-400"
+                                  : "bg-blue-100 text-blue-600"
+                              )}
+                            >
                               {t("finance.default")}
                             </span>
                           )}
                         </p>
-                        <p className="text-grays text-[1.2em] font-mono">
+                        <p
+                          className={clsx(
+                            "text-[1.2em] font-mono",
+                            isDark ? "text-gray-400" : "text-grays"
+                          )}
+                        >
                           {pm.accountNumber}
                         </p>
                       </div>
@@ -103,7 +167,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                   ))}
                 </div>
               ) : (
-                <p className="text-grays italic text-[1.3em]">
+                <p
+                  className={clsx(
+                    "italic text-[1.3em]",
+                    isDark ? "text-gray-400" : "text-grays"
+                  )}
+                >
                   {t("finance.noMethods")}
                 </p>
               )}
@@ -112,7 +181,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
             {/* Recent Withdrawals */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-[1.4em] font-bold text-shortblack flex items-center gap-2">
+                <h4
+                  className={clsx(
+                    "text-[1.4em] font-bold flex items-center gap-2",
+                    isDark ? "text-white" : "text-shortblack"
+                  )}
+                >
                   <History className="w-5 h-5 text-bluelight" />{" "}
                   {t("finance.withdrawalHistory")}
                 </h4>
@@ -121,17 +195,31 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                 <div className="relative z-20">
                   <button
                     onClick={() => setIsSortOpen(!isSortOpen)}
-                    className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-[1.1em] font-medium text-shortblack hover:bg-gray-50 transition-colors shadow-sm"
+                    className={clsx(
+                      "flex items-center gap-2 px-4 py-2 border rounded-xl text-[1.1em] font-medium transition-colors shadow-sm",
+                      isDark
+                        ? "bg-subcard border-gray-700 text-white hover:bg-gray-700"
+                        : "bg-white border-gray-200 text-shortblack hover:bg-gray-50"
+                    )}
                   >
-                    <Filter className="w-4 h-4 text-grays" />
-                    <span className="text-grays">Sort:</span>
+                    <Filter
+                      className={clsx(
+                        "w-4 h-4",
+                        isDark ? "text-gray-400" : "text-grays"
+                      )}
+                    />
+                    <span className={isDark ? "text-gray-400" : "text-grays"}>
+                      Sort:
+                    </span>
                     <span className="font-bold text-bluelight">
                       {sortOrder === "newest" ? "Terbaru" : "Terlama"}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-grays transition-transform ${
-                        isSortOpen ? "rotate-180" : ""
-                      }`}
+                      className={clsx(
+                        "w-4 h-4 transition-transform",
+                        isDark ? "text-gray-400" : "text-grays",
+                        isSortOpen && "rotate-180"
+                      )}
                     />
                   </button>
                   <AnimatePresence>
@@ -145,7 +233,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
-                          className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 p-2 z-30"
+                          className={clsx(
+                            "absolute right-0 mt-2 w-48 rounded-xl shadow-xl border p-2 z-30",
+                            isDark
+                              ? "bg-card border-gray-700"
+                              : "bg-white border-gray-100"
+                          )}
                         >
                           {[
                             { id: "newest", label: "Terbaru" },
@@ -160,7 +253,11 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                               className={clsx(
                                 "flex items-center justify-between w-full px-4 py-2.5 rounded-lg text-[1.1em] transition-colors text-left",
                                 sortOrder === option.id
-                                  ? "bg-blue-50 text-bluelight font-semibold"
+                                  ? isDark
+                                    ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                                    : "bg-blue-50 text-bluelight font-semibold"
+                                  : isDark
+                                  ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
                                   : "text-shortblack hover:bg-gray-50"
                               )}
                             >
@@ -182,7 +279,14 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                 className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"
               >
                 {sortedHistory.length === 0 ? (
-                  <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-gray-200 text-grays">
+                  <div
+                    className={clsx(
+                      "p-8 text-center rounded-2xl border border-dashed",
+                      isDark
+                        ? "bg-subcard border-gray-700 text-gray-400"
+                        : "bg-slate-50 border-gray-200 text-grays"
+                    )}
+                  >
                     No withdrawal history found.
                   </div>
                 ) : (
@@ -190,7 +294,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                     {visibleHistory.map((tx) => (
                       <div
                         key={tx.id}
-                        className="p-4 hover:bg-slate-50 rounded-xl transition-colors border border-gray-100"
+                        className={clsx(
+                          "p-4 rounded-xl transition-colors border",
+                          isDark
+                            ? "border-gray-700 hover:bg-subcard"
+                            : "border-gray-100 hover:bg-slate-50"
+                        )}
                       >
                         {/* Row 1: Amount + Method + Account | Status Badge */}
                         <div className="flex justify-between items-start mb-2">
@@ -199,9 +308,15 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                               className={clsx(
                                 "p-2 rounded-full shrink-0",
                                 tx.status === "paid"
-                                  ? "bg-green-100 text-green-600"
+                                  ? isDark
+                                    ? "bg-green-500/20 text-green-400"
+                                    : "bg-green-100 text-green-600"
                                   : tx.status === "rejected"
-                                  ? "bg-red-100 text-red-600"
+                                  ? isDark
+                                    ? "bg-red-500/20 text-red-400"
+                                    : "bg-red-100 text-red-600"
+                                  : isDark
+                                  ? "bg-amber-500/20 text-amber-400"
                                   : "bg-amber-100 text-amber-600"
                               )}
                             >
@@ -211,10 +326,29 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                                 <XCircle className="w-4 h-4" />
                               )}
                             </div>
-                            <p className="font-bold text-shortblack text-[1.2em]">
+                            <p
+                              className={clsx(
+                                "font-bold text-[1.2em]",
+                                isDark ? "text-white" : "text-shortblack"
+                              )}
+                            >
                               {formatCurrency(tx.amount)} via {tx.method}{" "}
-                              <span className="text-grays font-normal">→</span>{" "}
-                              <span className="text-grays font-medium">
+                              <span
+                                className={
+                                  isDark
+                                    ? "text-gray-400 font-normal"
+                                    : "text-grays font-normal"
+                                }
+                              >
+                                →
+                              </span>{" "}
+                              <span
+                                className={
+                                  isDark
+                                    ? "text-gray-400 font-medium"
+                                    : "text-grays font-medium"
+                                }
+                              >
                                 {tx.account}
                               </span>
                             </p>
@@ -223,9 +357,15 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                             className={clsx(
                               "text-[1em] font-bold px-3 py-1 rounded-lg uppercase shrink-0",
                               tx.status === "paid"
-                                ? "bg-green-50 text-green-600"
+                                ? isDark
+                                  ? "bg-green-500/20 text-green-400"
+                                  : "bg-green-50 text-green-600"
                                 : tx.status === "rejected"
-                                ? "bg-red-50 text-red-600"
+                                ? isDark
+                                  ? "bg-red-500/20 text-red-400"
+                                  : "bg-red-50 text-red-600"
+                                : isDark
+                                ? "bg-amber-500/20 text-amber-400"
                                 : "bg-amber-50 text-amber-600"
                             )}
                           >
@@ -235,20 +375,40 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
 
                         {/* Row 2: Date • TX ID | Fee */}
                         <div className="flex justify-between items-center pl-11">
-                          <p className="text-grays text-[1.1em]">
+                          <p
+                            className={clsx(
+                              "text-[1.1em]",
+                              isDark ? "text-gray-400" : "text-grays"
+                            )}
+                          >
                             {format.dateTime(new Date(tx.date), {
                               dateStyle: "medium",
                             })}
                             {tx.txId && (
-                              <span className="ml-2 text-slate-400">
+                              <span
+                                className={clsx(
+                                  "ml-2",
+                                  isDark ? "text-gray-500" : "text-slate-400"
+                                )}
+                              >
                                 • #{tx.txId}
                               </span>
                             )}
                           </p>
                           {tx.fee !== undefined && tx.fee > 0 && (
-                            <span className="text-[1em] text-grays">
+                            <span
+                              className={clsx(
+                                "text-[1em]",
+                                isDark ? "text-gray-400" : "text-grays"
+                              )}
+                            >
                               Fee:{" "}
-                              <span className="font-medium text-shortblack">
+                              <span
+                                className={clsx(
+                                  "font-medium",
+                                  isDark ? "text-white" : "text-shortblack"
+                                )}
+                              >
                                 {formatCurrency(tx.fee)}
                               </span>
                             </span>
@@ -261,7 +421,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                     {hasMore && (
                       <button
                         onClick={handleLoadMore}
-                        className="w-full py-3 mt-2 bg-slate-50 hover:bg-slate-100 border border-gray-200 rounded-xl text-[1.2em] font-medium text-grays hover:text-shortblack transition-colors flex items-center justify-center gap-2"
+                        className={clsx(
+                          "w-full py-3 mt-2 border rounded-xl text-[1.2em] font-medium transition-colors flex items-center justify-center gap-2",
+                          isDark
+                            ? "bg-subcard border-gray-700 text-gray-400 hover:text-white hover:bg-gray-700"
+                            : "bg-slate-50 hover:bg-slate-100 border-gray-200 text-grays hover:text-shortblack"
+                        )}
                       >
                         <ChevronDown className="w-4 h-4" />
                         Load More ({sortedHistory.length - visibleCount}{" "}

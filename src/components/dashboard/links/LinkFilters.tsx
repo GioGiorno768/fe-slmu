@@ -93,7 +93,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+    <div className="bg-card rounded-2xl shadow-sm p-6 mb-6 shadow-sm shadow-slate-500/50">
       <div className="flex flex-col gap-5">
         {/* Title Row */}
         <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })
               }
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] text-shortblack transition-all"
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-subcard border border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] text-shortblack placeholder:text-grays transition-all"
             />
           </div>
 
@@ -124,7 +124,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsStatusOpen(false);
                 setIsLevelOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[130px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[130px] justify-between"
             >
               <Calendar className="w-4 h-4 text-grays" />
               <span className="text-shortblack font-medium">
@@ -143,7 +143,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full left-0 mt-2 w-44 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {sortOptions.map((opt) => (
                     <button
@@ -153,9 +153,9 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsSortOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.sort === opt.value
-                          ? "bg-blues text-bluelight font-medium"
+                          ? "bg-subcard text-bluelight font-medium"
                           : "text-shortblack"
                       )}
                     >
@@ -175,7 +175,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsLevelOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between"
             >
               <Activity className="w-4 h-4 text-grays" />
               <span className="text-shortblack font-medium">
@@ -194,7 +194,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-48 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {statusOptions.map((opt) => (
                     <button
@@ -204,9 +204,9 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsStatusOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.status === opt.value
-                          ? "bg-blues text-bluelight font-medium"
+                          ? "bg-subcard text-bluelight font-medium"
                           : "text-shortblack"
                       )}
                     >
@@ -226,7 +226,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsStatusOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-slate-50 transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between"
             >
               <Megaphone className="w-4 h-4 text-grays" />
               <span className="text-shortblack font-medium">
@@ -245,7 +245,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-40 bg-white rounded-xl border border-gray-200 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-40 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {levelOptions.map((opt) => (
                     <button
@@ -255,9 +255,9 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         setIsLevelOpen(false);
                       }}
                       className={clsx(
-                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-blues transition-colors",
+                        "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.adsLevel === opt.value
-                          ? "bg-blues text-bluelight font-medium"
+                          ? "bg-subcard text-bluelight font-medium"
                           : "text-shortblack"
                       )}
                     >

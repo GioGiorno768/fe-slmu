@@ -39,6 +39,8 @@ export interface CountryRate {
   level2Rate: number;
   level3Rate: number;
   level4Rate: number;
+  // Legacy single rate (for backwards compatibility with CountryRateEditor)
+  cpcRate?: number;
 }
 
 // ============== AD LEVELS API ==============
@@ -148,10 +150,10 @@ export const calculateCPM = (cpc: number): number => {
   return cpc * 1000;
 };
 
-// Utility: Format CPM for display
+// Utility: Format CPM for display (5 decimals for micro-transactions)
 export const formatCPM = (cpc: number): string => {
   const cpm = calculateCPM(cpc);
-  return `$${cpm.toFixed(2)}`;
+  return `$${cpm.toFixed(5)}`;
 };
 
 // ============== GLOBAL FEATURES API ==============

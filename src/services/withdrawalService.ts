@@ -71,6 +71,10 @@ export async function getWithdrawalData(
     maxWithdrawal: number;
     limitCount: number;
     limitDays: number;
+    // Monthly limit info
+    monthlyLimit: number; // -1 = unlimited
+    monthlyWithdrawn: number;
+    monthlyRemaining: number; // -1 = unlimited
   };
 }> {
   const params = new URLSearchParams({
@@ -132,6 +136,10 @@ export async function getWithdrawalData(
       maxWithdrawal: data.max_withdrawal || 0,
       limitCount: data.limit_count || 0,
       limitDays: data.limit_days || 1,
+      // Monthly limit info from backend
+      monthlyLimit: data.monthly_limit ?? -1,
+      monthlyWithdrawn: data.monthly_withdrawn ?? 0,
+      monthlyRemaining: data.monthly_remaining ?? -1,
     },
   };
 }

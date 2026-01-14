@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { User, Lock, CreditCard, Settings2, Loader2 } from "lucide-react";
 import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 // Section Components
 import ProfileSection from "@/components/dashboard/settings/ProfileSection";
@@ -26,6 +27,15 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 export default function SettingsPage() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
   // Get initial tab from URL hash
   const getInitialTab = (): TabId => {
     if (typeof window !== "undefined") {
@@ -108,7 +118,14 @@ export default function SettingsPage() {
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* SIDEBAR (STICKY) */}
-        <div className="w-full lg:w-[280px] flex-shrink-0 bg-white rounded-3xl p-4 shadow-sm border border-gray-100 z-20 sticky sm:top-[15em] top-[10em]">
+        <div
+          className={clsx(
+            "w-full lg:w-[280px] flex-shrink-0 rounded-3xl p-4 shadow-sm z-20 sticky sm:top-[15em] top-[10em]",
+            isDark
+              ? "bg-card border border-gray-800"
+              : "bg-white border border-gray-100"
+          )}
+        >
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -119,7 +136,9 @@ export default function SettingsPage() {
                   className={clsx(
                     "flex items-center sm:justify-baseline justify-center gap-4 sm:px-6 px-4 py-4 rounded-2xl transition-all whitespace-nowrap text-[1.4em] font-medium w-full",
                     isActive
-                      ? "bg-bluelight text-white shadow-md shadow-blue-200"
+                      ? isDark
+                        ? "bg-bluelight text-white shadow-md shadow-purple-900/30"
+                        : "bg-bluelight text-white shadow-md shadow-blue-200"
                       : "text-grays hover:bg-blues hover:text-shortblack"
                   )}
                 >

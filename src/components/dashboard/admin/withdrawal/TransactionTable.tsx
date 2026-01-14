@@ -46,7 +46,7 @@ export default function TransactionTable({
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Helper Formatters
-  const formatCurrency = (val: number) => "$" + val.toFixed(2);
+  const formatCurrency = (val: number) => "$" + val.toFixed(5);
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("id-ID", {
       day: "numeric",
