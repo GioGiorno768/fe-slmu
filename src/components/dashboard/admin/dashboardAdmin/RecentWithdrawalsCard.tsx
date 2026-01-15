@@ -1,4 +1,5 @@
 "use client";
+// RecentWithdrawalsCard - Dashboard withdrawal list component
 
 import { motion, AnimatePresence } from "motion/react";
 import {
