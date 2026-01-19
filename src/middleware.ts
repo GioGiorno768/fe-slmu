@@ -295,7 +295,7 @@ export default async function middleware(request: NextRequest) {
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
     }
-    // Block admin from accessing user dashboard (only super_admin can access)
+    // Block admin from accessing user dashboard (only super_admin can access)s
     if (userRole === "admin") {
       const url = request.nextUrl.clone();
       const locale = segments[0] || "en";
