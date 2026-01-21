@@ -9,20 +9,20 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-16">
           {/* Logo & Description */}
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex justify-center md:justify-start items-center gap-2 mb-6">
               <div className="size-8 rounded bg-bluelight flex items-center justify-center text-white">
                 <Link2 className="w-4 h-4" />
               </div>
               <span className="text-xl font-bold text-white">ShortLinkmu</span>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+            <p className="text-slate-400 text-sm leading-relaxed max-w-xs text-center md:text-start">
               The most reliable URL shortener service for publishers. Shorten,
               share and track your links with ease in a clean, modern
               environment.
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-20">
+          <div className="flex md:flex-row gap-20">
             {/* Platform Links */}
             <div>
               <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">
