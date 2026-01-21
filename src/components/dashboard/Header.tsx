@@ -286,9 +286,9 @@ export default function Header({
             className="custom:w-[5em] custom:h-[5em] w-[4em] h-[4em] flex justify-center items-center rounded-full custom:hover:-translate-y-1 transition-all duration-300 ease-in-out"
           >
             {isDark ? (
-              <span className="solar--moon-stars-broken custom:w-[2.5em] custom:h-[2.5em] w-[2.5em] h-[2.5em] bg-bluelight " />
-            ) : (
               <span className="solar--sun-broken custom:w-[3em] custom:h-[3em] w-[3em] h-[3em] bg-bluelight " />
+            ) : (
+              <span className="solar--moon-stars-broken custom:w-[2.5em] custom:h-[2.5em] w-[2.5em] h-[2.5em] bg-bluelight " />
             )}
           </button>
 

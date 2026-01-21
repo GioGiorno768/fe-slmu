@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "./sidebar/Sidebar";
 import Header from "./Header";
 import Breadcrumb from "./Breadcrumb";
 import DashboardFooter from "./DashboardFooter";
@@ -14,6 +13,7 @@ import { getMemberMenu, getAdminMenu } from "@/lib/menus";
 import MobileBottomBar from "./MobileBottomBar";
 import { Role } from "@/types/type";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import Sidebar from "./sidebar/Sidebar";
 
 export default function DashboardLayout({
   children,

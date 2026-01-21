@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { NavItem } from "@/types/type";
 import { Link } from "@/i18n/routing";
+import { useTheme } from "next-themes";
 
 export default function SidebarItem({
   item,
@@ -24,6 +25,15 @@ export default function SidebarItem({
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+
+  const { theme } = useTheme();
+
+  // Prevent hydration mismatch - wait for client-side
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isDark = mounted && theme === "dark";
 
   // SAFETY CHECK: Kalau icon undefined, pake icon default (Circle)
   const Icon = item.icon || Circle;
@@ -77,17 +87,32 @@ export default function SidebarItem({
           }}
           title={item.label}
           className={`
-            flex items-center justify-between w-full gap-3 px-[3em] py-3 rounded-md
+            flex items-center justify-between w-full gap-3 px-[3em] py-3 rounded-lg
             transition-all duration-200
             ${
               isChildActive
-                ? "text-white"
-                : "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                ? isDark
+                  ? "text-white"
+                  : "text-tx-blue-dashboard"
+                : isDark
+                  ? "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                  : "text-shortblack hover:bg-blues hover:text-tx-blue-dashboard"
             }
             ${
               isCollapsed
                 ? "justify-center"
-                : "hover:bg-[#1f2545] hover:text-white"
+                : isDark
+                  ? "hover:bg-[#1f2545] hover:text-white"
+                  : "hover:bg-blues hover:text-tx-blue-dashboard"
+            }
+            ${
+              isCollapsed && isChildActive
+                ? isDark
+                  ? "justify-center"
+                  : "justify-center text-white bg-bluelight "
+                : isDark
+                  ? "hover:bg-[#1f2545] hover:text-white"
+                  : "hover:bg-blues hover:text-tx-blue-dashboard"
             }
           `}
         >
@@ -123,7 +148,9 @@ export default function SidebarItem({
             `}
           >
             <div className="overflow-hidden">
-              <div className="mt-1 ml-[3em] pl-[1.5em] border-l border-slate-700">
+              <div
+                className={`mt-1 ml-[3em] pl-[1.5em] border-l ${isDark ? "border-slate-700" : "border-gray-dashboard"}`}
+              >
                 {item.children.map((child) => {
                   // Safety Check buat Child Icon juga
                   const ChildIcon = child.icon || Circle;
@@ -136,12 +163,16 @@ export default function SidebarItem({
                       href={child.href!}
                       onClick={onClose}
                       className={`
-                        flex items-center gap-3 px-3 py-2 rounded-md mt-1
+                        flex items-center gap-3 px-3 py-2 rounded-lg mt-1
                         transition-all duration-200 text-[1.5em]
                         ${
                           isChildItemActive
-                            ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                            : "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                            ? isDark
+                              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                              : "bg-bluelight shadow-md shadow-blue-300 text-white"
+                            : isDark
+                              ? "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                              : "text-shortblack hover:bg-blues hover:text-tx-blue-dashboard"
                         }
                       `}
                     >
@@ -159,14 +190,14 @@ export default function SidebarItem({
 
         {/* Popup Flyout (Mode Collapsed) - Fixed positioning to escape overflow */}
         <div
-          style={{
-            top: popupPosition.top,
-            left: popupPosition.left,
-          }}
+          // style={{
+          //   top: popupPosition.top,
+          //   left: popupPosition.left,
+          // }}
           className={`
             fixed z-[9999]
-            bg-[#10052C] shadow-lg rounded-md p-2 w-max
-            transition-all duration-150 ease-out transform
+            bg-card shadow-lg rounded-md p-2 w-max
+            transition-all duration-150 ease-out transform left-[9em] top-[20em]
             ${
               isCollapsed && isPopupOpen
                 ? "opacity-100 scale-100 visible"
@@ -192,8 +223,12 @@ export default function SidebarItem({
                   transition-all duration-200 text-[1.4em] w-full
                   ${
                     isChildItemActive
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                      : "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                      ? isDark
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                        : "bg-bluelight shadow-md shadow-blue-300 text-white"
+                      : isDark
+                        ? "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+                        : "text-shortblack hover:bg-blues hover:text-tx-blue-dashboard"
                   }
                 `}
               >
@@ -219,8 +254,12 @@ export default function SidebarItem({
         transition-all duration-200
         ${
           isActive
-            ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-            : "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+            ? isDark
+              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+              : "bg-bluelight shadow-md shadow-blue-300 text-white"
+            : isDark
+              ? "text-slate-400 hover:bg-[#1f2545] hover:text-white"
+              : "text-shortblack hover:bg-blues hover:text-tx-blue-dashboard"
         }
         ${isCollapsed ? "justify-center" : ""}
       `}
