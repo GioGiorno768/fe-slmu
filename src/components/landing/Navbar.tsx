@@ -113,18 +113,6 @@ export default function Navbar() {
             >
               {t("payoutRates")}
             </Link>
-            <Link
-              href="/about"
-              className="text-[1.8em] font-semibold tracking-tight"
-            >
-              {t("about")}
-            </Link>
-            <Link
-              href="/contact"
-              className="text-[1.8em] font-semibold tracking-tight"
-            >
-              {t("contact")}
-            </Link>
           </div>
 
           {/* Desktop Right Side (Lang Switcher + Auth) */}
@@ -277,18 +265,6 @@ export default function Navbar() {
               className="text-[1.6em] font-semibold tracking-tight w-full px-[2em] bg-blue-50 text-bluelight py-[.8em] rounded-full hover:bg-blues"
             >
               {t("payoutRates")}
-            </Link>
-            <Link
-              href="/about"
-              className="text-[1.6em] font-semibold tracking-tight w-full px-[2em] text-shortblack py-[.8em] rounded-full hover:bg-blues"
-            >
-              {t("about")}
-            </Link>
-            <Link
-              href="/contact"
-              className="text-[1.6em] font-semibold tracking-tight w-full px-[2em] text-shortblack py-[.8em] rounded-full hover:bg-blues"
-            >
-              {t("contact")}
             </Link>
             <div className="w-full border-t border-gray-200 my-[1em]"></div>
             {/* Auth Buttons - Mobile */}
