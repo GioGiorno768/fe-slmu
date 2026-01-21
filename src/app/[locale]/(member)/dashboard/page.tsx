@@ -7,10 +7,14 @@ import LinkAnalyticsCard from "@/components/dashboard/LinkAnalyticsCard";
 import TopPerformingLinksCard from "@/components/dashboard/TopPerformingLinksCard";
 import TopCountriesCard from "@/components/dashboard/TopCountriesCard";
 import ReferralCard from "@/components/dashboard/ReferralCard";
-import { useDashboard } from "@/hooks/useDashboard"; // <--- Import Hook
+import { useDashboard } from "@/hooks/useDashboard";
+import { useUser } from "@/hooks/useUser";
 
 export default function DashboardPage() {
-  // Panggil hook, ambil semua data & fungsi yang dibutuhkan
+  // Get current user data for personalized greeting
+  const { user } = useUser("user");
+
+  // Panggil hook dengan username untuk personalisasi slider
   const {
     slides,
     milestone,
@@ -23,7 +27,7 @@ export default function DashboardPage() {
     analyticsStat,
     setAnalyticsRange,
     setAnalyticsStat,
-  } = useDashboard();
+  } = useDashboard(user?.username);
 
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree pb-10">

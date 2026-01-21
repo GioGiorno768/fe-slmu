@@ -62,6 +62,22 @@ export default function GoogleAuthButton({
             }
           },
           error_callback: (error: any) => {
+            // Ignore user-cancelled actions (popup closed, user cancelled, etc)
+            const errorType = error?.type?.toLowerCase() || "";
+            const errorMessage = error?.message?.toLowerCase() || "";
+
+            const isUserCancelled =
+              errorType === "popup_closed" ||
+              errorType === "user_cancel" ||
+              errorMessage.includes("popup") ||
+              errorMessage.includes("closed") ||
+              errorMessage.includes("cancel");
+
+            if (isUserCancelled) {
+              console.log("Google Auth cancelled by user");
+              return; // Don't show error for intentional cancellations
+            }
+
             console.error("Google Auth Error:", error);
             onError(error?.message || "Login dengan Google gagal.");
           },

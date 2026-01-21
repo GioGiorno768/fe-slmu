@@ -14,6 +14,7 @@ import type {
   TimeRange,
   StatType,
   CountryStat,
+  DashboardSlide,
 } from "@/types/type";
 import { getTopCountries } from "@/services/analyticsService";
 
@@ -29,15 +30,23 @@ export const dashboardKeys = {
     [...dashboardKeys.all, "analytics", range, stat] as const,
 };
 
-export function useDashboard() {
+export function useDashboard(username?: string) {
   const queryClient = useQueryClient();
 
   // Analytics Filter State (still need local state for filters)
   const [analyticsRange, setAnalyticsRange] = useState<TimeRange>("perWeek");
   const [analyticsStat, setAnalyticsStat] = useState<StatType>("totalViews");
 
-  // 1. Slides - HARDCODED, no fetch needed
-  const slides = DASHBOARD_SLIDES;
+  // 1. Slides - Create personalized slides with username
+  const slides: DashboardSlide[] = DASHBOARD_SLIDES.map((slide) => {
+    if (slide.id === "welcome" && username) {
+      return {
+        ...slide,
+        title: `Selamat Datang, ${username}! 🤗`,
+      };
+    }
+    return slide;
+  });
 
   // 2. Milestone Query
   const { data: milestone } = useQuery({

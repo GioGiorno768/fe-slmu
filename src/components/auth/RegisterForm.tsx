@@ -8,6 +8,7 @@ import { Link } from "@/i18n/routing";
 import authService, { hasEverRegistered } from "@/services/authService";
 import ErrorAlert from "./ErrorAlert";
 import Modal from "@/components/common/Modal";
+import Toast from "@/components/common/Toast";
 import GoogleAuthButton from "./GoogleAuthButton";
 import { useFingerprint } from "@/hooks/useFingerprint";
 
@@ -43,6 +44,10 @@ export default function RegisterForm() {
   // 🔄 Loading state for eligibility check
   const [isCheckingEligibility, setIsCheckingEligibility] =
     useState(!!referralCode);
+
+  // 🎉 Toast state for success messages
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // Reset loading state when referralCode becomes empty (after redirect)
   useEffect(() => {
@@ -159,10 +164,16 @@ export default function RegisterForm() {
         visitor_id: visitorId || undefined, // 🛡️ Anti-Fraud
       });
 
+      // 🎉 Show success toast
+      setToastMessage("Registrasi berhasil! Selamat datang.");
+      setShowToast(true);
+
       // [DEV MODE] Redirect to dashboard (email auto-verified)
       // TODO: Change to "/verification-pending" for production
-      const redirectPath = authService.getRedirectPath();
-      router.push(redirectPath);
+      setTimeout(() => {
+        const redirectPath = authService.getRedirectPath();
+        router.push(redirectPath);
+      }, 800);
     } catch (err: any) {
       console.error("Registration error:", err);
 
@@ -211,9 +222,15 @@ export default function RegisterForm() {
         referralCode || undefined,
       );
 
+      // 🎉 Show success toast
+      setToastMessage("Registrasi dengan Google berhasil!");
+      setShowToast(true);
+
       // Redirect based on user role
-      const redirectPath = authService.getRedirectPath();
-      router.push(redirectPath);
+      setTimeout(() => {
+        const redirectPath = authService.getRedirectPath();
+        router.push(redirectPath);
+      }, 800);
     } catch (err: any) {
       console.error("Google login error:", err);
       const errorMessage =
@@ -410,6 +427,14 @@ export default function RegisterForm() {
         title={modalConfig.title}
         message={modalConfig.message}
         type="error"
+      />
+
+      {/* Toast Notification */}
+      <Toast
+        message={toastMessage}
+        type="success"
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
       />
     </>
   );
