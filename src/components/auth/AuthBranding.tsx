@@ -1,4 +1,4 @@
-// Auth Branding Component - Purple left side
+// Auth Branding Component - Purple left side with animated background
 "use client";
 
 import { motion } from "motion/react";
@@ -18,15 +18,11 @@ export default function AuthBranding({
 }: AuthBrandingProps) {
   const colorConfig = {
     blue: {
-      circle1: "bg-blue-500/10",
-      circle2: "bg-purple-500/10",
       gradient: "from-blue-500 to-purple-600",
       shadow: "shadow-blue-500/50",
       backText: "text-blue-200",
     },
     purple: {
-      circle1: "bg-purple-500/10",
-      circle2: "bg-blue-500/10",
       gradient: "from-purple-500 to-blue-600",
       shadow: "shadow-purple-500/50",
       backText: "text-purple-200",
@@ -51,13 +47,86 @@ export default function AuthBranding({
         <span className="font-semibold">Kembali ke Home</span>
       </Link>
 
-      {/* Decorative circles */}
-      <div
-        className={`absolute top-20 left-20 w-64 h-64 ${colors.circle1} rounded-full blur-3xl animate-pulse`}
-      />
-      <div
-        className={`absolute bottom-20 right-20 w-80 h-80 ${colors.circle2} rounded-full blur-3xl animate-pulse delay-700`}
-      />
+      {/* Animated floating orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Large gradient orbs */}
+        <motion.div
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-10 left-10 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.5,
+          }}
+          className="absolute bottom-10 right-10 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            x: [0, 60, 0],
+            y: [0, 60, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="absolute top-1/2 left-1/4 w-48 h-48 bg-indigo-500/15 rounded-full blur-2xl"
+        />
+
+        {/* Grid pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+
+        {/* Animated ring */}
+        <motion.div
+          animate={{
+            rotate: 360,
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white/5 rounded-full"
+        />
+        <motion.div
+          animate={{
+            rotate: -360,
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/[0.03] rounded-full"
+        />
+      </div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-12">

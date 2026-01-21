@@ -21,17 +21,17 @@ export default function AuthFormWrapper({
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
       onWheel={(e) => e.stopPropagation()}
-      className={`flex items-center justify-center bg-white p-[6em] relative ${
+      className={`flex items-center justify-center bg-white px-6 py-8 md:px-12 lg:px-10 xl:px-1 relative ${
         allowScroll ? "overflow-y-auto" : ""
       }`}
     >
-      <div className="w-full">
+      <div className="w-full max-w-md">
         {/* Back button mobile */}
         <Link
           href="/"
-          className="flex lg:hidden items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors group"
+          className="flex lg:hidden items-center gap-2 text-gray-500 hover:text-gray-800 mb-8 transition-colors group text-sm"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Kembali ke Home
         </Link>
 

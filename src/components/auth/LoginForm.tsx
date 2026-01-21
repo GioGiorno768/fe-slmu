@@ -35,11 +35,11 @@ export default function LoginForm() {
 
     if (suspended === "true") {
       setWarningMessage(
-        "Akun admin Anda telah di-suspend. Silakan hubungi Super Admin."
+        "Akun admin Anda telah di-suspend. Silakan hubungi Super Admin.",
       );
     } else if (expired === "true") {
       setWarningMessage(
-        "Sesi Anda telah berakhir atau akun tidak ditemukan. Silakan login kembali."
+        "Sesi Anda telah berakhir atau akun tidak ditemukan. Silakan login kembali.",
       );
     }
   }, [searchParams]);
@@ -146,22 +146,20 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="space-y-6 h-fit">
+    <div className="space-y-6">
       {/* Title */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-gray-900">Welcome Back!</h1>
-        <p className="text-lg text-gray-600">Silakan login untuk melanjutkan</p>
+      <div className="space-y-1">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+          Welcome Back!
+        </h1>
+        <p className="text-gray-500">Silakan login untuk melanjutkan</p>
       </div>
 
       {/* Warning Banner for Suspended/Expired */}
       {warningMessage && (
-        <div className="flex items-start gap-3 p-4 bg-orange-50 border border-orange-200 rounded-xl">
-          <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-medium text-orange-800">
-              {warningMessage}
-            </p>
-          </div>
+        <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-800">{warningMessage}</p>
         </div>
       )}
 
@@ -169,12 +167,12 @@ export default function LoginForm() {
       <ErrorAlert error={error} onClose={() => setError("")} />
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700">
+        <div className="space-y-1.5">
+          {/* <label className="block text-sm font-medium text-gray-700">
             Email
-          </label>
+          </label> */}
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
             <input
@@ -182,7 +180,7 @@ export default function LoginForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
               placeholder="email@anda.com"
               required
               disabled={loading}
@@ -191,10 +189,10 @@ export default function LoginForm() {
         </div>
 
         {/* Password */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700">
+        <div className="space-y-1.5">
+          {/* <label className="block text-sm font-medium text-gray-700">
             Password
-          </label>
+          </label> */}
           <div className="relative group">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
             <input
@@ -202,7 +200,7 @@ export default function LoginForm() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+              className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
               placeholder="••••••••"
               required
               disabled={loading}
@@ -225,7 +223,7 @@ export default function LoginForm() {
         <div className="flex justify-end">
           <Link
             href="/forgot-password"
-            className="text-sm text-blue-600 hover:text-blue-700 font-semibold hover:underline"
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline"
           >
             Lupa password?
           </Link>
@@ -235,7 +233,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/30"
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/25"
         >
           {loading ? "Loading..." : "Login"}
         </button>
@@ -247,25 +245,23 @@ export default function LoginForm() {
           <div className="w-full border-t border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-white text-gray-500">Atau</span>
+          <span className="px-4 bg-white text-gray-400">atau</span>
         </div>
       </div>
 
       {/* Google OAuth */}
-      <div>
-        <GoogleAuthButton
-          onSuccess={handleGoogleSuccess}
-          onError={(error) => setError(error)}
-          text="Masuk dengan Google"
-        />
-      </div>
+      <GoogleAuthButton
+        onSuccess={handleGoogleSuccess}
+        onError={(error) => setError(error)}
+        text="Masuk dengan Google"
+      />
 
       {/* Register link */}
-      <p className="text-center text-gray-600">
+      <p className="text-center text-gray-500 text-sm">
         Belum punya akun?{" "}
         <Link
           href="/register"
-          className="font-bold text-blue-600 hover:text-blue-700 hover:underline"
+          className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
         >
           Daftar sekarang
         </Link>

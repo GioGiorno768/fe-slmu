@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, User, Eye, EyeOff, Gift, UserPlus } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Gift } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import authService, { hasEverRegistered } from "@/services/authService";
 import ErrorAlert from "./ErrorAlert";
@@ -41,9 +41,8 @@ export default function RegisterForm() {
   const [referrerName, setReferrerName] = useState<string>("");
 
   // 🔄 Loading state for eligibility check
-  const [isCheckingEligibility, setIsCheckingEligibility] = useState(
-    !!referralCode
-  );
+  const [isCheckingEligibility, setIsCheckingEligibility] =
+    useState(!!referralCode);
 
   // Reset loading state when referralCode becomes empty (after redirect)
   useEffect(() => {
@@ -77,7 +76,7 @@ export default function RegisterForm() {
               visitor_id: visitorId,
               referral_code: referralCode,
             }),
-          }
+          },
         );
 
         const data = await response.json();
@@ -94,7 +93,7 @@ export default function RegisterForm() {
 
         // 2. Check if referrer has reached their max referrals limit
         const referrerInfoRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/referral/info?code=${referralCode}`
+          `${process.env.NEXT_PUBLIC_API_URL}/referral/info?code=${referralCode}`,
         );
         const referrerInfo = await referrerInfoRes.json();
 
@@ -209,7 +208,7 @@ export default function RegisterForm() {
       await authService.googleLogin(
         accessToken,
         visitorId || undefined,
-        referralCode || undefined
+        referralCode || undefined,
       );
 
       // Redirect based on user role
@@ -239,29 +238,29 @@ export default function RegisterForm() {
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Title */}
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">Buat Akun Baru</h1>
-          <p className="text-lg text-gray-600">
-            Gratis selamanya. Ayo bergabung!
-          </p>
+        <div className="space-y-1">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+            Buat Akun Baru
+          </h1>
+          <p className="text-gray-500">Gratis selamanya. Ayo bergabung!</p>
         </div>
 
         {/* Referral Banner */}
         {referralCode && (
-          <div className="bg-linear-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-4 flex items-center gap-3">
-            <div className="bg-purple-100 p-2 rounded-lg">
-              <Gift className="w-6 h-6 text-purple-600" />
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-xl p-4 flex items-center gap-3">
+            <div className="bg-purple-100 p-2 rounded-lg shrink-0">
+              <Gift className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="font-semibold text-purple-900">
+              <p className="font-semibold text-purple-900 text-sm">
                 🎉{" "}
                 {referrerName
                   ? `Diundang oleh ${referrerName}!`
                   : "Kamu diundang!"}
               </p>
-              <p className="text-sm text-purple-700">
+              <p className="text-xs text-purple-700">
                 Daftar sekarang dan nikmati bonus spesial.
               </p>
             </div>
@@ -272,13 +271,10 @@ export default function RegisterForm() {
         <ErrorAlert error={error} onClose={() => setError("")} />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5 ">
-          <div className="grid custom:grid-cols-2 grid-cols-1 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 gap-3">
             {/* Name */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Nama Lengkap
-              </label>
+            <div className="space-y-1.5">
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                 <input
@@ -286,8 +282,8 @@ export default function RegisterForm() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
-                  placeholder="Nama lengkap Anda"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
+                  placeholder="Nama lengkap"
                   required
                   disabled={loading}
                 />
@@ -295,10 +291,7 @@ export default function RegisterForm() {
             </div>
 
             {/* Email */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Email
-              </label>
+            <div className="space-y-1.5">
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                 <input
@@ -306,7 +299,7 @@ export default function RegisterForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
                   placeholder="email@anda.com"
                   required
                   disabled={loading}
@@ -315,10 +308,7 @@ export default function RegisterForm() {
             </div>
 
             {/* Password */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Password
-              </label>
+            <div className="space-y-1.5">
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                 <input
@@ -326,8 +316,8 @@ export default function RegisterForm() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
-                  placeholder="Min. 8 karakter"
+                  className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
+                  placeholder="Password (min. 8 karakter)"
                   required
                   disabled={loading}
                 />
@@ -346,10 +336,7 @@ export default function RegisterForm() {
             </div>
 
             {/* Confirm Password */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
-                Konfirmasi Password
-              </label>
+            <div className="space-y-1.5">
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-600 transition-colors" />
                 <input
@@ -357,8 +344,8 @@ export default function RegisterForm() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
-                  placeholder="Ulangi password"
+                  className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:bg-white transition-all"
+                  placeholder="Konfirmasi password"
                   required
                   disabled={loading}
                 />
@@ -381,9 +368,9 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-purple-500/30"
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-purple-500/25"
           >
-            {loading ? "Mendaftar..." : "Daftar"}
+            {loading ? "Mendaftar..." : "Daftar Sekarang"}
           </button>
         </form>
 
@@ -393,25 +380,23 @@ export default function RegisterForm() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-gray-500">Atau</span>
+            <span className="px-4 bg-white text-gray-400">atau</span>
           </div>
         </div>
 
         {/* Google OAuth */}
-        <div>
-          <GoogleAuthButton
-            onSuccess={handleGoogleSuccess}
-            onError={(error) => setError(error)}
-            text="Daftar dengan Google"
-          />
-        </div>
+        <GoogleAuthButton
+          onSuccess={handleGoogleSuccess}
+          onError={(error) => setError(error)}
+          text="Daftar dengan Google"
+        />
 
         {/* Login link */}
-        <p className="text-center text-gray-600">
+        <p className="text-center text-gray-500 text-sm">
           Sudah punya akun?{" "}
           <Link
             href="/login"
-            className="font-bold text-purple-600 hover:text-purple-700 hover:underline"
+            className="font-semibold text-purple-600 hover:text-purple-700 hover:underline"
           >
             Login di sini
           </Link>
