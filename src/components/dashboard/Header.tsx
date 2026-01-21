@@ -175,7 +175,7 @@ export default function Header({
             <span className="solar--hamburger-menu-broken w-[3em] h-[3em] dark:bg-foreground " />
           </button>
 
-          <div className="md:flex hidden cursor-default">
+          <div className="lg:flex hidden cursor-default">
             {headItems.map((item, index) => (
               <div
                 key={index}
@@ -207,7 +207,7 @@ export default function Header({
 
         <div className="flex items-center gap-1 custom:gap-[2em]">
           {/* === LANGUAGE SWITCHER DROPDOWN (DESKTOP) === */}
-          <div className="custom:block hidden relative">
+          <div className="lg:block hidden relative">
             <button
               onClick={() => setShowLangDropdown(!showLangDropdown)}
               disabled={isPending}

@@ -309,7 +309,7 @@ export default function Sidebar({
           <div
             className={`
               absolute bottom-full left-0 right-0 p-2 mx-[1em] mb-1
-              bg-card shadow-sm shadow-shd-card/50 rounded-md
+              bg-card shadow-sm shadow-shd-card/40 rounded-md
               transition-all duration-150 ease-out transform ${isDark && "outline-2 outline-[#1f2545]"}
               ${
                 isUserPopupOpen && !isCollapsed
@@ -322,18 +322,18 @@ export default function Sidebar({
             <UserPopupContent />
           </div>
 
-          {/* Popup Collapsed */}
+          {/* Popup Collapsed - Muncul di samping kanan sidebar yang collapsed */}
           <div
             className={`
-              absolute bottom-full left-0 right-0 p-2 mx-[1em] mb-1
-              bg-card shadow-sm shadow-shd-card/50 rounded-md
+              absolute bottom-[1em] left-full ml-2 p-2 w-max
+              bg-card shadow-sm shadow-shd-card/40 rounded-md
               transition-all duration-150 ease-out transform ${isDark && "outline-2 outline-[#1f2545]"}
               ${
-                isUserPopupOpen && !isCollapsed
+                isUserPopupOpen && isCollapsed
                   ? "opacity-100 scale-100 visible"
-                  : "opacity-0 scale-95 invisible"
+                  : "opacity-0 scale-95 invisible pointer-events-none"
               }
-              origin-bottom 
+              origin-left z-[100]
             `}
           >
             <UserPopupContent />
