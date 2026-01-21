@@ -202,8 +202,7 @@ export default function Sidebar({
 
       {/* Sidebar Container */}
       <aside
-        className={`
-          ${isDark ? "bg-background" : "bg-white"} text-shortblack h-screen fixed left-0 top-0 
+        className={`bg-background-side text-shortblack h-screen fixed left-0 top-0 
           transition-all duration-300 ease-in-out
           ${isCollapsed ? "w-20" : "w-64"}
           ${
