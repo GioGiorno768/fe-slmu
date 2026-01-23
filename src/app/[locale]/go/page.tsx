@@ -37,7 +37,7 @@ export default function GuestGoPage() {
     const fetchSession = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/links/session/${sessionId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/links/session/${sessionId}`
         );
         const data = await response.json();
 

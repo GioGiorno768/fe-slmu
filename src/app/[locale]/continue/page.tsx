@@ -50,7 +50,7 @@ export default function ContinuePage() {
       try {
         // 1. Fetch session data
         const sessionResponse = await fetch(
-          `http://localhost:8000/api/links/session/${sessionId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/links/session/${sessionId}`
         );
         const sessionResult = await sessionResponse.json();
 
@@ -66,7 +66,7 @@ export default function ContinuePage() {
 
         // 2. Check if all steps are completed
         const statusResponse = await fetch(
-          `http://localhost:8000/api/links/${data.code}/check-step-status`,
+          `${process.env.NEXT_PUBLIC_API_URL}/links/${data.code}/check-step-status`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
