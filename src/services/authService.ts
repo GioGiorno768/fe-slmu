@@ -70,7 +70,7 @@ export const setUser = (user: any) => {
     sessionStorage.setItem(USER_KEY, JSON.stringify(minimalUser));
     // Also set as session cookie for middleware (no max-age = session cookie)
     document.cookie = `user_data=${encodeURIComponent(
-      JSON.stringify(minimalUser)
+      JSON.stringify(minimalUser),
     )}; path=/`;
   }
 };
@@ -175,7 +175,7 @@ interface AuthResponse {
  * Manual Login
  */
 export const login = async (
-  credentials: LoginCredentials
+  credentials: LoginCredentials,
 ): Promise<AuthResponse> => {
   const response = await apiClient.post("/login", credentials);
   const { token, user } = response.data;
@@ -192,7 +192,7 @@ export const login = async (
  * Manual Register
  */
 export const register = async (
-  credentials: RegisterCredentials
+  credentials: RegisterCredentials,
 ): Promise<AuthResponse> => {
   const response = await apiClient.post("/register", credentials);
   const { token, user } = response.data;
@@ -235,7 +235,7 @@ export const resetPassword = async (data: ResetPasswordData) => {
 export const googleLogin = async (
   credential: string,
   visitorId?: string,
-  referralCode?: string
+  referralCode?: string,
 ): Promise<AuthResponse> => {
   const response = await apiClient.post("/auth/google/callback", {
     access_token: credential, // Backend expect 'access_token' key

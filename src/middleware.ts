@@ -181,6 +181,7 @@ export default async function middleware(request: NextRequest) {
       "referral",
       "backdoor", // Admin backdoor login
       "maintenance", // Maintenance page
+      "test-error", // 👈 Temporary for testing error page
       // Member routes
       "analytics",
       "levels",

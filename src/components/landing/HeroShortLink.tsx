@@ -43,11 +43,10 @@ export default function HeroShortLink() {
     try {
       const data = await linkService.createGuestLink(
         urlInput,
-        aliasInput || undefined
+        aliasInput || undefined,
       );
-      const host = window.location.host;
-      const fullShortUrl = `${host}/${data.code}`;
-      setShortLink(fullShortUrl);
+      // Use the full short URL returned by backend (e.g. sho.rt/code or localhost:8000/code)
+      setShortLink(data.shortUrl);
       setUrlInput("");
       setAliasInput("");
     } catch (err: any) {
@@ -105,7 +104,7 @@ export default function HeroShortLink() {
       showAlert(
         "Browser Anda tidak mendukung fitur share. Link telah disalin.",
         "info",
-        "Info"
+        "Info",
       );
     }
   };
@@ -187,7 +186,7 @@ export default function HeroShortLink() {
                   Your Shortlink
                 </span>
                 <a
-                  href={`//${shortLink}`}
+                  href={shortLink}
                   target="_blank"
                   rel="noopener"
                   className="text-slate-900 font-semibold hover:text-bluelight truncate transition-colors"

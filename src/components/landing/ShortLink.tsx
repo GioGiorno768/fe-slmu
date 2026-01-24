@@ -40,9 +40,7 @@ export default function ShortLink() {
 
     try {
       const data = await linkService.createGuestLink(urlInput);
-      const host = window.location.host;
-      const fullShortUrl = `${host}/${data.code}`;
-      setShortLink(fullShortUrl);
+      setShortLink(data.shortUrl);
       setUrlInput("");
     } catch (err: any) {
       // Extract error message from various possible structures
@@ -105,7 +103,7 @@ export default function ShortLink() {
       showAlert(
         "Browser Anda tidak mendukung fitur share. Link telah disalin.",
         "info",
-        "Info"
+        "Info",
       );
     }
   };
@@ -153,7 +151,7 @@ export default function ShortLink() {
               <div className="gap-[.5em] flex flex-col">
                 <span className="text-[1.4em]">Your Link</span>
                 <a
-                  href={`http://${shortLink}`}
+                  href={shortLink}
                   target="_blank"
                   rel="noopener"
                   className="text-shortblack text-[1.6em] font-semibold hover:underline truncate"
