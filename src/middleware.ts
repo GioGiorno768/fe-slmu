@@ -4,6 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
 
+// Valid locales for locale extraction
+const VALID_LOCALES = ["en", "id"] as const;
+type Locale = (typeof VALID_LOCALES)[number];
+
+// Helper to safely extract locale from path segments
+function getLocaleFromSegments(segments: string[]): Locale {
+  const firstSegment = segments[0];
+  if (firstSegment && VALID_LOCALES.includes(firstSegment as Locale)) {
+    return firstSegment as Locale;
+  }
+  return "id"; // Default locale
+}
+
 // Cache maintenance status to avoid repeated API calls
 let maintenanceCache: {
   status: boolean;
@@ -116,7 +129,7 @@ export default async function middleware(request: NextRequest) {
   ];
 
   const isMaintenanceBypass = maintenanceBypassPaths.some(
-    (path) => pathname === path || pathname.startsWith(path + "/")
+    (path) => pathname === path || pathname.startsWith(path + "/"),
   );
 
   // Check if user is logged in as admin/super_admin (from cookie)
@@ -134,15 +147,14 @@ export default async function middleware(request: NextRequest) {
 
   // Only check maintenance for non-admin users and non-bypass paths
   if (!isMaintenanceBypass && !isAdminUser) {
-    const { isMaintenanceMode, isWhitelisted } = await checkMaintenanceStatus(
-      request
-    );
+    const { isMaintenanceMode, isWhitelisted } =
+      await checkMaintenanceStatus(request);
 
     if (isMaintenanceMode && !isWhitelisted) {
       // Redirect to maintenance page
       const url = request.nextUrl.clone();
       const locale = pathname.split("/").filter(Boolean)[0];
-      const validLocale = locale === "en" || locale === "id" ? locale : "en";
+      const validLocale = getLocaleFromSegments([locale]);
       url.pathname = `/${validLocale}/maintenance`;
       return NextResponse.redirect(url);
     }
@@ -246,10 +258,7 @@ export default async function middleware(request: NextRequest) {
   if (isAuthPage && token) {
     const url = request.nextUrl.clone();
 
-    // Properly extract locale - check if first segment is a valid locale
-    const validLocales = ["en", "id"];
-    const firstSegment = segments[0] || "en";
-    const locale = validLocales.includes(firstSegment) ? firstSegment : "en";
+    const locale = getLocaleFromSegments(segments);
 
     // If accessing register with referral code, redirect to referral page
     const hasRefParam = request.nextUrl.searchParams.has("ref");
@@ -290,7 +299,7 @@ export default async function middleware(request: NextRequest) {
     // This is user dashboard (/dashboard) or member page
     if (!token) {
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       url.pathname = `/${locale}/login`;
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
@@ -298,7 +307,7 @@ export default async function middleware(request: NextRequest) {
     // Block admin from accessing user dashboard (only super_admin can access)s
     if (userRole === "admin") {
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       url.pathname = `/${locale}/admin/dashboard`;
       return NextResponse.redirect(url);
     }
@@ -308,7 +317,7 @@ export default async function middleware(request: NextRequest) {
   if (isAdminPath && !isSuperAdminPath) {
     if (!token) {
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       url.pathname = `/${locale}/login`;
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
@@ -316,7 +325,7 @@ export default async function middleware(request: NextRequest) {
     if (userRole !== "admin" && userRole !== "super_admin") {
       // Not authorized - redirect to user dashboard
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       url.pathname = `/${locale}/dashboard`;
       return NextResponse.redirect(url);
     }
@@ -326,7 +335,7 @@ export default async function middleware(request: NextRequest) {
   if (isSuperAdminPath) {
     if (!token) {
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       url.pathname = `/${locale}/login`;
       url.searchParams.set("redirect", pathname);
       return NextResponse.redirect(url);
@@ -334,7 +343,7 @@ export default async function middleware(request: NextRequest) {
     if (userRole !== "super_admin") {
       // Not super admin - redirect based on role
       const url = request.nextUrl.clone();
-      const locale = segments[0] || "en";
+      const locale = getLocaleFromSegments(segments);
       if (userRole === "admin") {
         url.pathname = `/${locale}/admin/dashboard`;
       } else {
