@@ -63,7 +63,7 @@ interface GetLinksParams {
 }
 
 export const getLinks = async (
-  params: GetLinksParams
+  params: GetLinksParams,
 ): Promise<{ data: Shortlink[]; totalPages: number }> => {
   try {
     const { filters } = params;
@@ -151,7 +151,7 @@ export const getLinks = async (
 };
 
 export const createLink = async (
-  data: CreateLinkFormData
+  data: CreateLinkFormData,
 ): Promise<Shortlink> => {
   try {
     const payload = {
@@ -188,7 +188,7 @@ export const createLink = async (
 
 export const updateLink = async (
   id: string,
-  data: EditableLinkData
+  data: EditableLinkData,
 ): Promise<Shortlink> => {
   try {
     const payload = {
@@ -223,7 +223,7 @@ export const updateLink = async (
 
 export const toggleLinkStatus = async (
   id: string,
-  status: "active" | "disabled"
+  status: "active" | "disabled",
 ): Promise<Shortlink> => {
   try {
     const response = await apiClient.patch(`/links/${id}/toggle-status`);
@@ -242,7 +242,7 @@ export const toggleLinkStatus = async (
 
 export const createGuestLink = async (
   originalUrl: string,
-  alias?: string
+  alias?: string,
 ): Promise<GeneratedLinkData> => {
   try {
     const response = await apiClient.post("/links", {
@@ -266,7 +266,7 @@ export const createGuestLink = async (
   } catch (error: any) {
     // Handle specific backend errors - use message from backend
     if (error.response && error.response.status === 429) {
-      // Rate limit hit - use backend message which has dynamic limit info
+      // Rate limit hit
       const message =
         error.response?.data?.message ||
         "Guest limit reached. Please register to create more.";
@@ -279,6 +279,15 @@ export const createGuestLink = async (
         "Guest link creation is disabled. Please register.";
       throw new Error(message);
     }
+    if (error.response && error.response.status === 422) {
+      // Validation error (Alias taken, invalid URL, etc)
+      const errorData = error.response.data;
+      const message = errorData.message || "Validation failed";
+      // Attach errors object if available
+      const validationError: any = new Error(message);
+      validationError.errors = errorData.errors;
+      throw validationError;
+    }
     throw error;
   }
 };
@@ -287,7 +296,7 @@ export const validateContinueToken = async (
   code: string,
   token: string,
   password?: string,
-  visitorId?: string // 🛡️ Anti-Fraud Device Fingerprint
+  visitorId?: string, // 🛡️ Anti-Fraud Device Fingerprint
 ): Promise<string> => {
   try {
     const payload: any = { token };
@@ -323,7 +332,7 @@ export interface MassCreateParams {
 }
 
 export const massCreateLinks = async (
-  params: MassCreateParams
+  params: MassCreateParams,
 ): Promise<MassCreateResult[]> => {
   try {
     // Backend expects: urls (string, newline separated), ad_level (int)
@@ -344,7 +353,7 @@ export const massCreateLinks = async (
     }));
   } catch (error: any) {
     throw new Error(
-      error.response?.data?.message || "Failed to create mass links"
+      error.response?.data?.message || "Failed to create mass links",
     );
   }
 };

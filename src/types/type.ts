@@ -344,7 +344,7 @@ export interface PrivacySettings {
 
 export interface UserPreferences {
   language: "en" | "id";
-  currency: "USD" | "IDR" | "MYR" | "SGD" | "EUR" | "GBP";
+  currency: string; // Dynamic from backend (USD, IDR, etc.)
   timezone: string;
   // 👇 GANTI KEY JADI 'privacy'
   privacy: PrivacySettings;

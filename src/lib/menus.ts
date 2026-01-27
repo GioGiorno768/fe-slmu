@@ -36,7 +36,7 @@ export const getMemberMenu = (t: any): NavItem[] => [
     ],
   },
   { icon: ChartSpline, label: t("analytics"), href: "/analytics" },
-  { icon: Crown, label: "Levels", href: "/levels" },
+  { icon: Crown, label: "Rank", href: "/levels" },
   { icon: UserPlus2, label: t("referral"), href: "/referral" },
   { icon: BanknoteArrowDown, label: t("withdrawal"), href: "/withdrawal" },
   // { icon: History, label: t("history"), href: "/history" },

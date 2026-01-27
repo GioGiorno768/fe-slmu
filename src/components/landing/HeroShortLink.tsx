@@ -12,10 +12,13 @@ import {
   ArrowRight,
   X,
   UserPlus,
+  TriangleAlert,
 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import * as linkService from "@/services/linkService";
 import { Link } from "@/i18n/routing";
+import Toast from "@/components/common/Toast";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function HeroShortLink() {
   const { showAlert } = useAlert();
@@ -26,11 +29,53 @@ export default function HeroShortLink() {
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [toast, setToast] = useState<{
+    show: boolean;
+    message: string;
+    type: "success" | "error" | "info" | "warning";
+  }>({
+    show: false,
+    message: "",
+    type: "success",
+  });
+  const [validationErrors, setValidationErrors] = useState<{
+    alias?: string;
+  }>({});
+
+  const validateAlias = (value: string) => {
+    // Allows alphanumeric, hyphens, and underscores. No emojis or spaces.
+    const regex = /^[a-zA-Z0-9-_]+$/;
+    if (value && !regex.test(value)) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        alias: "Alias hanya boleh berisi huruf, angka, strip, dan underscore.",
+      }));
+    } else if (value && value.length > 20) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        alias: "Alias maksimal 20 karakter.",
+      }));
+    } else {
+      setValidationErrors((prev) => ({ ...prev, alias: undefined }));
+    }
+  };
+
+  const showToast = (
+    message: string,
+    type: "success" | "error" | "info" | "warning",
+  ) => {
+    setToast({ show: true, message, type });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!urlInput) {
-      setError("Link tidak boleh kosong!");
+      showToast("Link tidak boleh kosong!", "error");
+      return;
+    }
+
+    if (validationErrors.alias) {
+      showToast(validationErrors.alias, "error");
       return;
     }
 
@@ -65,12 +110,26 @@ export default function HeroShortLink() {
 
       // Show modal for rate limit or disabled errors
       const lowerError = errorMessage.toLowerCase();
-      if (
-        lowerError.includes("limit") ||
-        lowerError.includes("disabled") ||
-        lowerError.includes("register")
-      ) {
-        setShowErrorModal(true);
+      setError(errorMessage);
+
+      // Show specific alias error if available
+      if (err.errors?.alias) {
+        showToast(err.errors.alias[0], "error");
+      } else {
+        // Only show generic error toast if it's NOT a modal-triggering error
+        const lowerError = errorMessage.toLowerCase();
+        const isModalError =
+          lowerError.includes("limit") ||
+          lowerError.includes("disabled") ||
+          lowerError.includes("register");
+
+        if (!isModalError) {
+          showToast(errorMessage, "error");
+        }
+
+        if (isModalError) {
+          setShowErrorModal(true);
+        }
       }
     } finally {
       setIsLoading(false);
@@ -82,7 +141,9 @@ export default function HeroShortLink() {
     const protocol = window.location.protocol;
     navigator.clipboard.writeText(`${protocol}//${shortLink}`);
     setIsCopied(true);
-    showAlert("Link telah disalin ke clipboard!", "success", "Copied!");
+    navigator.clipboard.writeText(`${protocol}//${shortLink}`);
+    setIsCopied(true);
+    showToast("Link telah disalin ke clipboard!", "success");
     setTimeout(() => setIsCopied(false), 2000);
   };
 
@@ -112,7 +173,7 @@ export default function HeroShortLink() {
   return (
     <div className="w-full">
       {/* Input Form */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-100">
+      <div className="relative z-10 bg-white/80 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-100">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col md:flex-row gap-3"
@@ -140,11 +201,39 @@ export default function HeroShortLink() {
             <input
               type="text"
               value={aliasInput}
-              onChange={(e) => setAliasInput(e.target.value)}
-              className="block w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-bluelight text-[1rem] placeholder-slate-400 text-slate-900 transition-all shadow-sm hover:border-slate-300"
+              onChange={(e) => {
+                setAliasInput(e.target.value);
+                validateAlias(e.target.value);
+              }}
+              className={`block w-full pl-12 pr-4 py-4 bg-white border rounded-xl focus:ring-4 focus:ring-blue-100 text-[1rem] placeholder-slate-400 text-slate-900 transition-all shadow-sm ${
+                validationErrors.alias
+                  ? "border-red-300 focus:border-red-500 hover:border-red-400"
+                  : "border-slate-200 focus:border-bluelight hover:border-slate-300"
+              }`}
               placeholder="Alias (Opsional)"
               disabled={isLoading}
             />
+            {/* Validation Message Tooltip */}
+            <AnimatePresence>
+              {validationErrors.alias && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full mt-3 left-0 z-20 flex items-center gap-2 px-4 py-2.5 bg-white border border-red-100 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+                >
+                  <div className="w-5 h-5 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                    <TriangleAlert className="w-3 h-3 text-red-500" />
+                  </div>
+                  <span className="text-xs font-semibold text-red-600 whitespace-nowrap">
+                    {validationErrors.alias}
+                  </span>
+                  {/* Tooltip Arrow */}
+                  <div className="absolute -top-1.5 left-6 w-3 h-3 bg-white border-t border-l border-red-100 transform rotate-45" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Submit Button */}
@@ -302,6 +391,12 @@ export default function HeroShortLink() {
           }
         }
       `}</style>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.show}
+        onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 }

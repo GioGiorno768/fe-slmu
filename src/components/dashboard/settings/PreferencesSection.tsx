@@ -24,10 +24,12 @@ import { useTheme } from "next-themes";
 import type { UserPreferences, PrivacySettings } from "@/types/type";
 import { usePreferencesLogic } from "@/hooks/useSettings";
 import { useCurrency } from "@/contexts/CurrencyContext";
-import type { CurrencyCode } from "@/utils/currency";
+import currencyRatesService, {
+  CurrencyItem,
+} from "@/services/currencyRatesService";
 
-// --- DATA STATIS ---
-const CURRENCY_OPTIONS = [
+// Default currency options (fallback if API fails)
+const DEFAULT_CURRENCY_OPTIONS = [
   { code: "USD", label: "US Dollar", countryCode: "us" },
   { code: "IDR", label: "Indonesian Rupiah", countryCode: "id" },
   { code: "MYR", label: "Malaysian Ringgit", countryCode: "my" },
@@ -76,6 +78,37 @@ export default function PreferencesSection({
   const [isCurrencyOpen, setIsCurrencyOpen] = useState(false);
   const currencyRef = useRef<HTMLDivElement>(null);
 
+  // Dynamic currency options from backend
+  const [currencyOptions, setCurrencyOptions] = useState(
+    DEFAULT_CURRENCY_OPTIONS,
+  );
+  const [isLoadingCurrencies, setIsLoadingCurrencies] = useState(true);
+
+  // Fetch currency options from backend
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const data = await currencyRatesService.getRates();
+        if (data.currencies && data.currencies.length > 0) {
+          const options = data.currencies.map((c: CurrencyItem) => ({
+            code: c.code,
+            label: c.name,
+            countryCode: c.flag,
+          }));
+          setCurrencyOptions(options);
+        }
+      } catch (error) {
+        console.warn(
+          "Failed to fetch currency options, using defaults:",
+          error,
+        );
+      } finally {
+        setIsLoadingCurrencies(false);
+      }
+    };
+    fetchCurrencies();
+  }, []);
+
   // State Form (Default Value dari props or global context)
   const [preferences, setPreferences] = useState<UserPreferences>({
     language: (currentLocale as "en" | "id") || "en",
@@ -122,7 +155,7 @@ export default function PreferencesSection({
     });
     showAlert(
       `Bahasa diganti ke ${lang === "id" ? "Indonesia" : "English"}`,
-      "success"
+      "success",
     );
   };
 
@@ -140,8 +173,9 @@ export default function PreferencesSection({
   };
 
   const activeCurrency =
-    CURRENCY_OPTIONS.find((c) => c.code === preferences.currency) ||
-    CURRENCY_OPTIONS[0];
+    currencyOptions.find((c) => c.code === preferences.currency) ||
+    currencyOptions[0] ||
+    DEFAULT_CURRENCY_OPTIONS[0];
 
   return (
     <div className="space-y-8 font-figtree">
@@ -153,7 +187,7 @@ export default function PreferencesSection({
           "rounded-3xl p-8 shadow-sm",
           isDark
             ? "bg-card border border-gray-800"
-            : "bg-white border border-gray-100"
+            : "bg-white border border-gray-100",
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
@@ -180,14 +214,14 @@ export default function PreferencesSection({
                         ? "border-bluelight bg-blue-500/10 text-bluelight"
                         : "border-bluelight bg-blue-50 text-bluelight"
                       : isDark
-                      ? "border-gray-700 text-grays hover:border-blue-200 hover:bg-subcard"
-                      : "border-gray-200 text-grays hover:border-blue-200 hover:bg-slate-50"
+                        ? "border-gray-700 text-grays hover:border-blue-200 hover:bg-subcard"
+                        : "border-gray-200 text-grays hover:border-blue-200 hover:bg-slate-50",
                   )}
                 >
                   <div
                     className={clsx(
                       "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
-                      isDark ? "border-gray-700" : "border-gray-100"
+                      isDark ? "border-gray-700" : "border-gray-100",
                     )}
                   >
                     <Image
@@ -220,13 +254,13 @@ export default function PreferencesSection({
                   "w-full pl-4 pr-10 py-3 rounded-xl text-shortblack flex items-center gap-3 hover:border-bluelight transition-all focus:ring-2 focus:ring-bluelight/50",
                   isDark
                     ? "bg-card border border-gray-700"
-                    : "bg-white border border-gray-200"
+                    : "bg-white border border-gray-200",
                 )}
               >
                 <div
                   className={clsx(
                     "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
-                    isDark ? "border-gray-700" : "border-gray-100"
+                    isDark ? "border-gray-700" : "border-gray-100",
                   )}
                 >
                   <Image
@@ -256,24 +290,23 @@ export default function PreferencesSection({
                       "absolute top-full left-0 right-0 mt-2 rounded-xl shadow-xl z-20 overflow-hidden p-1.5",
                       isDark
                         ? "bg-card border border-gray-800"
-                        : "bg-white border border-gray-100"
+                        : "bg-white border border-gray-100",
                     )}
                   >
-                    {CURRENCY_OPTIONS.map((curr) => (
+                    {currencyOptions.map((curr) => (
                       <button
                         key={curr.code}
                         onClick={() => {
-                          const newCurrency = curr.code as CurrencyCode;
                           setPreferences({
                             ...preferences,
-                            currency: newCurrency,
+                            currency: curr.code,
                           });
                           // Update global currency context immediately
-                          setGlobalCurrency(newCurrency);
+                          setGlobalCurrency(curr.code);
                           setIsCurrencyOpen(false);
                           showAlert(
                             `Mata uang diganti ke ${curr.label}`,
-                            "success"
+                            "success",
                           );
                         }}
                         className={clsx(
@@ -283,14 +316,14 @@ export default function PreferencesSection({
                               ? "bg-blue-500/10 text-bluelight"
                               : "bg-blue-50 text-bluelight"
                             : isDark
-                            ? "text-shortblack hover:bg-subcard"
-                            : "text-shortblack hover:bg-gray-50"
+                              ? "text-shortblack hover:bg-subcard"
+                              : "text-shortblack hover:bg-gray-50",
                         )}
                       >
                         <div
                           className={clsx(
                             "relative w-8 h-6 shadow-sm rounded-md overflow-hidden shrink-0 border",
-                            isDark ? "border-gray-700" : "border-gray-100"
+                            isDark ? "border-gray-700" : "border-gray-100",
                           )}
                         >
                           <Image

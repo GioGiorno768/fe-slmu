@@ -23,6 +23,7 @@ import {
 import clsx from "clsx";
 import { useAlert } from "@/hooks/useAlert";
 import ConfirmationModal from "@/components/dashboard/ConfirmationModal";
+import CurrencyRatesSettings from "./CurrencyRatesSettings";
 
 // Reusable Toggle Switch Component
 const ToggleSwitch = ({
@@ -43,13 +44,13 @@ const ToggleSwitch = ({
     className={clsx(
       "relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-bluelight focus-visible:ring-offset-2",
       enabled ? activeColor : "bg-gray-300",
-      disabled && "opacity-50 cursor-not-allowed"
+      disabled && "opacity-50 cursor-not-allowed",
     )}
   >
     <span
       className={clsx(
         "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out",
-        enabled ? "translate-x-6" : "translate-x-1"
+        enabled ? "translate-x-6" : "translate-x-1",
       )}
     />
   </button>
@@ -139,7 +140,7 @@ export default function GeneralSettingsSection() {
 
   const handleInputChange = (
     key: keyof GeneralSettings,
-    value: string | number
+    value: string | number,
   ) => {
     setSettings((prev) => ({
       ...prev,
@@ -165,7 +166,7 @@ export default function GeneralSettingsSection() {
       if (result.users_logged_out) {
         showAlert(
           `Settings saved! ${result.users_logged_out} users logged out due to maintenance mode.`,
-          "success"
+          "success",
         );
       } else {
         showAlert("Settings saved successfully!", "success");
@@ -184,7 +185,7 @@ export default function GeneralSettingsSection() {
       const result = await generalSettingsService.forceLogout();
       showAlert(
         `${result.users_logged_out} users have been logged out!`,
-        "success"
+        "success",
       );
       setShowForceLogoutModal(false);
     } catch (error) {
@@ -203,7 +204,7 @@ export default function GeneralSettingsSection() {
         result.expired_links + result.blocked_links + result.old_notifications;
       showAlert(
         `Cleanup completed! ${total} items deleted (${result.expired_links} expired links, ${result.blocked_links} blocked links, ${result.old_notifications} old notifications).`,
-        "success"
+        "success",
       );
       setShowCleanupModal(false);
     } catch (error) {
@@ -240,6 +241,9 @@ export default function GeneralSettingsSection() {
           Save Changes
         </button>
       </div>
+
+      {/* === CURRENCY EXCHANGE RATES === */}
+      <CurrencyRatesSettings />
 
       {/* === MAINTENANCE MODE === */}
       <motion.div
@@ -284,7 +288,7 @@ export default function GeneralSettingsSection() {
                 onChange={(e) =>
                   handleInputChange(
                     "maintenance_estimated_time",
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 className="w-full px-4 py-3 shadow-sm shadow-shd-card/50 rounded-xl text-[1.3em] bg-card text-shortblack focus:ring-2 focus:ring-bluelight focus:border-transparent"
@@ -505,7 +509,7 @@ export default function GeneralSettingsSection() {
                   onChange={(e) =>
                     handleInputChange(
                       "cleanup_expired_links_days",
-                      parseInt(e.target.value) || 0
+                      parseInt(e.target.value) || 0,
                     )
                   }
                   min={0}
@@ -541,7 +545,7 @@ export default function GeneralSettingsSection() {
                   onChange={(e) =>
                     handleInputChange(
                       "cleanup_blocked_links_days",
-                      parseInt(e.target.value) || 0
+                      parseInt(e.target.value) || 0,
                     )
                   }
                   min={0}
@@ -577,7 +581,7 @@ export default function GeneralSettingsSection() {
                   onChange={(e) =>
                     handleInputChange(
                       "cleanup_old_notifications_days",
-                      parseInt(e.target.value) || 0
+                      parseInt(e.target.value) || 0,
                     )
                   }
                   min={0}

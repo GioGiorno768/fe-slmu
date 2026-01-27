@@ -83,7 +83,7 @@ export default function AnalyticsPage() {
         <SharedStatsGrid
           cards={statsCards}
           isLoading={statsLoading}
-          columns={4}
+          columns={3}
         />
 
         {/* 2. Main Chart - Has its own chartRange filter */}

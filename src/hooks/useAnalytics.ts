@@ -42,7 +42,7 @@ export function useAnalytics() {
   // Helper: Format number
   const formatNumber = useCallback(
     (val: number) => val.toLocaleString("en-US"),
-    []
+    [],
   );
 
   // Helper: Get sub label based on range
@@ -61,7 +61,7 @@ export function useAnalytics() {
           return t("perMonth");
       }
     },
-    [t]
+    [t],
   );
 
   // 1. Query: Summary Stats (for SharedStatsGrid) - Uses statsRange
@@ -100,14 +100,6 @@ export function useAnalytics() {
         color: "blue",
       },
       {
-        id: "referrals",
-        title: t("referral"),
-        value: formatNumber(statsData.referrals.referral_count),
-        subLabel: subLabel,
-        icon: UserPlus2,
-        color: "purple",
-      },
-      {
         id: "cpm",
         title: t("avgCPM"),
         value: formatCurrency(statsData.cpm.average_cpm),
@@ -130,7 +122,7 @@ export function useAnalytics() {
       return analyticsService.getAnalyticsData(
         chartRange,
         chartMetric,
-        groupBy
+        groupBy,
       );
     },
     staleTime: 2 * 60 * 1000,

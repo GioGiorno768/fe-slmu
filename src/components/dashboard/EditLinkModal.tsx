@@ -109,6 +109,14 @@ export default function EditLinkModal({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Alias validation: only alphanumeric, no spaces/symbols, max 20 chars
+  const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+      .replace(/[^a-zA-Z0-9]/g, "") // Remove non-alphanumeric
+      .slice(0, 20); // Max 20 characters
+    setFormData({ ...formData, alias: value });
+  };
+
   const handleAdLevelChange = (level: AdLevel, isLocked: boolean) => {
     if (isLocked) return;
     setFormData({ ...formData, adsLevel: level });
@@ -124,7 +132,7 @@ export default function EditLinkModal({
   const getMinDateTimeLocal = () => {
     const localDate = new Date();
     localDate.setMinutes(
-      localDate.getMinutes() - localDate.getTimezoneOffset()
+      localDate.getMinutes() - localDate.getTimezoneOffset(),
     );
     return localDate.toISOString().slice(0, 16);
   };
@@ -184,7 +192,9 @@ export default function EditLinkModal({
                       type="text"
                       name="alias"
                       value={formData.alias}
-                      onChange={handleChange}
+                      onChange={handleAliasChange}
+                      autoComplete="off"
+                      maxLength={20}
                       className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack placeholder:text-grays"
                       placeholder="e.g., my-awesome-link"
                     />
@@ -283,8 +293,8 @@ export default function EditLinkModal({
                                 level.isLocked
                                   ? "text-gray-400 cursor-not-allowed"
                                   : formData.adsLevel === level.key
-                                  ? "bg-subcard text-bluelight font-semibold"
-                                  : "text-shortblack hover:bg-subcard"
+                                    ? "bg-subcard text-bluelight font-semibold"
+                                    : "text-shortblack hover:bg-subcard"
                               }`}
                             >
                               <div className="flex items-center">
