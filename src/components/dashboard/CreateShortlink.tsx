@@ -21,6 +21,7 @@ import {
   Send,
   Megaphone,
   Sparkles,
+  Bolt,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type {
@@ -242,12 +243,12 @@ export default function CreateShortlink({
             onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
             className="flex items-center gap-2 text-[1.3em] font-semibold text-bluelight bg-subcard px-4 py-2 rounded-xl hover:bg-blues transition-all border border-gray-dashboard/30"
           >
-            {isAdvancedOpen ? (
+            {/* {isAdvancedOpen ? (
               <Minus className="w-4 h-4" />
             ) : (
-              <Plus className="w-4 h-4" />
-            )}
-            <span>{isAdvancedOpen ? t("basicLink") : t("advancedLink")}</span>
+            )} */}
+            <Bolt className="w-4 h-4" />
+            <span className="hidden sm:inline-block">{isAdvancedOpen ? t("basicLink") : t("advancedLink")}</span>
           </button>
         </div>
 

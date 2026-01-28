@@ -43,7 +43,7 @@ export default function LinkList({
     <div className="rounded-xl mt-6 text-[10px]">
       <LinkFilters filters={filters} setFilters={setFilters} />
 
-      <div className="space-y-4 min-h-[200px]">
+      <div className="space-y-3 sm:space-y-4 min-h-[200px]">
         {showLoading ? (
           <Spinner />
         ) : links.length === 0 ? (

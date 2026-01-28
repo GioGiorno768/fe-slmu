@@ -9,10 +9,14 @@ import TopCountriesCard from "@/components/dashboard/TopCountriesCard";
 import ReferralCard from "@/components/dashboard/ReferralCard";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useUser } from "@/hooks/useUser";
+import { useFeatureLocks } from "@/hooks/useFeatureLocks";
 
 export default function DashboardPage() {
   // Get current user data for personalized greeting
   const { user } = useUser("user");
+
+  // Get feature lock status for rank-based features
+  const { canViewTopCountries, levelForTopCountries } = useFeatureLocks();
 
   // Panggil hook dengan username untuk personalisasi slider
   const {
@@ -60,13 +64,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Bottom Section: Countries & Referral */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <TopCountriesCard data={topCountries} />
-        </div>
-        <div>
-          <ReferralCard data={referralData} />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <TopCountriesCard
+          data={topCountries}
+          isLocked={!canViewTopCountries}
+          requiredLevel={levelForTopCountries}
+        />
+        <ReferralCard data={referralData} />
       </div>
     </div>
   );

@@ -119,7 +119,7 @@ export const getMilestone = async (): Promise<MilestoneData> => {
 
     // Find current level styling from levels array
     const currentLevelData = data.levels.find(
-      (l) => l.id.toLowerCase() === data.card.current_level.toLowerCase()
+      (l) => l.id.toLowerCase() === data.card.current_level.toLowerCase(),
     );
 
     return {
@@ -203,7 +203,7 @@ export const getTrafficStats = async (): Promise<TopTrafficStats> => {
     // Priority: earnings > valid_clicks (earnings is more reliable indicator)
     // Edge case: if all months have 0 data, use current month (last in array)
     const hasAnyActivity = data.items.some(
-      (item) => item.earnings > 0 || item.valid_clicks > 0
+      (item) => item.earnings > 0 || item.valid_clicks > 0,
     );
 
     let topMonth;
@@ -233,7 +233,7 @@ export const getTrafficStats = async (): Promise<TopTrafficStats> => {
     // Calculate total views this year
     const totalViewsYear = data.items.reduce(
       (sum, item) => sum + item.valid_clicks,
-      0
+      0,
     );
 
     // Extract month name only (remove year from "December 2025" -> "December")
@@ -318,7 +318,7 @@ export const getTopLinks = async (): Promise<TopPerformingLink[]> => {
 // --- ANALYTICS: Connect to /api/dashboard/analytics (Weekly Only) ---
 export const getAnalytics = async (
   range: TimeRange,
-  stat: StatType
+  stat: StatType,
 ): Promise<AnalyticsData> => {
   try {
     // Map stat type to backend metric
@@ -425,7 +425,7 @@ async function fetchAdminDashboard(): Promise<AdminDashboardApiResponse> {
   }
 
   const data = await apiCall<AdminDashboardApiResponse>(
-    "/admin/dashboard/overview"
+    "/admin/dashboard/overview",
   );
 
   // Update cache

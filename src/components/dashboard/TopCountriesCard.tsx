@@ -1,9 +1,11 @@
 // src/components/dashboard/TopCountriesCard.tsx
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import Image from "next/image";
-import { Loader2, Globe, ArrowRight } from "lucide-react";
+import { Loader2, Globe, ArrowRight, Lock } from "lucide-react";
 import type { CountryStat } from "@/types/type";
 import { motion } from "motion/react";
 import { Link } from "@/i18n/routing";
@@ -11,10 +13,24 @@ import clsx from "clsx";
 
 interface TopCountriesCardProps {
   data: CountryStat[] | null;
+  isLocked?: boolean;
+  requiredLevel?: string | null;
 }
 
-export default function TopCountriesCard({ data }: TopCountriesCardProps) {
+export default function TopCountriesCard({
+  data,
+  isLocked = false,
+  requiredLevel,
+}: TopCountriesCardProps) {
   const t = useTranslations("Dashboard");
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && theme === "dark";
 
   const formatViews = (views: number) => {
     if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
@@ -35,6 +51,99 @@ export default function TopCountriesCard({ data }: TopCountriesCardProps) {
         return "bg-blues text-bluelight";
     }
   };
+
+  // Locked state UI
+  if (isLocked) {
+    return (
+      <div className="bg-card sm:p-0 p-4 rounded-3xl shadow-sm shadow-slate-500/50 h-full flex flex-col relative overflow-hidden">
+        {/* Locked overlay */}
+        <div
+          className={clsx(
+            "absolute inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-sm",
+            isDark
+              ? "bg-gradient-to-b from-card/98 via-subcard/95 to-background/90"
+              : "bg-gradient-to-b from-gray-100/90 via-gray-50/80 to-white/95",
+          )}
+        >
+          <div
+            className={clsx(
+              "w-16 h-16 rounded-2xl flex items-center justify-center mb-4 border",
+              isDark
+                ? "bg-purple-500/20 border-purple-500/30"
+                : "bg-gray-100 border-gray-200",
+            )}
+          >
+            <Lock
+              className={clsx(
+                "w-8 h-8",
+                isDark ? "text-purple-400" : "text-gray-500",
+              )}
+            />
+          </div>
+          <h3
+            className={clsx(
+              "text-[1.8em] font-bold mb-2",
+              isDark ? "text-white" : "text-gray-600",
+            )}
+          >
+            Top Countries
+          </h3>
+          <p
+            className={clsx(
+              "text-[1.3em] mb-4 text-center px-4",
+              isDark ? "text-gray-300" : "text-gray-500",
+            )}
+          >
+            {requiredLevel ? (
+              <>
+                🔓 Unlock di Level{" "}
+                <span
+                  className={clsx(
+                    "font-bold",
+                    isDark ? "text-purple-400" : "text-purple-600",
+                  )}
+                >
+                  {requiredLevel}
+                </span>
+              </>
+            ) : (
+              "Upgrade level kamu untuk unlock fitur ini"
+            )}
+          </p>
+        </div>
+
+        {/* Blurred background content */}
+        <div
+          className={clsx(
+            "pointer-events-none",
+            isDark ? "opacity-20" : "opacity-30 grayscale",
+          )}
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+              <Globe className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-[1.6em] font-bold text-shortblack">
+                Top Countries
+              </h3>
+            </div>
+          </div>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className={clsx(
+                  "h-12 rounded-xl",
+                  isDark ? "bg-subcard" : "bg-gray-100",
+                )}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-card p-6 rounded-3xl shadow-sm shadow-slate-500/50 hover:shadow-lg transition-shadow duration-200 h-full flex flex-col">
@@ -91,7 +200,7 @@ export default function TopCountriesCard({ data }: TopCountriesCardProps) {
                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[1.1em] font-bold",
                     index < 3
                       ? `bg-gradient-to-br ${getRankStyle(index)} shadow-md`
-                      : "bg-blues text-bluelight"
+                      : "bg-blues text-bluelight",
                   )}
                 >
                   {index + 1}
@@ -123,10 +232,10 @@ export default function TopCountriesCard({ data }: TopCountriesCardProps) {
                         index === 0
                           ? "bg-gradient-to-r from-yellow-400 to-amber-500"
                           : index === 1
-                          ? "bg-gradient-to-r from-slate-400 to-slate-500"
-                          : index === 2
-                          ? "bg-gradient-to-r from-orange-400 to-amber-500"
-                          : "bg-bluelight"
+                            ? "bg-gradient-to-r from-slate-400 to-slate-500"
+                            : index === 2
+                              ? "bg-gradient-to-r from-orange-400 to-amber-500"
+                              : "bg-bluelight",
                       )}
                       initial={{ width: 0 }}
                       animate={{ width: `${country.percentage}%` }}

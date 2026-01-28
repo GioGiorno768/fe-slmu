@@ -124,16 +124,18 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsStatusOpen(false);
                 setIsLevelOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[130px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[130px] justify-between w-full"
             >
-              <Calendar className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
-                {getSortLabel()}
-              </span>
+              <div className="flex items-start gap-4">
+                <Calendar className="w-4 h-4 text-grays" />
+                <span className="text-shortblack font-medium">
+                  {getSortLabel()}
+                </span>
+              </div>
               <ChevronDown
                 className={clsx(
                   "w-4 h-4 text-grays transition-transform",
-                  isSortOpen && "rotate-180"
+                  isSortOpen && "rotate-180",
                 )}
               />
             </button>
@@ -143,7 +145,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 mt-2 w-44 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full left-0 mt-2 w-full md:w-44 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {sortOptions.map((opt) => (
                     <button
@@ -156,7 +158,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.sort === opt.value
                           ? "bg-subcard text-bluelight font-medium"
-                          : "text-shortblack"
+                          : "text-shortblack",
                       )}
                     >
                       {opt.label}
@@ -175,16 +177,18 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsLevelOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between w-full"
             >
-              <Activity className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
-                {getStatusLabel()}
-              </span>
+              <div className="flex items-start gap-4">
+                <Activity className="w-4 h-4 text-grays" />
+                <span className="text-shortblack font-medium">
+                  {getStatusLabel()}
+                </span>
+              </div>
               <ChevronDown
                 className={clsx(
                   "w-4 h-4 text-grays transition-transform",
-                  isStatusOpen && "rotate-180"
+                  isStatusOpen && "rotate-180",
                 )}
               />
             </button>
@@ -194,7 +198,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-48 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-full md:w-48 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {statusOptions.map((opt) => (
                     <button
@@ -207,7 +211,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.status === opt.value
                           ? "bg-subcard text-bluelight font-medium"
-                          : "text-shortblack"
+                          : "text-shortblack",
                       )}
                     >
                       {opt.label}
@@ -226,16 +230,18 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                 setIsSortOpen(false);
                 setIsStatusOpen(false);
               }}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard hover:bg-blues transition-colors text-[1.4em] min-w-[140px] justify-between w-full"
             >
-              <Megaphone className="w-4 h-4 text-grays" />
-              <span className="text-shortblack font-medium">
-                {getLevelLabel()}
-              </span>
+              <div className="flex items-start gap-4">
+                <Megaphone className="w-4 h-4 text-grays" />
+                <span className="text-shortblack font-medium">
+                  {getLevelLabel()}
+                </span>
+              </div>
               <ChevronDown
                 className={clsx(
                   "w-4 h-4 text-grays transition-transform",
-                  isLevelOpen && "rotate-180"
+                  isLevelOpen && "rotate-180",
                 )}
               />
             </button>
@@ -245,7 +251,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full right-0 mt-2 w-40 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
+                  className="absolute top-full right-0 mt-2 w-full md:w-40 bg-card rounded-xl border border-gray-dashboard/30 shadow-lg z-20 overflow-hidden"
                 >
                   {levelOptions.map((opt) => (
                     <button
@@ -258,7 +264,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
                         "w-full px-4 py-3 text-left text-[1.3em] hover:bg-subcard transition-colors",
                         filters.adsLevel === opt.value
                           ? "bg-subcard text-bluelight font-medium"
-                          : "text-shortblack"
+                          : "text-shortblack",
                       )}
                     >
                       {opt.label}
