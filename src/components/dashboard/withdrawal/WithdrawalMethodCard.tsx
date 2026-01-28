@@ -38,19 +38,77 @@ export default function WithdrawalMethodCard({
   // State buat toggle visibility (Default: FALSE/Hidden)
   const [showDetail, setShowDetail] = useState(false);
 
-  // --- HELPER BUAT NYARI GAMBAR ---
+  // State untuk track apakah logo image gagal load
+  const [logoError, setLogoError] = useState(false);
+
+  // Reset logoError when method changes
+  useEffect(() => {
+    setLogoError(false);
+  }, [method?.provider]);
+
+  // --- HELPER BUAT NYARI GAMBAR & CATEGORY ICON ---
   const getPaymentBrandInfo = (providerName: string | undefined) => {
     if (!providerName) return null;
     const slug = providerName.toLowerCase().replace(/\s+/g, "-");
     const logoPath = `/payment-icons/${slug}.png`;
 
+    // Determine category icon based on known providers
     let DefaultIcon = CreditCard;
-    if (["dana", "ovo", "gopay", "shopeepay", "paypal"].includes(slug))
-      DefaultIcon = Wallet;
-    if (["bca", "bri", "mandiri", "bni", "jago"].includes(slug))
-      DefaultIcon = Landmark;
+    let categoryName = "Card";
 
-    return { logoPath, DefaultIcon };
+    // E-Wallets / Digital Wallets
+    if (
+      [
+        "dana",
+        "ovo",
+        "gopay",
+        "shopeepay",
+        "paypal",
+        "linkaja",
+        "sakuku",
+        "isaku",
+        "doku",
+        "jenius",
+        "flip",
+      ].includes(slug)
+    ) {
+      DefaultIcon = Wallet;
+      categoryName = "E-Wallet";
+    }
+    // Banks
+    if (
+      [
+        "bca",
+        "bri",
+        "mandiri",
+        "bni",
+        "jago",
+        "cimb",
+        "permata",
+        "btpn",
+        "danamon",
+        "mega",
+        "btn",
+        "bsi",
+        "ocbc",
+        "hsbc",
+        "uob",
+        "maybank",
+        "panin",
+        "seabank",
+        "bank-jago",
+        "blu",
+        "line-bank",
+        "neo-bank",
+        "bank-neo",
+        "superbank",
+      ].includes(slug)
+    ) {
+      DefaultIcon = Landmark;
+      categoryName = "Bank";
+    }
+
+    return { logoPath, DefaultIcon, categoryName };
   };
 
   // --- HELPER MASKING NOMOR ---
@@ -83,7 +141,7 @@ export default function WithdrawalMethodCard({
         "rounded-3xl p-8 shadow-sm h-full flex flex-col",
         isDark
           ? "bg-card border border-gray-dashboard/30 shadow-black/20"
-          : "bg-white border border-gray-100 shadow-slate-500/20"
+          : "bg-white border border-gray-100 shadow-slate-500/20",
       )}
     >
       {/* Header Kecil */}
@@ -91,7 +149,7 @@ export default function WithdrawalMethodCard({
         <h3
           className={clsx(
             "text-[1.8em] font-bold flex items-center gap-2",
-            isDark ? "text-white" : "text-shortblack"
+            isDark ? "text-white" : "text-shortblack",
           )}
         >
           Payment Method
@@ -115,22 +173,23 @@ export default function WithdrawalMethodCard({
                 "relative bg-gradient-to-br from-bluelight to-blue-600 rounded-3xl p-8 text-white overflow-hidden group min-h-[200px] flex flex-col justify-between",
                 isDark
                   ? "shadow-lg shadow-blue-900/40"
-                  : "shadow-xl shadow-blue-200"
+                  : "shadow-xl shadow-blue-200",
               )}
             >
               {/* Watermark Background */}
               <div className="absolute -right-8 -bottom-12 w-48 h-48 opacity-10 rotate-12 pointer-events-none transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6">
-                <Image
-                  src={brandInfo.logoPath}
-                  alt="watermark"
-                  width={200}
-                  height={200}
-                  className="object-contain grayscale brightness-200"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-                <brandInfo.DefaultIcon className="w-full h-full text-white absolute inset-0 -z-10" />
+                {!logoError ? (
+                  <Image
+                    src={brandInfo.logoPath}
+                    alt="watermark"
+                    width={200}
+                    height={200}
+                    className="object-contain grayscale brightness-200"
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <brandInfo.DefaultIcon className="w-full h-full text-white" />
+                )}
               </div>
 
               {/* Card Header */}
@@ -146,16 +205,21 @@ export default function WithdrawalMethodCard({
                 <div className="w-12 h-9 rounded-lg bg-gradient-to-br from-yellow-200 to-yellow-500 opacity-80 shadow-inner border border-yellow-600/30"></div>
               </div>
 
-              {/* Middle Icon */}
+              {/* Middle Icon - Updated dengan fallback ke DefaultIcon */}
               <div className="relative z-10 flex items-center justify-start my-6">
                 <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg shadow-black/10 border-4 border-white/20 backdrop-blur-sm">
-                  <Image
-                    src={brandInfo.logoPath}
-                    alt={method.provider}
-                    width={40}
-                    height={40}
-                    className="object-contain w-10 h-10"
-                  />
+                  {!logoError ? (
+                    <Image
+                      src={brandInfo.logoPath}
+                      alt={method.provider}
+                      width={40}
+                      height={40}
+                      className="object-contain w-10 h-10"
+                      onError={() => setLogoError(true)}
+                    />
+                  ) : (
+                    <brandInfo.DefaultIcon className="w-8 h-8 text-bluelight" />
+                  )}
                 </div>
                 <div className="h-px border-t-2 border-dashed border-white/30 flex-1 ml-4"></div>
               </div>
@@ -201,19 +265,19 @@ export default function WithdrawalMethodCard({
                 "mt-6 flex items-start gap-3 p-4 rounded-xl",
                 isDark
                   ? "bg-green-500/10 border border-green-500/20"
-                  : "bg-green-50 border border-green-100"
+                  : "bg-green-50 border border-green-100",
               )}
             >
               <ShieldCheck
                 className={clsx(
                   "w-5 h-5 mt-0.5 shrink-0",
-                  isDark ? "text-green-400" : "text-green-600"
+                  isDark ? "text-green-400" : "text-green-600",
                 )}
               />
               <p
                 className={clsx(
                   "text-[1.2em] leading-snug",
-                  isDark ? "text-green-300" : "text-green-800"
+                  isDark ? "text-green-300" : "text-green-800",
                 )}
               >
                 Akun terverifikasi. Pembayaran akan diproses otomatis ke
@@ -229,7 +293,7 @@ export default function WithdrawalMethodCard({
                 "w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-inner",
                 isDark
                   ? "bg-orange-500/10 border border-orange-500/20"
-                  : "bg-orange-50 border border-orange-100"
+                  : "bg-orange-50 border border-orange-100",
               )}
             >
               <div
@@ -237,7 +301,7 @@ export default function WithdrawalMethodCard({
                   "w-16 h-16 rounded-full flex items-center justify-center",
                   isDark
                     ? "bg-orange-500/20 text-orange-400"
-                    : "bg-orange-100 text-orange-500"
+                    : "bg-orange-100 text-orange-500",
                 )}
               >
                 <AlertTriangle className="w-8 h-8" />
@@ -247,7 +311,7 @@ export default function WithdrawalMethodCard({
             <h4
               className={clsx(
                 "text-[1.8em] font-bold mb-2",
-                isDark ? "text-white" : "text-shortblack"
+                isDark ? "text-white" : "text-shortblack",
               )}
             >
               No Payment Method
@@ -260,7 +324,7 @@ export default function WithdrawalMethodCard({
               href="/settings#payment"
               className={clsx(
                 "px-8 py-3 rounded-xl font-semibold text-[1.4em] hover:opacity-90 hover:shadow-lg transition-all w-full max-w-[200px]",
-                isDark ? "bg-bluelight text-white" : "bg-shortblack text-white"
+                isDark ? "bg-bluelight text-white" : "bg-shortblack text-white",
               )}
             >
               Setup Now

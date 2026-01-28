@@ -60,7 +60,7 @@ export function useSecurityLogic() {
   const updatePass = async (
     current: string,
     newPass: string,
-    confirmPass: string
+    confirmPass: string,
   ) => {
     setIsUpdating(true);
     try {
@@ -121,7 +121,7 @@ export function useSecurityLogic() {
       await settingsService.toggle2FA(enabled);
       showAlert(
         `2FA ${enabled ? "diaktifkan" : "dinonaktifkan"}.`,
-        enabled ? "success" : "warning"
+        enabled ? "success" : "warning",
       );
       return true;
     } catch (error) {
@@ -164,9 +164,8 @@ export function usePaymentLogic() {
   const { data: templates = [], isLoading: isLoadingTemplates } = useQuery({
     queryKey: paymentKeys.templates(),
     queryFn: async () => {
-      const { getPaymentTemplates } = await import(
-        "@/services/paymentTemplateService"
-      );
+      const { getPaymentTemplates } =
+        await import("@/services/paymentTemplateService");
       return getPaymentTemplates();
     },
     staleTime: 10 * 60 * 1000, // 10 minutes (templates change rarely)
@@ -194,7 +193,11 @@ export function usePaymentLogic() {
     mutationFn: (id: string) => settingsService.deletePaymentMethod(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: paymentKeys.all });
-      showAlert("Metode pembayaran dihapus.", "info");
+      showAlert("Metode pembayaran berhasil dihapus!", "success");
+      // Reload page after 1 second to reflect auto-set default changes
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     },
     onError: () => {
       showAlert("Gagal menghapus metode.", "error");
@@ -208,11 +211,11 @@ export function usePaymentLogic() {
       // Optimistic update
       await queryClient.cancelQueries({ queryKey: paymentKeys.list() });
       const previousMethods = queryClient.getQueryData<SavedPaymentMethod[]>(
-        paymentKeys.list()
+        paymentKeys.list(),
       );
       queryClient.setQueryData<SavedPaymentMethod[]>(
         paymentKeys.list(),
-        (old) => old?.map((m) => ({ ...m, isDefault: m.id === id })) ?? []
+        (old) => old?.map((m) => ({ ...m, isDefault: m.id === id })) ?? [],
       );
       return { previousMethods };
     },
@@ -233,7 +236,7 @@ export function usePaymentLogic() {
 
   // Action wrappers for backwards compatibility
   const addMethod = async (
-    data: Omit<SavedPaymentMethod, "id" | "isDefault">
+    data: Omit<SavedPaymentMethod, "id" | "isDefault">,
   ) => {
     try {
       await addMutation.mutateAsync(data);

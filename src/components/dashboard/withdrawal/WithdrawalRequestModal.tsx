@@ -146,6 +146,7 @@ const PAYMENT_CONFIG = {
 type CategoryKey = keyof typeof PAYMENT_CONFIG;
 
 import type { SavedPaymentMethod } from "@/types/type";
+import { Link } from "@/i18n/routing";
 
 interface WithdrawalSettings {
   minWithdrawal: number;
@@ -570,12 +571,12 @@ export default function WithdrawalRequestModal({
                               </p>
                               <p className="text-[1.2em] mt-1">
                                 Tambahkan di{" "}
-                                <a
-                                  href="/settings"
+                                <Link
+                                  href="/settings#payment"
                                   className="text-bluelight underline"
                                 >
                                   Settings
-                                </a>
+                                </Link>
                               </p>
                             </div>
                           )}
