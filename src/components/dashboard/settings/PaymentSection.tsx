@@ -26,6 +26,8 @@ import {
   groupTemplatesByType,
   getInputPlaceholder,
   getHtmlInputType,
+  getInputPattern,
+  getInputMode,
 } from "@/services/paymentTemplateService";
 
 // Category config for icons and labels
@@ -63,20 +65,20 @@ export default function PaymentSection() {
   // Group templates by type
   const groupedTemplates = useMemo(
     () => groupTemplatesByType(templates),
-    [templates]
+    [templates],
   );
 
   // Get available categories (only those with templates)
   const availableCategories = useMemo(() => {
     return (Object.keys(CATEGORY_CONFIG) as CategoryKey[]).filter(
-      (key) => groupedTemplates[key]?.length > 0
+      (key) => groupedTemplates[key]?.length > 0,
     );
   }, [groupedTemplates]);
 
   // State Form Lokal
   const [activeCategory, setActiveCategory] = useState<CategoryKey>("wallet");
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
-    null
+    null,
   );
   const [details, setDetails] = useState({
     accountName: "",
@@ -92,7 +94,7 @@ export default function PaymentSection() {
   // Get selected template
   const selectedTemplate = useMemo(
     () => templates.find((t) => t.id === selectedTemplateId) || null,
-    [templates, selectedTemplateId]
+    [templates, selectedTemplateId],
   );
 
   // Set default template when category changes or templates load
@@ -133,6 +135,24 @@ export default function PaymentSection() {
     if (success) setDetails({ accountName: "", accountNumber: "" });
   };
 
+  // Filter account number input based on input_type
+  const handleAccountNumberChange = (value: string) => {
+    const inputType = selectedTemplate?.input_type || "text";
+
+    let filteredValue = value;
+
+    if (inputType === "phone") {
+      // Allow only digits, +, -, and spaces for phone numbers
+      filteredValue = value.replace(/[^0-9+\-\s]/g, "");
+    } else if (inputType === "account_number") {
+      // Allow only digits for bank account numbers
+      filteredValue = value.replace(/[^0-9]/g, "");
+    }
+    // For email and other types, allow any input
+
+    setDetails({ ...details, accountNumber: filteredValue });
+  };
+
   // Loading state
   if (isLoading || isLoadingTemplates) {
     return (
@@ -155,7 +175,7 @@ export default function PaymentSection() {
           "space-y-4 p-8 rounded-3xl shadow-sm",
           isDark
             ? "bg-card border border-gray-800"
-            : "bg-white border border-gray-100"
+            : "bg-white border border-gray-100",
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack">Saved Methods</h2>
@@ -164,7 +184,7 @@ export default function PaymentSection() {
           <div
             className={clsx(
               "p-8 text-center border-2 border-dashed rounded-3xl text-grays",
-              isDark ? "border-gray-700" : "border-gray-200"
+              isDark ? "border-gray-700" : "border-gray-200",
             )}
           >
             <p className="text-[1.4em]">
@@ -188,8 +208,8 @@ export default function PaymentSection() {
                         ? "border-bluelight bg-blue-500/10"
                         : "border-bluelight bg-blue-50/30"
                       : isDark
-                      ? "border-gray-800 bg-card"
-                      : "border-gray-100 bg-white"
+                        ? "border-gray-800 bg-card"
+                        : "border-gray-100 bg-white",
                   )}
                 >
                   {/* Badge Default */}
@@ -222,7 +242,7 @@ export default function PaymentSection() {
                               "text-[1em] px-2 py-0.5 rounded-md font-medium",
                               isDark
                                 ? "bg-purple-500/20 text-purple-400"
-                                : "bg-purple-100 text-purple-600"
+                                : "bg-purple-100 text-purple-600",
                             )}
                           >
                             {method.currency}
@@ -242,7 +262,7 @@ export default function PaymentSection() {
                   <div
                     className={clsx(
                       "flex items-center justify-end gap-3 pt-4 border-t",
-                      isDark ? "border-gray-700" : "border-gray-200/50"
+                      isDark ? "border-gray-700" : "border-gray-200/50",
                     )}
                   >
                     {!method.isDefault && (
@@ -251,7 +271,7 @@ export default function PaymentSection() {
                         disabled={isProcessing}
                         className={clsx(
                           "text-[1.3em] font-semibold text-bluelight px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2",
-                          isDark ? "hover:bg-blue-500/10" : "hover:bg-blue-50"
+                          isDark ? "hover:bg-blue-500/10" : "hover:bg-blue-50",
                         )}
                       >
                         <CheckCircle className="w-4 h-4" /> Set Default
@@ -262,7 +282,7 @@ export default function PaymentSection() {
                       disabled={isProcessing}
                       className={clsx(
                         "text-[1.3em] font-semibold text-red-500 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2",
-                        isDark ? "hover:bg-red-500/10" : "hover:bg-red-50"
+                        isDark ? "hover:bg-red-500/10" : "hover:bg-red-50",
                       )}
                     >
                       <Trash2 className="w-4 h-4" /> Delete
@@ -287,7 +307,7 @@ export default function PaymentSection() {
           "rounded-3xl p-8 shadow-sm",
           isDark
             ? "bg-card border border-gray-800"
-            : "bg-white border border-gray-100"
+            : "bg-white border border-gray-100",
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
@@ -298,7 +318,7 @@ export default function PaymentSection() {
           <div
             className={clsx(
               "p-8 text-center border-2 border-dashed rounded-3xl text-grays",
-              isDark ? "border-gray-700" : "border-gray-200"
+              isDark ? "border-gray-700" : "border-gray-200",
             )}
           >
             <p className="text-[1.4em]">
@@ -325,8 +345,8 @@ export default function PaymentSection() {
                           ? "border-bluelight bg-blue-500/10 text-bluelight ring-2 ring-bluelight/20"
                           : "border-bluelight bg-blue-50 text-bluelight ring-2 ring-bluelight/20"
                         : isDark
-                        ? "border-gray-800 bg-card text-grays hover:bg-subcard"
-                        : "border-gray-100 bg-white text-grays hover:bg-slate-50"
+                          ? "border-gray-800 bg-card text-grays hover:bg-subcard"
+                          : "border-gray-100 bg-white text-grays hover:bg-slate-50",
                     )}
                   >
                     <config.icon
@@ -349,7 +369,7 @@ export default function PaymentSection() {
                 "rounded-3xl p-8 space-y-6",
                 isDark
                   ? "bg-blues border border-blue-500/30"
-                  : "bg-blues border border-blue-100"
+                  : "bg-blues border border-blue-100",
               )}
             >
               {/* Provider Select */}
@@ -367,7 +387,7 @@ export default function PaymentSection() {
                       "w-full px-6 py-4 pr-12 rounded-xl text-[1.6em] font-medium text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 appearance-none cursor-pointer",
                       isDark
                         ? "bg-card border border-gray-700"
-                        : "bg-white border border-gray-200"
+                        : "bg-white border border-gray-200",
                     )}
                   >
                     {currentTemplates.map((t) => (
@@ -387,7 +407,7 @@ export default function PaymentSection() {
                         "px-2 py-0.5 rounded font-medium",
                         isDark
                           ? "bg-purple-500/20 text-purple-400"
-                          : "bg-purple-100 text-purple-600"
+                          : "bg-purple-100 text-purple-600",
                       )}
                     >
                       {selectedTemplate.currency}
@@ -401,7 +421,7 @@ export default function PaymentSection() {
               <div
                 className={clsx(
                   "h-px my-4",
-                  isDark ? "bg-blue-500/20" : "bg-blue-200/50"
+                  isDark ? "bg-blue-500/20" : "bg-blue-200/50",
                 )}
               ></div>
 
@@ -422,7 +442,7 @@ export default function PaymentSection() {
                       "w-full pl-14 pr-4 py-3 rounded-xl text-[1.5em] text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50",
                       isDark
                         ? "bg-card border border-gray-700"
-                        : "bg-white border border-gray-200"
+                        : "bg-white border border-gray-200",
                     )}
                     placeholder="e.g. Kevin Ragil"
                     required
@@ -437,20 +457,24 @@ export default function PaymentSection() {
                 </label>
                 <input
                   type={getHtmlInputType(
-                    selectedTemplate?.input_type || "text"
+                    selectedTemplate?.input_type || "text",
+                  )}
+                  inputMode={getInputMode(
+                    selectedTemplate?.input_type || "text",
+                  )}
+                  pattern={getInputPattern(
+                    selectedTemplate?.input_type || "text",
                   )}
                   value={details.accountNumber}
-                  onChange={(e) =>
-                    setDetails({ ...details, accountNumber: e.target.value })
-                  }
+                  onChange={(e) => handleAccountNumberChange(e.target.value)}
                   className={clsx(
                     "w-full px-6 py-3 rounded-xl text-[1.5em] text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 font-mono",
                     isDark
                       ? "bg-card border border-gray-700"
-                      : "bg-white border border-gray-200"
+                      : "bg-white border border-gray-200",
                   )}
                   placeholder={getInputPlaceholder(
-                    selectedTemplate?.input_type || "text"
+                    selectedTemplate?.input_type || "text",
                   )}
                   required
                 />
@@ -464,7 +488,7 @@ export default function PaymentSection() {
                 disabled={isProcessing || !selectedTemplate}
                 className={clsx(
                   "bg-bluelight text-white px-10 py-4 rounded-xl font-bold text-[1.6em] hover:bg-opacity-90 transition-all flex items-center gap-3 disabled:opacity-50 shadow-lg",
-                  isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+                  isDark ? "shadow-purple-900/30" : "shadow-blue-200",
                 )}
               >
                 {isProcessing ? (

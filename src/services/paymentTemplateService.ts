@@ -66,16 +66,63 @@ export function getInputPlaceholder(inputType: string): string {
 
 /**
  * Get input type for HTML input element
+ * - phone: "tel" for phone number input (mobile keyboard optimization)
+ * - email: "email" for email validation
+ * - account_number: "text" with numeric pattern handling in component
+ * - crypto_address: "text"
  */
 export function getHtmlInputType(inputType: string): string {
   switch (inputType) {
     case "phone":
+      return "tel";
     case "account_number":
-      return "text";
+      return "text"; // Use text for account numbers (some have letters like IBAN)
     case "email":
       return "email";
     case "crypto_address":
       return "text";
+    default:
+      return "text";
+  }
+}
+
+/**
+ * Get input pattern for HTML validation
+ * - phone: numbers only (Indonesian phone format)
+ * - account_number: numbers only
+ * - email: standard email pattern
+ */
+export function getInputPattern(inputType: string): string | undefined {
+  switch (inputType) {
+    case "phone":
+      return "[0-9+\\-\\s]*"; // Allow numbers, +, -, spaces for phone
+    case "account_number":
+      return "[0-9]*"; // Numbers only for bank accounts
+    case "email":
+      return undefined; // Browser handles email validation
+    case "crypto_address":
+      return undefined; // Crypto addresses are complex, no pattern
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Get inputMode for mobile keyboard optimization
+ * - phone: "tel" for phone keyboard
+ * - account_number: "numeric" for number keyboard
+ * - email: "email" for email keyboard
+ */
+export function getInputMode(
+  inputType: string,
+): "text" | "tel" | "email" | "numeric" {
+  switch (inputType) {
+    case "phone":
+      return "tel";
+    case "account_number":
+      return "numeric";
+    case "email":
+      return "email";
     default:
       return "text";
   }
