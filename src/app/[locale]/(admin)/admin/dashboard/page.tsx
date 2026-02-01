@@ -11,7 +11,7 @@ export default function AdminDashboard() {
   const { stats, activities, isLoading } = useAdminDashboard();
 
   const formatCurrency = (val: number) =>
-    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
   const formatNumber = (val: number) => val.toLocaleString("en-US");
 
   // MAPPING DATA ADMIN (3 Cards)

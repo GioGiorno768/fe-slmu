@@ -23,7 +23,7 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
   const isDark = mounted && resolvedTheme === "dark";
 
   const formatCurrency = (val: number) =>
-    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
 
   const cards = [
     {
@@ -91,7 +91,7 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
             key={i}
             className={clsx(
               "h-[120px] rounded-2xl border shadow-sm flex items-center justify-center",
-              isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+              isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
             )}
           >
             <Loader2 className="w-6 h-6 animate-spin text-bluelight/30" />
@@ -115,7 +115,7 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
             className={clsx(
               "relative p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group",
               isDark ? "bg-card" : "bg-white",
-              style.border
+              style.border,
             )}
           >
             <div className="flex justify-between items-start mb-4 relative z-10">
@@ -145,15 +145,15 @@ export default function WithdrawalStatsCard({ stats, isLoading }: Props) {
             <div
               className={clsx(
                 "absolute -bottom-4 -right-4 w-24 h-24 rounded-full opacity-10 pointer-events-none transition-transform duration-500 group-hover:scale-125",
-                style.bg.replace("bg-", "bg-") // Hacky way to get color, better to use style.text color mapping if needed, but style.bg is bg-color-50. Let's use inline style for bg color to be safe or map it.
+                style.bg.replace("bg-", "bg-"), // Hacky way to get color, better to use style.text color mapping if needed, but style.bg is bg-color-50. Let's use inline style for bg color to be safe or map it.
               )}
               style={{
                 backgroundColor:
                   card.color === "emerald"
                     ? "#10b981"
                     : card.color === "blue"
-                    ? "#3b82f6"
-                    : "#f59e0b",
+                      ? "#3b82f6"
+                      : "#f59e0b",
               }}
             ></div>
           </motion.div>

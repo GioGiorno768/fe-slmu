@@ -60,6 +60,8 @@ export default function PaymentMethodModal({
 
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  // Separate state for fee string to allow trailing decimal
+  const [feeString, setFeeString] = useState("0.5");
 
   useEffect(() => {
     setMounted(true);
@@ -83,6 +85,7 @@ export default function PaymentMethodModal({
         is_active: editingTemplate.is_active,
         sort_order: editingTemplate.sort_order,
       });
+      setFeeString(String(editingTemplate.fee));
     } else {
       setFormData({
         name: "",
@@ -97,6 +100,7 @@ export default function PaymentMethodModal({
         is_active: true,
         sort_order: 0,
       });
+      setFeeString("0.5");
     }
   }, [editingTemplate, isOpen]);
 
@@ -113,7 +117,9 @@ export default function PaymentMethodModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(formData);
+    // Parse fee string before submit
+    const fee = parseFloat(feeString) || 0;
+    await onSubmit({ ...formData, fee });
     onClose();
   };
 
@@ -141,21 +147,21 @@ export default function PaymentMethodModal({
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className={clsx(
                 "w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden pointer-events-auto font-figtree text-[10px]",
-                isDark ? "bg-card" : "bg-white"
+                isDark ? "bg-card" : "bg-white",
               )}
             >
               {/* Header */}
               <div
                 className={clsx(
                   "flex justify-between items-center px-8 py-6 border-b",
-                  isDark ? "border-gray-700" : "border-gray-100"
+                  isDark ? "border-gray-700" : "border-gray-100",
                 )}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={clsx(
                       "w-10 h-10 rounded-xl flex items-center justify-center",
-                      isDark ? "bg-bluelight/20" : "bg-bluelight/10"
+                      isDark ? "bg-bluelight/20" : "bg-bluelight/10",
                     )}
                   >
                     <TypeIcon className="w-5 h-5 text-bluelight" />
@@ -164,7 +170,7 @@ export default function PaymentMethodModal({
                     <h2
                       className={clsx(
                         "text-[2em] font-bold",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       {editingTemplate
@@ -174,7 +180,7 @@ export default function PaymentMethodModal({
                     <p
                       className={clsx(
                         "text-[1.2em]",
-                        isDark ? "text-gray-400" : "text-grays"
+                        isDark ? "text-gray-400" : "text-grays",
                       )}
                     >
                       Configure payment method template for users
@@ -185,13 +191,13 @@ export default function PaymentMethodModal({
                   onClick={onClose}
                   className={clsx(
                     "p-2 rounded-full transition-colors",
-                    isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                    isDark ? "hover:bg-gray-700" : "hover:bg-gray-100",
                   )}
                 >
                   <X
                     className={clsx(
                       "w-5 h-5",
-                      isDark ? "text-gray-400" : "text-grays"
+                      isDark ? "text-gray-400" : "text-grays",
                     )}
                   />
                 </button>
@@ -208,7 +214,7 @@ export default function PaymentMethodModal({
                   <label
                     className={clsx(
                       "block text-[1.3em] font-bold mb-2",
-                      isDark ? "text-white" : "text-shortblack"
+                      isDark ? "text-white" : "text-shortblack",
                     )}
                   >
                     Provider Name
@@ -223,7 +229,7 @@ export default function PaymentMethodModal({
                       "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
                       isDark
                         ? "bg-subcard text-white placeholder:text-gray-500 focus:bg-card"
-                        : "bg-gray-50 focus:bg-white"
+                        : "bg-gray-50 focus:bg-white",
                     )}
                     placeholder="e.g., GoPay, BCA, Bitcoin"
                     required
@@ -237,7 +243,7 @@ export default function PaymentMethodModal({
                     <label
                       className={clsx(
                         "block text-[1.3em] font-bold mb-2",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       Payment Type
@@ -254,7 +260,7 @@ export default function PaymentMethodModal({
                         "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
                         isDark
                           ? "bg-subcard text-white focus:bg-card"
-                          : "bg-gray-50 focus:bg-white"
+                          : "bg-gray-50 focus:bg-white",
                       )}
                     >
                       {PAYMENT_TYPES.map((pt) => (
@@ -270,7 +276,7 @@ export default function PaymentMethodModal({
                     <label
                       className={clsx(
                         "block text-[1.3em] font-bold mb-2",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       Currency
@@ -284,7 +290,7 @@ export default function PaymentMethodModal({
                         "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
                         isDark
                           ? "bg-subcard text-white focus:bg-card"
-                          : "bg-gray-50 focus:bg-white"
+                          : "bg-gray-50 focus:bg-white",
                       )}
                     >
                       {CURRENCIES.map((c) => (
@@ -303,7 +309,7 @@ export default function PaymentMethodModal({
                     <label
                       className={clsx(
                         "block text-[1.3em] font-bold mb-2",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       Input Type
@@ -320,7 +326,7 @@ export default function PaymentMethodModal({
                         "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em] cursor-pointer",
                         isDark
                           ? "bg-subcard text-white focus:bg-card"
-                          : "bg-gray-50 focus:bg-white"
+                          : "bg-gray-50 focus:bg-white",
                       )}
                     >
                       {availableInputTypes.map((it) => (
@@ -332,7 +338,7 @@ export default function PaymentMethodModal({
                     <p
                       className={clsx(
                         "text-[1.1em] mt-1",
-                        isDark ? "text-gray-500" : "text-grays"
+                        isDark ? "text-gray-500" : "text-grays",
                       )}
                     >
                       Type of input user will fill
@@ -344,7 +350,7 @@ export default function PaymentMethodModal({
                     <label
                       className={clsx(
                         "block text-[1.3em] font-bold mb-2",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       Input Label
@@ -362,7 +368,7 @@ export default function PaymentMethodModal({
                         "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
                         isDark
                           ? "bg-subcard text-white placeholder:text-gray-500 focus:bg-card"
-                          : "bg-gray-50 focus:bg-white"
+                          : "bg-gray-50 focus:bg-white",
                       )}
                       placeholder="e.g., Nomor HP GoPay"
                       required
@@ -370,7 +376,7 @@ export default function PaymentMethodModal({
                     <p
                       className={clsx(
                         "text-[1.1em] mt-1",
-                        isDark ? "text-gray-500" : "text-grays"
+                        isDark ? "text-gray-500" : "text-grays",
                       )}
                     >
                       Label shown to user
@@ -383,33 +389,45 @@ export default function PaymentMethodModal({
                   <label
                     className={clsx(
                       "block text-[1.3em] font-bold mb-2",
-                      isDark ? "text-white" : "text-shortblack"
+                      isDark ? "text-white" : "text-shortblack",
                     )}
                   >
-                    Fee (USD)
+                    Fee ({formData.currency})
                   </label>
                   <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.fee}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        fee: parseFloat(e.target.value) || 0,
-                      })
-                    }
+                    type="text"
+                    inputMode="decimal"
+                    value={feeString}
+                    onChange={(e) => {
+                      // Allow only numbers and decimal point
+                      const value = e.target.value.replace(/[^0-9.]/g, "");
+                      // Prevent multiple decimal points
+                      const parts = value.split(".");
+                      const sanitized =
+                        parts.length > 2
+                          ? parts[0] + "." + parts.slice(1).join("")
+                          : value;
+                      setFeeString(sanitized);
+                    }}
+                    onBlur={() => {
+                      // Sync to formData on blur
+                      const fee = parseFloat(feeString) || 0;
+                      setFormData({ ...formData, fee });
+                    }}
                     className={clsx(
                       "w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-bluelight outline-none transition-all text-[1.3em]",
                       isDark
                         ? "bg-subcard text-white focus:bg-card"
-                        : "bg-gray-50 focus:bg-white"
+                        : "bg-gray-50 focus:bg-white",
                     )}
+                    placeholder={
+                      formData.currency === "IDR" ? "e.g., 6000" : "e.g., 0.5"
+                    }
                   />
                   <p
                     className={clsx(
                       "text-[1.1em] mt-1",
-                      isDark ? "text-gray-500" : "text-grays"
+                      isDark ? "text-gray-500" : "text-grays",
                     )}
                   >
                     Admin fee charged to user for each withdrawal
@@ -420,14 +438,14 @@ export default function PaymentMethodModal({
                 <div
                   className={clsx(
                     "flex items-center justify-between p-4 rounded-xl",
-                    isDark ? "bg-subcard" : "bg-gray-50"
+                    isDark ? "bg-subcard" : "bg-gray-50",
                   )}
                 >
                   <div>
                     <p
                       className={clsx(
                         "text-[1.3em] font-bold",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       Active Status
@@ -435,7 +453,7 @@ export default function PaymentMethodModal({
                     <p
                       className={clsx(
                         "text-[1.1em]",
-                        isDark ? "text-gray-500" : "text-grays"
+                        isDark ? "text-gray-500" : "text-grays",
                       )}
                     >
                       Users can select this payment method
@@ -454,14 +472,14 @@ export default function PaymentMethodModal({
                       formData.is_active
                         ? "bg-green-500"
                         : isDark
-                        ? "bg-gray-600"
-                        : "bg-gray-300"
+                          ? "bg-gray-600"
+                          : "bg-gray-300",
                     )}
                   >
                     <div
                       className={clsx(
                         "w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-sm",
-                        formData.is_active ? "right-1" : "left-1"
+                        formData.is_active ? "right-1" : "left-1",
                       )}
                     />
                   </button>
@@ -475,14 +493,14 @@ export default function PaymentMethodModal({
                     "w-full py-4 rounded-2xl font-bold text-[1.5em] hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed",
                     isDark
                       ? "bg-bluelight text-white"
-                      : "bg-linear-to-r from-shortblack to-gray-800 text-white"
+                      : "bg-linear-to-r from-shortblack to-gray-800 text-white",
                   )}
                 >
                   {isSubmitting
                     ? "Saving..."
                     : editingTemplate
-                    ? "Update Payment Method"
-                    : "Create Payment Method"}
+                      ? "Update Payment Method"
+                      : "Create Payment Method"}
                 </button>
               </form>
             </motion.div>

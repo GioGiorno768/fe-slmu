@@ -29,13 +29,13 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
       <div
         className={clsx(
           "rounded-3xl shadow-sm border overflow-hidden p-8 text-center",
-          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
         )}
       >
         <div
           className={clsx(
             "w-32 h-32 mx-auto relative rounded-full overflow-hidden border-4 shadow-md mb-6",
-            isDark ? "border-gray-700" : "border-white"
+            isDark ? "border-gray-700" : "border-white",
           )}
         >
           {data.avatarUrl ? (
@@ -51,7 +51,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
                 "w-full h-full flex items-center justify-center text-[3em] font-bold",
                 isDark
                   ? "bg-blue-500/20 text-blue-400"
-                  : "bg-blue-200 text-blue-600"
+                  : "bg-blue-200 text-blue-600",
               )}
             >
               {data.name.charAt(0)}
@@ -61,7 +61,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
         <h3
           className={clsx(
             "text-[2em] font-bold mb-1",
-            isDark ? "text-white" : "text-shortblack"
+            isDark ? "text-white" : "text-shortblack",
           )}
         >
           {data.name}
@@ -69,7 +69,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
         <p
           className={clsx(
             "text-[1.4em] mb-6",
-            isDark ? "text-gray-400" : "text-grays"
+            isDark ? "text-gray-400" : "text-grays",
           )}
         >
           @{data.username}
@@ -84,8 +84,8 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
                   ? "bg-green-500/20 text-green-400"
                   : "bg-green-100 text-green-700"
                 : isDark
-                ? "bg-red-500/20 text-red-400"
-                : "bg-red-100 text-red-700"
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-red-100 text-red-700",
             )}
           >
             {data.status}
@@ -95,7 +95,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
               "px-4 py-1.5 rounded-full text-[1.1em] font-medium flex items-center gap-1 border",
               isDark
                 ? "bg-gray-700 border-gray-600 text-gray-400"
-                : "bg-slate-50 border-gray-200 text-grays"
+                : "bg-slate-50 border-gray-200 text-grays",
             )}
           >
             <MapPin className="w-3 h-3" />
@@ -108,7 +108,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
             "space-y-4 text-left p-6 rounded-2xl border",
             isDark
               ? "bg-subcard border-gray-700"
-              : "bg-slate-50 border-gray-100"
+              : "bg-slate-50 border-gray-100",
           )}
         >
           <InfoRow
@@ -132,13 +132,13 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
         <div
           className={clsx(
             "p-5 rounded-2xl border shadow-sm text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
           )}
         >
           <p
             className={clsx(
               "text-[1.1em] mb-1",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             {t("overview.totalViews")}
@@ -146,7 +146,7 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
           <p
             className={clsx(
               "text-[1.8em] font-bold",
-              isDark ? "text-blue-400" : "text-bluelight"
+              isDark ? "text-blue-400" : "text-bluelight",
             )}
           >
             {format.number(data.stats.totalViews)}
@@ -155,13 +155,13 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
         <div
           className={clsx(
             "p-5 rounded-2xl border shadow-sm text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
           )}
         >
           <p
             className={clsx(
               "text-[1.1em] mb-1",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             {t("overview.walletBalance")}
@@ -169,25 +169,27 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
           <p
             className={clsx(
               "text-[1.8em] font-bold",
-              isDark ? "text-green-400" : "text-green-600"
+              isDark ? "text-green-400" : "text-green-600",
             )}
           >
             {format.number(data.stats.walletBalance, {
               style: "currency",
               currency: "USD",
+              minimumFractionDigits: 5,
+              maximumFractionDigits: 5,
             })}
           </p>
         </div>
         <div
           className={clsx(
             "p-5 rounded-2xl border shadow-sm text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
           )}
         >
           <p
             className={clsx(
               "text-[1.1em] mb-1",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Total Earnings
@@ -195,25 +197,27 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
           <p
             className={clsx(
               "text-[1.8em] font-bold",
-              isDark ? "text-emerald-400" : "text-emerald-600"
+              isDark ? "text-emerald-400" : "text-emerald-600",
             )}
           >
             {format.number(data.stats.totalEarnings || 0, {
               style: "currency",
               currency: "USD",
+              minimumFractionDigits: 5,
+              maximumFractionDigits: 5,
             })}
           </p>
         </div>
         <div
           className={clsx(
             "p-5 rounded-2xl border shadow-sm text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
           )}
         >
           <p
             className={clsx(
               "text-[1.1em] mb-1",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Avg CPM
@@ -221,12 +225,14 @@ export default function UserProfileCard({ data }: UserProfileCardProps) {
           <p
             className={clsx(
               "text-[1.8em] font-bold",
-              isDark ? "text-purple-400" : "text-purple-600"
+              isDark ? "text-purple-400" : "text-purple-600",
             )}
           >
             {format.number(data.stats.avgCpm || 0, {
               style: "currency",
               currency: "USD",
+              minimumFractionDigits: 5,
+              maximumFractionDigits: 5,
             })}
           </p>
         </div>
@@ -248,13 +254,13 @@ function InfoRow({
     <div
       className={clsx(
         "flex justify-between py-3 border-b last:border-0",
-        isDark ? "border-gray-700" : "border-gray-100"
+        isDark ? "border-gray-700" : "border-gray-100",
       )}
     >
       <span
         className={clsx(
           "text-[1.2em]",
-          isDark ? "text-gray-400" : "text-grays"
+          isDark ? "text-gray-400" : "text-grays",
         )}
       >
         {label}
@@ -262,7 +268,7 @@ function InfoRow({
       <span
         className={clsx(
           "font-bold text-[1.2em] text-right break-all max-w-[60%]",
-          isDark ? "text-white" : "text-shortblack"
+          isDark ? "text-white" : "text-shortblack",
         )}
       >
         {value}

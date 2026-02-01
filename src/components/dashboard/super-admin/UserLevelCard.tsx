@@ -59,7 +59,7 @@ export default function UserLevelCard({
       transition={{ delay: index * 0.05 }}
       className={clsx(
         "relative rounded-3xl p-6 border-2 shadow-sm hover:shadow-lg transition-all duration-300",
-        isDark ? "bg-card border-gray-700" : "bg-white border-gray-100"
+        isDark ? "bg-card border-gray-700" : "bg-white border-gray-100",
       )}
     >
       {/* Actions */}
@@ -68,14 +68,14 @@ export default function UserLevelCard({
           onClick={() => onEdit(level)}
           className={clsx(
             "p-2 rounded-xl transition-colors",
-            isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+            isDark ? "hover:bg-gray-700" : "hover:bg-gray-100",
           )}
           title="Edit Level"
         >
           <Pencil
             className={clsx(
               "w-4 h-4",
-              isDark ? "text-gray-400" : "text-gray-500"
+              isDark ? "text-gray-400" : "text-gray-500",
             )}
           />
         </button>
@@ -83,14 +83,14 @@ export default function UserLevelCard({
           onClick={() => onDelete(level)}
           className={clsx(
             "p-2 rounded-xl transition-colors",
-            isDark ? "hover:bg-red-500/20" : "hover:bg-red-50"
+            isDark ? "hover:bg-red-500/20" : "hover:bg-red-50",
           )}
           title="Delete Level"
         >
           <Trash2
             className={clsx(
               "w-4 h-4",
-              isDark ? "text-red-400" : "text-red-500"
+              isDark ? "text-red-400" : "text-red-500",
             )}
           />
         </button>
@@ -101,7 +101,7 @@ export default function UserLevelCard({
         <div
           className={clsx(
             "w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3 shadow-inner",
-            level.bgColor
+            level.bgColor,
           )}
         >
           <Icon className={clsx("w-8 h-8", level.iconColor)} />
@@ -109,7 +109,7 @@ export default function UserLevelCard({
         <h3
           className={clsx(
             "text-[2em] font-bold",
-            isDark ? "text-white" : "text-shortblack"
+            isDark ? "text-white" : "text-shortblack",
           )}
         >
           {level.name}
@@ -117,7 +117,7 @@ export default function UserLevelCard({
         <p
           className={clsx(
             "text-[1.2em]",
-            isDark ? "text-gray-500" : "text-grays"
+            isDark ? "text-gray-500" : "text-grays",
           )}
         >
           ID: {level.id}
@@ -131,27 +131,30 @@ export default function UserLevelCard({
             "rounded-xl p-3 text-center border",
             isDark
               ? "bg-subcard border-gray-700"
-              : "bg-slate-50 border-gray-100"
+              : "bg-slate-50 border-gray-100",
           )}
         >
           <DollarSign
             className={clsx(
               "w-4 h-4 mx-auto mb-1",
-              isDark ? "text-gray-500" : "text-gray-400"
+              isDark ? "text-gray-500" : "text-gray-400",
             )}
           />
           <p
             className={clsx(
               "text-[1.6em] font-bold",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
-            ${level.minEarnings}
+            $
+            {level.minEarnings.toLocaleString("en-US", {
+              minimumFractionDigits: 5,
+            })}
           </p>
           <p
             className={clsx(
               "text-[1em]",
-              isDark ? "text-gray-500" : "text-grays"
+              isDark ? "text-gray-500" : "text-grays",
             )}
           >
             Min Earnings
@@ -162,13 +165,13 @@ export default function UserLevelCard({
             "rounded-xl p-3 text-center border",
             isDark
               ? "bg-subcard border-gray-700"
-              : "bg-slate-50 border-gray-100"
+              : "bg-slate-50 border-gray-100",
           )}
         >
           <TrendingUp
             className={clsx(
               "w-4 h-4 mx-auto mb-1",
-              isDark ? "text-gray-500" : "text-gray-400"
+              isDark ? "text-gray-500" : "text-gray-400",
             )}
           />
           <p className={clsx("text-[1.6em] font-bold", level.iconColor)}>
@@ -177,7 +180,7 @@ export default function UserLevelCard({
           <p
             className={clsx(
               "text-[1em]",
-              isDark ? "text-gray-500" : "text-grays"
+              isDark ? "text-gray-500" : "text-grays",
             )}
           >
             CPM Bonus
@@ -190,7 +193,7 @@ export default function UserLevelCard({
         <p
           className={clsx(
             "text-[1.2em] font-semibold uppercase tracking-wider mb-2",
-            isDark ? "text-gray-500" : "text-grays"
+            isDark ? "text-gray-500" : "text-grays",
           )}
         >
           Benefits ({level.benefits.length})
@@ -208,7 +211,7 @@ export default function UserLevelCard({
             <li
               className={clsx(
                 "text-[1.2em] pl-6",
-                isDark ? "text-gray-500" : "text-grays"
+                isDark ? "text-gray-500" : "text-grays",
               )}
             >
               +{level.benefits.length - 4} more benefits...

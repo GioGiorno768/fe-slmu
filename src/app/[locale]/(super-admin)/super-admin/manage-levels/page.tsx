@@ -70,7 +70,7 @@ export default function ManageLevelsPage() {
           <h1
             className={clsx(
               "text-[2.8em] font-bold",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             Manage User Levels
@@ -78,7 +78,7 @@ export default function ManageLevelsPage() {
           <p
             className={clsx(
               "text-[1.4em] mt-1",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Configure progression levels, CPM bonuses, and benefits for users
@@ -98,7 +98,7 @@ export default function ManageLevelsPage() {
         <div
           className={clsx(
             "rounded-2xl border p-5 text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200",
           )}
         >
           <p className="text-[2.4em] font-bold text-bluelight">
@@ -107,7 +107,7 @@ export default function ManageLevelsPage() {
           <p
             className={clsx(
               "text-[1.2em]",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Total Levels
@@ -116,13 +116,13 @@ export default function ManageLevelsPage() {
         <div
           className={clsx(
             "rounded-2xl border p-5 text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200",
           )}
         >
           <p
             className={clsx(
               "text-[2.4em] font-bold",
-              isDark ? "text-green-400" : "text-green-600"
+              isDark ? "text-green-400" : "text-green-600",
             )}
           >
             {stats.maxCpmBonus}%
@@ -130,7 +130,7 @@ export default function ManageLevelsPage() {
           <p
             className={clsx(
               "text-[1.2em]",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Max CPM Bonus
@@ -139,21 +139,24 @@ export default function ManageLevelsPage() {
         <div
           className={clsx(
             "rounded-2xl border p-5 text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200",
           )}
         >
           <p
             className={clsx(
               "text-[2.4em] font-bold",
-              isDark ? "text-purple-400" : "text-purple-600"
+              isDark ? "text-purple-400" : "text-purple-600",
             )}
           >
-            ${stats.maxThreshold}
+            $
+            {stats.maxThreshold.toLocaleString("en-US", {
+              minimumFractionDigits: 5,
+            })}
           </p>
           <p
             className={clsx(
               "text-[1.2em]",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Max Threshold
@@ -162,13 +165,13 @@ export default function ManageLevelsPage() {
         <div
           className={clsx(
             "rounded-2xl border p-5 text-center",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200",
           )}
         >
           <p
             className={clsx(
               "text-[2.4em] font-bold",
-              isDark ? "text-orange-400" : "text-orange-600"
+              isDark ? "text-orange-400" : "text-orange-600",
             )}
           >
             {stats.totalBenefits}
@@ -176,7 +179,7 @@ export default function ManageLevelsPage() {
           <p
             className={clsx(
               "text-[1.2em]",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Total Benefits
@@ -189,19 +192,19 @@ export default function ManageLevelsPage() {
         <div
           className={clsx(
             "text-center py-16 rounded-2xl border",
-            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200"
+            isDark ? "bg-card border-gray-800" : "bg-white border-gray-200",
           )}
         >
           <Shield
             className={clsx(
               "w-16 h-16 mx-auto mb-4",
-              isDark ? "text-gray-600" : "text-gray-300"
+              isDark ? "text-gray-600" : "text-gray-300",
             )}
           />
           <h3
             className={clsx(
               "text-[2em] font-bold mb-2",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             No Levels Yet
@@ -209,7 +212,7 @@ export default function ManageLevelsPage() {
           <p
             className={clsx(
               "text-[1.4em] mb-4",
-              isDark ? "text-gray-400" : "text-grays"
+              isDark ? "text-gray-400" : "text-grays",
             )}
           >
             Create your first level to get started

@@ -90,7 +90,8 @@ export default function RevenueEstimationChart() {
         enabled: true,
         theme: isDark ? "dark" : "light",
         y: {
-          formatter: (val) => "$" + val.toLocaleString("en-US"),
+          formatter: (val) =>
+            "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 }),
         },
       },
       xaxis: {
@@ -105,7 +106,8 @@ export default function RevenueEstimationChart() {
       },
       yaxis: {
         labels: {
-          formatter: (val) => "$" + val.toFixed(0),
+          formatter: (val) =>
+            "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 }),
           style: {
             colors: isDark ? "#9ca3af" : "#64748b",
           },
@@ -124,14 +126,14 @@ export default function RevenueEstimationChart() {
         },
       },
     }),
-    [data, isDark]
+    [data, isDark],
   );
 
   return (
     <div
       className={clsx(
         "p-8 rounded-3xl shadow-sm border font-figtree",
-        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
       )}
     >
       {/* Header */}
@@ -140,7 +142,7 @@ export default function RevenueEstimationChart() {
           <h3
             className={clsx(
               "text-[1.8em] font-bold flex items-center gap-3",
-              isDark ? "text-white" : "text-slate-800"
+              isDark ? "text-white" : "text-slate-800",
             )}
           >
             <TrendingUp className="w-7 h-7 text-purple-600" />
@@ -149,7 +151,7 @@ export default function RevenueEstimationChart() {
           <p
             className={clsx(
               "text-[1.2em] mt-1",
-              isDark ? "text-gray-400" : "text-slate-400"
+              isDark ? "text-gray-400" : "text-slate-400",
             )}
           >
             Estimated platform revenue based on user earnings (Reverse
@@ -165,14 +167,14 @@ export default function RevenueEstimationChart() {
               "flex items-center gap-2 text-[1.4em] font-medium px-[1.5em] py-[.6em] rounded-xl transition-all duration-300 border",
               isDark
                 ? "bg-subcard border-gray-700 text-white hover:bg-gray-700"
-                : "bg-gray-50 border-gray-200 text-slate-600 hover:bg-white hover:shadow-sm"
+                : "bg-gray-50 border-gray-200 text-slate-600 hover:bg-white hover:shadow-sm",
             )}
           >
             {timeRanges.find((o) => o.key === range)?.label}
             <ChevronDown
               className={clsx(
                 "w-4 h-4 transition-transform duration-300",
-                isRangeOpen && "rotate-180"
+                isRangeOpen && "rotate-180",
               )}
             />
           </button>
@@ -188,7 +190,7 @@ export default function RevenueEstimationChart() {
                   "absolute top-full right-0 mt-2 p-2 w-48 rounded-xl shadow-xl border z-20 animate-in fade-in slide-in-from-top-2",
                   isDark
                     ? "bg-card border-gray-700"
-                    : "bg-white border-gray-100"
+                    : "bg-white border-gray-100",
                 )}
               >
                 {timeRanges.map((r) => (
@@ -205,8 +207,8 @@ export default function RevenueEstimationChart() {
                           ? "bg-purple-500/20 text-purple-400 font-semibold"
                           : "bg-purple-50 text-purple-600 font-semibold"
                         : isDark
-                        ? "text-gray-400 hover:text-white hover:bg-subcard"
-                        : "text-slate-600 hover:bg-gray-50"
+                          ? "text-gray-400 hover:text-white hover:bg-subcard"
+                          : "text-slate-600 hover:bg-gray-50",
                     )}
                   >
                     {r.label}

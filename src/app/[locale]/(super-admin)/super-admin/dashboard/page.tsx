@@ -24,7 +24,7 @@ export default function SuperAdminDashboardPage() {
   }, []);
 
   const formatCurrency = (val: number) =>
-    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
 
   // MAPPING DATA SUPER ADMIN - Only security & system stats
   const superAdminCards: StatCardData[] = [

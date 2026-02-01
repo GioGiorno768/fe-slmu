@@ -111,8 +111,8 @@ export default function PaymentMethodCard({
             ? "bg-card border-gray-700 shadow-sm hover:shadow-lg hover:-translate-y-1"
             : "bg-white border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1"
           : isDark
-          ? "bg-gray-800/50 border-gray-700 opacity-70"
-          : "bg-gray-50 border-gray-200 opacity-70"
+            ? "bg-gray-800/50 border-gray-700 opacity-70"
+            : "bg-gray-50 border-gray-200 opacity-70",
       )}
     >
       {/* Status Indicator */}
@@ -126,8 +126,8 @@ export default function PaymentMethodCard({
                 ? "bg-green-500/20 text-green-400 hover:bg-green-500/30"
                 : "bg-green-100 text-green-700 hover:bg-green-200"
               : isDark
-              ? "bg-gray-700 text-gray-400 hover:bg-gray-600"
-              : "bg-gray-200 text-gray-500 hover:bg-gray-300"
+                ? "bg-gray-700 text-gray-400 hover:bg-gray-600"
+                : "bg-gray-200 text-gray-500 hover:bg-gray-300",
           )}
         >
           {template.is_active ? (
@@ -149,7 +149,7 @@ export default function PaymentMethodCard({
         <div
           className={clsx(
             "w-12 h-12 rounded-xl flex items-center justify-center",
-            typeConfig.bg
+            typeConfig.bg,
           )}
         >
           <TypeIcon className={clsx("w-6 h-6", typeConfig.text)} />
@@ -158,7 +158,7 @@ export default function PaymentMethodCard({
           <h3
             className={clsx(
               "text-[1.6em] font-bold truncate",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             {template.name}
@@ -168,7 +168,7 @@ export default function PaymentMethodCard({
               className={clsx(
                 "px-2 py-0.5 rounded-md text-[1em] font-medium",
                 typeConfig.bg,
-                typeConfig.text
+                typeConfig.text,
               )}
             >
               {typeConfig.label}
@@ -178,7 +178,7 @@ export default function PaymentMethodCard({
                 "px-2 py-0.5 rounded-md text-[1em] font-semibold",
                 isDark
                   ? "bg-gray-700 text-gray-300"
-                  : "bg-slate-100 text-slate-600"
+                  : "bg-slate-100 text-slate-600",
               )}
             >
               {template.currency}
@@ -193,19 +193,19 @@ export default function PaymentMethodCard({
         <div
           className={clsx(
             "flex items-center gap-2 text-[1.2em]",
-            isDark ? "text-gray-400" : "text-grays"
+            isDark ? "text-gray-400" : "text-grays",
           )}
         >
           <InputIcon
             className={clsx(
               "w-4 h-4",
-              isDark ? "text-gray-500" : "text-gray-400"
+              isDark ? "text-gray-500" : "text-gray-400",
             )}
           />
           <span
             className={clsx(
               "font-medium",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             {template.input_label}
@@ -218,10 +218,27 @@ export default function PaymentMethodCard({
           <span
             className={clsx(
               "font-semibold",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
-            ${Number(template.fee).toFixed(2)}
+            {(() => {
+              const fee = Number(template.fee);
+              switch (template.currency) {
+                case "IDR":
+                  return `Rp ${fee.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+                case "EUR":
+                  return `€${fee.toLocaleString("de-DE", { minimumFractionDigits: 5 })}`;
+                case "GBP":
+                  return `£${fee.toLocaleString("en-GB", { minimumFractionDigits: 5 })}`;
+                case "SGD":
+                  return `S$${fee.toLocaleString("en-SG", { minimumFractionDigits: 5 })}`;
+                case "MYR":
+                  return `RM ${fee.toLocaleString("ms-MY", { minimumFractionDigits: 5 })}`;
+                case "USD":
+                default:
+                  return `$${fee.toLocaleString("en-US", { minimumFractionDigits: 5 })}`;
+              }
+            })()}
           </span>
         </div>
       </div>
@@ -230,7 +247,7 @@ export default function PaymentMethodCard({
       <div
         className={clsx(
           "flex gap-2 pt-3 border-t",
-          isDark ? "border-gray-700" : "border-gray-100"
+          isDark ? "border-gray-700" : "border-gray-100",
         )}
       >
         <button
@@ -246,7 +263,7 @@ export default function PaymentMethodCard({
             "py-2 px-3 rounded-xl font-semibold text-[1.2em] transition-all border",
             isDark
               ? "bg-red-500/20 text-red-400 border-red-500/30 hover:bg-red-500/30"
-              : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
+              : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100",
           )}
         >
           <Trash2 className="w-3.5 h-3.5" />

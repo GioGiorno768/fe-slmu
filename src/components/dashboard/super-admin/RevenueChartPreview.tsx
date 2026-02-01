@@ -84,7 +84,8 @@ export default function RevenueChartPreview() {
         enabled: true,
         theme: isDark ? "dark" : "light",
         y: {
-          formatter: (val) => "$" + val.toLocaleString("en-US"),
+          formatter: (val) =>
+            "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 }),
         },
       },
       xaxis: {
@@ -99,7 +100,8 @@ export default function RevenueChartPreview() {
       },
       yaxis: {
         labels: {
-          formatter: (val) => "$" + val.toFixed(0),
+          formatter: (val) =>
+            "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 }),
           style: {
             colors: isDark ? "#9ca3af" : "#64748b",
           },
@@ -118,14 +120,14 @@ export default function RevenueChartPreview() {
         },
       },
     }),
-    [data, isDark]
+    [data, isDark],
   );
 
   return (
     <div
       className={clsx(
         "p-8 rounded-3xl shadow-sm border font-figtree",
-        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
       )}
     >
       {/* Header */}
@@ -134,13 +136,13 @@ export default function RevenueChartPreview() {
           <h3
             className={clsx(
               "text-[1.8em] font-bold flex items-center gap-3",
-              isDark ? "text-white" : "text-slate-800"
+              isDark ? "text-white" : "text-slate-800",
             )}
           >
             <TrendingUp
               className={clsx(
                 "w-7 h-7",
-                isDark ? "text-purple-400" : "text-purple-600"
+                isDark ? "text-purple-400" : "text-purple-600",
               )}
             />
             Revenue Estimation
@@ -148,7 +150,7 @@ export default function RevenueChartPreview() {
           <p
             className={clsx(
               "text-[1.2em] mt-1",
-              isDark ? "text-gray-400" : "text-slate-400"
+              isDark ? "text-gray-400" : "text-slate-400",
             )}
           >
             This week&apos;s estimated revenue
@@ -162,7 +164,7 @@ export default function RevenueChartPreview() {
             "flex items-center gap-2 text-[1.3em] font-medium px-4 py-2 rounded-xl transition-all duration-300 group",
             isDark
               ? "text-purple-400 bg-purple-500/20 hover:bg-purple-500/30"
-              : "text-purple-600 hover:text-purple-700 bg-purple-50 hover:bg-purple-100"
+              : "text-purple-600 hover:text-purple-700 bg-purple-50 hover:bg-purple-100",
           )}
         >
           View Details

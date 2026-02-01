@@ -57,13 +57,13 @@ export default function WithdrawalItem({
     if (currency === "IDR") {
       return `Rp ${val.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
     }
-    // Default to USD
-    return "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    // Default to USD with 5 decimal places
+    return "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
   };
 
   // Helper to format USD amount
   const formatUSD = (val: number) =>
-    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("id-ID", {
@@ -78,7 +78,7 @@ export default function WithdrawalItem({
     <div
       className={clsx(
         "rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-md group relative",
-        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+        isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
       )}
     >
       {/* HEADER SECTION */}
@@ -92,16 +92,16 @@ export default function WithdrawalItem({
                 ? "bg-green-500/20 text-green-400"
                 : "bg-green-100 text-green-600"
               : trx.status === "approved"
-              ? isDark
-                ? "bg-blue-500/20 text-blue-400"
-                : "bg-blue-100 text-blue-600"
-              : trx.status === "rejected"
-              ? isDark
-                ? "bg-red-500/20 text-red-400"
-                : "bg-red-100 text-red-600"
-              : isDark
-              ? "bg-yellow-500/20 text-yellow-400"
-              : "bg-yellow-100 text-yellow-600"
+                ? isDark
+                  ? "bg-blue-500/20 text-blue-400"
+                  : "bg-blue-100 text-blue-600"
+                : trx.status === "rejected"
+                  ? isDark
+                    ? "bg-red-500/20 text-red-400"
+                    : "bg-red-100 text-red-600"
+                  : isDark
+                    ? "bg-yellow-500/20 text-yellow-400"
+                    : "bg-yellow-100 text-yellow-600",
           )}
         >
           {trx.status === "paid" ? (
@@ -144,16 +144,16 @@ export default function WithdrawalItem({
                         ? "bg-green-500/20 text-green-400"
                         : "bg-green-100 text-green-700"
                       : trx.status === "approved"
-                      ? isDark
-                        ? "bg-blue-500/20 text-blue-400"
-                        : "bg-blue-100 text-blue-700"
-                      : trx.status === "rejected"
-                      ? isDark
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-red-100 text-red-700"
-                      : isDark
-                      ? "bg-yellow-500/20 text-yellow-400"
-                      : "bg-yellow-100 text-yellow-700"
+                        ? isDark
+                          ? "bg-blue-500/20 text-blue-400"
+                          : "bg-blue-100 text-blue-700"
+                        : trx.status === "rejected"
+                          ? isDark
+                            ? "bg-red-500/20 text-red-400"
+                            : "bg-red-100 text-red-700"
+                          : isDark
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : "bg-yellow-100 text-yellow-700",
                   )}
                 >
                   {trx.status}
@@ -247,7 +247,7 @@ export default function WithdrawalItem({
           <div
             className={clsx(
               "h-px w-full mb-4",
-              isDark ? "bg-gray-800" : "bg-gray-100"
+              isDark ? "bg-gray-800" : "bg-gray-100",
             )}
           />
 
@@ -309,7 +309,7 @@ export default function WithdrawalItem({
                 trx.currency !== "USD"
                   ? formatCurrency(
                       (trx.amount + trx.fee) * trx.exchangeRate,
-                      trx.currency
+                      trx.currency,
                     )
                   : formatUSD(trx.amount + trx.fee)}
                 {/* Show USD equivalent as secondary */}
@@ -343,8 +343,8 @@ export default function WithdrawalItem({
                   trx.riskScore === "safe"
                     ? "bg-green-50 border-green-200 text-green-600"
                     : trx.riskScore === "medium"
-                    ? "bg-yellow-50 border-yellow-200 text-yellow-600"
-                    : "bg-red-50 border-red-200 text-red-600"
+                      ? "bg-yellow-50 border-yellow-200 text-yellow-600"
+                      : "bg-red-50 border-red-200 text-red-600",
                 )}
               >
                 <AlertTriangle className="w-3 h-3" /> Risk: {trx.riskScore}

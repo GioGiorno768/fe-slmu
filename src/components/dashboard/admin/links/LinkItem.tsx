@@ -61,8 +61,8 @@ LinkItemProps) {
             ? "border-bluelight ring-2 ring-bluelight/20 bg-blue-500/10"
             : "border-bluelight ring-2 ring-bluelight/20 bg-blue-50/30"
           : isDark
-          ? "bg-card border-gray-800 hover:border-blue-500/40"
-          : "bg-white border-gray-100 hover:border-blue-200"
+            ? "bg-card border-gray-800 hover:border-blue-500/40"
+            : "bg-white border-gray-100 hover:border-blue-200",
       )}
     >
       {/* HEADER SECTION */}
@@ -104,12 +104,12 @@ LinkItemProps) {
                         ? "bg-green-500/20 text-green-400"
                         : "bg-green-100 text-green-700"
                       : link.status === "disabled"
-                      ? isDark
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-red-100 text-red-700"
-                      : isDark
-                      ? "bg-gray-500/20 text-gray-400"
-                      : "bg-gray-100 text-gray-600"
+                        ? isDark
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-red-100 text-red-700"
+                        : isDark
+                          ? "bg-gray-500/20 text-gray-400"
+                          : "bg-gray-100 text-gray-600",
                   )}
                 >
                   {link.status}
@@ -124,7 +124,7 @@ LinkItemProps) {
                 <div
                   className={clsx(
                     "p-1.5 rounded-full animate-in zoom-in duration-200",
-                    isDark ? "bg-blue-500/20" : "bg-blue-50"
+                    isDark ? "bg-blue-500/20" : "bg-blue-50",
                   )}
                 >
                   <CheckCircle2 className="w-6 h-6 text-bluelight fill-blue-50" />
@@ -144,7 +144,7 @@ LinkItemProps) {
                   e.stopPropagation();
                   onAction(
                     link.id,
-                    link.status === "active" ? "block" : "activate"
+                    link.status === "active" ? "block" : "activate",
                   );
                 }}
                 className={clsx(
@@ -154,8 +154,8 @@ LinkItemProps) {
                       ? "text-red-400 hover:bg-red-500/10 border-red-500/30"
                       : "text-red-600 hover:bg-red-50 border-red-200"
                     : isDark
-                    ? "text-green-400 hover:bg-green-500/10 border-green-500/30"
-                    : "text-green-600 hover:bg-green-50 border-green-200"
+                      ? "text-green-400 hover:bg-green-500/10 border-green-500/30"
+                      : "text-green-600 hover:bg-green-50 border-green-200",
                 )}
               >
                 {link.status === "active" ? (
@@ -183,7 +183,7 @@ LinkItemProps) {
               onClick={(e) => e.stopPropagation()}
               className={clsx(
                 "opacity-0 group-hover/link:opacity-100 transition-opacity p-1 rounded",
-                isDark ? "hover:bg-gray-700" : "hover:bg-slate-100"
+                isDark ? "hover:bg-gray-700" : "hover:bg-slate-100",
               )}
             >
               <ExternalLink className="w-3 h-3" />
@@ -193,7 +193,7 @@ LinkItemProps) {
           <div
             className={clsx(
               "h-px w-full mb-4",
-              isDark ? "bg-gray-800" : "bg-gray-100"
+              isDark ? "bg-gray-800" : "bg-gray-100",
             )}
           />
 
@@ -206,7 +206,7 @@ LinkItemProps) {
                   "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border shadow-sm",
                   isDark
                     ? "bg-gray-700 text-gray-400 border-gray-600"
-                    : "bg-gray-200 text-gray-500 border-white"
+                    : "bg-gray-200 text-gray-500 border-white",
                 )}
               >
                 G
@@ -215,7 +215,7 @@ LinkItemProps) {
                 <p
                   className={clsx(
                     "font-medium",
-                    isDark ? "text-gray-400" : "text-gray-500"
+                    isDark ? "text-gray-400" : "text-gray-500",
                   )}
                 >
                   Guest Link
@@ -259,7 +259,12 @@ LinkItemProps) {
                 </p>
                 <p className="flex items-center gap-2 text-grays">
                   <DollarSign className="w-3.5 h-3.5" /> Earn:{" "}
-                  <b className="text-green-600">${link.earnings}</b>
+                  <b className="text-green-600">
+                    $
+                    {link.earnings.toLocaleString("en-US", {
+                      minimumFractionDigits: 5,
+                    })}
+                  </b>
                 </p>
               </div>
 
@@ -288,7 +293,7 @@ LinkItemProps) {
                     "px-3 py-1 rounded-full text-[0.9em] font-bold border",
                     link.adsLevel === "noAds"
                       ? "bg-gray-50 border-gray-200 text-gray-500"
-                      : "bg-purple-50 border-purple-200 text-purple-600"
+                      : "bg-purple-50 border-purple-200 text-purple-600",
                   )}
                 >
                   {link.adsLevel === "noAds"

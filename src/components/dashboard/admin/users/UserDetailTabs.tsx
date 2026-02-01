@@ -60,21 +60,26 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
 
   // Helper for currency
   const formatCurrency = (v: number) =>
-    format.number(v, { style: "currency", currency: "USD" });
+    format.number(v, {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
 
   return (
     <div className="lg:col-span-2">
       <div
         className={clsx(
           "rounded-3xl shadow-sm border overflow-hidden min-h-[550px] h-full",
-          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100"
+          isDark ? "bg-card border-gray-800" : "bg-white border-gray-100",
         )}
       >
         {/* Single Tab Header - Finance Only (Overview & Security hidden for MVP) */}
         <div
           className={clsx(
             "flex border-b px-8",
-            isDark ? "border-gray-700" : "border-gray-100"
+            isDark ? "border-gray-700" : "border-gray-100",
           )}
         >
           <div className="px-8 py-5 text-[1.4em] font-medium border-b-2 border-bluelight text-bluelight">
@@ -91,7 +96,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
               <h4
                 className={clsx(
                   "text-[1.4em] font-bold mb-4 flex items-center gap-2",
-                  isDark ? "text-white" : "text-shortblack"
+                  isDark ? "text-white" : "text-shortblack",
                 )}
               >
                 <CreditCard className="w-5 h-5 text-bluelight" />{" "}
@@ -106,7 +111,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                         "p-5 rounded-2xl border flex items-center gap-4 hover:shadow-md transition-shadow",
                         isDark
                           ? "bg-subcard border-gray-700"
-                          : "bg-white border-gray-200"
+                          : "bg-white border-gray-200",
                       )}
                     >
                       <div
@@ -114,21 +119,21 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                           "p-3 rounded-xl border",
                           isDark
                             ? "bg-gray-700 border-gray-600"
-                            : "bg-slate-50 border-gray-100"
+                            : "bg-slate-50 border-gray-100",
                         )}
                       >
                         {pm.category === "bank" ? (
                           <Landmark
                             className={clsx(
                               "w-6 h-6",
-                              isDark ? "text-gray-400" : "text-grays"
+                              isDark ? "text-gray-400" : "text-grays",
                             )}
                           />
                         ) : (
                           <Smartphone
                             className={clsx(
                               "w-6 h-6",
-                              isDark ? "text-gray-400" : "text-grays"
+                              isDark ? "text-gray-400" : "text-grays",
                             )}
                           />
                         )}
@@ -137,7 +142,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                         <p
                           className={clsx(
                             "font-bold text-[1.3em]",
-                            isDark ? "text-white" : "text-shortblack"
+                            isDark ? "text-white" : "text-shortblack",
                           )}
                         >
                           {pm.provider}{" "}
@@ -147,7 +152,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                                 "text-[0.7em] px-2 py-0.5 rounded ml-2 align-middle",
                                 isDark
                                   ? "bg-blue-500/20 text-blue-400"
-                                  : "bg-blue-100 text-blue-600"
+                                  : "bg-blue-100 text-blue-600",
                               )}
                             >
                               {t("finance.default")}
@@ -157,7 +162,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                         <p
                           className={clsx(
                             "text-[1.2em] font-mono",
-                            isDark ? "text-gray-400" : "text-grays"
+                            isDark ? "text-gray-400" : "text-grays",
                           )}
                         >
                           {pm.accountNumber}
@@ -170,7 +175,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                 <p
                   className={clsx(
                     "italic text-[1.3em]",
-                    isDark ? "text-gray-400" : "text-grays"
+                    isDark ? "text-gray-400" : "text-grays",
                   )}
                 >
                   {t("finance.noMethods")}
@@ -184,7 +189,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                 <h4
                   className={clsx(
                     "text-[1.4em] font-bold flex items-center gap-2",
-                    isDark ? "text-white" : "text-shortblack"
+                    isDark ? "text-white" : "text-shortblack",
                   )}
                 >
                   <History className="w-5 h-5 text-bluelight" />{" "}
@@ -199,13 +204,13 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                       "flex items-center gap-2 px-4 py-2 border rounded-xl text-[1.1em] font-medium transition-colors shadow-sm",
                       isDark
                         ? "bg-subcard border-gray-700 text-white hover:bg-gray-700"
-                        : "bg-white border-gray-200 text-shortblack hover:bg-gray-50"
+                        : "bg-white border-gray-200 text-shortblack hover:bg-gray-50",
                     )}
                   >
                     <Filter
                       className={clsx(
                         "w-4 h-4",
-                        isDark ? "text-gray-400" : "text-grays"
+                        isDark ? "text-gray-400" : "text-grays",
                       )}
                     />
                     <span className={isDark ? "text-gray-400" : "text-grays"}>
@@ -218,7 +223,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                       className={clsx(
                         "w-4 h-4 transition-transform",
                         isDark ? "text-gray-400" : "text-grays",
-                        isSortOpen && "rotate-180"
+                        isSortOpen && "rotate-180",
                       )}
                     />
                   </button>
@@ -237,7 +242,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                             "absolute right-0 mt-2 w-48 rounded-xl shadow-xl border p-2 z-30",
                             isDark
                               ? "bg-card border-gray-700"
-                              : "bg-white border-gray-100"
+                              : "bg-white border-gray-100",
                           )}
                         >
                           {[
@@ -257,8 +262,8 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                                     ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
                                     : "bg-blue-50 text-bluelight font-semibold"
                                   : isDark
-                                  ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
-                                  : "text-shortblack hover:bg-gray-50"
+                                    ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                                    : "text-shortblack hover:bg-gray-50",
                               )}
                             >
                               <span>{option.label}</span>
@@ -284,7 +289,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                       "p-8 text-center rounded-2xl border border-dashed",
                       isDark
                         ? "bg-subcard border-gray-700 text-gray-400"
-                        : "bg-slate-50 border-gray-200 text-grays"
+                        : "bg-slate-50 border-gray-200 text-grays",
                     )}
                   >
                     No withdrawal history found.
@@ -298,7 +303,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                           "p-4 rounded-xl transition-colors border",
                           isDark
                             ? "border-gray-700 hover:bg-subcard"
-                            : "border-gray-100 hover:bg-slate-50"
+                            : "border-gray-100 hover:bg-slate-50",
                         )}
                       >
                         {/* Row 1: Amount + Method + Account | Status Badge */}
@@ -312,12 +317,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                                     ? "bg-green-500/20 text-green-400"
                                     : "bg-green-100 text-green-600"
                                   : tx.status === "rejected"
-                                  ? isDark
-                                    ? "bg-red-500/20 text-red-400"
-                                    : "bg-red-100 text-red-600"
-                                  : isDark
-                                  ? "bg-amber-500/20 text-amber-400"
-                                  : "bg-amber-100 text-amber-600"
+                                    ? isDark
+                                      ? "bg-red-500/20 text-red-400"
+                                      : "bg-red-100 text-red-600"
+                                    : isDark
+                                      ? "bg-amber-500/20 text-amber-400"
+                                      : "bg-amber-100 text-amber-600",
                               )}
                             >
                               {tx.status === "paid" ? (
@@ -329,7 +334,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                             <p
                               className={clsx(
                                 "font-bold text-[1.2em]",
-                                isDark ? "text-white" : "text-shortblack"
+                                isDark ? "text-white" : "text-shortblack",
                               )}
                             >
                               {formatCurrency(tx.amount)} via {tx.method}{" "}
@@ -361,12 +366,12 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                                   ? "bg-green-500/20 text-green-400"
                                   : "bg-green-50 text-green-600"
                                 : tx.status === "rejected"
-                                ? isDark
-                                  ? "bg-red-500/20 text-red-400"
-                                  : "bg-red-50 text-red-600"
-                                : isDark
-                                ? "bg-amber-500/20 text-amber-400"
-                                : "bg-amber-50 text-amber-600"
+                                  ? isDark
+                                    ? "bg-red-500/20 text-red-400"
+                                    : "bg-red-50 text-red-600"
+                                  : isDark
+                                    ? "bg-amber-500/20 text-amber-400"
+                                    : "bg-amber-50 text-amber-600",
                             )}
                           >
                             {tx.status}
@@ -378,7 +383,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                           <p
                             className={clsx(
                               "text-[1.1em]",
-                              isDark ? "text-gray-400" : "text-grays"
+                              isDark ? "text-gray-400" : "text-grays",
                             )}
                           >
                             {format.dateTime(new Date(tx.date), {
@@ -388,7 +393,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                               <span
                                 className={clsx(
                                   "ml-2",
-                                  isDark ? "text-gray-500" : "text-slate-400"
+                                  isDark ? "text-gray-500" : "text-slate-400",
                                 )}
                               >
                                 • #{tx.txId}
@@ -399,14 +404,14 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                             <span
                               className={clsx(
                                 "text-[1em]",
-                                isDark ? "text-gray-400" : "text-grays"
+                                isDark ? "text-gray-400" : "text-grays",
                               )}
                             >
                               Fee:{" "}
                               <span
                                 className={clsx(
                                   "font-medium",
-                                  isDark ? "text-white" : "text-shortblack"
+                                  isDark ? "text-white" : "text-shortblack",
                                 )}
                               >
                                 {formatCurrency(tx.fee)}
@@ -425,7 +430,7 @@ export default function UserDetailTabs({ data }: UserDetailTabsProps) {
                           "w-full py-3 mt-2 border rounded-xl text-[1.2em] font-medium transition-colors flex items-center justify-center gap-2",
                           isDark
                             ? "bg-subcard border-gray-700 text-gray-400 hover:text-white hover:bg-gray-700"
-                            : "bg-slate-50 hover:bg-slate-100 border-gray-200 text-grays hover:text-shortblack"
+                            : "bg-slate-50 hover:bg-slate-100 border-gray-200 text-grays hover:text-shortblack",
                         )}
                       >
                         <ChevronDown className="w-4 h-4" />

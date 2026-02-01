@@ -67,7 +67,7 @@ export default function PlatformAnalyticsPage() {
     if (compact && val >= 1_000) {
       return "$" + formatCompact(val);
     }
-    return "$" + val.toLocaleString("en-US", { minimumFractionDigits: 2 });
+    return "$" + val.toLocaleString("en-US", { minimumFractionDigits: 5 });
   };
 
   // Get current filter label
@@ -208,7 +208,7 @@ export default function PlatformAnalyticsPage() {
           <h1
             className={clsx(
               "text-[2.4em] font-bold",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             Platform Analytics
@@ -216,7 +216,7 @@ export default function PlatformAnalyticsPage() {
           <p
             className={clsx(
               "text-[1.4em]",
-              isDark ? "text-gray-400" : "text-gray-400"
+              isDark ? "text-gray-400" : "text-gray-400",
             )}
           >
             Comprehensive overview of platform performance and metrics
@@ -231,7 +231,7 @@ export default function PlatformAnalyticsPage() {
               "flex items-center gap-2 text-[1.4em] font-medium px-5 py-3 rounded-2xl transition-all duration-300 border",
               isDark
                 ? "bg-subcard border-gray-700 text-white hover:bg-gray-700"
-                : "bg-white border-gray-200 text-slate-700 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm"
+                : "bg-white border-gray-200 text-slate-700 hover:bg-gray-50 hover:border-gray-300 hover:shadow-sm",
             )}
           >
             <Calendar className="w-4 h-4 text-bluelight" />
@@ -240,7 +240,7 @@ export default function PlatformAnalyticsPage() {
               className={clsx(
                 "w-4 h-4 transition-transform duration-300",
                 isDark ? "text-gray-400" : "text-gray-400",
-                isFilterOpen && "rotate-180"
+                isFilterOpen && "rotate-180",
               )}
             />
           </button>
@@ -258,7 +258,7 @@ export default function PlatformAnalyticsPage() {
                   "absolute top-full right-0 mt-2 p-2 w-44 rounded-2xl shadow-xl border z-20",
                   isDark
                     ? "bg-card border-gray-700"
-                    : "bg-white border-gray-100"
+                    : "bg-white border-gray-100",
                 )}
               >
                 {TIME_FILTER_OPTIONS.map((option) => (
@@ -275,8 +275,8 @@ export default function PlatformAnalyticsPage() {
                           ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
                           : "bg-bluelight/10 text-bluelight font-semibold"
                         : isDark
-                        ? "text-gray-400 hover:text-white hover:bg-subcard"
-                        : "text-slate-600 hover:bg-gray-50"
+                          ? "text-gray-400 hover:text-white hover:bg-subcard"
+                          : "text-slate-600 hover:bg-gray-50",
                     )}
                   >
                     {option.label}
