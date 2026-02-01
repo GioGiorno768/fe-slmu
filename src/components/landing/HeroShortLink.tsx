@@ -139,9 +139,9 @@ export default function HeroShortLink() {
   const handleCopy = () => {
     if (!shortLink) return;
     const protocol = window.location.protocol;
-    navigator.clipboard.writeText(`${protocol}//${shortLink}`);
-    setIsCopied(true);
-    navigator.clipboard.writeText(`${protocol}//${shortLink}`);
+    // navigator.clipboard.writeText(`${protocol}//${shortLink}`);
+    // setIsCopied(true);
+    navigator.clipboard.writeText(`${shortLink}`);
     setIsCopied(true);
     showToast("Link telah disalin ke clipboard!", "success");
     setTimeout(() => setIsCopied(false), 2000);
