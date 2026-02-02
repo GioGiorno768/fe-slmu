@@ -4,33 +4,13 @@ import type {
   AdminLinkStats,
   LinkStatus,
 } from "@/types/type";
+import { getToken } from "./authService";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
-// Helper: Get auth token from sessionStorage or cookie
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-
-  // First check sessionStorage
-  let token = sessionStorage.getItem("auth_token");
-
-  // If not in sessionStorage, try to get from cookie
-  if (!token) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === "auth_token" && value) {
-        token = value;
-        break;
-      }
-    }
-  }
-
-  return token;
-}
-
+// Helper: Auth headers (uses authService.getToken)
 function authHeaders(): HeadersInit {
-  const token = getAuthToken();
+  const token = getToken();
   return {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -43,7 +23,7 @@ function authHeaders(): HeadersInit {
 // ===========================
 export async function getLinks(
   page: number = 1,
-  filters: AdminLinkFilters
+  filters: AdminLinkFilters,
 ): Promise<{ data: AdminLink[]; totalPages: number; totalCount: number }> {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -90,7 +70,7 @@ export async function getLinks(
     const errorData = await res.json().catch(() => ({}));
     console.error("Admin Links API Error:", res.status, errorData);
     throw new Error(
-      errorData.message || `Failed to fetch links (${res.status})`
+      errorData.message || `Failed to fetch links (${res.status})`,
     );
   }
 
@@ -184,14 +164,14 @@ export async function bulkUpdateLinkStatus(params: {
         filters.status === "disabled"
           ? "1"
           : filters.status === "active"
-          ? "0"
-          : undefined,
+            ? "0"
+            : undefined,
       ad_level: filters.adsLevel !== "all" ? filters.adsLevel : undefined,
       search: filters.search || undefined,
     };
   } else {
     body.ids = ids.map(
-      (id) => parseInt(id.replace("link-", ""), 10) || parseInt(id, 10)
+      (id) => parseInt(id.replace("link-", ""), 10) || parseInt(id, 10),
     );
   }
 
@@ -211,7 +191,7 @@ export async function bulkUpdateLinkStatus(params: {
 export async function updateLinkStatus(
   id: string,
   status: LinkStatus,
-  reason?: string
+  reason?: string,
 ): Promise<boolean> {
   const linkId = id.replace("link-", "") || id;
 
@@ -250,7 +230,7 @@ export async function deleteLinks(ids: string[]): Promise<boolean> {
 export async function sendMessageToUser(
   linkId: string,
   message: string,
-  type: "warning" | "announcement"
+  type: "warning" | "announcement",
 ): Promise<boolean> {
   const id = linkId.replace("link-", "") || linkId;
 

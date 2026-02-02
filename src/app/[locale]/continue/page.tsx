@@ -26,6 +26,7 @@ export default function ContinuePage() {
   // 🛡️ Device Fingerprinting for Self-Click Detection
   const { visitorId } = useFingerprint();
 
+  // Get session ID directly from URL param
   const sessionId = searchParams.get("s");
 
   // Don't auto-load, wait for user to click
@@ -50,7 +51,7 @@ export default function ContinuePage() {
       try {
         // 1. Fetch session data
         const sessionResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/links/session/${sessionId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/links/session/${sessionId}`,
         );
         const sessionResult = await sessionResponse.json();
 
@@ -71,7 +72,7 @@ export default function ContinuePage() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: data.token }),
-          }
+          },
         );
 
         const statusResult = await statusResponse.json();
@@ -79,7 +80,7 @@ export default function ContinuePage() {
         if (!statusResponse.ok || !statusResult.data?.all_complete) {
           console.warn("🛡️ Direct continue access blocked:", statusResult);
           setError(
-            "Anda harus menyelesaikan semua langkah artikel terlebih dahulu."
+            "Anda harus menyelesaikan semua langkah artikel terlebih dahulu.",
           );
           setIsValid(false);
           setIsCheckingStatus(false);
@@ -111,7 +112,7 @@ export default function ContinuePage() {
         sessionData.code,
         sessionData.token,
         password || undefined,
-        visitorId || undefined // 🛡️ Pass fingerprint for self-click detection
+        visitorId || undefined, // 🛡️ Pass fingerprint for self-click detection
       );
 
       // Success! Redirect to destination (open in new tab)

@@ -11,35 +11,14 @@ import type {
   AdminDashboardStats,
 } from "@/types/type";
 import { Sparkles, Megaphone, Wallet, Star } from "lucide-react";
+import { getToken } from "./authService";
 
 // --- API BASE URL ---
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
-// Helper: Get auth token (matches withdrawalService.ts pattern)
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-
-  // First check sessionStorage
-  let token = sessionStorage.getItem("auth_token");
-
-  // If not in sessionStorage, try to get from cookie
-  if (!token) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === "auth_token" && value) {
-        token = value;
-        break;
-      }
-    }
-  }
-
-  return token;
-}
-
-// Helper: Auth headers
+// Helper: Auth headers (uses authService.getToken)
 function authHeaders(): HeadersInit {
-  const token = getAuthToken();
+  const token = getToken();
   return {
     "Content-Type": "application/json",
     Accept: "application/json",

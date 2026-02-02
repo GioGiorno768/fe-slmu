@@ -10,34 +10,13 @@ import type {
   AdminWithdrawalFilters,
   WithdrawalDetail,
 } from "@/types/type";
+import { getToken } from "./authService";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
-// Helper: Get auth token (matches authService.ts pattern)
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-
-  // First check sessionStorage
-  let token = sessionStorage.getItem("auth_token");
-
-  // If not in sessionStorage, try to get from cookie
-  if (!token) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === "auth_token" && value) {
-        token = value;
-        break;
-      }
-    }
-  }
-
-  return token;
-}
-
-// Helper: Auth headers
+// Helper: Auth headers (uses authService.getToken)
 function authHeaders(): HeadersInit {
-  const token = getAuthToken();
+  const token = getToken();
   return {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -61,7 +40,7 @@ export async function getWithdrawalData(
   page: number = 1,
   search: string = "",
   sort: "newest" | "oldest" = "newest",
-  method: string = "all"
+  method: string = "all",
 ): Promise<{
   stats: WithdrawalStats;
   transactions: Transaction[];
@@ -93,7 +72,7 @@ export async function getWithdrawalData(
     const errorData = await res.json().catch(() => ({}));
     console.error("Withdrawal API Error:", res.status, errorData);
     throw new Error(
-      errorData.message || `Failed to fetch withdrawal data (${res.status})`
+      errorData.message || `Failed to fetch withdrawal data (${res.status})`,
     );
   }
 
@@ -209,7 +188,7 @@ export async function requestWithdrawal(
     currency: string; // e.g., 'IDR', 'USD'
     localAmount: number; // Amount in user's local currency
     exchangeRate: number; // Exchange rate at time of request
-  }
+  },
 ): Promise<boolean> {
   const res = await fetch(`${API_URL}/withdrawals`, {
     method: "POST",
@@ -276,7 +255,7 @@ export async function deleteWithdrawalHistory(id: string): Promise<boolean> {
  */
 export async function getWithdrawals(
   page: number = 1,
-  filters?: AdminWithdrawalFilters
+  filters?: AdminWithdrawalFilters,
 ): Promise<{ data: RecentWithdrawal[]; totalPages: number }> {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -390,7 +369,7 @@ export async function getWithdrawalStats(): Promise<AdminWithdrawalStats> {
 export async function updateTransactionStatus(
   id: string,
   status: "approved" | "rejected" | "paid",
-  reasonOrProof?: string
+  reasonOrProof?: string,
 ): Promise<boolean> {
   const res = await fetch(`${API_URL}/admin/withdrawals/${id}/status`, {
     method: "PUT",
@@ -417,7 +396,7 @@ export async function updateTransactionStatus(
  * Get withdrawal detail (admin)
  */
 export async function getWithdrawalDetail(
-  id: string
+  id: string,
 ): Promise<WithdrawalDetail | null> {
   // For now, fetch from admin list and find by id
   const { data } = await getWithdrawals(1, { search: id });

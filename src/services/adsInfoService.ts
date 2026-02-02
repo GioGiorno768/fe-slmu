@@ -1,25 +1,8 @@
 // src/services/adsInfoService.ts
 import type { AdLevelConfig } from "@/types/type";
+import { getToken } from "./authService";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-
-// Helper: Get auth token (same pattern as other services)
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-
-  let token = sessionStorage.getItem("auth_token");
-  if (!token) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === "auth_token" && value) {
-        token = value;
-        break;
-      }
-    }
-  }
-  return token;
-}
 
 // API response type
 interface ApiAdLevel {
@@ -44,7 +27,7 @@ interface ApiAdLevel {
  */
 export async function getAdLevels(): Promise<AdLevelConfig[]> {
   try {
-    const token = getAuthToken();
+    const token = getToken();
     const res = await fetch(`${API_URL}/ad-levels`, {
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 // Auth Service - Handle semua API calls untuk authentication
+// Cookie-only approach - no sessionStorage
 import apiClient from "./apiClient";
 import { clearAllCaches } from "@/utils/cacheUtils";
 
@@ -6,97 +7,114 @@ const TOKEN_KEY = "auth_token";
 const USER_KEY = "user_data";
 const HAS_REGISTERED_KEY = "has_registered";
 
-// ==================== Helper Functions ====================
+// Legacy keys to cleanup
+const LEGACY_SESSION_KEYS = ["auth_token", "user_data"];
 
-export const setToken = (token: string) => {
-  if (typeof window !== "undefined") {
-    sessionStorage.setItem(TOKEN_KEY, token);
-    // Also set as session cookie for middleware (no max-age = session cookie)
-    document.cookie = `auth_token=${token}; path=/`;
-  }
-};
+// ==================== Cookie Helper Functions ====================
 
-export const getToken = (): string | null => {
-  if (typeof window !== "undefined") {
-    // First check sessionStorage
-    let token = sessionStorage.getItem(TOKEN_KEY);
+/**
+ * Get cookie value by name
+ */
+const getCookie = (name: string): string | null => {
+  if (typeof document === "undefined") return null;
 
-    // If not in sessionStorage, try to get from cookie (for new tabs)
-    if (!token) {
-      const cookies = document.cookie.split(";");
-      for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split("=");
-        if (name === TOKEN_KEY && value) {
-          token = value;
-          // Sync to sessionStorage for subsequent calls
-          sessionStorage.setItem(TOKEN_KEY, token);
-          break;
-        }
-      }
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const [cookieName, ...valueParts] = cookie.split("=");
+    if (cookieName === name) {
+      return decodeURIComponent(valueParts.join("=")) || null;
     }
-
-    return token;
   }
   return null;
 };
 
+/**
+ * Set session cookie (expires when browser closes)
+ */
+const setCookie = (name: string, value: string): void => {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; SameSite=Lax`;
+};
+
+/**
+ * Delete cookie
+ */
+const deleteCookie = (name: string): void => {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=; path=/; max-age=0`;
+};
+
+/**
+ * Cleanup legacy sessionStorage (migration)
+ */
+const cleanupLegacyStorage = (): void => {
+  if (typeof window === "undefined") return;
+
+  LEGACY_SESSION_KEYS.forEach((key) => {
+    if (sessionStorage.getItem(key)) {
+      console.log(`🧹 Cleaning up legacy sessionStorage: ${key}`);
+      sessionStorage.removeItem(key);
+    }
+  });
+};
+
+// ==================== Token Functions ====================
+
+export const setToken = (token: string) => {
+  cleanupLegacyStorage(); // Cleanup old data
+  setCookie(TOKEN_KEY, token);
+};
+
+export const getToken = (): string | null => {
+  cleanupLegacyStorage(); // Cleanup old data
+  return getCookie(TOKEN_KEY);
+};
+
 export const removeToken = () => {
   if (typeof window !== "undefined") {
+    // Clear sessionStorage (legacy)
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(USER_KEY);
-    // Also clear old localStorage data (migration cleanup)
+    // Clear localStorage (legacy)
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
-    // Remove cookies
-    document.cookie = "auth_token=; path=/; max-age=0";
-    document.cookie = "user_data=; path=/; max-age=0";
+    // Delete cookies
+    deleteCookie(TOKEN_KEY);
+    deleteCookie(USER_KEY);
   }
 };
+
+// ==================== User Functions ====================
 
 /**
  * Store minimal user data for security
  * Only keeps id, name, email, role - no sensitive data
  */
 export const setUser = (user: any) => {
-  if (typeof window !== "undefined") {
-    // 🔒 Only store minimal, non-sensitive data
-    const minimalUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
+  cleanupLegacyStorage();
 
-    sessionStorage.setItem(USER_KEY, JSON.stringify(minimalUser));
-    // Also set as session cookie for middleware (no max-age = session cookie)
-    document.cookie = `user_data=${encodeURIComponent(
-      JSON.stringify(minimalUser),
-    )}; path=/`;
-  }
+  // 🔒 Only store minimal, non-sensitive data
+  const minimalUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  };
+
+  setCookie(USER_KEY, JSON.stringify(minimalUser));
 };
 
 export const getUser = () => {
-  if (typeof window !== "undefined") {
-    // First check sessionStorage
-    let userData = sessionStorage.getItem(USER_KEY);
+  cleanupLegacyStorage();
 
-    // If not in sessionStorage, try to get from cookie (for new tabs)
-    if (!userData) {
-      const cookies = document.cookie.split(";");
-      for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split("=");
-        if (name === USER_KEY && value) {
-          userData = decodeURIComponent(value);
-          // Sync to sessionStorage for subsequent calls
-          sessionStorage.setItem(USER_KEY, userData);
-          break;
-        }
-      }
-    }
+  const userData = getCookie(USER_KEY);
+  if (!userData) return null;
 
-    return userData ? JSON.parse(userData) : null;
+  try {
+    return JSON.parse(userData);
+  } catch {
+    return null;
   }
-  return null;
 };
 
 export const isAuthenticated = (): boolean => {
@@ -293,9 +311,9 @@ export const setupCrossTabLogoutListener = (onLogout: () => void) => {
     const channel = new BroadcastChannel(LOGOUT_CHANNEL_NAME);
     channel.onmessage = (event) => {
       if (event.data?.type === "LOGOUT") {
-        // Another tab logged out - clear local session and redirect
-        sessionStorage.removeItem(TOKEN_KEY);
-        sessionStorage.removeItem(USER_KEY);
+        // Another tab logged out - clear cookies
+        deleteCookie(TOKEN_KEY);
+        deleteCookie(USER_KEY);
         onLogout();
       }
     };
