@@ -9,11 +9,7 @@ export default function RegisterPage() {
     <RegistrationCheck>
       <AuthPageCheck>
         <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree">
-          <AuthBranding
-            title="Mulai Perjalanan<br />Anda di Sini."
-            subtitle="Gratis selamanya. Ayo bergabung!"
-            accentColor="purple"
-          />
+          <AuthBranding accentColor="purple" />
           <AuthFormWrapper allowScroll>
             <RegisterForm />
           </AuthFormWrapper>

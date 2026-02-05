@@ -83,7 +83,7 @@ const steps = [
     number: "03",
     title: "Get Paid",
     desc: "Withdraw via PayPal or Crypto",
-    color: "from-bluelight to-fuchsia-600",
+    color: "from-bluelanding to-fuchsia-600",
     // Wallet icon for background
     bgIcon: (
       <svg className="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
@@ -163,7 +163,7 @@ export default function HowItWorks() {
           >
             <Link
               href={isAuthenticated ? dashboardPath : "/register"}
-              className="inline-flex items-center gap-2 text-bluelight hover:text-blue-600 font-medium text-sm transition-colors group"
+              className="inline-flex items-center gap-2 text-bluelanding hover:text-blue-600 font-medium text-sm transition-colors group"
             >
               {isAuthenticated ? "Go to Dashboard" : "Create account now"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

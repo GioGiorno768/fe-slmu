@@ -9,11 +9,7 @@ export default function LoginPage() {
     <LoginCheck>
       <AuthPageCheck>
         <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree">
-          <AuthBranding
-            title="Mulai Perjalanan<br />Anda di Sini."
-            subtitle="Daftar gratis untuk mulai mengubah link panjang menjadi link pendek yang menguntungkan."
-            accentColor="blue"
-          />
+          <AuthBranding accentColor="blue" />
           <AuthFormWrapper allowScroll>
             <LoginForm />
           </AuthFormWrapper>

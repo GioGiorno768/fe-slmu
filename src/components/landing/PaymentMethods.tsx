@@ -30,7 +30,7 @@ export default function PaymentMethods() {
               viewport={{ once: true }}
               className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-2 text-slate-800"
             >
-              All Payments, <span className="text-bluelight">One Platform</span>
+              All Payments, <span className="text-bluelanding">One Platform</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -51,7 +51,7 @@ export default function PaymentMethods() {
           >
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 text-bluelight hover:text-blue-600 font-medium text-sm transition-colors group"
+              className="inline-flex items-center gap-2 text-bluelanding hover:text-blue-600 font-medium text-sm transition-colors group"
             >
               Start earning now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

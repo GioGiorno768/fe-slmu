@@ -22,7 +22,7 @@ const FeatureCard = ({
   desc: string;
 }) => (
   <div className="group p-6 rounded-xl bg-white border border-slate-100 hover:border-slate-200 transition-all hover:shadow-lg hover:shadow-slate-200/50 font-figtree h-full">
-    <div className="size-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center mb-4 group-hover:bg-bluelight group-hover:border-bluelight group-hover:text-white transition-all text-slate-600">
+    <div className="size-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center mb-4 group-hover:bg-bluelanding group-hover:border-bluelanding group-hover:text-white transition-all text-slate-600">
       <Icon className="w-5 h-5" strokeWidth={1.5} />
     </div>
     <h3 className="text-base font-semibold mb-2 text-slate-800">{title}</h3>
@@ -81,7 +81,7 @@ export default function Features() {
         <div className="text-center mb-14 md:mb-16">
           <FeaturesClient>
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-4 text-slate-800">
-              Why Choose <span className="text-bluelight">Shortlinkmu</span>?
+              Why Choose <span className="text-bluelanding">Shortlinkmu?</span>
             </h2>
           </FeaturesClient>
           <FeaturesClient delay={0.1}>

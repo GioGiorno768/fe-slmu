@@ -1,117 +1,17 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+// Server Component - No "use client" for SEO
 import HeroShortLink from "./HeroShortLink";
-import { useEffect, useRef } from "react";
+import HeroParticles from "./HeroParticles";
 
 export default function Hero() {
-  const t = useTranslations("Hero");
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Animated particles background
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    // Set canvas size
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = canvas.parentElement?.offsetHeight || 800;
-    };
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    // Particles
-    const particles: Array<{
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
-    }> = [];
-
-    const particleCount = 50;
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 4 + 2,
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        opacity: Math.random() * 0.3 + 0.1,
-      });
-    }
-
-    // Animation
-    let animationId: number;
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((particle) => {
-        // Update position
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        // Wrap around edges
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(59, 130, 246, ${particle.opacity})`;
-        ctx.fill();
-      });
-
-      // Draw connections between nearby particles
-      particles.forEach((p1, i) => {
-        particles.slice(i + 1).forEach((p2) => {
-          const dx = p1.x - p2.x;
-          const dy = p1.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.05 * (1 - distance / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        });
-      });
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
   return (
     <section className="relative pt-28 pb-36 lg:pt-36 lg:pb-44 bg-white font-poppins overflow-hidden">
-      {/* Animated Canvas Background */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none"
-      />
+      {/* Animated Canvas Background - Client Component */}
+      <HeroParticles />
 
       {/* Gradient overlay for depth */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-blue-50/50 to-transparent"></div>
         <div className="absolute -top-20 -right-20 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl"></div>
-        {/* <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl"></div> */}
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center z-10">
@@ -119,16 +19,16 @@ export default function Hero() {
         <h1 className="text-[2.5rem] sm:text-[3.25rem] md:text-[4rem] lg:text-[4.5rem] font-semibold tracking-tight mb-5 max-w-4xl leading-[1.15] text-slate-800">
           Turn Every Click
           <br />
-          <span className="text-bluelight">into Cash</span>
+          <span className="text-bluelanding">into Cash</span>
         </h1>
 
         {/* Subtitle - Lighter */}
-        <p className="text-base md:text-lg text-slate-500 max-w-xl mb-12 leading-relaxed font-light">
+        <p className="text-base md:text-lg text-slate-500 max-w-xl mb-12 leading-relaxed font-light font-figtree">
           Monetize your traffic with the highest paying URL shortener. Secure
           links, detailed analytics, daily payouts.
         </p>
 
-        {/* Shortlink Form */}
+        {/* Shortlink Form - Client Component */}
         <div className="w-full max-w-2xl mb-16">
           <HeroShortLink />
         </div>

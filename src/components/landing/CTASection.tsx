@@ -41,9 +41,9 @@ export default function CTASection() {
           ></div>
 
           {/* Floating dots */}
-          <div className="absolute top-8 left-1/4 w-2 h-2 rounded-full bg-bluelight/20"></div>
+          <div className="absolute top-8 left-1/4 w-2 h-2 rounded-full bg-bluelanding/20"></div>
           <div className="absolute top-1/3 right-1/4 w-3 h-3 rounded-full bg-purple-300/30"></div>
-          <div className="absolute bottom-12 left-1/3 w-2.5 h-2.5 rounded-full bg-bluelight/15"></div>
+          <div className="absolute bottom-12 left-1/3 w-2.5 h-2.5 rounded-full bg-bluelanding/15"></div>
           <div className="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-blue-200/40"></div>
           <div className="absolute bottom-1/4 right-1/5 w-1.5 h-1.5 rounded-full bg-purple-200/30"></div>
 
@@ -84,7 +84,7 @@ export default function CTASection() {
 
             <Link
               href={isAuthenticated ? dashboardPath : "/register"}
-              className="inline-flex items-center justify-center bg-bluelight hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center bg-bluelanding hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors"
             >
               {isAuthenticated ? "Go to Dashboard" : "Start Earning Now"}
             </Link>

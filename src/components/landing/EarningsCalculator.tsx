@@ -67,7 +67,7 @@ export default function EarningsCalculator() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            Estimate Your <span className="text-bluelight">Earnings</span>
+            Estimate Your <span className="text-bluelanding">Earnings</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -127,7 +127,7 @@ export default function EarningsCalculator() {
                   <label className="text-sm font-medium text-slate-600">
                     Average CPM
                   </label>
-                  <span className="text-lg font-semibold text-bluelight">
+                  <span className="text-lg font-semibold text-bluelanding">
                     ${cpm.toFixed(2)}
                   </span>
                 </div>
@@ -159,7 +159,7 @@ export default function EarningsCalculator() {
             </div>
 
             {/* Right - Results */}
-            <div className="bg-gradient-to-br from-bluelight to-blue-600 rounded-xl p-6 text-white">
+            <div className="bg-gradient-to-br from-bluelanding to-blue-600 rounded-xl p-6 text-white">
               {/* Monthly - Main */}
               <div className="text-center mb-6">
                 <p className="text-blue-100 text-sm mb-1">Monthly Earnings</p>
@@ -196,7 +196,7 @@ export default function EarningsCalculator() {
               {/* CTA */}
               <Link
                 href={isAuthenticated ? dashboardPath : "/register"}
-                className="flex items-center justify-center gap-2 w-full bg-white text-bluelight font-semibold py-3 rounded-lg hover:bg-blue-50 transition-colors group"
+                className="flex items-center justify-center gap-2 w-full bg-white text-bluelanding font-semibold py-3 rounded-lg hover:bg-blue-50 transition-colors group"
               >
                 <span>
                   {isAuthenticated ? "Go to Dashboard" : "Start Earning Now"}

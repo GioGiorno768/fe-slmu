@@ -51,7 +51,7 @@ export default function FAQSection() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            Frequently Asked <span className="text-bluelight">Questions</span>
+            Frequently Asked <span className="text-bluelanding">Questions</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +78,7 @@ export default function FAQSection() {
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className={`w-full px-5 py-4 flex items-start justify-between text-left gap-4 rounded-xl transition-all ${
                   openIndex === index
-                    ? "bg-bluelight text-white"
+                    ? "bg-bluelanding text-white"
                     : "bg-slate-50 hover:bg-slate-100 text-slate-800"
                 }`}
               >

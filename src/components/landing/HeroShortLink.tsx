@@ -196,7 +196,7 @@ export default function HeroShortLink() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               {/* URL Input - Responsive */}
-              <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 sm:p-2 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-slate-300 focus-within:border-bluelight focus-within:ring-4 focus-within:ring-blue-50 transition-all">
+              <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 sm:p-2 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-slate-300 focus-within:border-bluelanding focus-within:ring-4 focus-within:ring-blue-50 transition-all">
                 <div className="flex items-center flex-1 gap-2">
                   <div className="pl-2 sm:pl-3 text-slate-400">
                     <LinkIcon className="w-5 h-5" />
@@ -213,7 +213,7 @@ export default function HeroShortLink() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-bluelight hover:bg-blue-600 text-white font-medium rounded-xl transition-all disabled:opacity-60 group shrink-0"
+                  className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-bluelanding hover:bg-blue-600 text-white font-medium rounded-xl transition-all disabled:opacity-60 group shrink-0"
                 >
                   {isLoading ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -231,7 +231,7 @@ export default function HeroShortLink() {
                 <button
                   type="button"
                   onClick={() => setShowAliasField(true)}
-                  className="self-start text-sm text-slate-400 hover:text-bluelight transition-colors flex items-center gap-1 pl-1"
+                  className="self-start text-sm text-slate-400 hover:text-bluelanding transition-colors flex items-center gap-1 pl-1"
                 >
                   <span>+ Add custom alias</span>
                 </button>
@@ -284,7 +284,7 @@ export default function HeroShortLink() {
                 <button
                   type="button"
                   onClick={handleViewPrevious}
-                  className="self-start text-sm text-bluelight hover:text-blue-600 transition-colors flex items-center gap-1 pl-1"
+                  className="self-start text-sm text-bluelanding hover:text-blue-600 transition-colors flex items-center gap-1 pl-1"
                 >
                   <ChevronLeft className="w-3 h-3" />
                   <span>View previous link</span>
@@ -301,7 +301,7 @@ export default function HeroShortLink() {
             exit={{ opacity: 0, scale: 0.95 }}
             className="relative"
           >
-            <div className="bg-gradient-to-br from-bluelight to-blue-600 rounded-2xl p-4 sm:p-6 text-white shadow-lg shadow-blue-500/20">
+            <div className="bg-gradient-to-br from-bluelanding to-blue-600 rounded-2xl p-4 sm:p-6 text-white shadow-lg shadow-blue-500/20">
               {/* Header */}
               <div className="flex items-center justify-between mb-4 sm:mb-5">
                 <div className="flex items-center gap-2">
@@ -376,7 +376,7 @@ export default function HeroShortLink() {
                   className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-all text-sm sm:text-base ${
                     isCopied
                       ? "bg-green-500 text-white"
-                      : "bg-white text-bluelight hover:bg-white/90"
+                      : "bg-white text-bluelanding hover:bg-white/90"
                   }`}
                 >
                   {isCopied ? (
@@ -437,7 +437,7 @@ export default function HeroShortLink() {
             <div className="flex flex-col gap-2">
               <Link
                 href="/register"
-                className="w-full py-2.5 px-4 bg-bluelight text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
+                className="w-full py-2.5 px-4 bg-bluelanding text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
               >
                 <UserPlus className="w-4 h-4" />
                 Sign Up Free
