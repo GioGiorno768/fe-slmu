@@ -1,120 +1,126 @@
-// Server Component - SEO friendly
-import { Link2, Mail, MessageCircle, FileText, Youtube, YoutubeIcon, Send } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Link2 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import authService from "@/services/authService";
 
 export default function Footer() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [dashboardPath, setDashboardPath] = useState("/dashboard");
+
+  useEffect(() => {
+    setIsAuthenticated(authService.isAuthenticated());
+    if (authService.isAuthenticated()) {
+      setDashboardPath(authService.getRedirectPath());
+    }
+  }, []);
+
+  const platform = [
+    { name: "Payout Rates", href: "/payout-rates" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  const company = [
+    { name: "Terms of Service", href: "/terms-of-service" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Report Abuse", href: "/report-abuse" },
+  ];
+
   return (
-    <footer className="bg-slate-900 pt-20 pb-10 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-16">
+    <footer className="bg-white py-14 font-poppins border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer */}
+        <div className="flex flex-col md:flex-row md:justify-between gap-10 mb-10">
           {/* Logo & Description */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex justify-center md:justify-start items-center gap-2 mb-6">
-              <div className="size-8 rounded bg-bluelight flex items-center justify-center text-white">
+          <div className="max-w-xs">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="size-8 rounded-lg bg-bluelight flex items-center justify-center text-white">
                 <Link2 className="w-4 h-4" />
               </div>
-              <span className="text-xl font-bold text-white">ShortLinkmu</span>
+              <span className="text-lg font-semibold text-slate-800">
+                Shortlinkmu
+              </span>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs text-center md:text-start">
-              The most reliable URL shortener service for publishers. Shorten,
-              share and track your links with ease in a clean, modern
-              environment.
+            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+              Turn complex links into clear, monetized short URLs so you can
+              earn more with every click.
             </p>
+            <Link
+              href={isAuthenticated ? dashboardPath : "/register"}
+              className="inline-flex items-center justify-center bg-bluelight hover:bg-blue-600 text-white text-sm font-medium py-2.5 px-5 rounded-lg transition-colors"
+            >
+              {isAuthenticated ? "Go to Dashboard" : "Get Started"}
+            </Link>
           </div>
 
-          <div className="flex md:flex-row gap-20">
-            {/* Platform Links */}
+          {/* Links */}
+          <div className="flex gap-16 md:gap-20">
+            {/* Platform */}
             <div>
-              <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">
+              <h4 className="text-slate-800 font-medium text-sm mb-4">
                 Platform
               </h4>
-              <ul className="space-y-3 text-sm text-slate-400">
-                <li>
-                  <Link
-                    href="/payout-rates"
-                    className="hover:text-white transition-colors"
-                  >
-                    Payout Rates
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/about"
-                    className="hover:text-white transition-colors"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-white transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
+              <ul className="space-y-2.5">
+                {platform.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Company Links */}
+            {/* Company */}
             <div>
-              <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-wider">
+              <h4 className="text-slate-800 font-medium text-sm mb-4">
                 Company
               </h4>
-              <ul className="space-y-3 text-sm text-slate-400">
-                <li>
-                  <Link
-                    href="/terms-of-service"
-                    className="hover:text-white transition-colors"
-                  >
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy-policy"
-                    className="hover:text-white transition-colors"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/report-abuse"
-                    className="hover:text-white transition-colors"
-                  >
-                    Report Abuse
-                  </Link>
-                </li>
+              <ul className="space-y-2.5">
+                {company.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-slate-100 pt-6 flex flex-col md:flex-row justify-between items-center gap-2">
           <p className="text-slate-500 text-sm">
-            © 2024 ShortLinkmu. All rights reserved.
+            © 2025 Shortlinkmu. All rights reserved.
           </p>
-          <div className="flex gap-3">
-            <a
-              href="#"
-              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+          <div className="flex justify-end gap-3">
+            <Link
+              href="/terms-of-service"
+              className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
-              <span className="meteor-icons--whatsapp w-5 h-5 bg-slate-400 group-hover:bg-white" />
-            </a>
-            <a
-              href="#"
-              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+              Youtube
+            </Link>
+            <Link
+              href="/privacy-policy"
+              className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
-              <span className="iconoir--telegram w-6 h-6 bg-slate-400 group-hover:bg-white" />
-            </a>
-            <a
-              href="#"
-              className="size-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-bluelight transition-all group"
+              Telegram
+            </Link>
+            <Link
+              href="/report-abuse"
+              className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
-              <span className="mynaui--youtube w-6 h-6 bg-slate-400 group-hover:bg-white" />
-            </a>
+              Instagram
+            </Link>
           </div>
         </div>
       </div>

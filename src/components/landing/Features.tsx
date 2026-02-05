@@ -16,21 +16,17 @@ const FeatureCard = ({
   icon: Icon,
   title,
   desc,
-  colorClass,
 }: {
   icon: any;
   title: string;
   desc: string;
-  colorClass: string;
 }) => (
-  <div className="group p-8 rounded-2xl bg-white border border-slate-100 hover:border-slate-200 transition-all hover:shadow-xl hover:shadow-slate-500/5 hover:-translate-y-1 font-figtree h-full">
-    <div
-      className={`size-14 rounded-xl ${colorClass} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}
-    >
-      <Icon className="w-7 h-7" />
+  <div className="group p-6 rounded-xl bg-white border border-slate-100 hover:border-slate-200 transition-all hover:shadow-lg hover:shadow-slate-200/50 font-figtree h-full">
+    <div className="size-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center mb-4 group-hover:bg-bluelight group-hover:border-bluelight group-hover:text-white transition-all text-slate-600">
+      <Icon className="w-5 h-5" strokeWidth={1.5} />
     </div>
-    <h3 className="text-xl font-bold mb-3 text-slate-900">{title}</h3>
-    <p className="text-slate-500 leading-relaxed">{desc}</p>
+    <h3 className="text-base font-semibold mb-2 text-slate-800">{title}</h3>
+    <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
   </div>
 );
 
@@ -39,81 +35,67 @@ export default function Features() {
     {
       icon: TrendingUp,
       title: "High CPM Rate",
-      desc: "Nikmati rate CPM tinggi hingga $8 berdasarkan negara dan kualitas traffic. Semakin premium audience, semakin besar pendapatan.",
-      colorClass: "bg-blue-50 text-blue-600",
-    },
-    {
-      icon: DollarSign,
-      title: "Low Minimum Payout",
-      desc: "Tarik pendapatan mulai dari $2 saja. Proses lebih cepat dan mudah untuk melihat hasil jerih payah Anda.",
-      colorClass: "bg-green-50 text-green-600",
+      desc: "Earn up to $8 CPM based on traffic quality and geo-location.",
     },
     {
       icon: Headphones,
-      title: "Fast Response Support",
-      desc: "Tim support kami siap membantu 24/7. Dapatkan bantuan cepat dari admin dan komunitas yang aktif.",
-      colorClass: "bg-purple-50 text-purple-600",
+      title: "24/7 Support",
+      desc: "Fast response from our dedicated support team anytime.",
     },
     {
       icon: Award,
-      title: "Level Akun & Bonus",
-      desc: "Naik level seiring pertumbuhan views Anda. Semakin tinggi level, semakin besar bonus dan benefit yang didapat.",
-      colorClass: "bg-orange-50 text-orange-600",
+      title: "Level & Bonuses",
+      desc: "Unlock higher bonuses as your views grow. Earn more rewards.",
     },
     {
       icon: Settings,
-      title: "Advanced Link Customize",
-      desc: "Kustomisasi link dengan alias, password protection, expiry date, dan pilihan level iklan sesuai kebutuhan.",
-      colorClass: "bg-pink-50 text-pink-600",
+      title: "Advanced Customization",
+      desc: "Custom alias, password protection, expiry dates, and more.",
     },
     {
       icon: Zap,
-      title: "Multi-Level Ads System",
-      desc: "Pilih level iklan (1-5 step) sesuai preferensi. Semakin banyak step, semakin tinggi CPM rate per klik.",
-      colorClass: "bg-teal-50 text-teal-600",
+      title: "Multi-Level Ads",
+      desc: "Choose ad levels (1-5 steps) to maximize your earnings.",
     },
     {
       icon: Wallet,
-      title: "Fast Payout",
-      desc: "Proses withdrawal cepat hanya 1-7 hari kerja via PayPal, Bank Transfer, atau Crypto. Aman dan terpercaya.",
-      colorClass: "bg-amber-50 text-amber-600",
+      title: "Fast Payouts",
+      desc: "1-7 day processing via PayPal, Bank Transfer, or Crypto.",
     },
     {
       icon: Users,
       title: "Referral Program",
-      desc: "Ajak teman dan dapatkan komisi 10%-25% dari pendapatan mereka secara permanen, tanpa mengurangi earning referral.",
-      colorClass: "bg-indigo-50 text-indigo-600",
+      desc: "Earn 10-25% lifetime commission from your referrals.",
     },
     {
       icon: Shield,
       title: "Anti-Fraud Protection",
-      desc: "Sistem keamanan canggih berbasis IP dan fingerprint untuk melindungi pendapatan Anda dari traffic tidak valid.",
-      colorClass: "bg-red-50 text-red-600",
+      desc: "Advanced IP & fingerprint security to protect your earnings.",
     },
   ];
 
   return (
-    <section
-      id="features"
-      className="py-24 md:py-32 bg-slate-50/50 font-figtree"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 md:mb-20">
+    <section id="features" className="py-20 md:py-28 bg-white font-poppins">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header - Clean style like Hero */}
+        <div className="text-center mb-14 md:mb-16">
           <FeaturesClient>
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-slate-900">
-              Kenapa Pilih ShortLinkmu?
+            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-4 text-slate-800">
+              Why Choose <span className="text-bluelight">Shortlinkmu</span>?
             </h2>
           </FeaturesClient>
           <FeaturesClient delay={0.1}>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto leading-relaxed">
-              Platform shortlink terpercaya dengan CPM rate tinggi, perlindungan
-              anti-fraud, dan fitur lengkap untuk memaksimalkan pendapatan Anda.
+            <p className="text-slate-500 text-base md:text-lg max-w-xl mx-auto leading-relaxed font-light">
+              Built for publishers who want to maximize their earnings with
+              premium features and reliable payouts.
             </p>
           </FeaturesClient>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        {/* Cards Grid - Smaller, cleaner */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {features.map((feature, idx) => (
-            <FeaturesClient key={idx} delay={idx * 0.05}>
+            <FeaturesClient key={idx} delay={idx * 0.03}>
               <FeatureCard {...feature} />
             </FeaturesClient>
           ))}

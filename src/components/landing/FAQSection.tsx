@@ -1,83 +1,71 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
+
+const faqs = [
+  {
+    question: "How do I start earning with Shortlinkmu?",
+    answer:
+      "Simply create a free account, paste your long URLs, and share the shortened links. You earn money every time someone clicks your link based on our competitive CPM rates.",
+  },
+  {
+    question: "What is CPM and how does it work?",
+    answer:
+      "CPM (Cost Per Mille) is the amount you earn per 1,000 views. Our rates range from $1-$12 depending on traffic quality and visitor location. Tier 1 countries like US, UK, and Canada earn the highest rates.",
+  },
+  {
+    question: "What is the minimum payout amount?",
+    answer:
+      "Our minimum payout is just $2, making it easy to withdraw your earnings quickly. We support PayPal, Bank Transfer, Dana, OVO, and cryptocurrency withdrawals.",
+  },
+  {
+    question: "Can I customize my short links?",
+    answer:
+      "Yes! You can create custom aliases, add password protection, set expiry dates, and choose ad levels. Premium members get access to even more customization options.",
+  },
+  {
+    question: "How does the referral program work?",
+    answer:
+      "Share your unique referral link and earn 10-25% lifetime commission from your referrals' earnings. The more active referrals you have, the higher your commission rate.",
+  },
+  {
+    question: "How fast are payouts processed?",
+    answer:
+      "Payouts are typically processed within 1-7 business days. We support multiple payment methods including PayPal, bank transfers, e-wallets, and cryptocurrency.",
+  },
+];
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const faqs = [
-    {
-      question: "Apakah layanan shortlink ini aman digunakan?",
-      answer:
-        "Ya, tentu! Platform kami menggunakan standar keamanan industri untuk melindungi link dan data Anda. Semua link dipindai untuk malware dan konten mencurigakan sebelum dipersingkat.",
-    },
-    {
-      question: "Bagaimana cara menghasilkan uang dari shortened links?",
-      answer:
-        "Setiap kali seseorang mengklik shortlink Anda, Anda mendapatkan penghasilan berdasarkan CPM (cost per 1000 views). Dengan rate CPM tinggi kami, link Anda dapat menghasilkan lebih banyak pendapatan dibandingkan platform lain.",
-    },
-    {
-      question: "Berapa minimum payout yang bisa ditarik?",
-      answer:
-        "Minimum payout kami sangat rendah, mulai dari $2 saja. Ini berarti Anda dapat menarik penghasilan lebih cepat tanpa waktu tunggu yang lama.",
-    },
-    {
-      question: "Bagaimana cara kerja referral links?",
-      answer:
-        "Bagikan link referral unik Anda kepada teman dan dapatkan bonus ekstra saat mereka mendaftar dan mulai menggunakan layanan. Anda akan mendapatkan persentase dari penghasilan mereka sebagai bonus permanen.",
-    },
-    {
-      question: "Bisakah saya mengkustomisasi shortlinks?",
-      answer:
-        "Ya! Anda dapat membuat custom shortlink dengan alias sendiri, password protection, expiry date, dan pilihan level iklan. Ini membuat link Anda lebih mudah diingat dan profesional.",
-    },
-    {
-      question: "Seberapa cepat proses payout?",
-      answer:
-        "Payout biasanya diproses dalam 1-7 hari kerja setelah permintaan withdrawal Anda. Kami mendukung berbagai metode pembayaran termasuk PayPal, transfer bank, dan cryptocurrency.",
-    },
-  ];
-
   return (
-    <section id="faq" className="py-24 md:py-32 bg-slate-50/50 font-figtree">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-20 md:py-28 bg-white font-poppins">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-bluelight text-xs font-bold uppercase tracking-wider mb-6"
-          >
-            <HelpCircle className="w-4 h-4" />
-            FAQ
-          </motion.div>
-
+        <div className="text-center mb-12 md:mb-14">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4"
+            className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            Pertanyaan yang Sering Diajukan
+            Frequently Asked <span className="text-bluelight">Questions</span>
           </motion.h2>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-600 text-lg max-w-2xl mx-auto"
+            transition={{ delay: 0.1 }}
+            className="text-slate-500 text-base md:text-lg font-light"
           >
-            Jawaban untuk pertanyaan umum tentang layanan shortlink kami
+            Everything you need to know about our platform
           </motion.p>
         </div>
 
         {/* FAQ Items */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
@@ -85,26 +73,25 @@ export default function FAQSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.05 }}
-              className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left gap-4 hover:bg-slate-50/50 transition-colors"
+                className={`w-full px-5 py-4 flex items-start justify-between text-left gap-4 rounded-xl transition-all ${
+                  openIndex === index
+                    ? "bg-bluelight text-white"
+                    : "bg-slate-50 hover:bg-slate-100 text-slate-800"
+                }`}
               >
-                <span className="text-slate-900 font-semibold text-base md:text-lg">
+                <span className="font-medium text-[15px] leading-relaxed">
                   {faq.question}
                 </span>
-                <motion.div
-                  animate={{ rotate: openIndex === index ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="shrink-0"
-                >
-                  <ChevronDown
-                    className={`w-5 h-5 ${
-                      openIndex === index ? "text-bluelight" : "text-slate-400"
-                    }`}
-                  />
-                </motion.div>
+                <div className="shrink-0 mt-0.5">
+                  {openIndex === index ? (
+                    <Minus className="w-5 h-5" />
+                  ) : (
+                    <Plus className="w-5 h-5 text-slate-400" />
+                  )}
+                </div>
               </button>
 
               <AnimatePresence>
@@ -113,13 +100,11 @@ export default function FAQSection() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 pb-5 pt-0">
-                      <p className="text-slate-600 leading-relaxed">
-                        {faq.answer}
-                      </p>
+                    <div className="px-5 py-4 text-slate-500 text-sm leading-relaxed">
+                      {faq.answer}
                     </div>
                   </motion.div>
                 )}

@@ -1,13 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Info } from "lucide-react";
+import { ArrowRight, TrendingUp, Calendar, DollarSign } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import authService from "@/services/authService";
 
 export default function EarningsCalculator() {
   const [views, setViews] = useState(50000);
-  const [cpm, setCpm] = useState(15);
+  const [cpm, setCpm] = useState(6);
+  const [mounted, setMounted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [dashboardPath, setDashboardPath] = useState("/dashboard");
+
+  useEffect(() => {
+    setMounted(true);
+    setIsAuthenticated(authService.isAuthenticated());
+    if (authService.isAuthenticated()) {
+      setDashboardPath(authService.getRedirectPath());
+    }
+  }, []);
 
   const dailyIncome = (views * cpm) / 1000;
   const weeklyIncome = dailyIncome * 7;
@@ -18,137 +30,182 @@ export default function EarningsCalculator() {
     new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(val);
 
-  // Consistent number formatting to prevent hydration mismatch
+  // Compact format for mobile (shows K/M for large numbers)
+  const formatCompact = (val: number) => {
+    if (val >= 1000000) {
+      return `$${(val / 1000000).toFixed(1)}M`;
+    }
+    if (val >= 1000) {
+      return `$${(val / 1000).toFixed(1)}K`;
+    }
+    return `$${val.toFixed(0)}`;
+  };
+
   const formatNumber = (val: number) =>
     new Intl.NumberFormat("en-US").format(val);
 
+  // Calculate slider percentage for gradient fill
+  const viewsPercent = ((views - 1000) / (100000 - 1000)) * 100;
+  const cpmPercent = ((cpm - 1) / (12 - 1)) * 100;
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <section className="py-24 bg-white relative overflow-hidden font-figtree">
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-slate-50 rounded-full translate-x-1/3 -translate-y-1/4 -z-0"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Side - Sliders */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+    <section className="py-20 md:py-28 bg-slate-50/50 font-poppins">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-14">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col gap-6"
+            className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">
-              Estimate Your Earnings
-            </h2>
-            <p className="text-slate-600 text-lg leading-relaxed">
-              See how much you could earn based on your daily traffic. Our CPM
-              rates are dynamic and among the most competitive in the industry.
-            </p>
+            Estimate Your <span className="text-bluelight">Earnings</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-slate-500 text-base md:text-lg font-light max-w-lg mx-auto"
+          >
+            Calculate your potential income based on daily views and CPM
+          </motion.p>
+        </div>
 
-            <div className="mt-8 space-y-10">
-              {/* Daily Views Slider */}
+        {/* Calculator Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left - Sliders */}
+            <div className="space-y-8">
+              {/* Daily Views */}
               <div>
-                <div className="flex justify-between mb-4">
-                  <label className="text-sm font-bold uppercase tracking-wider text-slate-400">
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-sm font-medium text-slate-600">
                     Daily Views
                   </label>
-                  <span className="text-xl font-bold text-bluelight">
+                  <span className="text-lg font-semibold text-slate-800">
                     {formatNumber(views)}
                   </span>
                 </div>
-                <input
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-bluelight"
-                  max="100000"
-                  min="1000"
-                  step="1000"
-                  type="range"
-                  value={views}
-                  onChange={(e) => setViews(parseInt(e.target.value))}
-                />
+                <div className="relative">
+                  <input
+                    type="range"
+                    min="1000"
+                    max="100000"
+                    step="1000"
+                    value={views}
+                    onChange={(e) => setViews(parseInt(e.target.value))}
+                    className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-100"
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${viewsPercent}%, #f1f5f9 ${viewsPercent}%, #f1f5f9 100%)`,
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-slate-400">
+                  <span>1K</span>
+                  <span>100K</span>
+                </div>
               </div>
 
-              {/* CPM Slider */}
+              {/* CPM */}
               <div>
-                <div className="flex justify-between mb-4">
-                  <label className="text-sm font-bold uppercase tracking-wider text-slate-400">
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-sm font-medium text-slate-600">
                     Average CPM
                   </label>
-                  <span className="text-xl font-bold text-bluelight">
+                  <span className="text-lg font-semibold text-bluelight">
                     ${cpm.toFixed(2)}
                   </span>
                 </div>
-                <input
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-bluelight"
-                  max="30"
-                  min="1"
-                  step="0.5"
-                  type="range"
-                  value={cpm}
-                  onChange={(e) => setCpm(parseFloat(e.target.value))}
-                />
+                <div className="relative">
+                  <input
+                    type="range"
+                    min="1"
+                    max="12"
+                    step="0.5"
+                    value={cpm}
+                    onChange={(e) => setCpm(parseFloat(e.target.value))}
+                    className="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-100"
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${cpmPercent}%, #f1f5f9 ${cpmPercent}%, #f1f5f9 100%)`,
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-slate-400">
+                  <span>$1</span>
+                  <span>$12</span>
+                </div>
               </div>
+
+              {/* Info */}
+              <p className="text-xs text-slate-500 leading-relaxed">
+                * CPM varies based on traffic quality and geo-location. Tier 1
+                countries (US, UK, CA) typically earn higher rates.
+              </p>
             </div>
 
-            {/* Info Box */}
-            <div className="mt-8 p-6 bg-slate-50 rounded-xl border border-slate-100">
-              <div className="flex items-start gap-4">
-                <Info className="w-5 h-5 text-bluelight mt-1 shrink-0" />
-                <p className="text-sm text-slate-500">
-                  Earnings are estimated based on Tier 1 traffic. Actual
-                  earnings may vary based on visitor location and ad inventory.
+            {/* Right - Results */}
+            <div className="bg-gradient-to-br from-bluelight to-blue-600 rounded-xl p-6 text-white">
+              {/* Monthly - Main */}
+              <div className="text-center mb-6">
+                <p className="text-blue-100 text-sm mb-1">Monthly Earnings</p>
+                <p className="text-4xl md:text-5xl font-bold tracking-tight">
+                  {formatCurrency(monthlyIncome)}
                 </p>
               </div>
-            </div>
-          </motion.div>
 
-          {/* Right Side - Results Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="bg-bluelight text-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-bluelight/20 relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-32 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-
-            <div className="relative z-10 text-center">
-              <p className="text-blue-100 text-lg font-medium mb-2">
-                Estimated Monthly Income
-              </p>
-              <h3 className="text-5xl md:text-6xl font-black mb-10 tracking-tight">
-                {formatCurrency(monthlyIncome).split(".")[0]}
-                <span className="text-2xl font-bold opacity-60">.00</span>
-              </h3>
-
-              <div className="flex flex-col gap-4 bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/10 text-left">
-                <div className="flex justify-between items-center pb-4 border-b border-white/10">
-                  <span className="text-blue-100">Daily Income</span>
-                  <span className="font-bold text-xl">
-                    {formatCurrency(dailyIncome)}
-                  </span>
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                  <TrendingUp className="w-4 h-4 mx-auto mb-1 text-blue-200" />
+                  <p className="text-base md:text-lg font-semibold">
+                    {formatCompact(dailyIncome)}
+                  </p>
+                  <p className="text-[10px] text-blue-200">Daily</p>
                 </div>
-                <div className="flex justify-between items-center pb-4 border-b border-white/10">
-                  <span className="text-blue-100">Weekly Income</span>
-                  <span className="font-bold text-xl">
-                    {formatCurrency(weeklyIncome)}
-                  </span>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                  <Calendar className="w-4 h-4 mx-auto mb-1 text-blue-200" />
+                  <p className="text-base md:text-lg font-semibold">
+                    {formatCompact(weeklyIncome)}
+                  </p>
+                  <p className="text-[10px] text-blue-200">Weekly</p>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-100">Yearly Potential</span>
-                  <span className="font-bold text-xl">
-                    {formatCurrency(yearlyPotential)}
-                  </span>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                  <DollarSign className="w-4 h-4 mx-auto mb-1 text-blue-200" />
+                  <p className="text-base md:text-lg font-semibold">
+                    {formatCompact(yearlyPotential)}
+                  </p>
+                  <p className="text-[10px] text-blue-200">Yearly</p>
                 </div>
               </div>
 
+              {/* CTA */}
               <Link
-                href="/register"
-                className="mt-8 block w-full bg-white text-bluelight font-bold py-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg shadow-black/10 text-center"
+                href={isAuthenticated ? dashboardPath : "/register"}
+                className="flex items-center justify-center gap-2 w-full bg-white text-bluelight font-semibold py-3 rounded-lg hover:bg-blue-50 transition-colors group"
               >
-                Start Earning Now
+                <span>
+                  {isAuthenticated ? "Go to Dashboard" : "Start Earning Now"}
+                </span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

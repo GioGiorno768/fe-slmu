@@ -72,8 +72,29 @@ export const DASHBOARD_SLIDES: DashboardSlide[] = [
   },
 ];
 
+// 🎨 DEMO MODE: Set to true for screenshot purposes
+const DEMO_MODE = false;
+
 // --- MILESTONE: Connect to /api/user/levels ---
 export const getMilestone = async (): Promise<MilestoneData> => {
+  // 🎨 DEMO: Return impressive dummy data
+  if (DEMO_MODE) {
+    return {
+      icon: Star,
+      currentLevel: "Pro",
+      nextLevel: "Elite",
+      currentEarnings: 127.5,
+      nextTarget: 200,
+      currentBonus: 25,
+      nextBonus: 35,
+      progress: 64,
+      iconName: "zap",
+      iconColor: "text-purple-400",
+      bgColor: "bg-purple-500/10",
+      borderColor: "border-purple-500/30",
+    };
+  }
+
   try {
     const data = await apiCall<{
       card: {
@@ -138,6 +159,18 @@ export const getMilestone = async (): Promise<MilestoneData> => {
 
 // --- REFERRAL: Connect to /api/dashboard/overview ---
 export const getReferralData = async (): Promise<ReferralCardData> => {
+  // 🎨 DEMO: Return impressive dummy data
+  if (DEMO_MODE) {
+    const baseUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://shortlinkmu.com";
+    return {
+      referralLink: `${baseUrl}/register?ref=DEMO2024`,
+      totalUsers: 47,
+    };
+  }
+
   try {
     const data = await apiCall<{
       referral: {
@@ -165,6 +198,15 @@ export const getReferralData = async (): Promise<ReferralCardData> => {
 };
 
 export const getTrafficStats = async (): Promise<TopTrafficStats> => {
+  // 🎨 DEMO: Return impressive dummy data
+  if (DEMO_MODE) {
+    return {
+      topMonth: { month: "January", views: 8432 },
+      topYear: { year: "2025", views: 45621 },
+      topLevel: { level: "pro", cpmBonusPercent: 25 },
+    };
+  }
+
   try {
     const data = await apiCall<{
       items: {
@@ -245,6 +287,63 @@ export const getTrafficStats = async (): Promise<TopTrafficStats> => {
 
 // --- TOP LINKS: Connect to /api/dashboard/overview (limit 10) ---
 export const getTopLinks = async (): Promise<TopPerformingLink[]> => {
+  // 🎨 DEMO: Return impressive dummy data
+  if (DEMO_MODE) {
+    const shortlinkBaseUrl = "https://slmu.my.id";
+    return [
+      {
+        id: "1",
+        title: "Tutorial React Hooks 2025",
+        shortUrl: `${shortlinkBaseUrl}/react25`,
+        originalUrl: "https://medium.com/react-hooks-tutorial",
+        validViews: 4521,
+        totalEarnings: 18.45,
+        cpm: 4.08,
+        adsLevel: "level2",
+      },
+      {
+        id: "2",
+        title: "Cara Dapat Uang dari Internet",
+        shortUrl: `${shortlinkBaseUrl}/cuan123`,
+        originalUrl: "https://blog.com/passive-income",
+        validViews: 3287,
+        totalEarnings: 12.76,
+        cpm: 3.88,
+        adsLevel: "level2",
+      },
+      {
+        id: "3",
+        title: "Download Film Gratis HD",
+        shortUrl: `${shortlinkBaseUrl}/filmhd`,
+        originalUrl: "https://movies.example.com/download",
+        validViews: 2854,
+        totalEarnings: 9.42,
+        cpm: 3.3,
+        adsLevel: "level3",
+      },
+      {
+        id: "4",
+        title: "Game Android Terbaru 2025",
+        shortUrl: `${shortlinkBaseUrl}/game25`,
+        originalUrl: "https://play.google.com/store/apps",
+        validViews: 1923,
+        totalEarnings: 6.15,
+        cpm: 3.2,
+        adsLevel: "level1",
+      },
+      {
+        id: "5",
+        title: "Preset Lightroom Aesthetic",
+        shortUrl: `${shortlinkBaseUrl}/preset`,
+        originalUrl: "https://drive.google.com/preset-lr",
+        validViews: 1456,
+        totalEarnings: 4.82,
+        cpm: 3.31,
+        adsLevel: "level2",
+      },
+    ];
+  }
+
   try {
     const data = await apiCall<{
       top_links: {
@@ -299,6 +398,38 @@ export const getAnalytics = async (
   range: TimeRange,
   stat: StatType,
 ): Promise<AnalyticsData> => {
+  // 🎨 DEMO: Return impressive chart data
+  if (DEMO_MODE) {
+    const daysOfWeek = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+
+    if (stat === "totalViews") {
+      return {
+        series: [
+          {
+            name: "Valid Clicks",
+            data: [1245, 1876, 1432, 2103, 2567, 3241, 2876],
+          },
+        ],
+        categories: daysOfWeek,
+      };
+    } else if (stat === "totalEarnings") {
+      return {
+        series: [
+          {
+            name: "Earnings",
+            data: [4.82, 7.23, 5.54, 8.12, 9.91, 12.53, 11.1],
+          },
+        ],
+        categories: daysOfWeek,
+      };
+    } else {
+      return {
+        series: [{ name: "Referrals", data: [3, 5, 2, 7, 4, 8, 6] }],
+        categories: daysOfWeek,
+      };
+    }
+  }
+
   try {
     // Map stat type to backend metric
     const metricMap: Record<StatType, string> = {

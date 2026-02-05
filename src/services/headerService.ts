@@ -2,6 +2,9 @@
 import type { HeaderStats, AdminHeaderStats } from "@/types/type";
 import apiClient from "./apiClient";
 
+// 🎨 DEMO MODE: Set to true for screenshot purposes
+const DEMO_MODE = false;
+
 // In-memory cache for header stats
 let cachedStats: HeaderStats | null = null;
 let cacheTimestamp = 0;
@@ -12,6 +15,15 @@ const CACHE_TTL = 0; // No cache - always fetch fresh balance
  * Uses dedicated lightweight endpoint /api/user/stats
  */
 export async function getHeaderStats(): Promise<HeaderStats> {
+  // 🎨 DEMO: Return impressive dummy data
+  if (DEMO_MODE) {
+    return {
+      balance: 127.5,
+      payout: 89.25,
+      cpm: 8.0,
+    };
+  }
+
   // Return cached if still valid
   const now = Date.now();
   if (cachedStats && now - cacheTimestamp < CACHE_TTL) {

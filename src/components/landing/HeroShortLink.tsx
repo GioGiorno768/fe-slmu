@@ -8,11 +8,14 @@ import {
   Share2,
   Loader2,
   OctagonAlert,
-  Edit3,
   ArrowRight,
   X,
   UserPlus,
   TriangleAlert,
+  Sparkles,
+  ExternalLink,
+  ChevronLeft,
+  Plus,
 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import * as linkService from "@/services/linkService";
@@ -24,11 +27,14 @@ export default function HeroShortLink() {
   const { showAlert } = useAlert();
   const [urlInput, setUrlInput] = useState("");
   const [aliasInput, setAliasInput] = useState("");
-  const [shortLink, setShortLink] = useState("");
+  const [createdLinks, setCreatedLinks] = useState<string[]>([]);
+  const [currentLinkIndex, setCurrentLinkIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showAliasField, setShowAliasField] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [toast, setToast] = useState<{
     show: boolean;
     message: string;
@@ -43,17 +49,16 @@ export default function HeroShortLink() {
   }>({});
 
   const validateAlias = (value: string) => {
-    // Allows alphanumeric, hyphens, and underscores. No emojis or spaces.
     const regex = /^[a-zA-Z0-9-_]+$/;
     if (value && !regex.test(value)) {
       setValidationErrors((prev) => ({
         ...prev,
-        alias: "Alias hanya boleh berisi huruf, angka, strip, dan underscore.",
+        alias: "Only letters, numbers, hyphens & underscores allowed",
       }));
     } else if (value && value.length > 20) {
       setValidationErrors((prev) => ({
         ...prev,
-        alias: "Alias maksimal 20 karakter.",
+        alias: "Max 20 characters",
       }));
     } else {
       setValidationErrors((prev) => ({ ...prev, alias: undefined }));
@@ -70,7 +75,7 @@ export default function HeroShortLink() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!urlInput) {
-      showToast("Link tidak boleh kosong!", "error");
+      showToast("Please enter a URL", "error");
       return;
     }
 
@@ -81,7 +86,6 @@ export default function HeroShortLink() {
 
     setIsLoading(true);
     setError("");
-    setShortLink("");
     setIsCopied(false);
     setShowErrorModal(false);
 
@@ -90,13 +94,15 @@ export default function HeroShortLink() {
         urlInput,
         aliasInput || undefined,
       );
-      // Use the full short URL returned by backend (e.g. sho.rt/code or localhost:8000/code)
-      setShortLink(data.shortUrl);
+      // Add to history
+      setCreatedLinks((prev) => [...prev, data.shortUrl]);
+      setCurrentLinkIndex(createdLinks.length); // Point to the new link
+      setShowForm(false);
       setUrlInput("");
       setAliasInput("");
+      setShowAliasField(false);
     } catch (err: any) {
-      // Extract error message from various possible structures
-      let errorMessage = "Terjadi kesalahan. Silakan coba lagi.";
+      let errorMessage = "Something went wrong. Please try again.";
 
       if (typeof err === "string") {
         errorMessage = err;
@@ -108,15 +114,9 @@ export default function HeroShortLink() {
 
       setError(errorMessage);
 
-      // Show modal for rate limit or disabled errors
-      const lowerError = errorMessage.toLowerCase();
-      setError(errorMessage);
-
-      // Show specific alias error if available
       if (err.errors?.alias) {
         showToast(err.errors.alias[0], "error");
       } else {
-        // Only show generic error toast if it's NOT a modal-triggering error
         const lowerError = errorMessage.toLowerCase();
         const isModalError =
           lowerError.includes("limit") ||
@@ -136,261 +136,323 @@ export default function HeroShortLink() {
     }
   };
 
+  const currentLink =
+    currentLinkIndex !== null ? createdLinks[currentLinkIndex] : null;
+
   const handleCopy = () => {
-    if (!shortLink) return;
-    const protocol = window.location.protocol;
-    // navigator.clipboard.writeText(`${protocol}//${shortLink}`);
-    // setIsCopied(true);
-    navigator.clipboard.writeText(`${shortLink}`);
+    if (!currentLink) return;
+    navigator.clipboard.writeText(`${currentLink}`);
     setIsCopied(true);
-    showToast("Link telah disalin ke clipboard!", "success");
+    showToast("Copied to clipboard!", "success");
     setTimeout(() => setIsCopied(false), 2000);
   };
 
   const handleShare = async () => {
-    if (!shortLink) return;
+    if (!currentLink) return;
     const protocol = window.location.protocol;
     if (navigator.share) {
       try {
         await navigator.share({
           title: "Shortlinkmu Link",
-          text: `Lihat link saya: ${shortLink}`,
-          url: `${protocol}//${shortLink}`,
+          text: `Check out my link: ${currentLink}`,
+          url: `${protocol}//${currentLink}`,
         });
       } catch (err) {
-        console.error("Gagal share:", err);
+        console.error("Failed to share:", err);
       }
     } else {
       handleCopy();
       showAlert(
-        "Browser Anda tidak mendukung fitur share. Link telah disalin.",
+        "Your browser doesn't support sharing. Link has been copied.",
         "info",
         "Info",
       );
     }
   };
 
+  const handleCreateNew = () => {
+    setShowForm(true);
+    setIsCopied(false);
+  };
+
+  const handleViewPrevious = () => {
+    if (createdLinks.length > 0) {
+      setCurrentLinkIndex(createdLinks.length - 1);
+      setShowForm(false);
+    }
+  };
+
   return (
     <div className="w-full">
-      {/* Input Form */}
-      <div className="relative z-10 bg-white/80 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl shadow-slate-200/50 border border-slate-100">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col md:flex-row gap-3"
-        >
-          {/* URL Input */}
-          <div className="flex-[2] relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-bluelight transition-colors">
-              <LinkIcon className="w-5 h-5" />
-            </div>
-            <input
-              type="text"
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              className="block w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-bluelight text-[1rem] placeholder-slate-400 text-slate-900 transition-all shadow-sm hover:border-slate-300"
-              placeholder="Tempel link panjang Anda di sini..."
-              disabled={isLoading}
-            />
-          </div>
-
-          {/* Alias Input */}
-          <div className="flex-1 relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-bluelight transition-colors">
-              <Edit3 className="w-5 h-5" />
-            </div>
-            <input
-              type="text"
-              value={aliasInput}
-              onChange={(e) => {
-                setAliasInput(e.target.value);
-                validateAlias(e.target.value);
-              }}
-              className={`block w-full pl-12 pr-4 py-4 bg-white border rounded-xl focus:ring-4 focus:ring-blue-100 text-[1rem] placeholder-slate-400 text-slate-900 transition-all shadow-sm ${
-                validationErrors.alias
-                  ? "border-red-300 focus:border-red-500 hover:border-red-400"
-                  : "border-slate-200 focus:border-bluelight hover:border-slate-300"
-              }`}
-              placeholder="Alias (Opsional)"
-              disabled={isLoading}
-            />
-            {/* Validation Message Tooltip */}
-            <AnimatePresence>
-              {validationErrors.alias && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-full mt-3 left-0 z-20 flex items-center gap-2 px-4 py-2.5 bg-white border border-red-100 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
-                >
-                  <div className="w-5 h-5 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                    <TriangleAlert className="w-3 h-3 text-red-500" />
+      <AnimatePresence mode="wait">
+        {showForm ? (
+          // Form State
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="relative"
+          >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              {/* URL Input - Responsive */}
+              <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 sm:p-2 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-slate-300 focus-within:border-bluelight focus-within:ring-4 focus-within:ring-blue-50 transition-all">
+                <div className="flex items-center flex-1 gap-2">
+                  <div className="pl-2 sm:pl-3 text-slate-400">
+                    <LinkIcon className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-semibold text-red-600 whitespace-nowrap">
-                    {validationErrors.alias}
-                  </span>
-                  {/* Tooltip Arrow */}
-                  <div className="absolute -top-1.5 left-6 w-3 h-3 bg-white border-t border-l border-red-100 transform rotate-45" />
+                  <input
+                    type="text"
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    className="flex-1 py-3 px-1 sm:px-2 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none text-[15px] min-w-0"
+                    placeholder="Paste your long URL here..."
+                    disabled={isLoading}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-bluelight hover:bg-blue-600 text-white font-medium rounded-xl transition-all disabled:opacity-60 group shrink-0"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <span>Shorten</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Alias Toggle & Input */}
+              {!showAliasField ? (
+                <button
+                  type="button"
+                  onClick={() => setShowAliasField(true)}
+                  className="self-start text-sm text-slate-400 hover:text-bluelight transition-colors flex items-center gap-1 pl-1"
+                >
+                  <span>+ Add custom alias</span>
+                </button>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="relative"
+                >
+                  <div className="flex items-center gap-2 p-2 bg-slate-50 border border-slate-200 rounded-xl">
+                    <span className="pl-2 sm:pl-3 text-sm text-slate-400 whitespace-nowrap">
+                      slmu.my.id/
+                    </span>
+                    <input
+                      type="text"
+                      value={aliasInput}
+                      onChange={(e) => {
+                        setAliasInput(e.target.value);
+                        validateAlias(e.target.value);
+                      }}
+                      className={`flex-1 py-2 px-1 sm:px-2 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none text-[15px] min-w-0 ${
+                        validationErrors.alias ? "text-red-500" : ""
+                      }`}
+                      placeholder="your-custom-alias"
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAliasField(false);
+                        setAliasInput("");
+                        setValidationErrors({});
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {validationErrors.alias && (
+                    <p className="mt-1 text-xs text-red-500 pl-2 flex items-center gap-1">
+                      <TriangleAlert className="w-3 h-3" />
+                      {validationErrors.alias}
+                    </p>
+                  )}
                 </motion.div>
               )}
-            </AnimatePresence>
-          </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="md:w-auto bg-bluelight hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-bluelight/30 hover:shadow-bluelight/40 transition-all flex items-center justify-center gap-2 whitespace-nowrap group disabled:opacity-70"
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <>
-                <span>Shorten</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </>
-            )}
-          </button>
-        </form>
-      </div>
-
-      {/* Error/Result */}
-      <div className="mt-4 min-h-[4rem]">
-        {/* Inline error for simple validation */}
-        {error && !showErrorModal && (
-          <div className="text-red-500 flex items-center gap-2 text-sm animate-in fade-in-0 slide-in-from-top-2">
-            <OctagonAlert className="w-5 h-5 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {shortLink && (
-          <div className="bg-white/90 backdrop-blur-xl px-6 py-4 rounded-xl shadow-lg border border-slate-100 flex justify-between items-center animate-in fade-in-0 slide-in-from-top-3 duration-300">
-            <div className="flex items-center gap-4 overflow-hidden">
-              <div className="p-2 bg-green-50 rounded-lg">
-                <Check className="w-5 h-5 text-green-600" />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs text-slate-500 uppercase tracking-wide font-medium">
-                  Your Shortlink
-                </span>
-                <a
-                  href={shortLink}
-                  target="_blank"
-                  rel="noopener"
-                  className="text-slate-900 font-semibold hover:text-bluelight truncate transition-colors"
+              {/* Show previous link button if exists */}
+              {createdLinks.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleViewPrevious}
+                  className="self-start text-sm text-bluelight hover:text-blue-600 transition-colors flex items-center gap-1 pl-1"
                 >
-                  {shortLink}
-                </a>
+                  <ChevronLeft className="w-3 h-3" />
+                  <span>View previous link</span>
+                </button>
+              )}
+            </form>
+          </motion.div>
+        ) : (
+          // Result State - Modern Card
+          <motion.div
+            key="result"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="relative"
+          >
+            <div className="bg-gradient-to-br from-bluelight to-blue-600 rounded-2xl p-4 sm:p-6 text-white shadow-lg shadow-blue-500/20">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4 sm:mb-5">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 sm:p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium text-white/90">
+                    Link Created!
+                  </span>
+                </div>
+                <button
+                  onClick={handleCreateNew}
+                  className="text-sm text-white/70 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span className="hidden sm:inline">Create another</span>
+                  <span className="sm:hidden">New</span>
+                </button>
+              </div>
+
+              {/* Link Display */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-4">
+                <p className="text-xs text-white/60 mb-1">Your short link</p>
+                <div className="flex items-center justify-between gap-2">
+                  <a
+                    href={`https://${currentLink}`}
+                    target="_blank"
+                    rel="noopener"
+                    className="text-base sm:text-lg font-semibold text-white hover:text-white/90 truncate flex items-center gap-2 group min-w-0"
+                  >
+                    <span className="truncate">{currentLink}</span>
+                    <ExternalLink className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Link Counter */}
+              {createdLinks.length > 1 && (
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <button
+                    onClick={() =>
+                      setCurrentLinkIndex((prev) =>
+                        Math.max(0, (prev || 0) - 1),
+                      )
+                    }
+                    disabled={currentLinkIndex === 0}
+                    className="p-1 text-white/50 hover:text-white disabled:opacity-30 transition-colors"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <span className="text-xs text-white/60">
+                    {(currentLinkIndex || 0) + 1} of {createdLinks.length}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setCurrentLinkIndex((prev) =>
+                        Math.min(createdLinks.length - 1, (prev || 0) + 1),
+                      )
+                    }
+                    disabled={currentLinkIndex === createdLinks.length - 1}
+                    className="p-1 text-white/50 hover:text-white disabled:opacity-30 transition-colors rotate-180"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleCopy}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-all text-sm sm:text-base ${
+                    isCopied
+                      ? "bg-green-500 text-white"
+                      : "bg-white text-bluelight hover:bg-white/90"
+                  }`}
+                >
+                  {isCopied ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <ClipboardCopy className="w-4 h-4" />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+                  title="Share"
+                >
+                  <Share2 className="w-5 h-5" />
+                </button>
               </div>
             </div>
-            <div className="flex gap-2 shrink-0">
-              <button
-                onClick={handleCopy}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-                title={isCopied ? "Disalin!" : "Salin link"}
-              >
-                {isCopied ? (
-                  <Check className="w-5 h-5 text-green-600" />
-                ) : (
-                  <ClipboardCopy className="w-5 h-5 text-bluelight" />
-                )}
-              </button>
-              <button
-                onClick={handleShare}
-                className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-                title="Bagikan link"
-              >
-                <Share2 className="w-5 h-5 text-bluelight" />
-              </button>
-            </div>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
-      {/* Error Modal Popup */}
+      {/* Error Modal */}
       {showErrorModal && (
         <div
-          className="fixed inset-0 bg-black/10 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
           onClick={() => setShowErrorModal(false)}
-          style={{
-            animation: "fadeIn 0.2s ease-out",
-          }}
         >
-          <div
-            className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              animation: "modalSlideIn 0.3s ease-out",
-            }}
           >
-            {/* Close button */}
             <button
               onClick={() => setShowErrorModal(false)}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+              className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            {/* Icon */}
-            <div className="w-16 h-16 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
-              <OctagonAlert className="w-8 h-8 text-red-500" />
+            <div className="w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+              <OctagonAlert className="w-6 h-6 text-red-500" />
             </div>
 
-            {/* Content */}
-            <h3 className="text-2xl font-bold text-center text-gray-900 mb-3">
-              Limit Tercapai
+            <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">
+              Limit Reached
             </h3>
-            <p className="text-gray-600 text-center mb-6 leading-relaxed">
+            <p className="text-gray-500 text-center text-sm mb-5 leading-relaxed">
               {error}
             </p>
 
-            {/* CTA Button */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Link
                 href="/register"
-                className="w-full py-3 px-6 bg-bluelight text-white font-semibold text-center rounded-xl hover:bg-opacity-90 transition-all flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-bluelight/30"
+                className="w-full py-2.5 px-4 bg-bluelight text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
               >
-                <UserPlus className="w-5 h-5" />
-                Daftar Sekarang - Gratis!
+                <UserPlus className="w-4 h-4" />
+                Sign Up Free
               </Link>
               <button
                 onClick={() => setShowErrorModal(false)}
-                className="w-full py-3 px-6 text-gray-500 font-medium text-center hover:text-gray-700 transition-colors"
+                className="w-full py-2.5 px-4 text-gray-500 font-medium text-center hover:text-gray-700 transition-colors text-sm"
               >
-                Tutup
+                Close
               </button>
             </div>
-
-            {/* Benefits hint */}
-            <p className="text-sm text-gray-400 text-center mt-4">
-              Daftar untuk akses unlimited link + fitur premium lainnya
-            </p>
-          </div>
+          </motion.div>
         </div>
       )}
 
-      {/* Modal Animation Styles */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95) translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-      `}</style>
       <Toast
         message={toast.message}
         type={toast.type}

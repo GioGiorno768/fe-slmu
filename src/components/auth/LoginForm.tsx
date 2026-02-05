@@ -174,13 +174,13 @@ export default function LoginForm() {
             Email
           </label> */}
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-bluelanding transition-colors" />
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
               placeholder="email@anda.com"
               required
               disabled={loading}
@@ -194,13 +194,13 @@ export default function LoginForm() {
             Password
           </label> */}
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-bluelanding transition-colors" />
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all"
+              className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
               placeholder="••••••••"
               required
               disabled={loading}
@@ -223,7 +223,7 @@ export default function LoginForm() {
         <div className="flex justify-end">
           <Link
             href="/forgot-password"
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline"
+            className="text-sm text-bluelanding font-medium hover:underline"
           >
             Lupa password?
           </Link>
@@ -233,7 +233,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/25"
+          className="w-full bg-bluelanding hover:bg-bluelanding/80 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/25"
         >
           {loading ? "Loading..." : "Login"}
         </button>
@@ -261,7 +261,7 @@ export default function LoginForm() {
         Belum punya akun?{" "}
         <Link
           href="/register"
-          className="font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+          className="font-semibold text-bluelanding hover:underline"
         >
           Daftar sekarang
         </Link>

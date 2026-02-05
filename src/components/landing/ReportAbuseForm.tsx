@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import {
   Link as LinkIcon,
   Mail,
@@ -10,6 +11,7 @@ import {
   AlertCircle,
   Loader2,
   ChevronDown,
+  Send,
 } from "lucide-react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
@@ -36,7 +38,7 @@ export default function ReportAbuseForm() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -68,19 +70,17 @@ export default function ReportAbuseForm() {
         setStatus("success");
         setMessage(
           data.message ||
-            "Laporan Anda telah diterima. Terima kasih atas kontribusi Anda!"
+            "Your report has been submitted. Thank you for helping us!",
         );
         setFormData({ url: "", reason: "", email: "", details: "" });
       } else {
         setStatus("error");
-        setMessage(
-          data.message || "Terjadi kesalahan. Silakan coba lagi nanti."
-        );
+        setMessage(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
       console.error("Report submission error:", error);
       setStatus("error");
-      setMessage("Gagal mengirim laporan. Periksa koneksi internet Anda.");
+      setMessage("Failed to submit report. Please check your connection.");
     }
   };
 
@@ -88,31 +88,39 @@ export default function ReportAbuseForm() {
     <div className="max-w-2xl mx-auto">
       {/* Success/Error Alert */}
       {status === "success" && (
-        <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-xl flex items-center gap-3 mb-8">
-          <CheckCircle2 className="w-6 h-6 text-green-600 shrink-0" />
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-xl flex items-center gap-3 mb-6"
+        >
+          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
           <p className="text-sm">{message}</p>
-        </div>
+        </motion.div>
       )}
 
       {status === "error" && (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex items-center gap-3 mb-8">
-          <AlertCircle className="w-6 h-6 text-red-600 shrink-0" />
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl flex items-center gap-3 mb-6"
+        >
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
           <p className="text-sm">{message}</p>
-        </div>
+        </motion.div>
       )}
 
       {/* Form */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 space-y-6"
+        className="bg-white border border-slate-100 rounded-2xl p-6 md:p-8 shadow-sm space-y-5"
       >
         {/* Link URL */}
         <div>
           <label
             htmlFor="url"
-            className="block text-sm font-semibold text-slate-900 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Link yang Dilaporkan <span className="text-red-500">*</span>
+            Reported Link <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <LinkIcon className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -122,7 +130,7 @@ export default function ReportAbuseForm() {
               name="url"
               value={formData.url}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all"
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
               placeholder="https://short.link/xxx"
               required
               disabled={status === "loading"}
@@ -134,9 +142,9 @@ export default function ReportAbuseForm() {
         <div>
           <label
             htmlFor="reason"
-            className="block text-sm font-semibold text-slate-900 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Alasan Pelaporan <span className="text-red-500">*</span>
+            Report Reason <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <ShieldAlert className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -145,21 +153,21 @@ export default function ReportAbuseForm() {
               name="reason"
               value={formData.reason}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all appearance-none"
+              className="w-full py-3 pl-12 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all appearance-none"
               required
               disabled={status === "loading"}
             >
               <option value="" disabled>
-                Pilih kategori...
+                Select a category...
               </option>
               <option value="phishing">Phishing</option>
               <option value="malware">Malware / Virus</option>
               <option value="spam">Spam</option>
               <option value="illegal_content">
-                Konten Ilegal (Judi, Pornografi, dll)
+                Illegal Content (Gambling, Adult, etc.)
               </option>
-              <option value="copyright">Pelanggaran Hak Cipta</option>
-              <option value="other">Lainnya</option>
+              <option value="copyright">Copyright Infringement</option>
+              <option value="other">Other</option>
             </select>
             <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
@@ -169,10 +177,10 @@ export default function ReportAbuseForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-semibold text-slate-900 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Email Anda{" "}
-            <span className="text-slate-400 font-normal">(Opsional)</span>
+            Your Email{" "}
+            <span className="text-slate-400 font-normal">(Optional)</span>
           </label>
           <div className="relative">
             <Mail className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -182,8 +190,8 @@ export default function ReportAbuseForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all"
-              placeholder="Email untuk tindak lanjut"
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
+              placeholder="For follow-up communication"
               disabled={status === "loading"}
             />
           </div>
@@ -193,10 +201,10 @@ export default function ReportAbuseForm() {
         <div>
           <label
             htmlFor="details"
-            className="block text-sm font-semibold text-slate-900 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Detail Tambahan{" "}
-            <span className="text-slate-400 font-normal">(Opsional)</span>
+            Additional Details{" "}
+            <span className="text-slate-400 font-normal">(Optional)</span>
           </label>
           <div className="relative">
             <MessageSquare className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
@@ -206,8 +214,8 @@ export default function ReportAbuseForm() {
               rows={4}
               value={formData.details}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all resize-none"
-              placeholder="Jelaskan lebih lanjut..."
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all resize-none"
+              placeholder="Describe the issue in more detail..."
               disabled={status === "loading"}
             />
           </div>
@@ -217,15 +225,18 @@ export default function ReportAbuseForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="w-full bg-bluelight text-white font-semibold py-3 px-6 rounded-xl hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-bluelanding text-white font-medium py-3.5 px-6 rounded-xl hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {status === "loading" ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Mengirim...
+              Submitting...
             </>
           ) : (
-            "Kirim Laporan"
+            <>
+              <Send className="w-4 h-4" />
+              Submit Report
+            </>
           )}
         </button>
       </form>

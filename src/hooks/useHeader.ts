@@ -8,7 +8,7 @@ import type { HeaderStats, AdminHeaderStats } from "@/types/type";
 
 export function useHeader(role: "member" | "admin" | "super-admin" = "member") {
   const [stats, setStats] = useState<HeaderStats | AdminHeaderStats | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
 

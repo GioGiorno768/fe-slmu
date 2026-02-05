@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Manrope } from "next/font/google";
+import { Figtree, Manrope, Poppins } from "next/font/google";
 import "../globals.css"; // Perhatikan path naik satu level (../)
 import LenisScrollProvider from "../LenisProvider"; // Sesuaikan path jika perlu
 import { NextIntlClientProvider } from "next-intl";
@@ -20,6 +20,12 @@ const figtree = Figtree({
 
 const manrope = Manrope({
   variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
 });
@@ -51,7 +57,7 @@ export default async function RootLayout({
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       {/* ... (Isi body sama aja) ... */}
       <body
-        className={`${figtree.variable} ${manrope.variable} font-figtree antialiased`}
+        className={`${figtree.variable} ${manrope.variable} ${poppins.variable} font-figtree antialiased`}
       >
         <Suspense fallback={<div />}>
           <TopLoadingBar />

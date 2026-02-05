@@ -6,6 +6,8 @@
   --foreground: #171717;
   --shortblack: #25253f;
   --bluelight: #350e8f;
+  --bluelanding: #350e8f;
+  --redlanding: #9c0056;
   --greenlight: #22c499;
   --blues: #f5f8ff;
   --grays: #7c7c85;
@@ -97,9 +99,12 @@
   --color-lazyload: var(--lazyload);
   --color-shd-card: var(--shd-card);
   --color-subcard: var(--subcard);
+  --color-bluelanding: var(--bluelanding);
+  --color-redlanding: var(--redlanding);
   --font-figtree: "Figtree", sans-serif;
   /* --font-geist: "Geist", sans-serif; */
   --font-manrope: "Manrope", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
   --breakpoint-custom: 82rem;
   --breakpoint-custom2: 2805px;
 }
@@ -420,4 +425,34 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-bluelight); /* Warna thumb lu */
   border-radius: 10px;
+}
+
+/* CTA Floating Animations - GPU Optimized */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(15deg);
+  }
+}
+
+@keyframes float-slow-reverse {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-12deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-8deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-float-slow-reverse {
+  animation: float-slow-reverse 6s ease-in-out infinite;
+  animation-delay: 1s;
 }

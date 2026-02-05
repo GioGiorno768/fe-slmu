@@ -1,205 +1,228 @@
-// Server Component - SEO friendly
+// Server Component - No "use client" for SEO
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
-import { Link } from "@/i18n/routing";
+import { AnimateOnView } from "@/components/landing/AnimateWrappers";
+import AuthCTA from "@/components/landing/AuthCTA";
 import {
-  Target,
-  Eye,
-  Users,
   Link2,
+  Zap,
   Shield,
   TrendingUp,
-  ArrowRight,
+  Globe,
+  Users,
+  Sparkles,
+  Target,
   Heart,
 } from "lucide-react";
-import {
-  AnimateOnView,
-  AnimateSlideIn,
-  AnimateScale,
-  PulseAnimation,
-} from "@/components/landing/AnimateWrappers";
 
-// Static data
-const team = [
+const highlights = [
   {
-    id: 1,
-    name: "Kevin Ragil K.D",
-    role: "Co-Founder & CEO",
-    color: "bg-blue-50 text-blue-600",
+    icon: Link2,
+    title: "Link Shortening",
+    description: "Transform long URLs into clean, shareable short links",
+    color: "bg-blue-50",
+    iconColor: "text-blue-600",
   },
   {
-    id: 2,
-    name: "Musthofa Ilmi",
-    role: "Co-Founder & CTO",
-    color: "bg-purple-50 text-purple-600",
+    icon: TrendingUp,
+    title: "Monetization",
+    description: "Earn money for every visitor who clicks your links",
+    color: "bg-green-50",
+    iconColor: "text-green-600",
   },
   {
-    id: 3,
-    name: "Septian Dwi P",
-    role: "Co-Founder & CMO",
-    color: "bg-teal-50 text-teal-600",
+    icon: Shield,
+    title: "Secure & Reliable",
+    description: "Enterprise-grade security for all your links",
+    color: "bg-purple-50",
+    iconColor: "text-purple-600",
+  },
+  {
+    icon: Globe,
+    title: "Global Reach",
+    description: "Optimized CPM rates for 35+ countries worldwide",
+    color: "bg-orange-50",
+    iconColor: "text-orange-600",
   },
 ];
 
 const values = [
   {
-    icon: Shield,
-    title: "Keamanan",
-    desc: "Kami memprioritaskan keamanan setiap link dan data pengguna.",
-    color: "bg-green-50 text-green-600",
+    icon: Target,
+    title: "Simple",
+    description: "Easy to use, no technical knowledge required",
   },
   {
-    icon: TrendingUp,
-    title: "Inovasi",
-    desc: "Terus mengembangkan fitur terbaik untuk memaksimalkan pendapatan.",
-    color: "bg-blue-50 text-blue-600",
+    icon: Zap,
+    title: "Fast",
+    description: "Lightning-fast redirects for the best user experience",
   },
   {
     icon: Heart,
-    title: "Kepedulian",
-    desc: "Memberikan support terbaik untuk setiap pengguna kami.",
-    color: "bg-pink-50 text-pink-600",
+    title: "Fair",
+    description: "Transparent rates with on-time payouts",
   },
 ];
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-white font-figtree">
+    <main className="min-h-screen bg-white font-poppins">
       {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-slate-50 to-blue-50/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-blue-50/60 to-transparent"></div>
+          <div className="absolute -top-20 -right-20 w-80 h-80 bg-purple-100/40 rounded-full blur-3xl"></div>
+          <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-100/40 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <AnimateOnView>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 text-bluelight text-xs font-bold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bluelanding/10 text-bluelanding text-sm font-medium mb-6">
               <Users className="w-4 h-4" />
               About Us
             </div>
           </AnimateOnView>
+
           <AnimateOnView delay={0.1}>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">
-              Tentang ShortLinkmu
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-800 mb-6 tracking-tight">
+              What is <span className="text-bluelanding">Shortlinkmu</span>?
             </h1>
           </AnimateOnView>
+
           <AnimateOnView delay={0.2}>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Pelajari lebih lanjut tentang siapa kami, apa yang kami lakukan,
-              dan mengapa kami bersemangat membantu publisher menghasilkan
-              lebih.
+            <p className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed font-light font-figtree">
+              Shortlinkmu is a link shortening platform that lets you earn money
+              from your shared links. Every time someone clicks on your
+              shortened link, you get paid based on your visitors location.
             </p>
           </AnimateOnView>
         </div>
       </section>
 
-      {/* Story Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Text */}
-            <AnimateSlideIn direction="left">
-              <div className="space-y-6">
-                <h2 className="text-3xl font-extrabold text-slate-900">
-                  Cerita Kami
-                </h2>
-                <p className="text-slate-600 leading-relaxed">
-                  ShortLinkmu dimulai dari ide sederhana: membuat proses berbagi
-                  link menjadi lebih mudah, aman, dan menguntungkan. Kami
-                  melihat banyak kreator, marketer, dan pengguna sehari-hari
-                  berjuang dengan URL yang panjang dan tidak menarik.
-                </p>
-                <p className="text-slate-600 leading-relaxed">
-                  Kami membangun platform ini untuk mengubah URL tersebut
-                  menjadi alat yang ampuh untuk branding, analitik, dan
-                  monetisasi. Misi kami adalah memberdayakan setiap orang untuk
-                  mendapatkan hasil maksimal dari setiap link yang mereka
-                  bagikan.
-                </p>
-              </div>
-            </AnimateSlideIn>
-
-            {/* Right: Visual */}
-            <AnimateScale delay={0.2}>
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-12 flex items-center justify-center">
-                <PulseAnimation>
-                  <div className="w-32 h-32 bg-bluelight rounded-full flex items-center justify-center text-white shadow-xl shadow-blue-200">
-                    <Link2 className="w-16 h-16" />
-                  </div>
-                </PulseAnimation>
-              </div>
-            </AnimateScale>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Mission */}
-            <AnimateOnView>
-              <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center h-full">
-                <div className="w-16 h-16 bg-blue-50 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                  <Target className="w-8 h-8 text-bluelight" />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">
-                  Misi Kami
-                </h3>
-                <p className="text-slate-600">
-                  Menyediakan layanan shortlink yang paling aman, andal, dan
-                  menguntungkan bagi kreator di seluruh dunia.
-                </p>
-              </div>
-            </AnimateOnView>
-
-            {/* Vision */}
-            <AnimateOnView delay={0.1}>
-              <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center h-full">
-                <div className="w-16 h-16 bg-purple-50 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                  <Eye className="w-8 h-8 text-purple-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">
-                  Visi Kami
-                </h3>
-                <p className="text-slate-600">
-                  Menjadi platform pilihan utama untuk manajemen link, di mana
-                  setiap link memiliki nilai lebih dari sekadar klik.
-                </p>
-              </div>
-            </AnimateOnView>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">
-              Nilai-Nilai Kami
+      {/* What We Offer */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnimateOnView className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
+              What We Offer
             </h2>
-            <p className="text-slate-600 text-lg">
-              Prinsip yang kami pegang dalam melayani pengguna
+            <p className="text-slate-500 text-base md:text-lg font-light max-w-xl mx-auto font-figtree">
+              Everything you need to monetize your online presence
             </p>
-          </div>
+          </AnimateOnView>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {highlights.map((item, index) => (
+              <AnimateOnView key={item.title} delay={index * 0.1}>
+                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                  <div
+                    className={`w-12 h-12 ${item.color} rounded-xl mb-4 flex items-center justify-center ${item.iconColor}`}
+                  >
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 font-figtree">
+                    {item.description}
+                  </p>
+                </div>
+              </AnimateOnView>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Simple */}
+      <section className="py-16 md:py-24 bg-slate-50/50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnimateOnView>
+            <div className="bg-white border border-slate-100 rounded-3xl p-8 md:p-12 shadow-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-bluelanding/10 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-bluelanding" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-semibold text-slate-800">
+                  How It Works
+                </h2>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-bluelanding text-white rounded-full flex items-center justify-center text-sm font-medium shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-slate-800 mb-1">
+                      Create Short Links
+                    </h3>
+                    <p className="text-slate-500 text-sm font-figtree">
+                      Paste any long URL and get a short, monetized link
+                      instantly
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-bluelanding text-white rounded-full flex items-center justify-center text-sm font-medium shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-slate-800 mb-1">
+                      Share Anywhere
+                    </h3>
+                    <p className="text-slate-500 text-sm font-figtree">
+                      Share your links on social media, websites, or wherever
+                      your audience is
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-bluelanding text-white rounded-full flex items-center justify-center text-sm font-medium shrink-0">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-slate-800 mb-1">
+                      Earn Money
+                    </h3>
+                    <p className="text-slate-500 text-sm font-figtree">
+                      Get paid for every 1,000 views with rates up to $15 CPM
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimateOnView>
+        </div>
+      </section>
+
+      {/* Our Values */}
+      <section className="py-16 md:py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnimateOnView className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
+              Our Values
+            </h2>
+          </AnimateOnView>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {values.map((value, index) => (
               <AnimateOnView key={value.title} delay={index * 0.1}>
-                <div className="text-center p-6">
-                  <div
-                    className={`w-16 h-16 ${
-                      value.color.split(" ")[0]
-                    } rounded-2xl mx-auto mb-6 flex items-center justify-center`}
-                  >
-                    <value.icon
-                      className={`w-8 h-8 ${value.color.split(" ")[1]}`}
-                    />
+                <div className="text-center">
+                  <div className="w-14 h-14 bg-bluelanding/10 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                    <value.icon className="w-7 h-7 text-bluelanding" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
                     {value.title}
                   </h3>
-                  <p className="text-slate-600">{value.desc}</p>
+                  <p className="text-sm text-slate-500 font-figtree">
+                    {value.description}
+                  </p>
                 </div>
               </AnimateOnView>
             ))}
@@ -207,69 +230,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <AnimateOnView>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 text-bluelight text-xs font-bold uppercase tracking-wider mb-4">
-                Our Team
-              </div>
-            </AnimateOnView>
-            <AnimateOnView delay={0.1}>
-              <h2 className="text-3xl font-extrabold text-slate-900 mb-4">
-                Tim Kami
-              </h2>
-            </AnimateOnView>
-            <AnimateOnView delay={0.2}>
-              <p className="text-slate-600 text-lg">
-                Orang-orang hebat di balik layar yang membuat semua ini terjadi
-              </p>
-            </AnimateOnView>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <AnimateOnView key={member.id} delay={index * 0.1}>
-                <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
-                  <div
-                    className={`w-20 h-20 ${
-                      member.color.split(" ")[0]
-                    } rounded-full mx-auto mb-6 flex items-center justify-center`}
-                  >
-                    <Users
-                      className={`w-10 h-10 ${member.color.split(" ")[1]}`}
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-bluelight font-medium">{member.role}</p>
-                </div>
-              </AnimateOnView>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-bluelight via-blue-600 to-indigo-700">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6">
-            Bergabung Bersama Kami
-          </h2>
-          <p className="text-lg text-blue-100 mb-8">
-            Jadilah bagian dari komunitas publisher yang terus berkembang
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 bg-white text-bluelight font-bold py-4 px-8 rounded-xl hover:bg-blue-50 transition-all shadow-lg"
-          >
-            Daftar Sekarang
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
-      </section>
+      {/* CTA Section - Client Component */}
+      <AuthCTA
+        title="Ready to Start Earning?"
+        subtitle="Join thousands of publishers and start monetizing your links today"
+      />
 
       {/* Footer */}
       <Footer />
