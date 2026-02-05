@@ -76,7 +76,7 @@ export default function ReportAbuse() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {guidelines.map((guide, index) => (
               <AnimateOnView key={guide.title} delay={index * 0.1}>
-                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm h-full">
                   <div className="flex items-center gap-3 mb-4">
                     <div
                       className={`w-10 h-10 ${guide.iconBg} rounded-xl flex items-center justify-center ${guide.iconColor}`}
