@@ -8,7 +8,7 @@ export default function RegisterPage() {
   return (
     <RegistrationCheck>
       <AuthPageCheck>
-        <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree">
+        <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree bg-white">
           <AuthBranding accentColor="purple" />
           <AuthFormWrapper allowScroll>
             <RegisterForm />
