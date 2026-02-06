@@ -49,7 +49,7 @@ export default function RegistrationCheck({
   // Show loading state briefly while checking
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-white">
         <Spinner />
       </div>
     );
