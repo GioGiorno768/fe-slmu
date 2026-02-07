@@ -305,7 +305,7 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Auth Button */}
+            {/* Auth Buttons */}
             {isAuthenticated ? (
               <Link
                 href={dashboardPath as any}
@@ -315,12 +315,21 @@ export default function Navbar() {
                 {t("dashboard")}
               </Link>
             ) : !isLoginDisabled ? (
-              <button
-                onClick={handleRegisterClick}
-                className="w-full py-3 text-base font-medium bg-bluelanding hover:bg-blue-600 shadow-lg shadow-blue-500/50 text-white rounded-xl transition-colors"
-              >
-                {t("register")}
-              </button>
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-center py-3 text-base font-medium border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+                >
+                  {t("login")}
+                </Link>
+                <button
+                  onClick={handleRegisterClick}
+                  className="w-full py-3 text-base font-medium bg-bluelanding hover:bg-blue-600 shadow-lg shadow-blue-500/50 text-white rounded-xl transition-colors"
+                >
+                  {t("register")}
+                </button>
+              </div>
             ) : null}
           </div>
         </div>
