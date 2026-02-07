@@ -2,7 +2,7 @@
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
-import AuthCTA from "@/components/landing/AuthCTA";
+import AboutCTA from "@/components/landing/AboutCTA";
 import {
   Link2,
   Zap,
@@ -14,57 +14,60 @@ import {
   Target,
   Heart,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-const highlights = [
-  {
-    icon: Link2,
-    title: "Link Shortening",
-    description: "Transform long URLs into clean, shareable short links",
-    color: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    icon: TrendingUp,
-    title: "Monetization",
-    description: "Earn money for every visitor who clicks your links",
-    color: "bg-green-50",
-    iconColor: "text-green-600",
-  },
-  {
-    icon: Shield,
-    title: "Secure & Reliable",
-    description: "Enterprise-grade security for all your links",
-    color: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-  {
-    icon: Globe,
-    title: "Global Reach",
-    description: "Optimized CPM rates for 35+ countries worldwide",
-    color: "bg-orange-50",
-    iconColor: "text-orange-600",
-  },
-];
+export default async function AboutPage() {
+  const t = await getTranslations("Landing.About");
 
-const values = [
-  {
-    icon: Target,
-    title: "Simple",
-    description: "Easy to use, no technical knowledge required",
-  },
-  {
-    icon: Zap,
-    title: "Fast",
-    description: "Lightning-fast redirects for the best user experience",
-  },
-  {
-    icon: Heart,
-    title: "Fair",
-    description: "Transparent rates with on-time payouts",
-  },
-];
+  const highlights = [
+    {
+      icon: Link2,
+      title: t("whatWeOffer.linkShortening.title"),
+      description: t("whatWeOffer.linkShortening.desc"),
+      color: "bg-blue-50",
+      iconColor: "text-blue-600",
+    },
+    {
+      icon: TrendingUp,
+      title: t("whatWeOffer.monetization.title"),
+      description: t("whatWeOffer.monetization.desc"),
+      color: "bg-green-50",
+      iconColor: "text-green-600",
+    },
+    {
+      icon: Shield,
+      title: t("whatWeOffer.secure.title"),
+      description: t("whatWeOffer.secure.desc"),
+      color: "bg-purple-50",
+      iconColor: "text-purple-600",
+    },
+    {
+      icon: Globe,
+      title: t("whatWeOffer.global.title"),
+      description: t("whatWeOffer.global.desc"),
+      color: "bg-orange-50",
+      iconColor: "text-orange-600",
+    },
+  ];
 
-export default function AboutPage() {
+  const values = [
+    {
+      icon: Target,
+      title: t("values.simple.title"),
+      description: t("values.simple.desc"),
+    },
+    {
+      icon: Zap,
+      title: t("values.fast.title"),
+      description: t("values.fast.desc"),
+    },
+    {
+      icon: Heart,
+      title: t("values.fair.title"),
+      description: t("values.fair.desc"),
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-white font-poppins">
       {/* Navbar */}
@@ -83,21 +86,20 @@ export default function AboutPage() {
           <AnimateOnView>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bluelanding/10 text-bluelanding text-sm font-medium mb-6">
               <Users className="w-4 h-4" />
-              About Us
+              {t("badge")}
             </div>
           </AnimateOnView>
 
           <AnimateOnView delay={0.1}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-800 mb-6 tracking-tight">
-              What is <span className="text-bluelanding">Shortlinkmu</span>?
+              {t("title1")}{" "}
+              <span className="text-bluelanding">{t("title2")}</span>?
             </h1>
           </AnimateOnView>
 
           <AnimateOnView delay={0.2}>
             <p className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed font-light font-figtree">
-              Shortlinkmu is a link shortening platform that lets you earn money
-              from your shared links. Every time someone clicks on your
-              shortened link, you get paid based on your visitors location.
+              {t("subtitle")}
             </p>
           </AnimateOnView>
         </div>
@@ -108,10 +110,10 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateOnView className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
-              What We Offer
+              {t("whatWeOffer.title")}
             </h2>
             <p className="text-slate-500 text-base md:text-lg font-light max-w-xl mx-auto font-figtree">
-              Everything you need to monetize your online presence
+              {t("whatWeOffer.subtitle")}
             </p>
           </AnimateOnView>
 
@@ -147,7 +149,7 @@ export default function AboutPage() {
                   <Sparkles className="w-5 h-5 text-bluelanding" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-800">
-                  How It Works
+                  {t("howItWorks.title")}
                 </h2>
               </div>
 
@@ -158,11 +160,10 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-slate-800 mb-1">
-                      Create Short Links
+                      {t("howItWorks.step1.title")}
                     </h3>
                     <p className="text-slate-500 text-sm font-figtree">
-                      Paste any long URL and get a short, monetized link
-                      instantly
+                      {t("howItWorks.step1.desc")}
                     </p>
                   </div>
                 </div>
@@ -173,11 +174,10 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-slate-800 mb-1">
-                      Share Anywhere
+                      {t("howItWorks.step2.title")}
                     </h3>
                     <p className="text-slate-500 text-sm font-figtree">
-                      Share your links on social media, websites, or wherever
-                      your audience is
+                      {t("howItWorks.step2.desc")}
                     </p>
                   </div>
                 </div>
@@ -188,10 +188,10 @@ export default function AboutPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-slate-800 mb-1">
-                      Earn Money
+                      {t("howItWorks.step3.title")}
                     </h3>
                     <p className="text-slate-500 text-sm font-figtree">
-                      Get paid for every 1,000 views with rates up to $15 CPM
+                      {t("howItWorks.step3.desc")}
                     </p>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateOnView className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
-              Our Values
+              {t("values.title")}
             </h2>
           </AnimateOnView>
 
@@ -231,10 +231,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section - Client Component */}
-      <AuthCTA
-        title="Ready to Start Earning?"
-        subtitle="Join thousands of publishers and start monetizing your links today"
-      />
+      <AboutCTA />
 
       {/* Footer */}
       <Footer />

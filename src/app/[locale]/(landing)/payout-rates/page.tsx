@@ -13,6 +13,7 @@ import {
   Shield,
   Clock,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 // Static data - rendered on server for SEO
 const payoutRates = [
@@ -52,52 +53,51 @@ const payoutRates = [
   { country: "Russia", cpm: 0.1, isoCode: "ru" },
 ];
 
-const paymentMethods = [
-  {
-    icon: Wallet,
-    name: "Digital Wallet",
-    minPayout: "$5.00",
-    processingTime: "1-3 days",
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    icon: Building2,
-    name: "Bank Transfer",
-    minPayout: "$10.00",
-    processingTime: "3-7 days",
-    iconBg: "bg-green-50",
-    iconColor: "text-green-600",
-  },
-  {
-    icon: Coins,
-    name: "Cryptocurrency",
-    minPayout: "$25.00",
-    processingTime: "1-2 days",
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
+export default async function PayoutRates() {
+  const t = await getTranslations("Landing.PayoutRates");
 
-const features = [
-  {
-    icon: Zap,
-    title: "Daily Payouts",
-    description: "Get paid every day with no delays",
-  },
-  {
-    icon: Shield,
-    title: "Secure Payments",
-    description: "Your earnings are always protected",
-  },
-  {
-    icon: Clock,
-    title: "Fast Processing",
-    description: "Quick withdrawal processing times",
-  },
-];
+  const paymentMethods = [
+    {
+      icon: Wallet,
+      name: t("paymentMethods.digitalWallet"),
+      minPayout: "$5.00",
+      processingTime: "1-3 days",
+      iconBg: "bg-blue-50",
+      iconColor: "text-blue-600",
+    },
+    {
+      icon: Building2,
+      name: t("paymentMethods.bankTransfer"),
+      minPayout: "$10.00",
+      processingTime: "3-7 days",
+      iconBg: "bg-green-50",
+      iconColor: "text-green-600",
+    },
+    {
+      icon: Coins,
+      name: t("paymentMethods.cryptocurrency"),
+      minPayout: "$25.00",
+      processingTime: "1-2 days",
+      iconBg: "bg-purple-50",
+      iconColor: "text-purple-600",
+    },
+  ];
 
-export default function PayoutRates() {
+  const features = [
+    {
+      icon: Zap,
+      title: t("features.dailyPayouts"),
+    },
+    {
+      icon: Shield,
+      title: t("features.securePayments"),
+    },
+    {
+      icon: Clock,
+      title: t("features.fastProcessing"),
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-white font-poppins">
       {/* Navbar */}
@@ -116,21 +116,20 @@ export default function PayoutRates() {
           <AnimateOnView>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bluelanding/10 text-bluelanding text-sm font-medium mb-6">
               <TrendingUp className="w-4 h-4" />
-              Payout Rates
+              {t("badge")}
             </div>
           </AnimateOnView>
 
           <AnimateOnView delay={0.1}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-800 mb-5 tracking-tight">
-              Industry-Leading{" "}
-              <span className="text-bluelanding">CPM Rates</span>
+              {t("title1")}{" "}
+              <span className="text-bluelanding">{t("title2")}</span>
             </h1>
           </AnimateOnView>
 
           <AnimateOnView delay={0.2}>
             <p className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed font-light font-figtree">
-              Earn the highest payouts for every 1,000 views. Our rates are
-              continuously optimized to maximize your earnings.
+              {t("subtitle")}
             </p>
           </AnimateOnView>
 
@@ -163,10 +162,10 @@ export default function PayoutRates() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimateOnView className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-semibold text-slate-800 mb-4">
-              Payment Methods
+              {t("paymentMethods.title")}
             </h2>
             <p className="text-slate-500 text-base md:text-lg font-light font-figtree">
-              Withdraw your earnings quickly and easily
+              {t("paymentMethods.subtitle")}
             </p>
           </AnimateOnView>
 
@@ -184,13 +183,13 @@ export default function PayoutRates() {
                   </h3>
                   <div className="space-y-2 text-sm">
                     <p className="text-slate-600">
-                      Minimum:{" "}
+                      {t("paymentMethods.minimum")}:{" "}
                       <span className="font-semibold text-slate-800">
                         {method.minPayout}
                       </span>
                     </p>
                     <p className="text-slate-500 font-figtree">
-                      Processing: {method.processingTime}
+                      {t("paymentMethods.processing")}: {method.processingTime}
                     </p>
                   </div>
                 </div>
@@ -201,10 +200,7 @@ export default function PayoutRates() {
       </section>
 
       {/* CTA Section - Client Component */}
-      <AuthCTA
-        title="Ready to Start Earning?"
-        subtitle="Join thousands of publishers and start monetizing your traffic with the highest CPM rates."
-      />
+      <AuthCTA />
 
       {/* Footer */}
       <Footer />

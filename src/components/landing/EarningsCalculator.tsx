@@ -5,8 +5,10 @@ import { motion } from "motion/react";
 import { ArrowRight, TrendingUp, Calendar, DollarSign } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import authService from "@/services/authService";
+import { useTranslations } from "next-intl";
 
 export default function EarningsCalculator() {
+  const t = useTranslations("Landing.Calculator");
   const [views, setViews] = useState(50000);
   const [cpm, setCpm] = useState(6);
   const [mounted, setMounted] = useState(false);
@@ -67,7 +69,8 @@ export default function EarningsCalculator() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            Estimate Your <span className="text-bluelanding">Earnings</span>
+            {t("title")}{" "}
+            <span className="text-bluelanding">{t("titleHighlight")}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -76,7 +79,7 @@ export default function EarningsCalculator() {
             transition={{ delay: 0.1 }}
             className="text-slate-500 text-base md:text-lg font-light max-w-lg mx-auto"
           >
-            Calculate your potential income based on daily views and CPM
+            {t("subtitle")}
           </motion.p>
         </div>
 
@@ -95,7 +98,7 @@ export default function EarningsCalculator() {
               <div>
                 <div className="flex justify-between items-center mb-3">
                   <label className="text-sm font-medium text-slate-600">
-                    Daily Views
+                    {t("dailyViews")}
                   </label>
                   <span className="text-lg font-semibold text-slate-800">
                     {formatNumber(views)}
@@ -125,7 +128,7 @@ export default function EarningsCalculator() {
               <div>
                 <div className="flex justify-between items-center mb-3">
                   <label className="text-sm font-medium text-slate-600">
-                    Average CPM
+                    {t("averageCpm")}
                   </label>
                   <span className="text-lg font-semibold text-bluelanding">
                     ${cpm.toFixed(2)}
@@ -153,8 +156,7 @@ export default function EarningsCalculator() {
 
               {/* Info */}
               <p className="text-xs text-slate-500 leading-relaxed">
-                * CPM varies based on traffic quality and geo-location. Tier 1
-                countries (US, UK, CA) typically earn higher rates.
+                {t("cpmNote")}
               </p>
             </div>
 
@@ -162,7 +164,9 @@ export default function EarningsCalculator() {
             <div className="bg-gradient-to-br from-bluelanding to-blue-600 rounded-xl p-6 text-white">
               {/* Monthly - Main */}
               <div className="text-center mb-6">
-                <p className="text-blue-100 text-sm mb-1">Monthly Earnings</p>
+                <p className="text-blue-100 text-sm mb-1">
+                  {t("monthlyEarnings")}
+                </p>
                 <p className="text-4xl md:text-5xl font-bold tracking-tight">
                   {formatCurrency(monthlyIncome)}
                 </p>
@@ -175,21 +179,21 @@ export default function EarningsCalculator() {
                   <p className="text-base md:text-lg font-semibold">
                     {formatCompact(dailyIncome)}
                   </p>
-                  <p className="text-[10px] text-blue-200">Daily</p>
+                  <p className="text-[10px] text-blue-200">{t("daily")}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
                   <Calendar className="w-4 h-4 mx-auto mb-1 text-blue-200" />
                   <p className="text-base md:text-lg font-semibold">
                     {formatCompact(weeklyIncome)}
                   </p>
-                  <p className="text-[10px] text-blue-200">Weekly</p>
+                  <p className="text-[10px] text-blue-200">{t("weekly")}</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
                   <DollarSign className="w-4 h-4 mx-auto mb-1 text-blue-200" />
                   <p className="text-base md:text-lg font-semibold">
                     {formatCompact(yearlyPotential)}
                   </p>
-                  <p className="text-[10px] text-blue-200">Yearly</p>
+                  <p className="text-[10px] text-blue-200">{t("yearly")}</p>
                 </div>
               </div>
 
@@ -199,7 +203,7 @@ export default function EarningsCalculator() {
                 className="flex items-center justify-center gap-2 w-full bg-white text-bluelanding font-semibold py-3 rounded-lg hover:bg-blue-50 transition-colors group"
               >
                 <span>
-                  {isAuthenticated ? "Go to Dashboard" : "Start Earning Now"}
+                  {isAuthenticated ? t("goToDashboard") : t("startEarning")}
                 </span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>

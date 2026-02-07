@@ -7,8 +7,8 @@ import { Link } from "@/i18n/routing";
 import authService from "@/services/authService";
 import { useTranslations } from "next-intl";
 
-export default function AuthCTA() {
-  const t = useTranslations("Landing.PayoutRates.cta");
+export default function AboutCTA() {
+  const t = useTranslations("Landing.About.cta");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dashboardPath, setDashboardPath] = useState("/dashboard");
 

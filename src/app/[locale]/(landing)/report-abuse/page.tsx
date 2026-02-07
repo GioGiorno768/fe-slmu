@@ -4,36 +4,28 @@ import Navbar from "@/components/landing/Navbar";
 import ReportAbuseForm from "@/components/landing/ReportAbuseForm";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { ShieldAlert, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-const guidelines = [
-  {
-    icon: AlertTriangle,
-    title: "What Can Be Reported",
-    items: [
-      "Phishing and scam websites",
-      "Malware and virus distribution",
-      "Illegal content (gambling, adult material)",
-      "Spam and platform abuse",
-      "Copyright infringement",
-    ],
-    iconBg: "bg-red-50",
-    iconColor: "text-red-500",
-  },
-  {
-    icon: CheckCircle,
-    title: "How We Handle Reports",
-    items: [
-      "Reports are reviewed within 24 hours",
-      "Our team investigates each case",
-      "Harmful links are blocked immediately",
-      "You'll be contacted if more info is needed",
-    ],
-    iconBg: "bg-green-50",
-    iconColor: "text-green-500",
-  },
-];
+export default async function ReportAbuse() {
+  const t = await getTranslations("Landing.ReportAbuse");
 
-export default function ReportAbuse() {
+  const guidelines = [
+    {
+      icon: AlertTriangle,
+      title: t("guidelines.whatCanBeReported.title"),
+      items: t.raw("guidelines.whatCanBeReported.items") as string[],
+      iconBg: "bg-red-50",
+      iconColor: "text-red-500",
+    },
+    {
+      icon: CheckCircle,
+      title: t("guidelines.howWeHandle.title"),
+      items: t.raw("guidelines.howWeHandle.items") as string[],
+      iconBg: "bg-green-50",
+      iconColor: "text-green-500",
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-white font-poppins">
       {/* Navbar */}
@@ -51,20 +43,20 @@ export default function ReportAbuse() {
           <AnimateOnView>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bluelanding/10 text-bluelanding text-sm font-medium mb-6">
               <ShieldAlert className="w-4 h-4" />
-              Security
+              {t("badge")}
             </div>
           </AnimateOnView>
 
           <AnimateOnView delay={0.1}>
             <h1 className="text-4xl md:text-5xl font-semibold text-slate-800 mb-5 tracking-tight">
-              Report <span className="text-bluelanding">Abuse</span>
+              {t("title1")}{" "}
+              <span className="text-bluelanding">{t("title2")}</span>
             </h1>
           </AnimateOnView>
 
           <AnimateOnView delay={0.2}>
             <p className="text-base md:text-lg text-slate-500 max-w-xl mx-auto leading-relaxed font-light font-figtree">
-              Found a suspicious or harmful link? Report it here and help us
-              keep the platform safe.
+              {t("subtitle")}
             </p>
           </AnimateOnView>
         </div>
@@ -107,7 +99,7 @@ export default function ReportAbuse() {
           <AnimateOnView>
             <div className="flex items-center justify-center gap-3 mt-8 text-sm text-slate-500">
               <Clock className="w-4 h-4" />
-              <span>Average response time: within 24 hours</span>
+              <span>{t("responseTime")}</span>
             </div>
           </AnimateOnView>
         </div>
@@ -119,10 +111,10 @@ export default function ReportAbuse() {
           <AnimateOnView>
             <div className="text-center mb-8">
               <h2 className="text-2xl md:text-3xl font-semibold text-slate-800 mb-3">
-                Submit a Report
+                {t("form.title")}
               </h2>
               <p className="text-slate-500 font-light font-figtree">
-                Fill out the form below to report a suspicious link
+                {t("form.subtitle")}
               </p>
             </div>
           </AnimateOnView>

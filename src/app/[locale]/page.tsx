@@ -8,8 +8,11 @@ import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Navbar from "@/components/landing/Navbar";
 import PaymentMethods from "@/components/landing/PaymentMethods";
+import { getTranslations } from "next-intl/server";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("Landing.Tagline");
+
   return (
     <>
       <main className="min-h-screen flex flex-col bg-white">
@@ -28,11 +31,11 @@ export default function Home() {
         <section className="py-12 md:py-16">
           <div className="max-w-4xl mx-auto px-4 text-center">
             <p className="text-xl md:text-2xl lg:text-3xl text-slate-600 font-light leading-relaxed">
-              Simplicity, performance, and security,{" "}
-              <span className="text-slate-900 font-medium">
-                empowering you to monetize every click
-              </span>{" "}
-              with confidence and ease.
+              {t("part1")}{" "}
+              <strong className="text-slate-900 font-medium">
+                {t("highlight")}
+              </strong>{" "}
+              {t("part2")}
             </p>
           </div>
         </section>

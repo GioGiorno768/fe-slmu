@@ -22,8 +22,10 @@ import * as linkService from "@/services/linkService";
 import { Link } from "@/i18n/routing";
 import Toast from "@/components/common/Toast";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslations } from "next-intl";
 
 export default function HeroShortLink() {
+  const t = useTranslations("Landing.HeroShortLink");
   const { showAlert } = useAlert();
   const [urlInput, setUrlInput] = useState("");
   const [aliasInput, setAliasInput] = useState("");
@@ -53,12 +55,12 @@ export default function HeroShortLink() {
     if (value && !regex.test(value)) {
       setValidationErrors((prev) => ({
         ...prev,
-        alias: "Only letters, numbers, hyphens & underscores allowed",
+        alias: t("aliasOnlyAlphanumeric"),
       }));
     } else if (value && value.length > 20) {
       setValidationErrors((prev) => ({
         ...prev,
-        alias: "Max 20 characters",
+        alias: t("aliasMaxLength"),
       }));
     } else {
       setValidationErrors((prev) => ({ ...prev, alias: undefined }));
@@ -75,7 +77,7 @@ export default function HeroShortLink() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!urlInput) {
-      showToast("Please enter a URL", "error");
+      showToast(t("pleaseEnterUrl"), "error");
       return;
     }
 
@@ -143,7 +145,7 @@ export default function HeroShortLink() {
     if (!currentLink) return;
     navigator.clipboard.writeText(`${currentLink}`);
     setIsCopied(true);
-    showToast("Copied to clipboard!", "success");
+    showToast(t("copiedToClipboard"), "success");
     setTimeout(() => setIsCopied(false), 2000);
   };
 
@@ -162,11 +164,7 @@ export default function HeroShortLink() {
       }
     } else {
       handleCopy();
-      showAlert(
-        "Your browser doesn't support sharing. Link has been copied.",
-        "info",
-        "Info",
-      );
+      showAlert(t("browserNoShare"), "info", "Info");
     }
   };
 
@@ -206,7 +204,7 @@ export default function HeroShortLink() {
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
                     className="flex-1 py-3 px-1 sm:px-2 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none text-[15px] min-w-0"
-                    placeholder="Paste your long URL here..."
+                    placeholder={t("inputPlaceholder")}
                     disabled={isLoading}
                   />
                 </div>
@@ -219,7 +217,7 @@ export default function HeroShortLink() {
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      <span>Shorten</span>
+                      <span>{t("shortenButton")}</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </>
                   )}
@@ -233,7 +231,7 @@ export default function HeroShortLink() {
                   onClick={() => setShowAliasField(true)}
                   className="self-start text-sm text-slate-400 hover:text-bluelanding transition-colors flex items-center gap-1 pl-1"
                 >
-                  <span>+ Add custom alias</span>
+                  <span>{t("addAlias")}</span>
                 </button>
               ) : (
                 <motion.div
@@ -255,7 +253,7 @@ export default function HeroShortLink() {
                       className={`flex-1 py-2 px-1 sm:px-2 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none text-[15px] min-w-0 ${
                         validationErrors.alias ? "text-red-500" : ""
                       }`}
-                      placeholder="your-custom-alias"
+                      placeholder={t("aliasPlaceholder")}
                       disabled={isLoading}
                     />
                     <button
@@ -287,7 +285,7 @@ export default function HeroShortLink() {
                   className="self-start text-sm text-bluelanding hover:text-blue-600 transition-colors flex items-center gap-1 pl-1"
                 >
                   <ChevronLeft className="w-3 h-3" />
-                  <span>View previous link</span>
+                  <span>{t("viewPrevious")}</span>
                 </button>
               )}
             </form>
@@ -309,7 +307,7 @@ export default function HeroShortLink() {
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <span className="text-sm font-medium text-white/90">
-                    Link Created!
+                    {t("linkCreated")}
                   </span>
                 </div>
                 <button
@@ -317,14 +315,16 @@ export default function HeroShortLink() {
                   className="text-sm text-white/70 hover:text-white transition-colors flex items-center gap-1"
                 >
                   <Plus className="w-3 h-3" />
-                  <span className="hidden sm:inline">Create another</span>
-                  <span className="sm:hidden">New</span>
+                  <span className="hidden sm:inline">{t("createAnother")}</span>
+                  <span className="sm:hidden">{t("new")}</span>
                 </button>
               </div>
 
               {/* Link Display */}
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 mb-4">
-                <p className="text-xs text-white/60 mb-1">Your short link</p>
+                <p className="text-xs text-white/60 mb-1">
+                  {t("yourShortLink")}
+                </p>
                 <div className="flex items-center justify-between gap-2">
                   <a
                     href={`https://${currentLink}`}
@@ -353,7 +353,8 @@ export default function HeroShortLink() {
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <span className="text-xs text-white/60">
-                    {(currentLinkIndex || 0) + 1} of {createdLinks.length}
+                    {(currentLinkIndex || 0) + 1} {t("of")}{" "}
+                    {createdLinks.length}
                   </span>
                   <button
                     onClick={() =>
@@ -382,19 +383,19 @@ export default function HeroShortLink() {
                   {isCopied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>Copied!</span>
+                      <span>{t("copied")}</span>
                     </>
                   ) : (
                     <>
                       <ClipboardCopy className="w-4 h-4" />
-                      <span>Copy Link</span>
+                      <span>{t("copyLink")}</span>
                     </>
                   )}
                 </button>
                 <button
                   onClick={handleShare}
                   className="p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
-                  title="Share"
+                  title={t("share")}
                 >
                   <Share2 className="w-5 h-5" />
                 </button>
@@ -428,7 +429,7 @@ export default function HeroShortLink() {
             </div>
 
             <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">
-              Limit Reached
+              {t("limitReached")}
             </h3>
             <p className="text-gray-500 text-center text-sm mb-5 leading-relaxed">
               {error}
@@ -440,13 +441,13 @@ export default function HeroShortLink() {
                 className="w-full py-2.5 px-4 bg-bluelanding text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
               >
                 <UserPlus className="w-4 h-4" />
-                Sign Up Free
+                {t("signUpFree")}
               </Link>
               <button
                 onClick={() => setShowErrorModal(false)}
                 className="w-full py-2.5 px-4 text-gray-500 font-medium text-center hover:text-gray-700 transition-colors text-sm"
               >
-                Close
+                {t("close")}
               </button>
             </div>
           </motion.div>

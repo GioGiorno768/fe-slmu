@@ -11,6 +11,7 @@ import {
   Headphones,
 } from "lucide-react";
 import FeaturesClient from "./FeaturesClient";
+import { getTranslations } from "next-intl/server";
 
 const FeatureCard = ({
   icon: Icon,
@@ -30,47 +31,49 @@ const FeatureCard = ({
   </div>
 );
 
-export default function Features() {
+export default async function Features() {
+  const t = await getTranslations("Landing.Features");
+
   const features = [
     {
       icon: TrendingUp,
-      title: "High CPM Rate",
-      desc: "Earn up to $8 CPM based on traffic quality and geo-location.",
+      title: t("highCpm.title"),
+      desc: t("highCpm.desc"),
     },
     {
       icon: Headphones,
-      title: "24/7 Support",
-      desc: "Fast response from our dedicated support team anytime.",
+      title: t("support.title"),
+      desc: t("support.desc"),
     },
     {
       icon: Award,
-      title: "Level & Bonuses",
-      desc: "Unlock higher bonuses as your views grow. Earn more rewards.",
+      title: t("levels.title"),
+      desc: t("levels.desc"),
     },
     {
       icon: Settings,
-      title: "Advanced Customization",
-      desc: "Custom alias, password protection, expiry dates, and more.",
+      title: t("customization.title"),
+      desc: t("customization.desc"),
     },
     {
       icon: Zap,
-      title: "Multi-Level Ads",
-      desc: "Choose ad levels (1-5 steps) to maximize your earnings.",
+      title: t("multiAds.title"),
+      desc: t("multiAds.desc"),
     },
     {
       icon: Wallet,
-      title: "Fast Payouts",
-      desc: "1-7 day processing via PayPal, Bank Transfer, or Crypto.",
+      title: t("payouts.title"),
+      desc: t("payouts.desc"),
     },
     {
       icon: Users,
-      title: "Referral Program",
-      desc: "Earn 10-25% lifetime commission from your referrals.",
+      title: t("referral.title"),
+      desc: t("referral.desc"),
     },
     {
       icon: Shield,
-      title: "Anti-Fraud Protection",
-      desc: "Advanced IP & fingerprint security to protect your earnings.",
+      title: t("antiFraud.title"),
+      desc: t("antiFraud.desc"),
     },
   ];
 
@@ -81,13 +84,13 @@ export default function Features() {
         <div className="text-center mb-14 md:mb-16">
           <FeaturesClient>
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-4 text-slate-800">
-              Why Choose <span className="text-bluelanding">Shortlinkmu?</span>
+              {t("title")}{" "}
+              <span className="text-bluelanding">{t("titleHighlight")}</span>
             </h2>
           </FeaturesClient>
           <FeaturesClient delay={0.1}>
             <p className="text-slate-500 text-base md:text-lg max-w-xl mx-auto leading-relaxed font-light">
-              Built for publishers who want to maximize their earnings with
-              premium features and reliable payouts.
+              {t("subtitle")}
             </p>
           </FeaturesClient>
         </div>

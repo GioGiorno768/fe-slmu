@@ -1,17 +1,679 @@
 {
   "Navbar": {
     "home": "Beranda",
+    "features": "Fitur",
+    "howItWorks": "Cara Kerja",
+    "payment": "Pembayaran",
+    "faq": "FAQ",
     "payoutRates": "Tarif Bayaran",
     "about": "Tentang",
     "contact": "Kontak",
     "login": "Masuk",
     "register": "Daftar",
     "dashboard": "Dasbor",
-    "switch": "EN"
+    "switch": "EN",
+    "registrationClosed": "Pendaftaran Ditutup",
+    "registrationClosedMessage": "Mohon maaf, pendaftaran akun baru sedang ditutup sementara. Silakan coba lagi nanti atau hubungi admin untuk informasi lebih lanjut.",
+    "backToHome": "Kembali ke Beranda"
+  },
+  "Footer": {
+    "description": "Ubah link kompleks menjadi URL pendek yang menghasilkan uang, sehingga Anda dapat menghasilkan lebih banyak dari setiap klik.",
+    "getStarted": "Mulai Sekarang",
+    "goToDashboard": "Ke Dashboard",
+    "platform": "Platform",
+    "payoutRates": "Tarif Bayaran",
+    "about": "Tentang",
+    "contact": "Kontak",
+    "company": "Perusahaan",
+    "termsOfService": "Syarat Layanan",
+    "privacyPolicy": "Kebijakan Privasi",
+    "reportAbuse": "Laporkan Penyalahgunaan",
+    "copyright": "© 2025 Shortlinkmu. Hak cipta dilindungi."
+  },
+  "Auth": {
+    "backToHome": "Kembali ke Home",
+    "branding": {
+      "slide1": {
+        "badge": "Monetisasi",
+        "title": "Hasilkan Uang dari Link Anda",
+        "desc": "Ubah setiap klik menjadi penghasilan. Bagikan link dan dapatkan bayaran dari setiap pengunjung."
+      },
+      "slide2": {
+        "badge": "Tinggi",
+        "title": "CPM Rate hingga $15",
+        "desc": "Nikmati rate tertinggi di industri dengan pembayaran per 1.000 views yang kompetitif."
+      },
+      "slide3": {
+        "badge": "Cepat",
+        "title": "Pencairan Harian",
+        "desc": "Tarik penghasilan Anda setiap hari dengan berbagai metode pembayaran yang tersedia."
+      },
+      "slide4": {
+        "badge": "Global",
+        "title": "Jangkauan 35+ Negara",
+        "desc": "Rate CPM dioptimalkan untuk traffic dari seluruh dunia dengan dukungan multi-regional."
+      }
+    },
+    "login": {
+      "title": "Selamat Datang Kembali!",
+      "subtitle": "Silakan login untuk melanjutkan",
+      "emailPlaceholder": "email@anda.com",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Lupa password?",
+      "submitButton": "Login",
+      "loading": "Loading...",
+      "or": "atau",
+      "googleButton": "Masuk dengan Google",
+      "noAccount": "Belum punya akun?",
+      "registerNow": "Daftar sekarang",
+      "successMessage": "Login berhasil! Mengalihkan...",
+      "googleSuccess": "Login dengan Google berhasil!",
+      "suspended": "Akun admin Anda telah di-suspend. Silakan hubungi Super Admin.",
+      "expired": "Sesi Anda telah berakhir atau akun tidak ditemukan. Silakan login kembali.",
+      "wrongCredentials": "Email atau password salah. Silakan coba lagi.",
+      "genericError": "Terjadi kesalahan. Silakan coba lagi."
+    },
+    "register": {
+      "title": "Buat Akun Baru",
+      "subtitle": "Gratis selamanya. Ayo bergabung!",
+      "verifyingInvitation": "Memverifikasi undangan...",
+      "invitedBy": "Diundang oleh {name}!",
+      "youAreInvited": "Kamu diundang!",
+      "referralBonus": "Daftar sekarang dan nikmati bonus spesial.",
+      "namePlaceholder": "Nama lengkap",
+      "emailPlaceholder": "email@anda.com",
+      "passwordPlaceholder": "Password (min. 8 karakter)",
+      "confirmPasswordPlaceholder": "Konfirmasi password",
+      "submitButton": "Daftar Sekarang",
+      "loading": "Mendaftar...",
+      "or": "atau",
+      "googleButton": "Daftar dengan Google",
+      "hasAccount": "Sudah punya akun?",
+      "loginHere": "Login di sini",
+      "successMessage": "Registrasi berhasil! Selamat datang.",
+      "googleSuccess": "Registrasi dengan Google berhasil!",
+      "passwordMismatch": "Password dan konfirmasi password tidak cocok",
+      "passwordMinLength": "Password minimal 8 karakter",
+      "emailTaken": "Email Sudah Terdaftar",
+      "emailTakenMessage": "Email ini sudah digunakan oleh akun lain. Silakan gunakan email berbeda atau login dengan akun yang sudah ada.",
+      "genericError": "Terjadi kesalahan saat registrasi. Silakan coba lagi."
+    }
   },
   "Hero": {
     "title": "Hasilkan uang dari link yang Anda buat",
     "subtitle": "Shortlink termudah dan terpercaya"
+  },
+  "Landing": {
+    "Hero": {
+      "titleLine1": "Ubah Setiap Klik",
+      "titleLine2": "Jadi Uang",
+      "subtitle": "Pemendek URL terbaik untuk menghasilkan uang. Shortlink dengan CPM tertinggi, link aman, analitik lengkap, dan pencairan harian.",
+      "rating": "4.9",
+      "trust": "Dipercaya 10.000+ publisher di seluruh dunia"
+    },
+    "HeroShortLink": {
+      "inputPlaceholder": "Tempel URL panjang Anda di sini...",
+      "aliasPlaceholder": "alias-kustom-anda",
+      "shortenButton": "Perpendek",
+      "addAlias": "+ Tambah alias kustom",
+      "viewPrevious": "Lihat link sebelumnya",
+      "linkCreated": "Link Berhasil Dibuat!",
+      "createAnother": "Buat lagi",
+      "new": "Baru",
+      "yourShortLink": "Link pendek Anda",
+      "copyLink": "Salin Link",
+      "copied": "Tersalin!",
+      "share": "Bagikan",
+      "of": "dari",
+      "limitReached": "Batas Tercapai",
+      "signUpFree": "Daftar Gratis",
+      "close": "Tutup",
+      "pleaseEnterUrl": "Silakan masukkan URL",
+      "copiedToClipboard": "Tersalin ke clipboard!",
+      "browserNoShare": "Browser Anda tidak mendukung berbagi. Link telah disalin.",
+      "aliasOnlyAlphanumeric": "Hanya huruf, angka, tanda hubung & garis bawah yang diizinkan",
+      "aliasMaxLength": "Maksimal 20 karakter"
+    },
+    "Tagline": {
+      "part1": "Kesederhanaan, performa, dan keamanan,",
+      "highlight": "memberdayakan Anda untuk monetisasi setiap klik",
+      "part2": "dengan percaya diri dan mudah."
+    },
+    "Features": {
+      "title": "Mengapa Memilih",
+      "titleHighlight": "Shortlinkmu?",
+      "subtitle": "Dibuat untuk publisher yang ingin memaksimalkan pendapatan dengan fitur premium dan pembayaran terpercaya.",
+      "highCpm": {
+        "title": "CPM Rate Tinggi",
+        "desc": "Dapatkan hingga $8 CPM berdasarkan kualitas trafik dan lokasi geografis."
+      },
+      "support": {
+        "title": "Dukungan 24/7",
+        "desc": "Respons cepat dari tim support kami kapan saja."
+      },
+      "levels": {
+        "title": "Level & Bonus",
+        "desc": "Buka bonus lebih tinggi seiring pertumbuhan views Anda. Dapatkan lebih banyak hadiah."
+      },
+      "customization": {
+        "title": "Kustomisasi Lanjutan",
+        "desc": "Alias kustom, proteksi password, tanggal kadaluarsa, dan lainnya."
+      },
+      "multiAds": {
+        "title": "Multi-Level Iklan",
+        "desc": "Pilih level iklan (1-5 langkah) untuk memaksimalkan pendapatan Anda."
+      },
+      "payouts": {
+        "title": "Pembayaran Cepat",
+        "desc": "Proses 1-7 hari via PayPal, Transfer Bank, atau Crypto."
+      },
+      "referral": {
+        "title": "Program Referral",
+        "desc": "Dapatkan 10-25% komisi seumur hidup dari referral Anda."
+      },
+      "antiFraud": {
+        "title": "Proteksi Anti-Fraud",
+        "desc": "Keamanan IP & fingerprint canggih untuk melindungi pendapatan Anda."
+      }
+    },
+    "HowItWorks": {
+      "title": "Cara",
+      "titleHighlight": "Kerja",
+      "subtitle": "Mulai hasilkan uang dalam 3 langkah mudah",
+      "goToDashboard": "Ke Dashboard",
+      "createAccount": "Buat akun sekarang",
+      "step1": {
+        "title": "Buat Akun",
+        "desc": "Daftar gratis dalam hitungan detik",
+        "button": "Mulai"
+      },
+      "step2": {
+        "title": "Perpendek Link",
+        "desc": "Buat URL pendek yang menghasilkan uang",
+        "clicks": "klik"
+      },
+      "step3": {
+        "title": "Terima Bayaran",
+        "desc": "Tarik via PayPal atau Crypto",
+        "withdraw": "Tarik"
+      }
+    },
+    "PaymentMethods": {
+      "title": "Semua Pembayaran,",
+      "titleHighlight": "Satu Platform",
+      "subtitle": "Tarik penghasilan Anda melalui berbagai metode pembayaran. Cepat, aman, dan tanpa ribet.",
+      "startEarning": "Mulai hasilkan sekarang",
+      "available": "Tersedia"
+    },
+    "Calculator": {
+      "title": "Perkirakan",
+      "titleHighlight": "Penghasilan Anda",
+      "subtitle": "Hitung potensi pendapatan berdasarkan views harian dan CPM",
+      "dailyViews": "Views Harian",
+      "averageCpm": "CPM Rata-rata",
+      "cpmNote": "* CPM bervariasi berdasarkan kualitas trafik dan lokasi geografis. Negara Tier 1 (US, UK, CA) biasanya mendapat rate lebih tinggi.",
+      "monthlyEarnings": "Penghasilan Bulanan",
+      "daily": "Harian",
+      "weekly": "Mingguan",
+      "yearly": "Tahunan",
+      "goToDashboard": "Ke Dashboard",
+      "startEarning": "Mulai Hasilkan Sekarang"
+    },
+    "FAQ": {
+      "title": "Pertanyaan yang",
+      "titleHighlight": "Sering Diajukan",
+      "subtitle": "Semua yang perlu Anda ketahui tentang platform kami",
+      "q1": {
+        "question": "Bagaimana cara mulai menghasilkan uang dengan Shortlinkmu?",
+        "answer": "Cukup buat akun gratis, tempel URL panjang Anda, dan bagikan link pendeknya. Anda mendapatkan uang setiap kali seseorang mengklik link Anda berdasarkan rate CPM kompetitif kami."
+      },
+      "q2": {
+        "question": "Apa itu CPM dan bagaimana cara kerjanya?",
+        "answer": "CPM (Cost Per Mille) adalah jumlah yang Anda hasilkan per 1.000 views. Rate kami berkisar $1-$12 tergantung kualitas trafik dan lokasi pengunjung. Negara Tier 1 seperti US, UK, dan Kanada mendapat rate tertinggi."
+      },
+      "q3": {
+        "question": "Berapa minimal pencairan?",
+        "answer": "Minimal pencairan kami hanya $2, memudahkan Anda untuk menarik penghasilan dengan cepat. Kami mendukung penarikan via PayPal, Transfer Bank, Dana, OVO, dan cryptocurrency."
+      },
+      "q4": {
+        "question": "Bisakah saya mengkustomisasi link pendek saya?",
+        "answer": "Ya! Anda dapat membuat alias kustom, menambah proteksi password, mengatur tanggal kadaluarsa, dan memilih level iklan. Member premium mendapat akses ke lebih banyak opsi kustomisasi."
+      },
+      "q5": {
+        "question": "Bagaimana cara kerja program referral?",
+        "answer": "Bagikan link referral unik Anda dan dapatkan 10-25% komisi seumur hidup dari penghasilan referral Anda. Semakin banyak referral aktif, semakin tinggi tingkat komisi Anda."
+      },
+      "q6": {
+        "question": "Seberapa cepat pencairan diproses?",
+        "answer": "Pencairan biasanya diproses dalam 1-7 hari kerja. Kami mendukung berbagai metode pembayaran termasuk PayPal, transfer bank, e-wallet, dan cryptocurrency."
+      }
+    },
+    "CTA": {
+      "title1": "Siap Mulai",
+      "title2": "Menghasilkan",
+      "title3": "dengan",
+      "title4": "Shortlinkmu?",
+      "subtitle": "Bergabung dengan ribuan publisher dan mulai monetisasi link Anda dengan rate CPM tertinggi.",
+      "goToDashboard": "Ke Dashboard",
+      "startEarning": "Mulai Hasilkan Sekarang"
+    },
+    "PayoutRates": {
+      "badge": "Tarif Bayaran",
+      "title1": "Rate CPM",
+      "title2": "Terbaik di Industri",
+      "subtitle": "Dapatkan bayaran tertinggi untuk setiap 1.000 tayangan. Rate kami terus dioptimalkan untuk memaksimalkan penghasilan Anda.",
+      "features": {
+        "dailyPayouts": "Pencairan Harian",
+        "securePayments": "Pembayaran Aman",
+        "fastProcessing": "Proses Cepat"
+      },
+      "table": {
+        "highestCPM": "CPM Tertinggi",
+        "averageCPM": "CPM Rata-rata",
+        "countries": "Negara",
+        "searchPlaceholder": "Cari negara...",
+        "all": "Semua",
+        "tier1": "Tier 1",
+        "tier2": "Tier 2",
+        "tier3": "Tier 3",
+        "premium": "PREMIUM",
+        "standard": "STANDAR",
+        "basic": "DASAR",
+        "per1kViews": "per 1K tayangan",
+        "upTo": "Hingga",
+        "noCountriesFound": "Negara tidak ditemukan",
+        "ratesDisclaimer": "* Rate dapat berubah berdasarkan kualitas traffic dan kondisi pasar"
+      },
+      "paymentMethods": {
+        "title": "Metode Pembayaran",
+        "subtitle": "Tarik penghasilan Anda dengan cepat dan mudah",
+        "digitalWallet": "Dompet Digital",
+        "bankTransfer": "Transfer Bank",
+        "cryptocurrency": "Cryptocurrency",
+        "minimum": "Minimum",
+        "processing": "Proses"
+      },
+      "cta": {
+        "title": "Siap Mulai Menghasilkan?",
+        "subtitle": "Bergabung dengan ribuan publisher dan mulai monetisasi traffic Anda dengan rate CPM tertinggi.",
+        "goToDashboard": "Ke Dashboard",
+        "getStartedFree": "Mulai Gratis"
+      }
+    },
+    "About": {
+      "badge": "Tentang Kami",
+      "title1": "Apa itu",
+      "title2": "Shortlinkmu",
+      "subtitle": "Shortlinkmu adalah platform pemendek link yang memungkinkan Anda menghasilkan uang dari link yang dibagikan. Setiap kali seseorang mengklik link pendek Anda, Anda dibayar berdasarkan lokasi pengunjung.",
+      "whatWeOffer": {
+        "title": "Apa yang Kami Tawarkan",
+        "subtitle": "Semua yang Anda butuhkan untuk monetisasi kehadiran online Anda",
+        "linkShortening": {
+          "title": "Pemendek Link",
+          "desc": "Ubah URL panjang menjadi link pendek yang rapi dan mudah dibagikan"
+        },
+        "monetization": {
+          "title": "Monetisasi",
+          "desc": "Hasilkan uang untuk setiap pengunjung yang mengklik link Anda"
+        },
+        "secure": {
+          "title": "Aman & Terpercaya",
+          "desc": "Keamanan kelas enterprise untuk semua link Anda"
+        },
+        "global": {
+          "title": "Jangkauan Global",
+          "desc": "Rate CPM dioptimalkan untuk 35+ negara di seluruh dunia"
+        }
+      },
+      "howItWorks": {
+        "title": "Cara Kerja",
+        "step1": {
+          "title": "Buat Link Pendek",
+          "desc": "Tempel URL panjang apapun dan dapatkan link pendek termonetisasi secara instan"
+        },
+        "step2": {
+          "title": "Bagikan Di Mana Saja",
+          "desc": "Bagikan link Anda di media sosial, website, atau di mana pun audiens Anda berada"
+        },
+        "step3": {
+          "title": "Hasilkan Uang",
+          "desc": "Dibayar untuk setiap 1.000 tayangan dengan rate hingga $15 CPM"
+        }
+      },
+      "values": {
+        "title": "Nilai-nilai Kami",
+        "simple": {
+          "title": "Sederhana",
+          "desc": "Mudah digunakan, tidak perlu pengetahuan teknis"
+        },
+        "fast": {
+          "title": "Cepat",
+          "desc": "Redirect super cepat untuk pengalaman pengguna terbaik"
+        },
+        "fair": {
+          "title": "Adil",
+          "desc": "Rate transparan dengan pembayaran tepat waktu"
+        }
+      },
+      "cta": {
+        "title": "Siap Mulai Menghasilkan?",
+        "subtitle": "Bergabung dengan ribuan publisher dan mulai monetisasi link Anda hari ini",
+        "goToDashboard": "Ke Dashboard",
+        "getStartedFree": "Mulai Gratis"
+      }
+    },
+    "Contact": {
+      "badge": "Hubungi Kami",
+      "title1": "Hubungi",
+      "title2": "Kami",
+      "subtitle": "Punya pertanyaan atau butuh bantuan? Tim support kami siap membantu Anda.",
+      "methods": {
+        "support": {
+          "title": "Support Umum",
+          "desc": "Untuk pertanyaan umum, masalah teknis, atau bantuan akun"
+        },
+        "billing": {
+          "title": "Billing & Pencairan",
+          "desc": "Untuk pertanyaan pembayaran, penarikan, atau kemitraan"
+        },
+        "sendEmail": "Kirim Email"
+      },
+      "quickInfo": {
+        "responseTime": {
+          "title": "Waktu Respon",
+          "value": "Dalam 24 jam"
+        },
+        "supportHours": {
+          "title": "Jam Support",
+          "value": "Sen - Jum, 09.00 - 17.00"
+        }
+      },
+      "faq": {
+        "title": "Cek FAQ Kami",
+        "subtitle": "Pertanyaan Anda mungkin sudah dijawab di daftar pertanyaan yang sering diajukan",
+        "button": "Lihat FAQ"
+      }
+    },
+    "TermsOfService": {
+      "badge": "Legal",
+      "title": "Syarat dan Ketentuan",
+      "subtitle": "Harap baca ketentuan ini dengan seksama sebelum menggunakan layanan kami",
+      "lastUpdated": "Terakhir diperbarui: 5 Februari 2026",
+      "contactUs": "Hubungi Kami",
+      "sections": {
+        "acceptance": {
+          "title": "1. Penerimaan Ketentuan",
+          "content": "Dengan mengakses atau menggunakan Shortlinkmu (\"Layanan\"), Anda setuju untuk terikat dengan Syarat dan Ketentuan ini. Jika Anda tidak menyetujui ketentuan ini, Anda tidak boleh mengakses atau menggunakan Layanan. Ketentuan ini berlaku untuk semua pengguna, termasuk pengunjung, pengguna terdaftar, dan publisher."
+        },
+        "eligibility": {
+          "title": "2. Kelayakan",
+          "content": "Untuk menggunakan Layanan kami, Anda harus berusia minimal 18 tahun atau memiliki persetujuan orang tua. Dengan menggunakan Layanan, Anda menyatakan dan menjamin bahwa Anda memenuhi persyaratan kelayakan ini dan memiliki kapasitas hukum untuk masuk ke dalam Ketentuan ini."
+        },
+        "account": {
+          "title": "3. Pendaftaran Akun",
+          "content": "Saat Anda membuat akun, Anda setuju untuk:",
+          "list": [
+            "Memberikan informasi yang akurat, terkini, dan lengkap",
+            "Menjaga keamanan password dan akun Anda",
+            "Menerima tanggung jawab atas semua aktivitas di bawah akun Anda",
+            "Memberitahu kami segera jika ada akses tidak sah"
+          ],
+          "note": "Kami berhak untuk menangguhkan atau menghentikan akun yang melanggar ketentuan ini."
+        },
+        "service": {
+          "title": "4. Deskripsi Layanan",
+          "content": "Shortlinkmu menyediakan layanan pemendek URL yang memungkinkan pengguna membuat link pendek dan mendapatkan pendapatan berdasarkan traffic pengunjung yang sah. Kami berhak untuk mengubah, menangguhkan, atau menghentikan aspek apa pun dari Layanan kapan saja tanpa pemberitahuan sebelumnya."
+        },
+        "prohibited": {
+          "title": "5. Penggunaan yang Dilarang",
+          "content": "Anda setuju untuk tidak menggunakan Layanan untuk:",
+          "list": [
+            "Membuat link ke konten ilegal, berbahaya, atau jahat",
+            "Menyebarkan malware, virus, atau skema phishing",
+            "Menghasilkan traffic palsu atau buatan (bot, auto-click)",
+            "Mempromosikan kekerasan, ujaran kebencian, atau konten diskriminatif",
+            "Melanggar hak kekayaan intelektual",
+            "Spam atau pesan massal yang tidak diminta",
+            "Aktivitas apa pun yang melanggar hukum atau peraturan yang berlaku"
+          ],
+          "note": "Pelanggaran aturan ini dapat mengakibatkan penghentian akun segera dan penyitaan penghasilan."
+        },
+        "earnings": {
+          "title": "6. Penghasilan dan Pembayaran",
+          "content": "Publisher mendapatkan pendapatan berdasarkan tayangan yang sah dari link pendek mereka. Ketentuan pembayaran:",
+          "list": [
+            "Penghasilan dihitung berdasarkan rate CPM yang dipublikasikan",
+            "Rate dapat bervariasi berdasarkan lokasi dan kualitas traffic",
+            "Ambang batas pencairan minimum berlaku sesuai yang ditentukan di platform kami",
+            "Kami berhak untuk menahan pembayaran untuk aktivitas mencurigakan",
+            "Penghasilan dari traffic palsu akan disita"
+          ]
+        },
+        "intellectual": {
+          "title": "7. Kekayaan Intelektual",
+          "content": "Semua konten, merek dagang, dan kekayaan intelektual yang terkait dengan Layanan dimiliki oleh Shortlinkmu. Anda tidak boleh menyalin, mengubah, mendistribusikan, atau membuat karya turunan tanpa izin tertulis dari kami. Anda tetap memiliki kepemilikan atas konten yang Anda bagikan melalui Layanan kami."
+        },
+        "disclaimer": {
+          "title": "8. Penafian Jaminan",
+          "content": "Layanan disediakan \"sebagaimana adanya\" dan \"sebagaimana tersedia\" tanpa jaminan apa pun, baik tersurat maupun tersirat. Kami tidak menjamin bahwa Layanan akan tidak terputus, aman, atau bebas kesalahan. Kami menolak semua jaminan termasuk kelayakan jual, kesesuaian untuk tujuan tertentu, dan non-pelanggaran."
+        },
+        "limitation": {
+          "title": "9. Batasan Tanggung Jawab",
+          "content": "Sejauh diizinkan oleh hukum, Shortlinkmu tidak bertanggung jawab atas:",
+          "list": [
+            "Kerugian tidak langsung, insidental, atau konsekuensial",
+            "Kehilangan keuntungan, pendapatan, data, atau peluang bisnis",
+            "Gangguan layanan atau kegagalan sistem",
+            "Tindakan pihak ketiga yang menggunakan Layanan",
+            "Kerugian yang melebihi jumlah yang dibayarkan kepada Anda dalam 12 bulan terakhir"
+          ]
+        },
+        "indemnification": {
+          "title": "10. Ganti Rugi",
+          "content": "Anda setuju untuk mengganti rugi dan membebaskan Shortlinkmu, pejabat, direktur, karyawan, dan agennya dari klaim, kerugian, atau biaya apa pun yang timbul dari penggunaan Layanan oleh Anda, pelanggaran Ketentuan ini, atau pelanggaran hak pihak lain."
+        },
+        "termination": {
+          "title": "11. Pengakhiran",
+          "content": "Kami dapat mengakhiri atau menangguhkan akun Anda kapan saja, dengan atau tanpa sebab, dengan atau tanpa pemberitahuan. Setelah pengakhiran, hak Anda untuk menggunakan Layanan akan segera berakhir. Ketentuan yang secara alamiah harus tetap berlaku setelah pengakhiran akan tetap berlaku."
+        },
+        "changes": {
+          "title": "12. Perubahan Ketentuan",
+          "content": "Kami berhak untuk mengubah Ketentuan ini kapan saja. Kami akan memberitahu pengguna tentang perubahan material dengan memposting Ketentuan yang diperbarui di halaman ini. Penggunaan Layanan yang berkelanjutan setelah perubahan merupakan penerimaan Ketentuan baru."
+        },
+        "governing": {
+          "title": "13. Hukum yang Berlaku",
+          "content": "Ketentuan ini akan diatur dan ditafsirkan sesuai dengan hukum Republik Indonesia, tanpa memperhatikan ketentuan konflik hukumnya. Setiap perselisihan akan diselesaikan di pengadilan Jakarta, Indonesia."
+        },
+        "contact": {
+          "title": "14. Informasi Kontak",
+          "content": "Jika Anda memiliki pertanyaan tentang Syarat dan Ketentuan ini, silakan hubungi kami melalui halaman kontak atau email kami di legal@shortlinkmu.com."
+        }
+      }
+    },
+    "PrivacyPolicy": {
+      "badge": "Legal",
+      "title": "Kebijakan Privasi",
+      "subtitle": "Privasi Anda penting bagi kami. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda.",
+      "lastUpdated": "Terakhir diperbarui: 5 Februari 2026",
+      "contactUs": "Hubungi Kami",
+      "sections": {
+        "collection": {
+          "title": "1. Informasi yang Kami Kumpulkan",
+          "content": "Kami mengumpulkan informasi untuk menyediakan dan meningkatkan layanan kami. Jenis informasi yang kami kumpulkan meliputi:",
+          "subsections": {
+            "personal": {
+              "title": "Informasi Pribadi",
+              "items": [
+                "Alamat email dan username saat pendaftaran",
+                "Informasi pembayaran untuk memproses pencairan",
+                "Informasi profil yang Anda pilih untuk diberikan"
+              ]
+            },
+            "usage": {
+              "title": "Data Penggunaan",
+              "items": [
+                "Alamat IP pengunjung yang mengklik link Anda",
+                "Jenis browser, informasi perangkat, dan sistem operasi",
+                "Halaman yang dikunjungi, waktu yang dihabiskan, dan sumber rujukan",
+                "Pola klik dan data lokasi geografis"
+              ]
+            },
+            "technical": {
+              "title": "Data Teknis",
+              "items": [
+                "URL yang Anda kirimkan untuk dipendekkan",
+                "Metrik analitik dan performa",
+                "File log dan laporan error"
+              ]
+            }
+          }
+        },
+        "use": {
+          "title": "2. Bagaimana Kami Menggunakan Informasi Anda",
+          "content": "Kami menggunakan informasi yang dikumpulkan untuk tujuan berikut:",
+          "list": [
+            "Untuk menyediakan, mengoperasikan, dan memelihara layanan pemendek URL kami",
+            "Untuk memproses pendaftaran akun dan mengautentikasi pengguna",
+            "Untuk menghitung dan memproses penghasilan dan pencairan Anda",
+            "Untuk mengirimkan update layanan, peringatan keamanan, dan pesan dukungan",
+            "Untuk mendeteksi, mencegah, dan mengatasi penipuan, penyalahgunaan, dan masalah teknis",
+            "Untuk menganalisis pola penggunaan dan meningkatkan layanan kami",
+            "Untuk mematuhi kewajiban hukum dan menegakkan ketentuan kami"
+          ]
+        },
+        "sharing": {
+          "title": "3. Berbagi Informasi",
+          "content": "Kami tidak menjual informasi pribadi Anda. Kami dapat membagikan informasi dalam keadaan berikut:",
+          "list": [
+            "Dengan pemroses pembayaran untuk memfasilitasi pencairan",
+            "Dengan penyedia layanan yang membantu mengoperasikan platform kami",
+            "Ketika diwajibkan oleh hukum atau untuk merespons proses hukum",
+            "Untuk melindungi hak, privasi, keamanan, atau properti kami",
+            "Sehubungan dengan merger, akuisisi, atau penjualan aset"
+          ],
+          "note": "Penyedia layanan pihak ketiga terikat secara kontraktual untuk melindungi data Anda."
+        },
+        "cookies": {
+          "title": "4. Cookie dan Teknologi Pelacakan",
+          "content": "Kami menggunakan cookie dan teknologi serupa untuk meningkatkan pengalaman Anda:",
+          "list": [
+            "Cookie esensial untuk autentikasi dan keamanan",
+            "Cookie analitik untuk memahami bagaimana pengguna berinteraksi dengan layanan kami",
+            "Cookie preferensi untuk mengingat pengaturan Anda"
+          ],
+          "note": "Anda dapat mengontrol cookie melalui pengaturan browser Anda. Menonaktifkan cookie tertentu dapat mempengaruhi fungsionalitas."
+        },
+        "security": {
+          "title": "5. Keamanan Data",
+          "content": "Kami menerapkan langkah-langkah keamanan standar industri untuk melindungi informasi Anda:",
+          "list": [
+            "Enkripsi data dalam transit menggunakan SSL/TLS",
+            "Penyimpanan password yang aman menggunakan algoritma hashing",
+            "Audit keamanan rutin dan penilaian kerentanan",
+            "Kontrol akses yang membatasi siapa yang dapat melihat data Anda"
+          ],
+          "note": "Meskipun kami berusaha melindungi data Anda, tidak ada metode transmisi melalui Internet yang 100% aman."
+        },
+        "retention": {
+          "title": "6. Penyimpanan Data",
+          "content": "Kami menyimpan informasi Anda selama diperlukan untuk menyediakan layanan kami dan memenuhi tujuan yang diuraikan dalam kebijakan ini. Secara khusus:",
+          "list": [
+            "Data akun disimpan selama akun Anda aktif",
+            "Data penggunaan dan analitik disimpan hingga 24 bulan",
+            "Catatan keuangan disimpan sesuai yang diwajibkan oleh hukum",
+            "Anda dapat meminta penghapusan akun dan data terkait"
+          ]
+        },
+        "rights": {
+          "title": "7. Hak-hak Anda",
+          "content": "Tergantung pada lokasi Anda, Anda mungkin memiliki hak-hak berikut:",
+          "list": [
+            "Mengakses dan mendapatkan salinan data pribadi Anda",
+            "Mengoreksi informasi yang tidak akurat atau tidak lengkap",
+            "Meminta penghapusan data pribadi Anda",
+            "Menolak atau membatasi aktivitas pemrosesan tertentu",
+            "Portabilitas data untuk menerima data Anda dalam format terstruktur",
+            "Menarik persetujuan di mana pemrosesan didasarkan pada persetujuan"
+          ],
+          "note": "Untuk melaksanakan hak-hak ini, silakan hubungi kami melalui halaman kontak."
+        },
+        "children": {
+          "title": "8. Privasi Anak-anak",
+          "content": "Layanan kami tidak ditujukan untuk anak-anak di bawah 13 tahun. Kami tidak secara sengaja mengumpulkan informasi pribadi dari anak-anak di bawah 13 tahun. Jika Anda adalah orang tua atau wali dan yakin anak Anda telah memberikan informasi pribadi kepada kami, silakan hubungi kami segera."
+        },
+        "international": {
+          "title": "9. Transfer Data Internasional",
+          "content": "Informasi Anda dapat ditransfer ke dan diproses di negara-negara selain negara tempat tinggal Anda. Negara-negara ini mungkin memiliki undang-undang perlindungan data yang berbeda. Dengan menggunakan layanan kami, Anda menyetujui transfer tersebut. Kami mengambil langkah-langkah yang tepat untuk memastikan data Anda tetap terlindungi."
+        },
+        "thirdparty": {
+          "title": "10. Link Pihak Ketiga",
+          "content": "Layanan kami mungkin berisi link ke situs web pihak ketiga. Kami tidak bertanggung jawab atas praktik privasi situs eksternal ini. Kami mendorong Anda untuk membaca kebijakan privasi situs pihak ketiga mana pun yang Anda kunjungi melalui link pendek."
+        },
+        "changes": {
+          "title": "11. Perubahan Kebijakan Ini",
+          "content": "Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberitahu Anda tentang perubahan material dengan memposting kebijakan baru di halaman ini dan memperbarui tanggal \"Terakhir diperbarui\". Penggunaan layanan yang berkelanjutan setelah perubahan merupakan penerimaan kebijakan yang diperbarui."
+        },
+        "contact": {
+          "title": "12. Hubungi Kami",
+          "content": "Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini atau praktik data kami, silakan hubungi kami di privacy@shortlinkmu.com atau melalui halaman kontak."
+        }
+      }
+    },
+    "ReportAbuse": {
+      "badge": "Keamanan",
+      "title1": "Laporkan",
+      "title2": "Penyalahgunaan",
+      "subtitle": "Menemukan link mencurigakan atau berbahaya? Laporkan di sini dan bantu kami menjaga platform tetap aman.",
+      "responseTime": "Waktu respon rata-rata: dalam 24 jam",
+      "guidelines": {
+        "whatCanBeReported": {
+          "title": "Apa yang Dapat Dilaporkan",
+          "items": [
+            "Website phishing dan penipuan",
+            "Distribusi malware dan virus",
+            "Konten ilegal (judi, materi dewasa)",
+            "Spam dan penyalahgunaan platform",
+            "Pelanggaran hak cipta"
+          ]
+        },
+        "howWeHandle": {
+          "title": "Cara Kami Menangani Laporan",
+          "items": [
+            "Laporan ditinjau dalam 24 jam",
+            "Tim kami menyelidiki setiap kasus",
+            "Link berbahaya diblokir segera",
+            "Anda akan dihubungi jika informasi tambahan diperlukan"
+          ]
+        }
+      },
+      "form": {
+        "title": "Kirim Laporan",
+        "subtitle": "Isi formulir di bawah ini untuk melaporkan link mencurigakan",
+        "urlLabel": "Link yang Dilaporkan",
+        "urlPlaceholder": "https://short.link/xxx",
+        "reasonLabel": "Alasan Laporan",
+        "reasonPlaceholder": "Pilih kategori...",
+        "reasons": {
+          "phishing": "Phishing",
+          "malware": "Malware / Virus",
+          "spam": "Spam",
+          "illegalContent": "Konten Ilegal (Judi, Dewasa, dll.)",
+          "copyright": "Pelanggaran Hak Cipta",
+          "other": "Lainnya"
+        },
+        "emailLabel": "Email Anda",
+        "emailOptional": "(Opsional)",
+        "emailPlaceholder": "Untuk komunikasi tindak lanjut",
+        "detailsLabel": "Detail Tambahan",
+        "detailsOptional": "(Opsional)",
+        "detailsPlaceholder": "Jelaskan masalah secara lebih detail...",
+        "submitting": "Mengirim...",
+        "submitButton": "Kirim Laporan",
+        "successMessage": "Laporan Anda telah dikirim. Terima kasih telah membantu kami!",
+        "errorMessage": "Terjadi kesalahan. Silakan coba lagi.",
+        "connectionError": "Gagal mengirim laporan. Periksa koneksi Anda."
+      }
+    }
   },
   "Dashboard": {
     "title": "Dasbor",

@@ -5,8 +5,10 @@ import { motion } from "motion/react";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import authService from "@/services/authService";
+import { useTranslations } from "next-intl";
 
 export default function CTASection() {
+  const t = useTranslations("Landing.CTA");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dashboardPath, setDashboardPath] = useState("/dashboard");
 
@@ -72,21 +74,22 @@ export default function CTASection() {
           {/* Content */}
           <div className="relative z-10 text-center max-w-xl mx-auto">
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-4 text-slate-800">
-              Ready to Start <span className="text-bluelanding">Earning</span>
+              {t("title1")}{" "}
+              <span className="text-bluelanding">{t("title2")}</span>
               <br />
-              with <span className="text-bluelanding">Shortlinkmu?</span>
+              {t("title3")}{" "}
+              <span className="text-bluelanding">{t("title4")}</span>
             </h2>
 
             <p className="text-slate-500 text-base md:text-lg font-light mb-8">
-              Join thousands of publishers and start monetizing your links with
-              the highest CPM rates.
+              {t("subtitle")}
             </p>
 
             <Link
               href={isAuthenticated ? dashboardPath : "/register"}
               className="inline-flex items-center justify-center bg-bluelanding hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-colors"
             >
-              {isAuthenticated ? "Go to Dashboard" : "Start Earning Now"}
+              {isAuthenticated ? t("goToDashboard") : t("startEarning")}
             </Link>
           </div>
         </motion.div>

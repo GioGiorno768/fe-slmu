@@ -3,42 +3,38 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
-
-const faqs = [
-  {
-    question: "How do I start earning with Shortlinkmu?",
-    answer:
-      "Simply create a free account, paste your long URLs, and share the shortened links. You earn money every time someone clicks your link based on our competitive CPM rates.",
-  },
-  {
-    question: "What is CPM and how does it work?",
-    answer:
-      "CPM (Cost Per Mille) is the amount you earn per 1,000 views. Our rates range from $1-$12 depending on traffic quality and visitor location. Tier 1 countries like US, UK, and Canada earn the highest rates.",
-  },
-  {
-    question: "What is the minimum payout amount?",
-    answer:
-      "Our minimum payout is just $2, making it easy to withdraw your earnings quickly. We support PayPal, Bank Transfer, Dana, OVO, and cryptocurrency withdrawals.",
-  },
-  {
-    question: "Can I customize my short links?",
-    answer:
-      "Yes! You can create custom aliases, add password protection, set expiry dates, and choose ad levels. Premium members get access to even more customization options.",
-  },
-  {
-    question: "How does the referral program work?",
-    answer:
-      "Share your unique referral link and earn 10-25% lifetime commission from your referrals' earnings. The more active referrals you have, the higher your commission rate.",
-  },
-  {
-    question: "How fast are payouts processed?",
-    answer:
-      "Payouts are typically processed within 1-7 business days. We support multiple payment methods including PayPal, bank transfers, e-wallets, and cryptocurrency.",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export default function FAQSection() {
+  const t = useTranslations("Landing.FAQ");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const faqs = [
+    {
+      question: t("q1.question"),
+      answer: t("q1.answer"),
+    },
+    {
+      question: t("q2.question"),
+      answer: t("q2.answer"),
+    },
+    {
+      question: t("q3.question"),
+      answer: t("q3.answer"),
+    },
+    {
+      question: t("q4.question"),
+      answer: t("q4.answer"),
+    },
+    {
+      question: t("q5.question"),
+      answer: t("q5.answer"),
+    },
+    {
+      question: t("q6.question"),
+      answer: t("q6.answer"),
+    },
+  ];
 
   return (
     <section id="faq" className="py-20 md:py-28 bg-white font-poppins">
@@ -51,7 +47,8 @@ export default function FAQSection() {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800"
           >
-            Frequently Asked <span className="text-bluelanding">Questions</span>
+            {t("title")}{" "}
+            <span className="text-bluelanding">{t("titleHighlight")}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +57,7 @@ export default function FAQSection() {
             transition={{ delay: 0.1 }}
             className="text-slate-500 text-base md:text-lg font-light"
           >
-            Everything you need to know about our platform
+            {t("subtitle")}
           </motion.p>
         </div>
 

@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { Link2 } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import authService from "@/services/authService";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dashboardPath, setDashboardPath] = useState("/dashboard");
 
@@ -17,15 +19,15 @@ export default function Footer() {
   }, []);
 
   const platform = [
-    { name: "Payout Rates", href: "/payout-rates" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
+    { name: t("payoutRates"), href: "/payout-rates" },
+    { name: t("about"), href: "/about" },
+    { name: t("contact"), href: "/contact" },
   ];
 
   const company = [
-    { name: "Terms of Service", href: "/terms-of-service" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Report Abuse", href: "/report-abuse" },
+    { name: t("termsOfService"), href: "/terms-of-service" },
+    { name: t("privacyPolicy"), href: "/privacy-policy" },
+    { name: t("reportAbuse"), href: "/report-abuse" },
   ];
 
   return (
@@ -60,14 +62,13 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              Turn complex links into clear, monetized short URLs so you can
-              earn more with every click.
+              {t("description")}
             </p>
             <Link
               href={isAuthenticated ? dashboardPath : "/register"}
               className="inline-flex items-center justify-center bg-bluelanding hover:bg-blue-600 text-white text-sm font-medium py-2.5 px-5 rounded-lg transition-colors"
             >
-              {isAuthenticated ? "Go to Dashboard" : "Get Started"}
+              {isAuthenticated ? t("goToDashboard") : t("getStarted")}
             </Link>
           </div>
 
@@ -76,11 +77,11 @@ export default function Footer() {
             {/* Platform */}
             <div>
               <h4 className="text-slate-800 font-medium text-sm mb-4">
-                Platform
+                {t("platform")}
               </h4>
               <ul className="space-y-2.5">
                 {platform.map((item) => (
-                  <li key={item.name}>
+                  <li key={item.href}>
                     <Link
                       href={item.href}
                       className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
@@ -95,11 +96,11 @@ export default function Footer() {
             {/* Company */}
             <div>
               <h4 className="text-slate-800 font-medium text-sm mb-4">
-                Company
+                {t("company")}
               </h4>
               <ul className="space-y-2.5">
                 {company.map((item) => (
-                  <li key={item.name}>
+                  <li key={item.href}>
                     <Link
                       href={item.href}
                       className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
@@ -115,28 +116,32 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-slate-100 pt-6 flex flex-col md:flex-row justify-between items-center gap-2">
-          <p className="text-slate-500 text-sm">
-            © 2025 Shortlinkmu. All rights reserved.
-          </p>
+          <p className="text-slate-500 text-sm">{t("copyright")}</p>
           <div className="flex justify-end gap-3">
-            <Link
-              href="/terms-of-service"
+            <a
+              href="https://youtube.com/@shortlinkmu"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Youtube
-            </Link>
-            <Link
-              href="/privacy-policy"
+            </a>
+            <a
+              href="https://t.me/shortlinkmu"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Telegram
-            </Link>
-            <Link
-              href="/report-abuse"
+            </a>
+            <a
+              href="https://instagram.com/shortlinkmu"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Instagram
-            </Link>
+            </a>
           </div>
         </div>
       </div>

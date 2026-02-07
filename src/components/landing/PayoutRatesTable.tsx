@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Search, Globe, TrendingUp, Sparkles } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface Rate {
   country: string;
@@ -16,6 +17,7 @@ interface PayoutRatesTableProps {
 }
 
 export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
+  const t = useTranslations("Landing.PayoutRates.table");
   const [search, setSearch] = useState("");
   const [selectedTier, setSelectedTier] = useState<
     "all" | "tier1" | "tier2" | "tier3"
@@ -41,6 +43,13 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
   const topRate = Math.max(...rates.map((r) => r.cpm));
   const avgRate = rates.reduce((sum, r) => sum + r.cpm, 0) / rates.length;
 
+  const tierFilters = [
+    { key: "all", label: t("all") },
+    { key: "tier1", label: t("tier1") },
+    { key: "tier2", label: t("tier2") },
+    { key: "tier3", label: t("tier3") },
+  ];
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Stats Cards */}
@@ -53,7 +62,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
         <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-2 text-green-600 text-sm font-medium mb-2">
             <TrendingUp className="w-4 h-4" />
-            Highest CPM
+            {t("highestCPM")}
           </div>
           <p className="text-2xl md:text-3xl font-medium text-slate-800">
             ${topRate.toFixed(2)}
@@ -62,7 +71,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
         <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-2 text-bluelanding text-sm font-medium mb-2">
             <Sparkles className="w-4 h-4" />
-            Average CPM
+            {t("averageCPM")}
           </div>
           <p className="text-2xl md:text-3xl font-medium text-slate-800">
             ${avgRate.toFixed(2)}
@@ -71,7 +80,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
         <div className="hidden md:block bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-2 text-purple-600 text-sm font-medium mb-2">
             <Globe className="w-4 h-4" />
-            Countries
+            {t("countries")}
           </div>
           <p className="text-2xl md:text-3xl font-medium text-slate-800">
             {rates.length}+
@@ -94,18 +103,13 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full py-3.5 pl-12 pr-4 bg-white border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
-            placeholder="Search country..."
+            placeholder={t("searchPlaceholder")}
           />
         </div>
 
         {/* Tier Filter */}
         <div className="flex gap-2">
-          {[
-            { key: "all", label: "All" },
-            { key: "tier1", label: "Tier 1" },
-            { key: "tier2", label: "Tier 2" },
-            { key: "tier3", label: "Tier 3" },
-          ].map((tier) => (
+          {tierFilters.map((tier) => (
             <button
               key={tier.key}
               onClick={() => setSelectedTier(tier.key as any)}
@@ -130,18 +134,6 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
       >
         {filteredRates.length > 0 ? (
           filteredRates.map((rate, index) => {
-            const tier = getTier(rate.cpm);
-            const tierLabelColors = {
-              tier1: "text-green-600",
-              tier2: "text-blue-600",
-              tier3: "text-slate-500",
-            };
-            const tierLabels = {
-              tier1: "PREMIUM",
-              tier2: "STANDARD",
-              tier3: "BASIC",
-            };
-
             return (
               <motion.div
                 key={rate.country}
@@ -150,12 +142,6 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
                 transition={{ delay: 0.05 * Math.min(index, 8) }}
                 className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative"
               >
-                {/* Up To Badge - floating above card */}
-                {/* <div className="absolute -top-3 right-4 flex items-center gap-2 px-3 py-1 text-xs font-medium bg-gradient-to-r from-bluelanding to-bluelanding/80 rounded-md shadow-md">
-                  <span className=" text-white">Up To</span>
-                  <TrendingUp className="w-4 h-4 text-white" />
-                </div> */}
-
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {rate.isoCode === "all" ? (
@@ -175,11 +161,13 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
                       <p className="font-medium text-slate-800">
                         {rate.country}
                       </p>
-                      <p className="text-xs text-slate-400">per 1K views</p>
+                      <p className="text-xs text-slate-400">
+                        {t("per1kViews")}
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-slate-400">Up to</p>
+                    <p className="text-xs text-slate-400">{t("upTo")}</p>
                     <p className="text-lg font-medium text-slate-800">
                       ${rate.cpm.toFixed(2)}
                     </p>
@@ -191,7 +179,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
         ) : (
           <div className="col-span-full py-16 text-center">
             <Globe className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500">No countries found</p>
+            <p className="text-slate-500">{t("noCountriesFound")}</p>
           </div>
         )}
       </motion.div>
@@ -202,7 +190,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
         transition={{ delay: 0.6 }}
         className="text-center text-sm text-slate-400 mt-8"
       >
-        * Rates may vary based on traffic quality and market conditions
+        {t("ratesDisclaimer")}
       </motion.p>
     </div>
   );

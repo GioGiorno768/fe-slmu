@@ -10,8 +10,10 @@ import ErrorAlert from "./ErrorAlert";
 import GoogleAuthButton from "./GoogleAuthButton";
 import Toast from "@/components/common/Toast";
 import { useFingerprint } from "@/hooks/useFingerprint";
+import { useTranslations } from "next-intl";
 
 export default function LoginForm() {
+  const t = useTranslations("Auth.login");
   const router = useRouter();
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
@@ -34,15 +36,11 @@ export default function LoginForm() {
     const expired = searchParams.get("expired");
 
     if (suspended === "true") {
-      setWarningMessage(
-        "Akun admin Anda telah di-suspend. Silakan hubungi Super Admin.",
-      );
+      setWarningMessage(t("suspended"));
     } else if (expired === "true") {
-      setWarningMessage(
-        "Sesi Anda telah berakhir atau akun tidak ditemukan. Silakan login kembali.",
-      );
+      setWarningMessage(t("expired"));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -65,7 +63,7 @@ export default function LoginForm() {
       });
 
       // Show success toast
-      setToastMessage("Login berhasil! Mengalihkan...");
+      setToastMessage(t("successMessage"));
       setShowToast(true);
 
       // Redirect after short delay for toast visibility
@@ -79,7 +77,7 @@ export default function LoginForm() {
       console.log("Error response data:", err.response?.data);
 
       // Handle different error types
-      let errorMessage = "Terjadi kesalahan. Silakan coba lagi.";
+      let errorMessage = t("genericError");
 
       const status = err.response?.status;
       const data = err.response?.data;
@@ -89,13 +87,13 @@ export default function LoginForm() {
         const errors = data?.errors;
         if (errors?.email) {
           // Login failed - wrong credentials
-          errorMessage = "Email atau password salah. Silakan coba lagi.";
+          errorMessage = t("wrongCredentials");
         } else {
           // Other validation errors
           const firstError = Object.values(errors || {})[0];
           errorMessage = Array.isArray(firstError)
             ? firstError[0]
-            : (firstError as string) || "Email atau password salah.";
+            : (firstError as string) || t("wrongCredentials");
         }
       } else if (status === 403) {
         // Account banned - show reason from backend
@@ -103,13 +101,10 @@ export default function LoginForm() {
         errorMessage = `Akun Anda telah di-suspend. Alasan: ${banReason}`;
       } else if (status === 401) {
         // Unauthorized - wrong credentials
-        errorMessage = "Email atau password salah.";
+        errorMessage = t("wrongCredentials");
       } else {
         // Other errors (500, network, etc)
-        errorMessage =
-          data?.message ||
-          data?.error ||
-          "Terjadi kesalahan saat login. Silakan coba lagi.";
+        errorMessage = data?.message || data?.error || t("genericError");
       }
 
       setError(errorMessage);
@@ -125,7 +120,7 @@ export default function LoginForm() {
       await authService.googleLogin(accessToken, visitorId || undefined); // 🛡️ Pass fingerprint
 
       // Show success toast
-      setToastMessage("Login dengan Google berhasil!");
+      setToastMessage(t("googleSuccess"));
       setShowToast(true);
 
       // Redirect after short delay
@@ -138,7 +133,7 @@ export default function LoginForm() {
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
-        "Login dengan Google gagal. Silakan coba lagi.";
+        t("genericError");
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -150,9 +145,9 @@ export default function LoginForm() {
       {/* Title */}
       <div className="space-y-1">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-          Welcome Back!
+          {t("title")}
         </h1>
-        <p className="text-gray-500">Silakan login untuk melanjutkan</p>
+        <p className="text-gray-500">{t("subtitle")}</p>
       </div>
 
       {/* Warning Banner for Suspended/Expired */}
@@ -170,9 +165,6 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div className="space-y-1.5">
-          {/* <label className="block text-sm font-medium text-gray-700">
-            Email
-          </label> */}
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-bluelanding transition-colors" />
             <input
@@ -181,7 +173,7 @@ export default function LoginForm() {
               value={formData.email}
               onChange={handleChange}
               className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-              placeholder="email@anda.com"
+              placeholder={t("emailPlaceholder")}
               required
               disabled={loading}
             />
@@ -190,9 +182,6 @@ export default function LoginForm() {
 
         {/* Password */}
         <div className="space-y-1.5">
-          {/* <label className="block text-sm font-medium text-gray-700">
-            Password
-          </label> */}
           <div className="relative group">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-bluelanding transition-colors" />
             <input
@@ -201,7 +190,7 @@ export default function LoginForm() {
               value={formData.password}
               onChange={handleChange}
               className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-              placeholder="••••••••"
+              placeholder={t("passwordPlaceholder")}
               required
               disabled={loading}
             />
@@ -225,7 +214,7 @@ export default function LoginForm() {
             href="/forgot-password"
             className="text-sm text-bluelanding font-medium hover:underline"
           >
-            Lupa password?
+            {t("forgotPassword")}
           </Link>
         </div>
 
@@ -235,7 +224,7 @@ export default function LoginForm() {
           disabled={loading}
           className="w-full bg-bluelanding hover:bg-bluelanding/80 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-blue-500/25"
         >
-          {loading ? "Loading..." : "Login"}
+          {loading ? t("loading") : t("submitButton")}
         </button>
       </form>
 
@@ -245,7 +234,7 @@ export default function LoginForm() {
           <div className="w-full border-t border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-white text-gray-400">atau</span>
+          <span className="px-4 bg-white text-gray-400">{t("or")}</span>
         </div>
       </div>
 
@@ -253,17 +242,17 @@ export default function LoginForm() {
       <GoogleAuthButton
         onSuccess={handleGoogleSuccess}
         onError={(error) => setError(error)}
-        text="Masuk dengan Google"
+        text={t("googleButton")}
       />
 
       {/* Register link */}
       <p className="text-center text-gray-500 text-sm">
-        Belum punya akun?{" "}
+        {t("noAccount")}{" "}
         <Link
           href="/register"
           className="font-semibold text-bluelanding hover:underline"
         >
-          Daftar sekarang
+          {t("registerNow")}
         </Link>
       </p>
 

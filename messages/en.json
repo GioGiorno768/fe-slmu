@@ -1,17 +1,679 @@
 {
   "Navbar": {
     "home": "Home",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "payment": "Payment",
+    "faq": "FAQ",
     "payoutRates": "Payout Rates",
     "about": "About",
     "contact": "Contact",
     "login": "Login",
     "register": "Register",
     "dashboard": "Dashboard",
-    "switch": "ID"
+    "switch": "ID",
+    "registrationClosed": "Registration Closed",
+    "registrationClosedMessage": "Sorry, new account registration is temporarily closed. Please try again later or contact admin for more information.",
+    "backToHome": "Back to Home"
+  },
+  "Footer": {
+    "description": "Turn complex links into clear, monetized short URLs so you can earn more with every click.",
+    "getStarted": "Get Started",
+    "goToDashboard": "Go to Dashboard",
+    "platform": "Platform",
+    "payoutRates": "Payout Rates",
+    "about": "About",
+    "contact": "Contact",
+    "company": "Company",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "reportAbuse": "Report Abuse",
+    "copyright": "© 2025 Shortlinkmu. All rights reserved."
+  },
+  "Auth": {
+    "backToHome": "Back to Home",
+    "branding": {
+      "slide1": {
+        "badge": "Monetize",
+        "title": "Earn Money from Your Links",
+        "desc": "Turn every click into income. Share links and get paid for every visitor."
+      },
+      "slide2": {
+        "badge": "High",
+        "title": "CPM Rate up to $15",
+        "desc": "Enjoy the highest rates in the industry with competitive pay per 1,000 views."
+      },
+      "slide3": {
+        "badge": "Fast",
+        "title": "Daily Withdrawals",
+        "desc": "Withdraw your earnings daily with various available payment methods."
+      },
+      "slide4": {
+        "badge": "Global",
+        "title": "Reach 35+ Countries",
+        "desc": "CPM rates optimized for traffic worldwide with multi-regional support."
+      }
+    },
+    "login": {
+      "title": "Welcome Back!",
+      "subtitle": "Please login to continue",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submitButton": "Login",
+      "loading": "Loading...",
+      "or": "or",
+      "googleButton": "Sign in with Google",
+      "noAccount": "Don't have an account?",
+      "registerNow": "Register now",
+      "successMessage": "Login successful! Redirecting...",
+      "googleSuccess": "Login with Google successful!",
+      "suspended": "Your admin account has been suspended. Please contact Super Admin.",
+      "expired": "Your session has expired or account not found. Please login again.",
+      "wrongCredentials": "Email or password is incorrect.",
+      "genericError": "An error occurred. Please try again."
+    },
+    "register": {
+      "title": "Create New Account",
+      "subtitle": "Free forever. Let's join!",
+      "verifyingInvitation": "Verifying invitation...",
+      "invitedBy": "Invited by {name}!",
+      "youAreInvited": "You're invited!",
+      "referralBonus": "Register now and enjoy special bonus.",
+      "namePlaceholder": "Full name",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "Password (min. 8 characters)",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "submitButton": "Register Now",
+      "loading": "Registering...",
+      "or": "or",
+      "googleButton": "Register with Google",
+      "hasAccount": "Already have an account?",
+      "loginHere": "Login here",
+      "successMessage": "Registration successful! Welcome.",
+      "googleSuccess": "Registration with Google successful!",
+      "passwordMismatch": "Password and confirmation don't match",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "emailTaken": "Email Already Registered",
+      "emailTakenMessage": "This email is already used by another account. Please use a different email or login with the existing account.",
+      "genericError": "An error occurred during registration. Please try again."
+    }
   },
   "Hero": {
     "title": "Make money from the links you create",
     "subtitle": "Easiest and most trusted link shortener"
+  },
+  "Landing": {
+    "Hero": {
+      "titleLine1": "Turn Every Click",
+      "titleLine2": "into Cash",
+      "subtitle": "The best link shortener to earn money. Highest paying URL shortener with secure links, detailed analytics, and daily payouts.",
+      "rating": "4.9",
+      "trust": "Trusted by 10K+ publishers worldwide"
+    },
+    "HeroShortLink": {
+      "inputPlaceholder": "Paste your long URL here...",
+      "aliasPlaceholder": "your-custom-alias",
+      "shortenButton": "Shorten",
+      "addAlias": "+ Add custom alias",
+      "viewPrevious": "View previous link",
+      "linkCreated": "Link Created!",
+      "createAnother": "Create another",
+      "new": "New",
+      "yourShortLink": "Your short link",
+      "copyLink": "Copy Link",
+      "copied": "Copied!",
+      "share": "Share",
+      "of": "of",
+      "limitReached": "Limit Reached",
+      "signUpFree": "Sign Up Free",
+      "close": "Close",
+      "pleaseEnterUrl": "Please enter a URL",
+      "copiedToClipboard": "Copied to clipboard!",
+      "browserNoShare": "Your browser doesn't support sharing. Link has been copied.",
+      "aliasOnlyAlphanumeric": "Only letters, numbers, hyphens & underscores allowed",
+      "aliasMaxLength": "Max 20 characters"
+    },
+    "Tagline": {
+      "part1": "Simplicity, performance, and security,",
+      "highlight": "empowering you to monetize every click",
+      "part2": "with confidence and ease."
+    },
+    "Features": {
+      "title": "Why Choose",
+      "titleHighlight": "Shortlinkmu?",
+      "subtitle": "Built for publishers who want to maximize their earnings with premium features and reliable payouts.",
+      "highCpm": {
+        "title": "High CPM Rate",
+        "desc": "Earn up to $8 CPM based on traffic quality and geo-location."
+      },
+      "support": {
+        "title": "24/7 Support",
+        "desc": "Fast response from our dedicated support team anytime."
+      },
+      "levels": {
+        "title": "Level & Bonuses",
+        "desc": "Unlock higher bonuses as your views grow. Earn more rewards."
+      },
+      "customization": {
+        "title": "Advanced Customization",
+        "desc": "Custom alias, password protection, expiry dates, and more."
+      },
+      "multiAds": {
+        "title": "Multi-Level Ads",
+        "desc": "Choose ad levels (1-5 steps) to maximize your earnings."
+      },
+      "payouts": {
+        "title": "Fast Payouts",
+        "desc": "1-7 day processing via PayPal, Bank Transfer, or Crypto."
+      },
+      "referral": {
+        "title": "Referral Program",
+        "desc": "Earn 10-25% lifetime commission from your referrals."
+      },
+      "antiFraud": {
+        "title": "Anti-Fraud Protection",
+        "desc": "Advanced IP & fingerprint security to protect your earnings."
+      }
+    },
+    "HowItWorks": {
+      "title": "How It",
+      "titleHighlight": "Works",
+      "subtitle": "Start earning in 3 simple steps",
+      "goToDashboard": "Go to Dashboard",
+      "createAccount": "Create account now",
+      "step1": {
+        "title": "Create Account",
+        "desc": "Sign up for free in seconds",
+        "button": "Get Started"
+      },
+      "step2": {
+        "title": "Shorten Links",
+        "desc": "Create monetized short URLs",
+        "clicks": "clicks"
+      },
+      "step3": {
+        "title": "Get Paid",
+        "desc": "Withdraw via PayPal or Crypto",
+        "withdraw": "Withdraw"
+      }
+    },
+    "PaymentMethods": {
+      "title": "All Payments,",
+      "titleHighlight": "One Platform",
+      "subtitle": "Withdraw your earnings through multiple payment methods. Fast, secure, and hassle-free.",
+      "startEarning": "Start earning now",
+      "available": "Available"
+    },
+    "Calculator": {
+      "title": "Estimate Your",
+      "titleHighlight": "Earnings",
+      "subtitle": "Calculate your potential income based on daily views and CPM",
+      "dailyViews": "Daily Views",
+      "averageCpm": "Average CPM",
+      "cpmNote": "* CPM varies based on traffic quality and geo-location. Tier 1 countries (US, UK, CA) typically earn higher rates.",
+      "monthlyEarnings": "Monthly Earnings",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "yearly": "Yearly",
+      "goToDashboard": "Go to Dashboard",
+      "startEarning": "Start Earning Now"
+    },
+    "FAQ": {
+      "title": "Frequently Asked",
+      "titleHighlight": "Questions",
+      "subtitle": "Everything you need to know about our platform",
+      "q1": {
+        "question": "How do I start earning with Shortlinkmu?",
+        "answer": "Simply create a free account, paste your long URLs, and share the shortened links. You earn money every time someone clicks your link based on our competitive CPM rates."
+      },
+      "q2": {
+        "question": "What is CPM and how does it work?",
+        "answer": "CPM (Cost Per Mille) is the amount you earn per 1,000 views. Our rates range from $1-$12 depending on traffic quality and visitor location. Tier 1 countries like US, UK, and Canada earn the highest rates."
+      },
+      "q3": {
+        "question": "What is the minimum payout amount?",
+        "answer": "Our minimum payout is just $2, making it easy to withdraw your earnings quickly. We support PayPal, Bank Transfer, Dana, OVO, and cryptocurrency withdrawals."
+      },
+      "q4": {
+        "question": "Can I customize my short links?",
+        "answer": "Yes! You can create custom aliases, add password protection, set expiry dates, and choose ad levels. Premium members get access to even more customization options."
+      },
+      "q5": {
+        "question": "How does the referral program work?",
+        "answer": "Share your unique referral link and earn 10-25% lifetime commission from your referrals' earnings. The more active referrals you have, the higher your commission rate."
+      },
+      "q6": {
+        "question": "How fast are payouts processed?",
+        "answer": "Payouts are typically processed within 1-7 business days. We support multiple payment methods including PayPal, bank transfers, e-wallets, and cryptocurrency."
+      }
+    },
+    "CTA": {
+      "title1": "Ready to Start",
+      "title2": "Earning",
+      "title3": "with",
+      "title4": "Shortlinkmu?",
+      "subtitle": "Join thousands of publishers and start monetizing your links with the highest CPM rates.",
+      "goToDashboard": "Go to Dashboard",
+      "startEarning": "Start Earning Now"
+    },
+    "PayoutRates": {
+      "badge": "Payout Rates",
+      "title1": "Industry-Leading",
+      "title2": "CPM Rates",
+      "subtitle": "Earn the highest payouts for every 1,000 views. Our rates are continuously optimized to maximize your earnings.",
+      "features": {
+        "dailyPayouts": "Daily Payouts",
+        "securePayments": "Secure Payments",
+        "fastProcessing": "Fast Processing"
+      },
+      "table": {
+        "highestCPM": "Highest CPM",
+        "averageCPM": "Average CPM",
+        "countries": "Countries",
+        "searchPlaceholder": "Search country...",
+        "all": "All",
+        "tier1": "Tier 1",
+        "tier2": "Tier 2",
+        "tier3": "Tier 3",
+        "premium": "PREMIUM",
+        "standard": "STANDARD",
+        "basic": "BASIC",
+        "per1kViews": "per 1K views",
+        "upTo": "Up to",
+        "noCountriesFound": "No countries found",
+        "ratesDisclaimer": "* Rates may vary based on traffic quality and market conditions"
+      },
+      "paymentMethods": {
+        "title": "Payment Methods",
+        "subtitle": "Withdraw your earnings quickly and easily",
+        "digitalWallet": "Digital Wallet",
+        "bankTransfer": "Bank Transfer",
+        "cryptocurrency": "Cryptocurrency",
+        "minimum": "Minimum",
+        "processing": "Processing"
+      },
+      "cta": {
+        "title": "Ready to Start Earning?",
+        "subtitle": "Join thousands of publishers and start monetizing your traffic with the highest CPM rates.",
+        "goToDashboard": "Go to Dashboard",
+        "getStartedFree": "Get Started Free"
+      }
+    },
+    "About": {
+      "badge": "About Us",
+      "title1": "What is",
+      "title2": "Shortlinkmu",
+      "subtitle": "Shortlinkmu is a link shortening platform that lets you earn money from your shared links. Every time someone clicks on your shortened link, you get paid based on your visitor's location.",
+      "whatWeOffer": {
+        "title": "What We Offer",
+        "subtitle": "Everything you need to monetize your online presence",
+        "linkShortening": {
+          "title": "Link Shortening",
+          "desc": "Transform long URLs into clean, shareable short links"
+        },
+        "monetization": {
+          "title": "Monetization",
+          "desc": "Earn money for every visitor who clicks your links"
+        },
+        "secure": {
+          "title": "Secure & Reliable",
+          "desc": "Enterprise-grade security for all your links"
+        },
+        "global": {
+          "title": "Global Reach",
+          "desc": "Optimized CPM rates for 35+ countries worldwide"
+        }
+      },
+      "howItWorks": {
+        "title": "How It Works",
+        "step1": {
+          "title": "Create Short Links",
+          "desc": "Paste any long URL and get a short, monetized link instantly"
+        },
+        "step2": {
+          "title": "Share Anywhere",
+          "desc": "Share your links on social media, websites, or wherever your audience is"
+        },
+        "step3": {
+          "title": "Earn Money",
+          "desc": "Get paid for every 1,000 views with rates up to $15 CPM"
+        }
+      },
+      "values": {
+        "title": "Our Values",
+        "simple": {
+          "title": "Simple",
+          "desc": "Easy to use, no technical knowledge required"
+        },
+        "fast": {
+          "title": "Fast",
+          "desc": "Lightning-fast redirects for the best user experience"
+        },
+        "fair": {
+          "title": "Fair",
+          "desc": "Transparent rates with on-time payouts"
+        }
+      },
+      "cta": {
+        "title": "Ready to Start Earning?",
+        "subtitle": "Join thousands of publishers and start monetizing your links today",
+        "goToDashboard": "Go to Dashboard",
+        "getStartedFree": "Get Started Free"
+      }
+    },
+    "Contact": {
+      "badge": "Contact Us",
+      "title1": "Get in",
+      "title2": "Touch",
+      "subtitle": "Have a question or need help? Our support team is ready to assist you.",
+      "methods": {
+        "support": {
+          "title": "General Support",
+          "desc": "For general questions, technical issues, or account help"
+        },
+        "billing": {
+          "title": "Billing & Payout",
+          "desc": "For payment questions, withdrawals, or partnerships"
+        },
+        "sendEmail": "Send Email"
+      },
+      "quickInfo": {
+        "responseTime": {
+          "title": "Response Time",
+          "value": "Within 24 hours"
+        },
+        "supportHours": {
+          "title": "Support Hours",
+          "value": "Mon - Fri, 9AM - 5PM"
+        }
+      },
+      "faq": {
+        "title": "Check Our FAQ",
+        "subtitle": "Your question might already be answered in our frequently asked questions",
+        "button": "View FAQ"
+      }
+    },
+    "TermsOfService": {
+      "badge": "Legal",
+      "title": "Terms of Service",
+      "subtitle": "Please read these terms carefully before using our service",
+      "lastUpdated": "Last updated: February 5, 2026",
+      "contactUs": "Contact Us",
+      "sections": {
+        "acceptance": {
+          "title": "1. Acceptance of Terms",
+          "content": "By accessing or using Shortlinkmu (\"Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not access or use the Service. These terms apply to all users, including visitors, registered users, and publishers."
+        },
+        "eligibility": {
+          "title": "2. Eligibility",
+          "content": "To use our Service, you must be at least 18 years old or have parental consent. By using the Service, you represent and warrant that you meet these eligibility requirements and have the legal capacity to enter into these Terms."
+        },
+        "account": {
+          "title": "3. Account Registration",
+          "content": "When you create an account, you agree to:",
+          "list": [
+            "Provide accurate, current, and complete information",
+            "Maintain the security of your password and account",
+            "Accept responsibility for all activities under your account",
+            "Notify us immediately of any unauthorized access"
+          ],
+          "note": "We reserve the right to suspend or terminate accounts that violate these terms."
+        },
+        "service": {
+          "title": "4. Service Description",
+          "content": "Shortlinkmu provides URL shortening services that allow users to create shortened links and earn revenue based on legitimate visitor traffic. We reserve the right to modify, suspend, or discontinue any aspect of the Service at any time without prior notice."
+        },
+        "prohibited": {
+          "title": "5. Prohibited Uses",
+          "content": "You agree not to use the Service for:",
+          "list": [
+            "Creating links to illegal, harmful, or malicious content",
+            "Distributing malware, viruses, or phishing schemes",
+            "Generating fraudulent or artificial traffic (bots, auto-clicks)",
+            "Promoting violence, hate speech, or discriminatory content",
+            "Infringing on intellectual property rights",
+            "Spamming or unsolicited bulk messaging",
+            "Any activity that violates applicable laws or regulations"
+          ],
+          "note": "Violation of these rules may result in immediate account termination and forfeiture of earnings."
+        },
+        "earnings": {
+          "title": "6. Earnings and Payments",
+          "content": "Publishers earn revenue based on legitimate views of their shortened links. Payment terms:",
+          "list": [
+            "Earnings are calculated based on our published CPM rates",
+            "Rates may vary based on traffic location and quality",
+            "Minimum payout thresholds apply as specified on our platform",
+            "We reserve the right to withhold payment for suspicious activity",
+            "Earnings from fraudulent traffic will be forfeited"
+          ]
+        },
+        "intellectual": {
+          "title": "7. Intellectual Property",
+          "content": "All content, trademarks, and intellectual property related to the Service are owned by Shortlinkmu. You may not copy, modify, distribute, or create derivative works without our written permission. You retain ownership of content you share through our Service."
+        },
+        "disclaimer": {
+          "title": "8. Disclaimer of Warranties",
+          "content": "The Service is provided \"as is\" and \"as available\" without warranties of any kind, either express or implied. We do not guarantee that the Service will be uninterrupted, secure, or error-free. We disclaim all warranties including merchantability, fitness for a particular purpose, and non-infringement."
+        },
+        "limitation": {
+          "title": "9. Limitation of Liability",
+          "content": "To the maximum extent permitted by law, Shortlinkmu shall not be liable for:",
+          "list": [
+            "Any indirect, incidental, or consequential damages",
+            "Loss of profits, revenue, data, or business opportunities",
+            "Service interruptions or system failures",
+            "Actions of third parties using the Service",
+            "Damages exceeding the amount paid to you in the past 12 months"
+          ]
+        },
+        "indemnification": {
+          "title": "10. Indemnification",
+          "content": "You agree to indemnify and hold harmless Shortlinkmu, its officers, directors, employees, and agents from any claims, damages, or expenses arising from your use of the Service, violation of these Terms, or infringement of any rights of another party."
+        },
+        "termination": {
+          "title": "11. Termination",
+          "content": "We may terminate or suspend your account at any time, with or without cause, with or without notice. Upon termination, your right to use the Service will immediately cease. Provisions that by their nature should survive termination shall survive."
+        },
+        "changes": {
+          "title": "12. Changes to Terms",
+          "content": "We reserve the right to modify these Terms at any time. We will notify users of material changes by posting the updated Terms on this page. Your continued use of the Service after changes constitutes acceptance of the new Terms."
+        },
+        "governing": {
+          "title": "13. Governing Law",
+          "content": "These Terms shall be governed by and construed in accordance with the laws of the Republic of Indonesia, without regard to its conflict of law provisions. Any disputes shall be resolved in the courts of Jakarta, Indonesia."
+        },
+        "contact": {
+          "title": "14. Contact Information",
+          "content": "If you have any questions about these Terms of Service, please contact us through our contact page or email us at legal@shortlinkmu.com."
+        }
+      }
+    },
+    "PrivacyPolicy": {
+      "badge": "Legal",
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy is important to us. This policy explains how we collect, use, and protect your data.",
+      "lastUpdated": "Last updated: February 5, 2026",
+      "contactUs": "Contact Us",
+      "sections": {
+        "collection": {
+          "title": "1. Information We Collect",
+          "content": "We collect information to provide and improve our services. The types of information we collect include:",
+          "subsections": {
+            "personal": {
+              "title": "Personal Information",
+              "items": [
+                "Email address and username during registration",
+                "Payment information for processing withdrawals",
+                "Profile information you choose to provide"
+              ]
+            },
+            "usage": {
+              "title": "Usage Data",
+              "items": [
+                "IP addresses of visitors clicking your links",
+                "Browser type, device information, and operating system",
+                "Pages visited, time spent, and referral sources",
+                "Click patterns and geographic location data"
+              ]
+            },
+            "technical": {
+              "title": "Technical Data",
+              "items": [
+                "URLs you submit for shortening",
+                "Analytics and performance metrics",
+                "Log files and error reports"
+              ]
+            }
+          }
+        },
+        "use": {
+          "title": "2. How We Use Your Information",
+          "content": "We use the collected information for the following purposes:",
+          "list": [
+            "To provide, operate, and maintain our URL shortening service",
+            "To process your account registration and authenticate users",
+            "To calculate and process your earnings and payouts",
+            "To send you service updates, security alerts, and support messages",
+            "To detect, prevent, and address fraud, abuse, and technical issues",
+            "To analyze usage patterns and improve our services",
+            "To comply with legal obligations and enforce our terms"
+          ]
+        },
+        "sharing": {
+          "title": "3. Information Sharing",
+          "content": "We do not sell your personal information. We may share information in the following circumstances:",
+          "list": [
+            "With payment processors to facilitate withdrawals",
+            "With service providers who assist in operating our platform",
+            "When required by law or to respond to legal process",
+            "To protect our rights, privacy, safety, or property",
+            "In connection with a merger, acquisition, or sale of assets"
+          ],
+          "note": "Third-party service providers are contractually bound to protect your data."
+        },
+        "cookies": {
+          "title": "4. Cookies and Tracking Technologies",
+          "content": "We use cookies and similar technologies to enhance your experience:",
+          "list": [
+            "Essential cookies for authentication and security",
+            "Analytics cookies to understand how users interact with our service",
+            "Preference cookies to remember your settings"
+          ],
+          "note": "You can control cookies through your browser settings. Disabling certain cookies may affect functionality."
+        },
+        "security": {
+          "title": "5. Data Security",
+          "content": "We implement industry-standard security measures to protect your information:",
+          "list": [
+            "Encryption of data in transit using SSL/TLS",
+            "Secure storage of passwords using hashing algorithms",
+            "Regular security audits and vulnerability assessments",
+            "Access controls limiting who can view your data"
+          ],
+          "note": "While we strive to protect your data, no method of transmission over the Internet is 100% secure."
+        },
+        "retention": {
+          "title": "6. Data Retention",
+          "content": "We retain your information for as long as necessary to provide our services and fulfill the purposes outlined in this policy. Specifically:",
+          "list": [
+            "Account data is retained while your account is active",
+            "Usage and analytics data is retained for up to 24 months",
+            "Financial records are retained as required by law",
+            "You may request deletion of your account and associated data"
+          ]
+        },
+        "rights": {
+          "title": "7. Your Rights",
+          "content": "Depending on your location, you may have the following rights:",
+          "list": [
+            "Access and obtain a copy of your personal data",
+            "Correct inaccurate or incomplete information",
+            "Request deletion of your personal data",
+            "Object to or restrict certain processing activities",
+            "Data portability to receive your data in a structured format",
+            "Withdraw consent where processing is based on consent"
+          ],
+          "note": "To exercise these rights, please contact us through our contact page."
+        },
+        "children": {
+          "title": "8. Children's Privacy",
+          "content": "Our service is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately."
+        },
+        "international": {
+          "title": "9. International Data Transfers",
+          "content": "Your information may be transferred to and processed in countries other than your country of residence. These countries may have different data protection laws. By using our service, you consent to such transfers. We take appropriate safeguards to ensure your data remains protected."
+        },
+        "thirdparty": {
+          "title": "10. Third-Party Links",
+          "content": "Our service may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage you to read the privacy policies of any third-party sites you visit through shortened links."
+        },
+        "changes": {
+          "title": "11. Changes to This Policy",
+          "content": "We may update this Privacy Policy from time to time. We will notify you of any material changes by posting the new policy on this page and updating the \"Last updated\" date. Your continued use of the service after changes constitutes acceptance of the updated policy."
+        },
+        "contact": {
+          "title": "12. Contact Us",
+          "content": "If you have any questions about this Privacy Policy or our data practices, please contact us at privacy@shortlinkmu.com or through our contact page."
+        }
+      }
+    },
+    "ReportAbuse": {
+      "badge": "Security",
+      "title1": "Report",
+      "title2": "Abuse",
+      "subtitle": "Found a suspicious or harmful link? Report it here and help us keep the platform safe.",
+      "responseTime": "Average response time: within 24 hours",
+      "guidelines": {
+        "whatCanBeReported": {
+          "title": "What Can Be Reported",
+          "items": [
+            "Phishing and scam websites",
+            "Malware and virus distribution",
+            "Illegal content (gambling, adult material)",
+            "Spam and platform abuse",
+            "Copyright infringement"
+          ]
+        },
+        "howWeHandle": {
+          "title": "How We Handle Reports",
+          "items": [
+            "Reports are reviewed within 24 hours",
+            "Our team investigates each case",
+            "Harmful links are blocked immediately",
+            "You'll be contacted if more info is needed"
+          ]
+        }
+      },
+      "form": {
+        "title": "Submit a Report",
+        "subtitle": "Fill out the form below to report a suspicious link",
+        "urlLabel": "Reported Link",
+        "urlPlaceholder": "https://short.link/xxx",
+        "reasonLabel": "Report Reason",
+        "reasonPlaceholder": "Select a category...",
+        "reasons": {
+          "phishing": "Phishing",
+          "malware": "Malware / Virus",
+          "spam": "Spam",
+          "illegalContent": "Illegal Content (Gambling, Adult, etc.)",
+          "copyright": "Copyright Infringement",
+          "other": "Other"
+        },
+        "emailLabel": "Your Email",
+        "emailOptional": "(Optional)",
+        "emailPlaceholder": "For follow-up communication",
+        "detailsLabel": "Additional Details",
+        "detailsOptional": "(Optional)",
+        "detailsPlaceholder": "Describe the issue in more detail...",
+        "submitting": "Submitting...",
+        "submitButton": "Submit Report",
+        "successMessage": "Your report has been submitted. Thank you for helping us!",
+        "errorMessage": "Something went wrong. Please try again.",
+        "connectionError": "Failed to submit report. Please check your connection."
+      }
+    }
   },
   "Dashboard": {
     "title": "Dashboard",

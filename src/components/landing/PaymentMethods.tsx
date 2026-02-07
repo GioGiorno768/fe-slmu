@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 const paymentMethods = [
   { name: "PayPal", icon: "/payment-icons/paypal.png" },
@@ -18,8 +19,13 @@ const paymentMethods = [
 const marqueeItems = [...paymentMethods, ...paymentMethods];
 
 export default function PaymentMethods() {
+  const t = useTranslations("Landing.PaymentMethods");
+
   return (
-    <section id="payment-methods" className="py-20 md:py-28 bg-white font-poppins overflow-hidden">
+    <section
+      id="payment-methods"
+      className="py-20 md:py-28 bg-white font-poppins overflow-hidden"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 md:mb-14">
@@ -30,7 +36,8 @@ export default function PaymentMethods() {
               viewport={{ once: true }}
               className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-2 text-slate-800"
             >
-              All Payments, <span className="text-bluelanding">One Platform</span>
+              {t("title")}{" "}
+              <span className="text-bluelanding">{t("titleHighlight")}</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -39,8 +46,7 @@ export default function PaymentMethods() {
               transition={{ delay: 0.1 }}
               className="text-slate-500 text-base md:text-lg font-light max-w-lg"
             >
-              Withdraw your earnings through multiple payment methods. Fast,
-              secure, and hassle-free.
+              {t("subtitle")}
             </motion.p>
           </div>
           <motion.div
@@ -53,7 +59,7 @@ export default function PaymentMethods() {
               href="/register"
               className="inline-flex items-center gap-2 text-bluelanding hover:text-blue-600 font-medium text-sm transition-colors group"
             >
-              Start earning now
+              {t("startEarning")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -98,7 +104,7 @@ export default function PaymentMethods() {
                     {method.name}
                   </p>
                   <p className="text-[10px] text-green-600 font-medium">
-                    Available
+                    {t("available")}
                   </p>
                 </div>
               </div>
@@ -138,7 +144,7 @@ export default function PaymentMethods() {
                     {method.name}
                   </p>
                   <p className="text-[10px] text-green-600 font-medium">
-                    Available
+                    {t("available")}
                   </p>
                 </div>
               </div>

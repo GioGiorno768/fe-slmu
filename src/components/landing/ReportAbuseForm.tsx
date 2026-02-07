@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   Link as LinkIcon,
   Mail,
@@ -26,6 +27,7 @@ interface FormData {
 type FormStatus = "idle" | "loading" | "success" | "error";
 
 export default function ReportAbuseForm() {
+  const t = useTranslations("Landing.ReportAbuse.form");
   const [formData, setFormData] = useState<FormData>({
     url: "",
     reason: "",
@@ -68,19 +70,16 @@ export default function ReportAbuseForm() {
 
       if (response.ok) {
         setStatus("success");
-        setMessage(
-          data.message ||
-            "Your report has been submitted. Thank you for helping us!",
-        );
+        setMessage(data.message || t("successMessage"));
         setFormData({ url: "", reason: "", email: "", details: "" });
       } else {
         setStatus("error");
-        setMessage(data.message || "Something went wrong. Please try again.");
+        setMessage(data.message || t("errorMessage"));
       }
     } catch (error) {
       console.error("Report submission error:", error);
       setStatus("error");
-      setMessage("Failed to submit report. Please check your connection.");
+      setMessage(t("connectionError"));
     }
   };
 
@@ -120,7 +119,7 @@ export default function ReportAbuseForm() {
             htmlFor="url"
             className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Reported Link <span className="text-red-500">*</span>
+            {t("urlLabel")} <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <LinkIcon className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -131,7 +130,7 @@ export default function ReportAbuseForm() {
               value={formData.url}
               onChange={handleChange}
               className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
-              placeholder="https://short.link/xxx"
+              placeholder={t("urlPlaceholder")}
               required
               disabled={status === "loading"}
             />
@@ -144,7 +143,7 @@ export default function ReportAbuseForm() {
             htmlFor="reason"
             className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Report Reason <span className="text-red-500">*</span>
+            {t("reasonLabel")} <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <ShieldAlert className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -158,16 +157,16 @@ export default function ReportAbuseForm() {
               disabled={status === "loading"}
             >
               <option value="" disabled>
-                Select a category...
+                {t("reasonPlaceholder")}
               </option>
-              <option value="phishing">Phishing</option>
-              <option value="malware">Malware / Virus</option>
-              <option value="spam">Spam</option>
+              <option value="phishing">{t("reasons.phishing")}</option>
+              <option value="malware">{t("reasons.malware")}</option>
+              <option value="spam">{t("reasons.spam")}</option>
               <option value="illegal_content">
-                Illegal Content (Gambling, Adult, etc.)
+                {t("reasons.illegalContent")}
               </option>
-              <option value="copyright">Copyright Infringement</option>
-              <option value="other">Other</option>
+              <option value="copyright">{t("reasons.copyright")}</option>
+              <option value="other">{t("reasons.other")}</option>
             </select>
             <ChevronDown className="w-5 h-5 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
@@ -179,8 +178,10 @@ export default function ReportAbuseForm() {
             htmlFor="email"
             className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Your Email{" "}
-            <span className="text-slate-400 font-normal">(Optional)</span>
+            {t("emailLabel")}{" "}
+            <span className="text-slate-400 font-normal">
+              {t("emailOptional")}
+            </span>
           </label>
           <div className="relative">
             <Mail className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -191,7 +192,7 @@ export default function ReportAbuseForm() {
               value={formData.email}
               onChange={handleChange}
               className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
-              placeholder="For follow-up communication"
+              placeholder={t("emailPlaceholder")}
               disabled={status === "loading"}
             />
           </div>
@@ -203,8 +204,10 @@ export default function ReportAbuseForm() {
             htmlFor="details"
             className="block text-sm font-medium text-slate-700 mb-2"
           >
-            Additional Details{" "}
-            <span className="text-slate-400 font-normal">(Optional)</span>
+            {t("detailsLabel")}{" "}
+            <span className="text-slate-400 font-normal">
+              {t("detailsOptional")}
+            </span>
           </label>
           <div className="relative">
             <MessageSquare className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
@@ -215,7 +218,7 @@ export default function ReportAbuseForm() {
               value={formData.details}
               onChange={handleChange}
               className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all resize-none"
-              placeholder="Describe the issue in more detail..."
+              placeholder={t("detailsPlaceholder")}
               disabled={status === "loading"}
             />
           </div>
@@ -230,12 +233,12 @@ export default function ReportAbuseForm() {
           {status === "loading" ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Submitting...
+              {t("submitting")}
             </>
           ) : (
             <>
               <Send className="w-4 h-4" />
-              Submit Report
+              {t("submitButton")}
             </>
           )}
         </button>

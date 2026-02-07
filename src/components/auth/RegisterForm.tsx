@@ -11,8 +11,10 @@ import Modal from "@/components/common/Modal";
 import Toast from "@/components/common/Toast";
 import GoogleAuthButton from "./GoogleAuthButton";
 import { useFingerprint } from "@/hooks/useFingerprint";
+import { useTranslations } from "next-intl";
 
 export default function RegisterForm() {
+  const t = useTranslations("Auth.register");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -144,12 +146,12 @@ export default function RegisterForm() {
     setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Password dan konfirmasi password tidak cocok");
+      setError(t("passwordMismatch"));
       return;
     }
 
     if (formData.password.length < 8) {
-      setError("Password minimal 8 karakter");
+      setError(t("passwordMinLength"));
       return;
     }
 
@@ -165,7 +167,7 @@ export default function RegisterForm() {
       });
 
       // 🎉 Show success toast
-      setToastMessage("Registrasi berhasil! Selamat datang.");
+      setToastMessage(t("successMessage"));
       setShowToast(true);
 
       // [DEV MODE] Redirect to dashboard (email auto-verified)
@@ -187,9 +189,8 @@ export default function RegisterForm() {
           setError(emailError);
 
           setModalConfig({
-            title: "Email Sudah Terdaftar",
-            message:
-              "Email ini sudah digunakan oleh akun lain. Silakan gunakan email berbeda atau login dengan akun yang sudah ada.",
+            title: t("emailTaken"),
+            message: t("emailTakenMessage"),
           });
           setShowModal(true);
         } else {
@@ -203,7 +204,7 @@ export default function RegisterForm() {
         const errorMessage =
           err.response?.data?.message ||
           err.response?.data?.error ||
-          "Terjadi kesalahan saat registrasi. Silakan coba lagi.";
+          t("genericError");
         setError(errorMessage);
       }
     } finally {
@@ -223,7 +224,7 @@ export default function RegisterForm() {
       );
 
       // 🎉 Show success toast
-      setToastMessage("Registrasi dengan Google berhasil!");
+      setToastMessage(t("googleSuccess"));
       setShowToast(true);
 
       // Redirect based on user role
@@ -236,7 +237,7 @@ export default function RegisterForm() {
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
-        "Terjadi kesalahan saat login dengan Google.";
+        t("genericError");
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -248,7 +249,7 @@ export default function RegisterForm() {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
         <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
-        <p className="text-gray-500 text-lg">Memverifikasi undangan...</p>
+        <p className="text-gray-500 text-lg">{t("verifyingInvitation")}</p>
       </div>
     );
   }
@@ -259,9 +260,9 @@ export default function RegisterForm() {
         {/* Title */}
         <div className="space-y-1">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
-            Buat Akun Baru
+            {t("title")}
           </h1>
-          <p className="text-gray-500">Gratis selamanya. Ayo bergabung!</p>
+          <p className="text-gray-500">{t("subtitle")}</p>
         </div>
 
         {/* Referral Banner */}
@@ -274,12 +275,10 @@ export default function RegisterForm() {
               <p className="font-semibold text-purple-900 text-sm">
                 🎉{" "}
                 {referrerName
-                  ? `Diundang oleh ${referrerName}!`
-                  : "Kamu diundang!"}
+                  ? t("invitedBy", { name: referrerName })
+                  : t("youAreInvited")}
               </p>
-              <p className="text-xs text-purple-700">
-                Daftar sekarang dan nikmati bonus spesial.
-              </p>
+              <p className="text-xs text-purple-700">{t("referralBonus")}</p>
             </div>
           </div>
         )}
@@ -300,7 +299,7 @@ export default function RegisterForm() {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-                  placeholder="Nama lengkap"
+                  placeholder={t("namePlaceholder")}
                   required
                   disabled={loading}
                 />
@@ -317,7 +316,7 @@ export default function RegisterForm() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-                  placeholder="email@anda.com"
+                  placeholder={t("emailPlaceholder")}
                   required
                   disabled={loading}
                 />
@@ -334,7 +333,7 @@ export default function RegisterForm() {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-                  placeholder="Password (min. 8 karakter)"
+                  placeholder={t("passwordPlaceholder")}
                   required
                   disabled={loading}
                 />
@@ -362,7 +361,7 @@ export default function RegisterForm() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-bluelanding focus:border-transparent focus:bg-white transition-all"
-                  placeholder="Konfirmasi password"
+                  placeholder={t("confirmPasswordPlaceholder")}
                   required
                   disabled={loading}
                 />
@@ -387,7 +386,7 @@ export default function RegisterForm() {
             disabled={loading}
             className="w-full bg-bluelanding hover:bg-bluelanding/80 text-white font-semibold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg shadow-bluelanding/25"
           >
-            {loading ? "Mendaftar..." : "Daftar Sekarang"}
+            {loading ? t("loading") : t("submitButton")}
           </button>
         </form>
 
@@ -397,7 +396,7 @@ export default function RegisterForm() {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-gray-400">atau</span>
+            <span className="px-4 bg-white text-gray-400">{t("or")}</span>
           </div>
         </div>
 
@@ -405,17 +404,17 @@ export default function RegisterForm() {
         <GoogleAuthButton
           onSuccess={handleGoogleSuccess}
           onError={(error) => setError(error)}
-          text="Daftar dengan Google"
+          text={t("googleButton")}
         />
 
         {/* Login link */}
         <p className="text-center text-gray-500 text-sm">
-          Sudah punya akun?{" "}
+          {t("hasAccount")}{" "}
           <Link
             href="/login"
             className="font-semibold text-bluelanding hover:underline"
           >
-            Login di sini
+            {t("loginHere")}
           </Link>
         </p>
       </div>

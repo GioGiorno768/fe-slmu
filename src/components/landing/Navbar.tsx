@@ -23,13 +23,12 @@ export default function Navbar() {
   const [isLoginDisabled, setIsLoginDisabled] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
-  // Section links for navigation
+  // Section links for navigation - now using translations
   const navLinks = [
-    { name: "Features", href: "/#features" },
-    { name: "How It Works", href: "/#how-it-works" },
-    { name: "Payment", href: "/#payment-methods" },
-    // { name: "Calculator", href: "/#calculator" },
-    { name: "FAQ", href: "/#faq" },
+    { name: t("features"), href: "/#features" },
+    { name: t("howItWorks"), href: "/#how-it-works" },
+    { name: t("payment"), href: "/#payment-methods" },
+    { name: t("faq"), href: "/#faq" },
   ];
 
   // Check auth status
@@ -155,7 +154,7 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <Link
-                  key={link.name}
+                  key={link.href}
                   href={link.href as any}
                   className="text-sm text-slate-600 hover:text-bluelanding transition-colors font-medium"
                 >
@@ -262,7 +261,7 @@ export default function Navbar() {
             <div className=" mb-6">
               {navLinks.map((link) => (
                 <Link
-                  key={link.name}
+                  key={link.href}
                   href={link.href as any}
                   onClick={() => setIsOpen(false)}
                   className="block w-full text-left py-3 text-base font-medium text-slate-700 hover:text-bluelanding transition-colors"
@@ -339,10 +338,10 @@ export default function Navbar() {
       <Modal
         isOpen={showRegisterModal}
         onClose={() => setShowRegisterModal(false)}
-        title="Pendaftaran Ditutup"
-        message="Mohon maaf, pendaftaran akun baru sedang ditutup sementara. Silakan coba lagi nanti atau hubungi admin untuk informasi lebih lanjut."
+        title={t("registrationClosed")}
+        message={t("registrationClosedMessage")}
         type="warning"
-        buttonLabel="Kembali ke Home"
+        buttonLabel={t("backToHome")}
         onButtonClick={() => {
           setShowRegisterModal(false);
           router.push("/");

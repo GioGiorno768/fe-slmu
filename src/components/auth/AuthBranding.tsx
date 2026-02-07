@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, TrendingUp, Zap, Globe, Wallet } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 interface AuthBrandingProps {
   title?: string;
@@ -12,42 +13,39 @@ interface AuthBrandingProps {
   accentColor?: "blue" | "purple";
 }
 
-const slides = [
-  {
-    icon: TrendingUp,
-    badge: "Monetisasi",
-    title: "Hasilkan Uang dari Link Anda",
-    description:
-      "Ubah setiap klik menjadi penghasilan. Bagikan link dan dapatkan bayaran dari setiap pengunjung.",
-  },
-  {
-    icon: Zap,
-    badge: "Tinggi",
-    title: "CPM Rate hingga $15",
-    description:
-      "Nikmati rate tertinggi di industri dengan pembayaran per 1.000 views yang kompetitif.",
-  },
-  {
-    icon: Wallet,
-    badge: "Cepat",
-    title: "Pencairan Harian",
-    description:
-      "Tarik penghasilan Anda setiap hari dengan berbagai metode pembayaran yang tersedia.",
-  },
-  {
-    icon: Globe,
-    badge: "Global",
-    title: "Jangkauan 35+ Negara",
-    description:
-      "Rate CPM dioptimalkan untuk traffic dari seluruh dunia dengan dukungan multi-regional.",
-  },
-];
-
 export default function AuthBranding({
   accentColor = "blue",
 }: AuthBrandingProps) {
+  const t = useTranslations("Auth");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  const slides = [
+    {
+      icon: TrendingUp,
+      badge: t("branding.slide1.badge"),
+      title: t("branding.slide1.title"),
+      description: t("branding.slide1.desc"),
+    },
+    {
+      icon: Zap,
+      badge: t("branding.slide2.badge"),
+      title: t("branding.slide2.title"),
+      description: t("branding.slide2.desc"),
+    },
+    {
+      icon: Wallet,
+      badge: t("branding.slide3.badge"),
+      title: t("branding.slide3.title"),
+      description: t("branding.slide3.desc"),
+    },
+    {
+      icon: Globe,
+      badge: t("branding.slide4.badge"),
+      title: t("branding.slide4.title"),
+      description: t("branding.slide4.desc"),
+    },
+  ];
 
   const colorConfig = {
     blue: {
@@ -70,7 +68,7 @@ export default function AuthBranding({
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-  }, []);
+  }, [slides.length]);
 
   // Auto-rotate slides
   useEffect(() => {
@@ -97,7 +95,7 @@ export default function AuthBranding({
         className={`absolute top-8 left-8 flex items-center gap-2 ${colors.backText} transition-colors group z-20`}
       >
         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-        <span className="font-semibold">Kembali ke Home</span>
+        <span className="font-semibold">{t("backToHome")}</span>
       </Link>
 
       {/* Background decorations - simplified */}

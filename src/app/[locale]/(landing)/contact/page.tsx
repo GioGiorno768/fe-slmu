@@ -12,40 +12,43 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
+import { getTranslations } from "next-intl/server";
 
-const contactMethods = [
-  {
-    icon: Headphones,
-    title: "General Support",
-    description: "For general questions, technical issues, or account help",
-    email: "support@shortlinkmu.com",
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    icon: Mail,
-    title: "Billing & Payout",
-    description: "For payment questions, withdrawals, or partnerships",
-    email: "billing@shortlinkmu.com",
-    iconBg: "bg-green-50",
-    iconColor: "text-green-600",
-  },
-];
+export default async function Contact() {
+  const t = await getTranslations("Landing.Contact");
 
-const quickInfo = [
-  {
-    icon: Clock,
-    title: "Response Time",
-    description: "Within 24 hours",
-  },
-  {
-    icon: MessageCircle,
-    title: "Support Hours",
-    description: "Mon - Fri, 9AM - 5PM",
-  },
-];
+  const contactMethods = [
+    {
+      icon: Headphones,
+      title: t("methods.support.title"),
+      description: t("methods.support.desc"),
+      email: "support@shortlinkmu.com",
+      iconBg: "bg-blue-50",
+      iconColor: "text-blue-600",
+    },
+    {
+      icon: Mail,
+      title: t("methods.billing.title"),
+      description: t("methods.billing.desc"),
+      email: "billing@shortlinkmu.com",
+      iconBg: "bg-green-50",
+      iconColor: "text-green-600",
+    },
+  ];
 
-export default function Contact() {
+  const quickInfo = [
+    {
+      icon: Clock,
+      title: t("quickInfo.responseTime.title"),
+      description: t("quickInfo.responseTime.value"),
+    },
+    {
+      icon: MessageCircle,
+      title: t("quickInfo.supportHours.title"),
+      description: t("quickInfo.supportHours.value"),
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-white font-poppins">
       {/* Navbar */}
@@ -64,20 +67,20 @@ export default function Contact() {
           <AnimateOnView>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bluelanding/10 text-bluelanding text-sm font-medium mb-6">
               <Send className="w-4 h-4" />
-              Contact Us
+              {t("badge")}
             </div>
           </AnimateOnView>
 
           <AnimateOnView delay={0.1}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-800 mb-5 tracking-tight">
-              Get in <span className="text-bluelanding">Touch</span>
+              {t("title1")}{" "}
+              <span className="text-bluelanding">{t("title2")}</span>
             </h1>
           </AnimateOnView>
 
           <AnimateOnView delay={0.2}>
             <p className="text-base md:text-lg text-slate-500 max-w-xl mx-auto leading-relaxed font-light font-figtree">
-              Have a question or need help? Our support team is ready to assist
-              you.
+              {t("subtitle")}
             </p>
           </AnimateOnView>
         </div>
@@ -106,7 +109,7 @@ export default function Contact() {
                     className="inline-flex items-center gap-2 w-full justify-center bg-bluelanding text-white font-medium py-3 px-5 rounded-xl hover:bg-blue-600 transition-all text-sm"
                   >
                     <Mail className="w-4 h-4" />
-                    Send Email
+                    {t("methods.sendEmail")}
                   </a>
                 </div>
               </AnimateOnView>
@@ -144,17 +147,16 @@ export default function Contact() {
                 <HelpCircle className="w-7 h-7 text-bluelanding" />
               </div>
               <h2 className="text-2xl md:text-3xl font-semibold text-slate-800 mb-3">
-                Check Our FAQ
+                {t("faq.title")}
               </h2>
               <p className="text-slate-500 font-light mb-6 max-w-md mx-auto font-figtree">
-                Your question might already be answered in our frequently asked
-                questions
+                {t("faq.subtitle")}
               </p>
               <Link
                 href="/#faq"
                 className="inline-flex items-center gap-2 bg-bluelanding text-white font-medium py-3 px-6 rounded-xl hover:bg-blue-600 transition-all group"
               >
-                View FAQ
+                {t("faq.button")}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
