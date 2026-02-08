@@ -2,6 +2,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import {
   TrendingUp,
   ChevronRight,
@@ -49,6 +50,7 @@ interface MilestoneCardProps {
 
 export default function MilestoneCard({ data }: MilestoneCardProps) {
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard.milestone");
 
   // Handle Loading State
   if (!data) {
@@ -103,7 +105,7 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
           </div>
           <div>
             <p className="text-[1.4em] text-grays font-medium mb-0.5">
-              Current Rank
+              {t("currentRank")}
             </p>
             <h3 className={`text-[2.2em] font-bold leading-none`}>
               {currentLevel}
@@ -132,7 +134,7 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
           } font-bold text-right`}
         >
           <div className="text-[2em]">+{currentBonus}%</div>
-          <span className="text-[1em] opacity-80">CPM Bonus</span>
+          <span className="text-[1em] opacity-80">{t("cpmBonus")}</span>
         </div>
       </div>
 
@@ -141,11 +143,11 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
         {/* Earnings Row */}
         <div className="flex justify-between items-baseline mb-3">
           <span className="text-[1.3em]">
-            <span className="text-grays">Earnings: </span>
+            <span className="text-grays">{t("earnings")}: </span>
             <b className="text-bluelight">{formatCurrency(currentEarnings)}</b>
           </span>
           <span className="text-[1.2em] text-grays">
-            Target: {formatCurrency(nextTarget)}
+            {t("target")}: {formatCurrency(nextTarget)}
           </span>
         </div>
 
@@ -166,7 +168,7 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
           <span className="text-bluelight font-semibold">
             {formatCurrency(nextTarget - currentEarnings)}
           </span>{" "}
-          more to unlock{" "}
+          {t("moreToUnlock")}{" "}
           <span className={`${iconColor || "text-yellow-400"} font-bold`}>
             {nextLevel}
           </span>
@@ -178,7 +180,7 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
         <div className="flex items-center gap-2.5 opacity-70">
           <Lock className="w-4 h-4 text-grays" />
           <span className="text-[1.15em] text-grays">
-            Next:{" "}
+            {t("next")}:{" "}
             <span className="text-bluelight font-semibold">
               +{nextBonus}% CPM
             </span>
@@ -189,7 +191,7 @@ export default function MilestoneCard({ data }: MilestoneCardProps) {
           href="/levels"
           className="flex items-center gap-1 text-[1.2em] font-semibold text-bluelight/70 hover:text-bluelight transition-colors group"
         >
-          View Levels
+          {t("viewLevels")}
           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

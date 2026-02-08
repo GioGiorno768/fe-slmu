@@ -77,7 +77,7 @@ export default function TopCountriesCard({
             "absolute inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-sm",
             isDark
               ? "bg-gradient-to-b from-card/98 via-subcard/95 to-background/90"
-              : "bg-gradient-to-b from-gray-100/90 via-gray-50/80 to-white/95"
+              : "bg-gradient-to-b from-gray-100/90 via-gray-50/80 to-white/95",
           )}
         >
           <div
@@ -85,44 +85,44 @@ export default function TopCountriesCard({
               "w-16 h-16 rounded-2xl flex items-center justify-center mb-4 border",
               isDark
                 ? "bg-purple-500/20 border-purple-500/30"
-                : "bg-gray-100 border-gray-200"
+                : "bg-gray-100 border-gray-200",
             )}
           >
             <Lock
               className={clsx(
                 "w-8 h-8",
-                isDark ? "text-purple-400" : "text-gray-500"
+                isDark ? "text-purple-400" : "text-gray-500",
               )}
             />
           </div>
           <h3
             className={clsx(
               "text-[1.8em] font-bold mb-2",
-              isDark ? "text-white" : "text-gray-600"
+              isDark ? "text-white" : "text-gray-600",
             )}
           >
-            {t("topCountries")}
+            {t("topCountries.title")}
           </h3>
           <p
             className={clsx(
               "text-[1.3em] mb-4 text-center px-4",
-              isDark ? "text-gray-300" : "text-gray-500"
+              isDark ? "text-gray-300" : "text-gray-500",
             )}
           >
             {requiredLevel ? (
               <>
-                🔓 Unlock di Level{" "}
+                {t("topCountries.unlockAtLevel")}{" "}
                 <span
                   className={clsx(
                     "font-bold",
-                    isDark ? "text-purple-400" : "text-purple-600"
+                    isDark ? "text-purple-400" : "text-purple-600",
                   )}
                 >
                   {requiredLevel}
                 </span>
               </>
             ) : (
-              "Upgrade level kamu untuk unlock fitur ini"
+              t("topCountries.upgradeToUnlock")
             )}
           </p>
         </div>
@@ -131,7 +131,7 @@ export default function TopCountriesCard({
         <div
           className={clsx(
             "pointer-events-none",
-            isDark ? "opacity-20" : "opacity-30 grayscale"
+            isDark ? "opacity-20" : "opacity-30 grayscale",
           )}
         >
           <div className="flex items-center gap-3 mb-5">
@@ -140,7 +140,7 @@ export default function TopCountriesCard({
             </div>
             <div>
               <h3 className="text-[1.6em] font-bold text-shortblack">
-                {t("topCountries")}
+                {t("topCountries.title")}
               </h3>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function TopCountriesCard({
                 key={i}
                 className={clsx(
                   "h-12 rounded-xl",
-                  isDark ? "bg-subcard" : "bg-gray-100"
+                  isDark ? "bg-subcard" : "bg-gray-100",
                 )}
               />
             ))}
@@ -170,9 +170,11 @@ export default function TopCountriesCard({
           </div>
           <div>
             <h3 className="text-[1.6em] font-bold text-shortblack">
-              {t("topCountries")}
+              {t("topCountries.title")}
             </h3>
-            <p className="text-[1.1em] text-grays">Traffic by region</p>
+            <p className="text-[1.1em] text-grays">
+              {t("topCountries.subtitle")}
+            </p>
           </div>
         </div>
 
@@ -194,8 +196,12 @@ export default function TopCountriesCard({
         ) : data.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <Globe className="w-12 h-12 text-gray-200 mb-3" />
-            <p className="text-grays text-[1.3em]">Belum ada data traffic</p>
-            <p className="text-gray-400 text-[1.1em]">Mulai share link kamu!</p>
+            <p className="text-grays text-[1.3em]">
+              {t("topCountries.noData")}
+            </p>
+            <p className="text-gray-400 text-[1.1em]">
+              {t("topCountries.startSharing")}
+            </p>
           </div>
         ) : (
           <div
@@ -216,7 +222,7 @@ export default function TopCountriesCard({
                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[1.1em] font-bold",
                     index < 3
                       ? `bg-gradient-to-br ${getRankStyle(index)} shadow-md`
-                      : "bg-subcard text-bluelight"
+                      : "bg-subcard text-bluelight",
                   )}
                 >
                   {index + 1}
@@ -245,7 +251,7 @@ export default function TopCountriesCard({
                     <motion.div
                       className={clsx(
                         "h-full rounded-full bg-gradient-to-r",
-                        getBarColor(index)
+                        getBarColor(index),
                       )}
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.max(country.percentage, 2)}%` }}

@@ -102,7 +102,9 @@ export default function TopPerformingLinksCard({
             onClick={() => setIsSortOpen(!isSortOpen)}
             className="flex items-center gap-2 text-[1.3em] bg-blues font-medium text-bluelight transition-colors px-3 py-1.5 rounded-lg hover:bg-blue-dashboard"
           >
-            {sortBy === "highest" ? "Teratas" : "Terbawah"}
+            {sortBy === "highest"
+              ? t("topLinks.highest")
+              : t("topLinks.lowest")}
             <ChevronDown
               className={`w-4 h-4 transition-transform ${
                 isSortOpen ? "rotate-180" : ""
@@ -126,10 +128,11 @@ export default function TopPerformingLinksCard({
                     "flex items-center gap-2 w-full text-left text-[1.3em] px-3 py-2 rounded-lg transition-colors",
                     sortBy === "highest"
                       ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
-                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
+                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out",
                   )}
                 >
-                  <ArrowUpWideNarrow className="w-4 h-4" /> Teratas
+                  <ArrowUpWideNarrow className="w-4 h-4" />{" "}
+                  {t("topLinks.highest")}
                 </button>
                 <button
                   onClick={() => {
@@ -140,10 +143,11 @@ export default function TopPerformingLinksCard({
                     "flex items-center gap-2 w-full text-left text-[1.3em] px-3 py-2 rounded-lg transition-colors",
                     sortBy === "lowest"
                       ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
-                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out"
+                      : "dark:text-grays hover:dark:text-tx-blue-dashboard hover:bg-subcard transition-colors duration-300 ease-in-out",
                   )}
                 >
-                  <ArrowDownWideNarrow className="w-4 h-4" /> Terbawah
+                  <ArrowDownWideNarrow className="w-4 h-4" />{" "}
+                  {t("topLinks.lowest")}
                 </button>
               </motion.div>
             )}
@@ -167,9 +171,7 @@ export default function TopPerformingLinksCard({
                 key={link.id}
                 className={clsx(
                   "transition-all duration-200 rounded-2xl relative z-10 mb-2",
-                  expandedId === link.id
-                    ? "bg-subcard"
-                    : "hover:bg-subcard"
+                  expandedId === link.id ? "bg-subcard" : "hover:bg-subcard",
                 )}
               >
                 {/* Main Row */}
@@ -184,10 +186,10 @@ export default function TopPerformingLinksCard({
                       index === 0 && sortBy === "highest"
                         ? "bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-yellow-200"
                         : index === 1 && sortBy === "highest"
-                        ? "bg-gradient-to-br from-slate-300 to-slate-400 shadow-md shadow-slate-200"
-                        : index === 2 && sortBy === "highest"
-                        ? "bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-200"
-                        : "bg-blues"
+                          ? "bg-gradient-to-br from-slate-300 to-slate-400 shadow-md shadow-slate-200"
+                          : index === 2 && sortBy === "highest"
+                            ? "bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-200"
+                            : "bg-blues",
                     )}
                   >
                     {sortBy === "lowest" ? (
@@ -210,7 +212,7 @@ export default function TopPerformingLinksCard({
                         "text-[1.35em] font-semibold truncate transition-colors",
                         expandedId === link.id
                           ? "text-bluelight"
-                          : "text-shortblack group-hover:text-bluelight"
+                          : "text-shortblack group-hover:text-bluelight",
                       )}
                     >
                       {link.title}
@@ -242,7 +244,7 @@ export default function TopPerformingLinksCard({
                     <ChevronDown
                       className={clsx(
                         "w-4 h-4 text-grays transition-transform duration-300",
-                        expandedId === link.id && "rotate-180 text-bluelight"
+                        expandedId === link.id && "rotate-180 text-bluelight",
                       )}
                     />
                   </div>
@@ -265,7 +267,7 @@ export default function TopPerformingLinksCard({
                             <Eye className="w-4 h-4 text-bluelight" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">
-                                Views
+                                {t("topLinks.views")}
                               </span>
                               <span className="text-[1.2em] font-bold text-shortblack">
                                 {link.validViews.toLocaleString()}
@@ -278,7 +280,7 @@ export default function TopPerformingLinksCard({
                             <Coins className="w-4 h-4 text-green-600" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">
-                                Earned
+                                {t("topLinks.earned")}
                               </span>
                               <span className="text-[1.2em] font-bold text-tx-blue-dashboard">
                                 ${link.totalEarnings.toFixed(5)}
@@ -291,7 +293,7 @@ export default function TopPerformingLinksCard({
                             <Megaphone className="w-4 h-4 text-purple-500" />
                             <div className="flex flex-col">
                               <span className="text-[1em] text-grays">
-                                Level
+                                {t("topLinks.level")}
                               </span>
                               <span className="text-[1.2em] font-bold text-shortblack capitalize">
                                 {link.adsLevel}
@@ -325,7 +327,7 @@ export default function TopPerformingLinksCard({
           href="/new-link"
           className="text-[1.3em] font-semibold text-grays hover:text-bluelight flex items-center justify-center gap-1 transition-colors"
         >
-          Lihat Semua Link <ArrowRight className="w-4 h-4" />
+          {t("topLinks.viewAllLinks")} <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </div>

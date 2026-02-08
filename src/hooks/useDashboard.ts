@@ -1,10 +1,11 @@
 // src/hooks/useDashboard.ts
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import * as dashboardService from "@/services/dashboardService";
-import { DASHBOARD_SLIDES } from "@/services/dashboardService";
+import { SLIDE_CONFIGS } from "@/services/dashboardService";
 import type {
   MilestoneData,
   ReferralCardData,
@@ -32,21 +33,34 @@ export const dashboardKeys = {
 
 export function useDashboard(username?: string) {
   const queryClient = useQueryClient();
+  const t = useTranslations("Dashboard");
 
   // Analytics Filter State (still need local state for filters)
   const [analyticsRange, setAnalyticsRange] = useState<TimeRange>("perWeek");
   const [analyticsStat, setAnalyticsStat] = useState<StatType>("totalViews");
 
-  // 1. Slides - Create personalized slides with username
-  const slides: DashboardSlide[] = DASHBOARD_SLIDES.map((slide) => {
-    if (slide.id === "welcome" && username) {
+  // 1. Slides - Create personalized slides with translations
+  const slides: DashboardSlide[] = useMemo(() => {
+    return SLIDE_CONFIGS.map((config) => {
+      // Get translated content for this slide
+      let title = t(`slides.${config.id}.title`);
+
+      // For welcome slide, use titleWithName if username is available
+      if (config.id === "welcome" && username) {
+        title = t(`slides.${config.id}.titleWithName`, { name: username });
+      }
+
       return {
-        ...slide,
-        title: `Selamat Datang, ${username}! 🤗`,
+        id: config.id,
+        title,
+        desc: t(`slides.${config.id}.desc`),
+        cta: t(`slides.${config.id}.cta`),
+        link: config.link,
+        icon: config.icon,
+        theme: config.theme,
       };
-    }
-    return slide;
-  });
+    });
+  }, [t, username]);
 
   // 2. Milestone Query
   const { data: milestone } = useQuery({
@@ -97,7 +111,7 @@ export function useDashboard(username?: string) {
 
   return {
     // Data
-    slides, // Hardcoded constant, always available
+    slides, // Now translated and personalized
     milestone: milestone ?? null,
     referralData: referralData ?? null,
     trafficStats: trafficStats ?? null,

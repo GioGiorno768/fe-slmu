@@ -679,6 +679,25 @@
     "title": "Dasbor",
     "myLinks": "Tautan Saya",
     "adsInfo": "Info Iklan",
+    "latestNews": "Info Terbaru",
+    "slides": {
+      "welcome": {
+        "title": "Selamat Datang! 👋",
+        "titleWithName": "Selamat Datang, {name}! 🤗",
+        "desc": "Semoga harimu menyenangkan. Yuk cek performa link kamu dan tingkatkan trafik hari ini!",
+        "cta": "Buat Link Baru"
+      },
+      "event": {
+        "title": "Bonus CPM Weekend! 🚀",
+        "desc": "Dapatkan kenaikan CPM +15% untuk semua traffic dari Indonesia khusus Sabtu & Minggu ini.",
+        "cta": "Lihat Info"
+      },
+      "feature": {
+        "title": "Withdraw via Crypto 💎",
+        "desc": "Kabar gembira! Sekarang kamu bisa menarik saldo ke wallet USDT (TRC20) dengan fee rendah.",
+        "cta": "Atur Payment"
+      }
+    },
     "createLink": "Buat Tautan",
     "subs4unlock": "Subs4unlock.id",
     "analytics": "Analitik",
@@ -706,8 +725,34 @@
     "allDetails": "Semua Detail",
     "targetClicksAchieved": "Target Klik Tercapai",
     "clickAnalytics": "Analitik Klik",
+    "milestone": {
+      "currentRank": "Peringkat Saat Ini",
+      "cpmBonus": "Bonus CPM",
+      "earnings": "Pendapatan",
+      "target": "Target",
+      "moreToUnlock": "lagi untuk membuka",
+      "next": "Berikutnya",
+      "viewLevels": "Lihat Level"
+    },
     "monthly": "Bulanan",
     "topPerformingLinks": "Tautan Performa Terbaik",
+    "topLinks": {
+      "highest": "Teratas",
+      "lowest": "Terbawah",
+      "views": "Tampilan",
+      "earned": "Pendapatan",
+      "level": "Level",
+      "viewAllLinks": "Lihat Semua Link"
+    },
+    "topCountries": {
+      "title": "Negara Teratas",
+      "subtitle": "Traffic berdasarkan wilayah",
+      "detail": "Detail",
+      "unlockAtLevel": "🔓 Unlock di Level",
+      "upgradeToUnlock": "Upgrade level kamu untuk unlock fitur ini",
+      "noData": "Belum ada data traffic",
+      "startSharing": "Mulai share link kamu!"
+    },
     "latest": "Terbaru",
     "topEarning": "Pendapatan Tertinggi",
     "allTime": "Semua Waktu",
@@ -731,13 +776,22 @@
     "levelMythic": "Mythic",
     "referralTitle": "Referral",
     "referralSubtitle": "Dapat 20% komisi dari pendapatan temanmu",
+    "referralCard": {
+      "subtitle": "Ajak teman, dapat komisi!",
+      "referralLink": "Link Referral",
+      "copyLink": "Salin Link",
+      "copied": "Tersalin!",
+      "shareTitle": "Bergabung di Shortlinkmu",
+      "shareText": "Daftar dan dapatkan penghasilan tambahan!",
+      "viewDetails": "Lihat Detail",
+      "viewAllReferrals": "Lihat semua detail referral"
+    },
     "copy": "Salin",
     "copied": "Tersalin!",
     "share": "Bagikan",
     "contact": "Kontak",
     "avgCPM": "CPM Rata-rata",
     "analyticsDescription": "Lihat performa link, pendapatan, dan statistik klik Anda.",
-    "topCountries": "Negara Teratas",
     "topReferrers": "Referrer Teratas",
     "direct": "Langsung",
     "createShortlink": "Buat Shortlink",
@@ -875,6 +929,23 @@
       "linksSelected": "tautan dipilih",
       "disableSelected": "Nonaktifkan Terpilih",
       "deleteSelected": "Hapus Terpilih"
+    }
+  },
+  "AdsInfo": {
+    "title": "Konfigurasi Level Iklan",
+    "subtitle": "Pilih level iklan yang sesuai dengan strategi traffic Anda. Sesuaikan keseimbangan antara kenyamanan pengunjung dan pendapatan maksimal.",
+    "locked": "Terkunci",
+    "mostPopular": "PALING POPULER",
+    "revenue": "Revenue",
+    "unlockAtLevel": "🔓 Unlock di Level",
+    "viewDemo": "Lihat Demo",
+    "infoTitle": "Info Penting buat Admin",
+    "infoDesc": "Fitur dan persentase revenue di atas diambil dari API. Nanti di halaman admin, lu bisa atur:",
+    "infoList": {
+      "revenueShare": "Persentase Revenue Share untuk tiap level.",
+      "popups": "Jumlah popups per 24 jam.",
+      "adTypes": "Mengaktifkan/menonaktifkan jenis iklan tertentu (Interstitial, Banner, dll).",
+      "demoLink": "Link demo untuk masing-masing level."
     }
   },
   "NotFound": {

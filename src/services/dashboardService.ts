@@ -41,31 +41,29 @@ const apiCall = async <T>(endpoint: string): Promise<T> => {
   return json.data;
 };
 
-// --- SLIDES: HARDCODED (Static, no fetch needed) ---
-export const DASHBOARD_SLIDES: DashboardSlide[] = [
+// --- SLIDES CONFIG: Static configuration only (text comes from translations) ---
+export interface SlideConfig {
+  id: string;
+  link: string;
+  icon: typeof Sparkles;
+  theme: "blue" | "purple" | "orange";
+}
+
+export const SLIDE_CONFIGS: SlideConfig[] = [
   {
     id: "welcome",
-    title: "Selamat Datang! 👋",
-    desc: "Semoga harimu menyenangkan. Yuk cek performa link kamu dan tingkatkan trafik hari ini!",
-    cta: "Buat Link Baru",
     link: "/new-link",
     icon: Sparkles,
     theme: "blue",
   },
   {
     id: "event",
-    title: "Bonus CPM Weekend! 🚀",
-    desc: "Dapatkan kenaikan CPM +15% untuk semua traffic dari Indonesia khusus Sabtu & Minggu ini.",
-    cta: "Lihat Info",
     link: "/levels",
     icon: Megaphone,
     theme: "purple",
   },
   {
     id: "feature",
-    title: "Withdraw via Crypto 💎",
-    desc: "Kabar gembira! Sekarang kamu bisa menarik saldo ke wallet USDT (TRC20) dengan fee rendah.",
-    cta: "Atur Payment",
     link: "/settings#payment",
     icon: Wallet,
     theme: "orange",

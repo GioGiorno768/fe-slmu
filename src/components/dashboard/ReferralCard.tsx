@@ -48,8 +48,8 @@ export default function ReferralCard({ data }: ReferralCardProps) {
     if (navigator.share && data?.referralLink) {
       try {
         await navigator.share({
-          title: "Join Shortlinkmu",
-          text: "Daftar dan dapatkan penghasilan tambahan!",
+          title: t("referralCard.shareTitle"),
+          text: t("referralCard.shareText"),
           url: data.referralLink,
         });
       } catch (err) {
@@ -76,7 +76,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
               {t("referralTitle")}
             </h3>
             <p className="text-[1.1em] text-bluelight">
-              Ajak teman, dapat komisi!
+              {t("referralCard.subtitle")}
             </p>
           </div>
         </div>
@@ -106,7 +106,9 @@ export default function ReferralCard({ data }: ReferralCardProps) {
               {/* Link Display */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[1em] text-grays mb-1">Link Referral</p>
+                  <p className="text-[1em] text-grays mb-1">
+                    {t("referralCard.referralLink")}
+                  </p>
                   <div className="flex items-center gap-2 bg-card rounded-xl px-4 py-3 border border-gray-dashboard/30">
                     <input
                       type="text"
@@ -121,7 +123,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
                         "shrink-0 p-2 rounded-lg transition-all duration-200",
                         isCopied
                           ? "bg-green-500/20 text-green-400"
-                          : "bg-subcard text-bluelight hover:bg-gray-dashboard/50"
+                          : "bg-subcard text-bluelight hover:bg-gray-dashboard/50",
                       )}
                     >
                       {isCopied ? (
@@ -144,19 +146,19 @@ export default function ReferralCard({ data }: ReferralCardProps) {
                     isCopied
                       ? "bg-green-500 text-white"
                       : isDark
-                      ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-white hover:opacity-90 shadow-lg shadow-lightpurple-dashboard/50"
-                      : "bg-bluelight text-white hover:bg-bluelight/90 shadow-lg shadow-blue-200"
+                        ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-white hover:opacity-90 shadow-lg shadow-lightpurple-dashboard/50"
+                        : "bg-bluelight text-white hover:bg-bluelight/90 shadow-lg shadow-blue-200",
                   )}
                 >
                   {isCopied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>Tersalin!</span>
+                      <span>{t("referralCard.copied")}</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      <span>Salin Link</span>
+                      <span>{t("referralCard.copyLink")}</span>
                     </>
                   )}
                 </button>
@@ -172,7 +174,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
                 <Link
                   href="/referral"
                   className="p-3 rounded-xl bg-subcard text-grays hover:text-bluelight hover:bg-gray-dashboard/50 transition-colors"
-                  title="Lihat Detail"
+                  title={t("referralCard.viewDetails")}
                 >
                   <ExternalLink className="w-5 h-5" />
                 </Link>
@@ -189,7 +191,7 @@ export default function ReferralCard({ data }: ReferralCardProps) {
           className="flex items-center justify-center gap-2 group"
         >
           <span className="text-[1.2em] text-grays group-hover:text-bluelight transition-colors">
-            Lihat semua detail referral
+            {t("referralCard.viewAllReferrals")}
           </span>
           <ArrowRight className="w-4 h-4 text-grays group-hover:text-bluelight group-hover:translate-x-1 transition-all" />
         </Link>

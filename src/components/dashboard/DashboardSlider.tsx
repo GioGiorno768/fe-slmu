@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Loader2 } from "lucide-react"; // Icon lain dihapus karena dikirim via props
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import clsx from "clsx";
 import type { DashboardSlide } from "@/types/type"; // Import tipe yang tadi
 import { useUser } from "@/hooks/useUser";
@@ -39,6 +40,7 @@ const getTheme = (theme: string) => {
 
 // Terima props 'slides'
 export default function DashboardSlider({ slides }: DashboardSliderProps) {
+  const t = useTranslations("Dashboard");
   const { user } = useUser(); // 1. Ambil data user
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -127,7 +129,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
           className={clsx(
             "absolute inset-0 w-full h-full p-8 flex flex-col justify-center rounded-3xl",
             theme.bg,
-            theme.text
+            theme.text,
           )}
         >
           {/* Dekorasi Desktop */}
@@ -144,7 +146,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-[1.2em] font-medium bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm border border-white/10">
-                  Info Terbaru
+                  {t("latestNews")}
                 </span>
               </div>
 
@@ -160,7 +162,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
                   href={currentSlide.link}
                   className={clsx(
                     "inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-[1.4em] transition-transform active:scale-95 shadow-md",
-                    theme.button
+                    theme.button,
                   )}
                 >
                   {formatText(currentSlide.cta)}
@@ -185,7 +187,7 @@ export default function DashboardSlider({ slides }: DashboardSliderProps) {
             onClick={() => goToSlide(i)}
             className={clsx(
               "w-3 h-3 rounded-full transition-all duration-300",
-              i === index ? "bg-white w-8" : "bg-white/40 hover:bg-white/70"
+              i === index ? "bg-white w-8" : "bg-white/40 hover:bg-white/70",
             )}
             aria-label={`Go to slide ${i + 1}`}
           />

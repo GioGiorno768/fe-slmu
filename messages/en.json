@@ -678,6 +678,25 @@
   "Dashboard": {
     "title": "Dashboard",
     "adsInfo": "Ads Info",
+    "latestNews": "Latest News",
+    "slides": {
+      "welcome": {
+        "title": "Welcome! 👋",
+        "titleWithName": "Welcome, {name}! 🤗",
+        "desc": "Have a great day. Check your link performance and boost your traffic today!",
+        "cta": "Create New Link"
+      },
+      "event": {
+        "title": "Weekend CPM Bonus! 🚀",
+        "desc": "Get +15% CPM boost for all traffic from Indonesia this Saturday & Sunday.",
+        "cta": "View Info"
+      },
+      "feature": {
+        "title": "Withdraw via Crypto 💎",
+        "desc": "Great news! You can now withdraw to USDT (TRC20) wallet with low fees.",
+        "cta": "Setup Payment"
+      }
+    },
     "myLinks": "My Links",
     "createLink": "Create Link",
     "subs4unlock": "Subs4unlock.id",
@@ -706,8 +725,34 @@
     "allDetails": "All Details",
     "targetClicksAchieved": "Target Clicks Achieved",
     "clickAnalytics": "Click Analytics",
+    "milestone": {
+      "currentRank": "Current Rank",
+      "cpmBonus": "CPM Bonus",
+      "earnings": "Earnings",
+      "target": "Target",
+      "moreToUnlock": "more to unlock",
+      "next": "Next",
+      "viewLevels": "View Levels"
+    },
     "monthly": "Monthly",
     "topPerformingLinks": "Top Performing Links",
+    "topLinks": {
+      "highest": "Highest",
+      "lowest": "Lowest",
+      "views": "Views",
+      "earned": "Earned",
+      "level": "Level",
+      "viewAllLinks": "View All Links"
+    },
+    "topCountries": {
+      "title": "Top Countries",
+      "subtitle": "Traffic by region",
+      "detail": "Detail",
+      "unlockAtLevel": "🔓 Unlock at Level",
+      "upgradeToUnlock": "Upgrade your level to unlock this feature",
+      "noData": "No traffic data yet",
+      "startSharing": "Start sharing your links!"
+    },
     "latest": "Latest",
     "topEarning": "Top Earning",
     "allTime": "All Time",
@@ -731,13 +776,22 @@
     "levelMythic": "Mythic",
     "referralTitle": "Referral",
     "referralSubtitle": "Get 20% commission from your friends earnings",
+    "referralCard": {
+      "subtitle": "Invite friends, earn commission!",
+      "referralLink": "Referral Link",
+      "copyLink": "Copy Link",
+      "copied": "Copied!",
+      "shareTitle": "Join Shortlinkmu",
+      "shareText": "Register and earn extra income!",
+      "viewDetails": "View Details",
+      "viewAllReferrals": "View all referral details"
+    },
     "copy": "Copy",
     "copied": "Copied!",
     "share": "Share",
     "contact": "Contact",
     "avgCPM": "Average CPM",
     "analyticsDescription": "View your link performance, earnings, and click statistics.",
-    "topCountries": "Top Countries",
     "topReferrers": "Top Referrers",
     "direct": "Direct",
     "createShortlink": "Create Shortlink",
@@ -875,6 +929,23 @@
       "linksSelected": "links selected",
       "disableSelected": "Disable Selected",
       "deleteSelected": "Delete Selected"
+    }
+  },
+  "AdsInfo": {
+    "title": "Ad Level Configuration",
+    "subtitle": "Choose the ad level that suits your traffic strategy. Balance between visitor comfort and maximum revenue.",
+    "locked": "Locked",
+    "mostPopular": "MOST POPULAR",
+    "revenue": "Revenue",
+    "unlockAtLevel": "🔓 Unlock at Level",
+    "viewDemo": "View Demo",
+    "infoTitle": "Important Info for Admin",
+    "infoDesc": "The features and revenue percentages above are fetched from the API. In the admin panel, you can configure:",
+    "infoList": {
+      "revenueShare": "Revenue Share percentage for each level.",
+      "popups": "Number of popups per 24 hours.",
+      "adTypes": "Enable/disable certain ad types (Interstitial, Banner, etc).",
+      "demoLink": "Demo link for each level."
     }
   },
   "NotFound": {

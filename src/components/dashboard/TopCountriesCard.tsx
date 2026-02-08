@@ -86,7 +86,7 @@ export default function TopCountriesCard({
               isDark ? "text-white" : "text-gray-600",
             )}
           >
-            Top Countries
+            {t("topCountries.title")}
           </h3>
           <p
             className={clsx(
@@ -96,7 +96,7 @@ export default function TopCountriesCard({
           >
             {requiredLevel ? (
               <>
-                🔓 Unlock di Level{" "}
+                {t("topCountries.unlockAtLevel")}{" "}
                 <span
                   className={clsx(
                     "font-bold",
@@ -107,7 +107,7 @@ export default function TopCountriesCard({
                 </span>
               </>
             ) : (
-              "Upgrade level kamu untuk unlock fitur ini"
+              t("topCountries.upgradeToUnlock")
             )}
           </p>
         </div>
@@ -125,7 +125,7 @@ export default function TopCountriesCard({
             </div>
             <div>
               <h3 className="text-[1.6em] font-bold text-shortblack">
-                Top Countries
+                {t("topCountries.title")}
               </h3>
             </div>
           </div>
@@ -155,16 +155,18 @@ export default function TopCountriesCard({
           </div>
           <div>
             <h3 className="text-[1.6em] font-bold text-shortblack">
-              Top Countries
+              {t("topCountries.title")}
             </h3>
-            <p className="text-[1.1em] text-grays">Traffic by region</p>
+            <p className="text-[1.1em] text-grays">
+              {t("topCountries.subtitle")}
+            </p>
           </div>
         </div>
         <Link
           href="/analytics#countries"
           className="flex items-center gap-1 text-[1.2em] text-bluelight hover:underline font-medium group"
         >
-          <span>Detail</span>
+          <span>{t("topCountries.detail")}</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
@@ -178,8 +180,12 @@ export default function TopCountriesCard({
         ) : data.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <Globe className="w-12 h-12 text-gray-200 mb-3" />
-            <p className="text-grays text-[1.3em]">Belum ada data traffic</p>
-            <p className="text-gray-400 text-[1.1em]">Mulai share link kamu!</p>
+            <p className="text-grays text-[1.3em]">
+              {t("topCountries.noData")}
+            </p>
+            <p className="text-gray-400 text-[1.1em]">
+              {t("topCountries.startSharing")}
+            </p>
           </div>
         ) : (
           <div

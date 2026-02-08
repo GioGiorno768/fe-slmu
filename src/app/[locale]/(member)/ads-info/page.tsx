@@ -19,6 +19,7 @@ import clsx from "clsx";
 import { useAdsInfo } from "@/hooks/useAdsInfo";
 import { useFeatureLocks } from "@/hooks/useFeatureLocks";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 // Helper Styles - returns different colors based on theme
 const getThemeStyles = (theme: string, isDark: boolean) => {
@@ -85,6 +86,7 @@ export default function AdsInfoPage() {
   const { levels, isLoading, error } = useAdsInfo();
   const { isAdLevelUnlocked } = useFeatureLocks();
   const { theme } = useTheme();
+  const t = useTranslations("AdsInfo");
 
   // Prevent hydration mismatch - wait for client-side
   const [mounted, setMounted] = useState(false);
@@ -121,12 +123,9 @@ export default function AdsInfoPage() {
     <div className="lg:text-[10px] text-[8px] font-figtree pb-10">
       {/* Header Page */}
       <div className="text-center mb-12 space-y-4">
-        <h1 className="text-[3em] font-bold text-shortblack">
-          Konfigurasi Level Iklan
-        </h1>
+        <h1 className="text-[3em] font-bold text-shortblack">{t("title")}</h1>
         <p className="text-[1.6em] text-grays max-w-2xl mx-auto">
-          Pilih level iklan yang sesuai dengan strategi traffic Anda. Sesuaikan
-          keseimbangan antara kenyamanan pengunjung dan pendapatan maksimal.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -157,12 +156,12 @@ export default function AdsInfoPage() {
                     ? "border-bluelight shadow-xl shadow-lightpurple-dashboard/30 scale-105 z-10"
                     : "border-bluelight shadow-xl shadow-blue-100 scale-105 z-10"
                   : isLocked
-                  ? isDark
-                    ? "border-lightpurple-dashboard/30 shadow-sm"
-                    : "border-gray-200 shadow-sm"
-                  : isDark
-                  ? "border-gray-dashboard/50 shadow-sm hover:shadow-lg hover:-translate-y-1"
-                  : "border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1"
+                    ? isDark
+                      ? "border-lightpurple-dashboard/30 shadow-sm"
+                      : "border-gray-200 shadow-sm"
+                    : isDark
+                      ? "border-gray-dashboard/50 shadow-sm hover:shadow-lg hover:-translate-y-1"
+                      : "border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1",
               )}
             >
               {/* Locked Overlay - Purple-tinted for dark mode */}
@@ -172,7 +171,7 @@ export default function AdsInfoPage() {
                     "absolute inset-0 rounded-3xl z-10 pointer-events-none",
                     isDark
                       ? "bg-gradient-to-b from-[#1c133a]/90 via-transparent to-transparent"
-                      : "bg-gradient-to-b from-gray-100/80 via-transparent to-transparent"
+                      : "bg-gradient-to-b from-gray-100/80 via-transparent to-transparent",
                   )}
                 />
               )}
@@ -184,11 +183,11 @@ export default function AdsInfoPage() {
                     "absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full text-[1.2em] font-semibold shadow-md tracking-wide flex items-center gap-2 z-20",
                     isDark
                       ? "bg-lightpurple-dashboard text-white"
-                      : "bg-gray-600 text-white"
+                      : "bg-gray-600 text-white",
                   )}
                 >
                   <Lock className="w-3 h-3" />
-                  <span>Terkunci</span>
+                  <span>{t("locked")}</span>
                 </div>
               )}
 
@@ -199,10 +198,10 @@ export default function AdsInfoPage() {
                     "absolute -top-4 left-1/2 -translate-x-1/2 text-white px-4 py-1 rounded-full text-[1.2em] font-semibold shadow-md tracking-wide",
                     isDark
                       ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient"
-                      : "bg-bluelight"
+                      : "bg-bluelight",
                   )}
                 >
-                  MOST POPULAR
+                  {t("mostPopular")}
                 </div>
               )}
 
@@ -210,13 +209,13 @@ export default function AdsInfoPage() {
               <div
                 className={clsx(
                   "mb-6 text-center",
-                  isLocked && !isDark && "grayscale"
+                  isLocked && !isDark && "grayscale",
                 )}
               >
                 <div
                   className={clsx(
                     "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4",
-                    themeStyle.bg
+                    themeStyle.bg,
                   )}
                 >
                   <LevelIcon className={clsx("w-8 h-8", themeStyle.text)} />
@@ -234,7 +233,7 @@ export default function AdsInfoPage() {
                 className={clsx(
                   "mb-8 p-4 rounded-xl text-center",
                   isDark ? "bg-subcard" : "bg-slate-50",
-                  isLocked && !isDark && "grayscale"
+                  isLocked && !isDark && "grayscale",
                 )}
               >
                 <div className="flex justify-center items-baseline gap-1">
@@ -242,7 +241,7 @@ export default function AdsInfoPage() {
                     {level.revenueShare}%
                   </span>
                   <span className="text-[1.4em] text-grays font-medium">
-                    Revenue
+                    {t("revenue")}
                   </span>
                 </div>
               </div>
@@ -251,7 +250,7 @@ export default function AdsInfoPage() {
               <ul
                 className={clsx(
                   "space-y-4 mb-8 flex-1",
-                  isLocked && !isDark && "grayscale"
+                  isLocked && !isDark && "grayscale",
                 )}
               >
                 {level.features.map((feature, i) => (
@@ -260,14 +259,14 @@ export default function AdsInfoPage() {
                       <Check
                         className={clsx(
                           "w-5 h-5 flex-shrink-0 mt-0.5",
-                          isDark ? "text-green-400" : "text-green-500"
+                          isDark ? "text-green-400" : "text-green-500",
                         )}
                       />
                     ) : (
                       <XIcon
                         className={clsx(
                           "w-5 h-5 flex-shrink-0 mt-0.5",
-                          isDark ? "text-gray-600" : "text-gray-300"
+                          isDark ? "text-gray-600" : "text-gray-300",
                         )}
                       />
                     )}
@@ -277,8 +276,8 @@ export default function AdsInfoPage() {
                           feature.included
                             ? "text-shortblack"
                             : isDark
-                            ? "text-gray-500"
-                            : "text-gray-400"
+                              ? "text-gray-500"
+                              : "text-gray-400"
                         }
                       >
                         {feature.label}
@@ -300,16 +299,16 @@ export default function AdsInfoPage() {
                     "mb-4 py-3 px-4 rounded-xl text-center border",
                     isDark
                       ? "bg-lightpurple-dashboard/20 border-lightpurple-dashboard/30"
-                      : "bg-amber-50 border-amber-200"
+                      : "bg-amber-50 border-amber-200",
                   )}
                 >
                   <p
                     className={clsx(
                       "text-[1.3em] font-medium",
-                      isDark ? "text-purple-300" : "text-amber-700"
+                      isDark ? "text-purple-300" : "text-amber-700",
                     )}
                   >
-                    🔓 Unlock di Level{" "}
+                    {t("unlockAtLevel")}{" "}
                     <span className="font-bold">{requiredLevel}</span>
                   </p>
                 </div>
@@ -327,11 +326,11 @@ export default function AdsInfoPage() {
                       ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-white hover:opacity-90 shadow-lg shadow-lightpurple-dashboard/50"
                       : "bg-bluelight text-white hover:bg-opacity-90 shadow-lg shadow-blue-200"
                     : isDark
-                    ? "bg-subcard border-2 border-gray-dashboard/30 text-shortblack hover:border-bluelight hover:text-bluelight"
-                    : "bg-white border-2 border-gray-200 text-shortblack hover:border-bluelight hover:text-bluelight"
+                      ? "bg-subcard border-2 border-gray-dashboard/30 text-shortblack hover:border-bluelight hover:text-bluelight"
+                      : "bg-white border-2 border-gray-200 text-shortblack hover:border-bluelight hover:text-bluelight",
                 )}
               >
-                <span>Lihat Demo</span>
+                <span>{t("viewDemo")}</span>
                 <ExternalLink className="w-4 h-4" />
               </a>
             </motion.div>
@@ -345,26 +344,20 @@ export default function AdsInfoPage() {
           "mt-16 p-8 rounded-2xl flex items-start gap-4 border",
           isDark
             ? "bg-subcard border-gray-dashboard/30"
-            : "bg-blue-dashboard border-bluelight/20"
+            : "bg-blue-dashboard border-bluelight/20",
         )}
       >
         <Info className="w-8 h-8 text-bluelight flex-shrink-0 mt-1" />
         <div>
           <h3 className="text-[1.6em] font-bold text-shortblack mb-2">
-            Info Penting buat Admin
+            {t("infoTitle")}
           </h3>
-          <p className="text-[1.4em] text-grays">
-            Fitur dan persentase revenue di atas diambil dari API. Nanti di
-            halaman admin, lu bisa atur:
-          </p>
+          <p className="text-[1.4em] text-grays">{t("infoDesc")}</p>
           <ul className="list-disc list-inside mt-2 text-[1.4em] text-grays ml-2 space-y-1">
-            <li>Persentase Revenue Share untuk tiap level.</li>
-            <li>Jumlah popups per 24 jam.</li>
-            <li>
-              Mengaktifkan/menonaktifkan jenis iklan tertentu (Interstitial,
-              Banner, dll).
-            </li>
-            <li>Link demo untuk masing-masing level.</li>
+            <li>{t("infoList.revenueShare")}</li>
+            <li>{t("infoList.popups")}</li>
+            <li>{t("infoList.adTypes")}</li>
+            <li>{t("infoList.demoLink")}</li>
           </ul>
         </div>
       </div>
