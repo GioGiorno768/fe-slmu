@@ -11,6 +11,7 @@ import {
 import type { ReferralStats } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 interface ReferralStatsGridProps {
   stats: ReferralStats | null;
@@ -18,6 +19,7 @@ interface ReferralStatsGridProps {
 
 export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
 
   const maxReferrals = stats?.maxReferrals ?? 10;
   const isLimitReached = stats?.isLimitReached ?? false;
@@ -25,9 +27,9 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
   const statsData = [
     {
       icon: DollarSign,
-      label: "Pendapatan Referral",
+      label: t("referralPage.referralEarnings"),
       value: formatCurrency(stats?.totalEarnings || 0),
-      subLabel: "Total komisi",
+      subLabel: t("referralPage.totalCommission"),
       gradient: "from-emerald-500 to-teal-600",
       bgLight: "bg-emerald-500/20",
       shadowColor: "shadow-emerald-200 dark:shadow-emerald-900/30",
@@ -36,9 +38,11 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
     },
     {
       icon: Users,
-      label: "Total Diundang",
+      label: t("referralPage.totalInvited"),
       value: `${stats?.totalReferred || 0} / ${maxReferrals}`,
-      subLabel: isLimitReached ? "Limit tercapai!" : "User terdaftar",
+      subLabel: isLimitReached
+        ? t("referralPage.limitReached")
+        : t("referralPage.registeredUsers"),
       gradient: isLimitReached
         ? "from-amber-500 to-orange-600"
         : "from-blue-500 to-indigo-600",
@@ -56,9 +60,9 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
     },
     {
       icon: Activity,
-      label: "User Aktif",
+      label: t("referralPage.activeUsers"),
       value: `${stats?.activeReferred || 0}`,
-      subLabel: "Menghasilkan komisi",
+      subLabel: t("referralPage.generatingCommission"),
       gradient: "from-orange-500 to-amber-600",
       bgLight: "bg-orange-500/20",
       shadowColor: "shadow-orange-200 dark:shadow-orange-900/30",
@@ -80,7 +84,7 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
             className={clsx(
               "relative bg-card p-6 rounded-3xl shadow-sm border overflow-hidden",
               "hover:shadow-lg hover:-translate-y-1 transition-all duration-200",
-              stat.borderColor
+              stat.borderColor,
             )}
           >
             {/* Background decoration */}
@@ -88,7 +92,7 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
               <div
                 className={clsx(
                   "w-full h-full rounded-full bg-gradient-to-br",
-                  stat.gradient
+                  stat.gradient,
                 )}
               />
             </div>
@@ -98,7 +102,7 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
               <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span className="text-[1em] font-medium text-amber-700 dark:text-amber-300">
-                  Upgrade level!
+                  {t("referralPage.upgradeRank")}
                 </span>
               </div>
             )}
@@ -109,7 +113,7 @@ export default function ReferralStatsGrid({ stats }: ReferralStatsGridProps) {
                 className={clsx(
                   "w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br",
                   stat.gradient,
-                  stat.shadowColor
+                  stat.shadowColor,
                 )}
               >
                 <Icon className="w-7 h-7 text-white" />

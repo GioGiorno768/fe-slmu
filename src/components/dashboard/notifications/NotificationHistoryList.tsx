@@ -12,6 +12,7 @@ import Pagination from "@/components/dashboard/Pagination";
 import type { NotificationItem } from "@/types/type";
 import clsx from "clsx";
 import { useAlert } from "@/hooks/useAlert";
+import { useLocale, useTranslations } from "next-intl";
 
 export type StatusFilterType = "all" | "unread" | "read";
 
@@ -56,6 +57,9 @@ export default function NotificationHistoryList({
   const isDark = mounted && resolvedTheme === "dark";
 
   const { showAlert } = useAlert();
+  const t = useTranslations("Dashboard");
+  const locale = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
   // State UI lokal
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -63,17 +67,17 @@ export default function NotificationHistoryList({
 
   // Modal states
   const [selectedNotif, setSelectedNotif] = useState<NotificationItem | null>(
-    null
+    null,
   );
   const [deleteTarget, setDeleteTarget] = useState<NotificationItem | null>(
-    null
+    null,
   );
   const [isDeleting, setIsDeleting] = useState(false);
 
   const filters: { id: StatusFilterType; label: string }[] = [
-    { id: "all", label: "Semua Notifikasi" },
-    { id: "unread", label: "Belum Dibaca" },
-    { id: "read", label: "Sudah Dibaca" },
+    { id: "all", label: t("notificationsPage.filterAll") },
+    { id: "unread", label: t("notificationsPage.filterUnread") },
+    { id: "read", label: t("notificationsPage.filterRead") },
   ];
 
   // Combine pinned + regular and filter by search locally (quick filter)
@@ -85,7 +89,7 @@ export default function NotificationHistoryList({
     return combined.filter(
       (n) =>
         n.title.toLowerCase().includes(searchLower) ||
-        n.message.toLowerCase().includes(searchLower)
+        n.message.toLowerCase().includes(searchLower),
     );
   }, [pinnedNotifications, notifications, search]);
 
@@ -93,7 +97,7 @@ export default function NotificationHistoryList({
   const groupedData = useMemo(() => {
     const groups: Record<string, NotificationItem[]> = {};
     allNotifications.forEach((item) => {
-      const date = new Date(item.timestamp).toLocaleDateString("id-ID", {
+      const date = new Date(item.timestamp).toLocaleDateString(dateLocale, {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -140,7 +144,7 @@ export default function NotificationHistoryList({
     setIsDeleting(true);
     try {
       await onDelete(deleteTarget.id);
-      showAlert("Notifikasi berhasil dihapus.", "success");
+      showAlert(t("notificationsPage.deleteSuccess"), "success");
 
       // Close modals
       if (selectedNotif?.id === deleteTarget.id) {
@@ -148,7 +152,7 @@ export default function NotificationHistoryList({
       }
       setDeleteTarget(null);
     } catch {
-      showAlert("Gagal menghapus notifikasi.", "error");
+      showAlert(t("notificationsPage.deleteFailed"), "error");
     } finally {
       setIsDeleting(false);
     }
@@ -163,7 +167,7 @@ export default function NotificationHistoryList({
             "flex flex-col md:flex-row gap-4 justify-between items-start md:items-center p-6 rounded-2xl shadow-sm",
             isDark
               ? "bg-card border border-gray-800"
-              : "bg-white border border-gray-100"
+              : "bg-white border border-gray-100",
           )}
         >
           {/* Search Input */}
@@ -171,14 +175,14 @@ export default function NotificationHistoryList({
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
             <input
               type="text"
-              placeholder="Cari notifikasi..."
+              placeholder={t("notificationsPage.searchPlaceholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={clsx(
                 "w-full pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm",
                 isDark
                   ? "bg-card border border-gray-700"
-                  : "bg-white border border-gray-200"
+                  : "bg-white border border-gray-200",
               )}
             />
           </div>
@@ -191,7 +195,7 @@ export default function NotificationHistoryList({
                 "flex items-center justify-between w-full md:w-[220px] px-4 py-3 rounded-xl text-[1.4em] font-medium text-shortblack transition-colors border focus:ring-2 focus:ring-bluelight/20",
                 isDark
                   ? "bg-subcard border-transparent hover:bg-gray-dashboard/50 focus:border-bluelight"
-                  : "bg-blues border-transparent hover:bg-blue-100/50 focus:border-bluelight"
+                  : "bg-blues border-transparent hover:bg-blue-100/50 focus:border-bluelight",
               )}
             >
               <div className="flex items-center gap-3">
@@ -201,7 +205,7 @@ export default function NotificationHistoryList({
               <ChevronDown
                 className={clsx(
                   "w-5 h-5 text-grays transition-transform duration-200",
-                  isFilterOpen && "rotate-180"
+                  isFilterOpen && "rotate-180",
                 )}
               />
             </button>
@@ -217,7 +221,7 @@ export default function NotificationHistoryList({
                     "absolute top-full left-0 right-0 mt-2 rounded-xl shadow-xl overflow-hidden p-1.5 min-w-[220px]",
                     isDark
                       ? "bg-card border border-gray-800"
-                      : "bg-white border border-gray-100"
+                      : "bg-white border border-gray-100",
                   )}
                 >
                   {filters.map((f) => (
@@ -234,15 +238,15 @@ export default function NotificationHistoryList({
                             ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard font-semibold"
                             : "bg-bluelight/10 text-bluelight font-semibold"
                           : isDark
-                          ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
-                          : "text-shortblack hover:text-bluelight hover:bg-gray-50"
+                            ? "text-grays hover:text-tx-blue-dashboard hover:bg-subcard"
+                            : "text-shortblack hover:text-bluelight hover:bg-gray-50",
                       )}
                     >
                       {statusFilter === f.id && (
                         <span
                           className={clsx(
                             "w-1.5 h-1.5 rounded-full shrink-0",
-                            isDark ? "bg-tx-blue-dashboard" : "bg-bluelight"
+                            isDark ? "bg-tx-blue-dashboard" : "bg-bluelight",
                           )}
                         />
                       )}
@@ -253,7 +257,9 @@ export default function NotificationHistoryList({
                         <Check
                           className={clsx(
                             "w-4 h-4 ml-auto",
-                            isDark ? "text-tx-blue-dashboard" : "text-bluelight"
+                            isDark
+                              ? "text-tx-blue-dashboard"
+                              : "text-bluelight",
                           )}
                         />
                       )}
@@ -269,7 +275,7 @@ export default function NotificationHistoryList({
         <div className="space-y-6 min-h-[400px]">
           {isLoading ? (
             <div className="text-center py-20 text-[1.4em] text-grays">
-              Loading notifications...
+              {t("notificationsPage.loading")}
             </div>
           ) : allNotifications.length > 0 ? (
             <>
@@ -284,7 +290,7 @@ export default function NotificationHistoryList({
                   <div
                     className={clsx(
                       "sticky top-[80px] z-10 py-4 backdrop-blur-sm mb-4",
-                      isDark ? "bg-background/95" : "bg-slate-50/95"
+                      isDark ? "bg-background/95" : "bg-slate-50/95",
                     )}
                   >
                     <h3 className="text-[1.4em] font-bold text-shortblack uppercase tracking-wider flex items-center gap-3">
@@ -321,24 +327,22 @@ export default function NotificationHistoryList({
               <div
                 className={clsx(
                   "w-24 h-24 rounded-full flex items-center justify-center mb-6 text-gray-400",
-                  isDark ? "bg-gray-800" : "bg-gray-100"
+                  isDark ? "bg-gray-800" : "bg-gray-100",
                 )}
               >
                 <BellOff className="w-10 h-10" />
               </div>
               <h3 className="text-[2em] font-bold text-shortblack mb-2">
-                Tidak ada notifikasi
+                {t("notificationsPage.noNotifications")}
               </h3>
               <p className="text-[1.5em] text-grays max-w-md leading-relaxed">
                 {search
-                  ? `Tidak ada hasil untuk "${search}"`
+                  ? t("notificationsPage.noSearchResults", { query: search })
                   : statusFilter !== "all"
-                  ? `Tidak ada notifikasi ${
-                      statusFilter === "unread"
-                        ? "yang belum dibaca"
-                        : "yang sudah dibaca"
-                    }`
-                  : "Belum ada notifikasi untuk ditampilkan."}
+                    ? statusFilter === "unread"
+                      ? t("notificationsPage.noUnreadNotifs")
+                      : t("notificationsPage.noReadNotifs")
+                    : t("notificationsPage.noNotifsYet")}
               </p>
               {(search || statusFilter !== "all") && (
                 <button
@@ -349,7 +353,7 @@ export default function NotificationHistoryList({
                   }}
                   className="mt-6 text-[1.4em] font-semibold text-bluelight hover:underline"
                 >
-                  Reset Filter
+                  {t("notificationsPage.resetFilter")}
                 </button>
               )}
             </div>

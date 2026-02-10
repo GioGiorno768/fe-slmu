@@ -158,29 +158,35 @@ export default function MassLinkCreator() {
       queryClient.invalidateQueries({ queryKey: ["links"] });
 
       const successCount = mappedResults.filter(
-        (r) => r.status === "success"
+        (r) => r.status === "success",
       ).length;
       const errorCount = mappedResults.filter(
-        (r) => r.status === "error"
+        (r) => r.status === "error",
       ).length;
 
       if (errorCount === 0) {
-        showAlert(`Berhasil membuat ${successCount} shortlink!`, "success");
+        showAlert(
+          t("massLinkCard.successAlert", { count: successCount }),
+          "success",
+        );
       } else {
         showAlert(
-          `${successCount} berhasil, ${errorCount} gagal`,
-          errorCount > successCount ? "error" : "warning"
+          t("massLinkCard.partialAlert", {
+            success: successCount,
+            error: errorCount,
+          }),
+          errorCount > successCount ? "error" : "warning",
         );
       }
     } catch (err: any) {
-      showAlert(err.message || "Gagal membuat shortlinks", "error");
+      showAlert(err.message || t("massLinkCard.errorAlert"), "error");
       // Set all as error
       setResults(
         parsedUrls.map((url) => ({
           original_url: url,
           status: "error",
-          error: "Terjadi kesalahan",
-        }))
+          error: t("massLinkCard.errorOccurred"),
+        })),
       );
     } finally {
       setIsProcessing(false);
@@ -218,10 +224,10 @@ export default function MassLinkCreator() {
             </div>
             <div>
               <h3 className="text-[1.8em] font-bold text-shortblack tracking-tight">
-                Mass Link Creator
+                {t("massLinkCard.title")}
               </h3>
               <p className="text-[1.2em] text-grays mt-0.5">
-                Buat hingga {massLinkLimit} shortlink sekaligus
+                {t("massLinkCard.subtitle", { limit: massLinkLimit })}
               </p>
             </div>
           </div>
@@ -231,7 +237,7 @@ export default function MassLinkCreator() {
               className="flex items-center gap-2 text-[1.2em] font-semibold text-red-500 hover:text-red-600 bg-red-500/10 px-4 py-2 rounded-xl transition-all border border-red-500/20"
             >
               <Trash2 className="w-4 h-4" />
-              Clear
+              {t("massLinkCard.clear")}
             </button>
           )}
         </div>
@@ -241,17 +247,18 @@ export default function MassLinkCreator() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                URLs
+                {t("massLinkCard.urlsLabel")}
               </label>
               <span
                 className={clsx(
                   "text-[1.2em]",
                   parsedUrls.length > massLinkLimit
                     ? "text-red-500"
-                    : "text-grays"
+                    : "text-grays",
                 )}
               >
-                {parsedUrls.length} / {massLinkLimit} URL valid
+                {parsedUrls.length} / {massLinkLimit}{" "}
+                {t("massLinkCard.urlsValid")}
               </span>
             </div>
             <textarea
@@ -265,9 +272,9 @@ export default function MassLinkCreator() {
 
           {/* Ads Level Selection */}
           <div className="flex items-center gap-4">
-            <span className="text-[1.4em] font-medium text-shortblack">
-              Ads Level:
-            </span>
+            {/* <span className="text-[1.4em] font-medium text-shortblack">
+              {t("massLinkCard.adsLevel")}
+            </span> */}
             <div className="relative flex-1 max-w-xs" ref={adsLevelRef}>
               <button
                 type="button"
@@ -278,12 +285,12 @@ export default function MassLinkCreator() {
                 {isLoadingLevels ? (
                   <span className="text-grays flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Loading...
+                    {t("massLinkCard.loading")}
                   </span>
                 ) : (
                   <span className="text-shortblack">
                     {adLevels.find((l) => l.key === adsLevel)?.label ||
-                      "Ads Level"}
+                      t("massLinkCard.adsLevelFallback")}
                   </span>
                 )}
                 <ChevronDown
@@ -312,8 +319,8 @@ export default function MassLinkCreator() {
                           level.isLocked
                             ? "text-gray-400 cursor-not-allowed"
                             : adsLevel === level.key
-                            ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
-                            : "text-shortblack hover:bg-subcard"
+                              ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                              : "text-shortblack hover:bg-subcard"
                         }`}
                       >
                         <span>{level.label}</span>
@@ -351,12 +358,14 @@ export default function MassLinkCreator() {
             {isProcessing ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Processing...</span>
+                <span>{t("massLinkCard.processing")}</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-5 h-5" />
-                <span>Generate {parsedUrls.length} Shortlinks</span>
+                <span>
+                  {t("massLinkCard.generateBtn", { count: parsedUrls.length })}
+                </span>
               </>
             )}
           </button>
@@ -375,17 +384,17 @@ export default function MassLinkCreator() {
             {/* Stats Header */}
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-[1.6em] font-semibold text-shortblack">
-                Hasil Generate
+                {t("massLinkCard.resultsTitle")}
               </h4>
               <div className="flex items-center gap-4 text-[1.3em]">
                 <span className="flex items-center gap-1 text-green-600">
                   <CheckCircle2 className="w-4 h-4" />
-                  {successCount} Sukses
+                  {successCount} {t("massLinkCard.success")}
                 </span>
                 {errorCount > 0 && (
                   <span className="flex items-center gap-1 text-red-500">
                     <XCircle className="w-4 h-4" />
-                    {errorCount} Gagal
+                    {errorCount} {t("massLinkCard.failed")}
                   </span>
                 )}
               </div>
@@ -412,7 +421,7 @@ export default function MassLinkCreator() {
                     result.status === "pending" &&
                       (isDark
                         ? "bg-subcard border-gray-dashboard/30"
-                        : "bg-gray-50 border-gray-200")
+                        : "bg-gray-50 border-gray-200"),
                   )}
                 >
                   <div className="flex items-center justify-between gap-4">

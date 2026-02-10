@@ -9,6 +9,7 @@ import type { SecuritySettings } from "@/types/type";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { useSecurityLogic } from "@/hooks/useSettings";
+import { useTranslations } from "next-intl";
 
 interface SecuritySectionProps {
   initialData: SecuritySettings | null;
@@ -26,9 +27,10 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
 
   const { showAlert } = useAlert();
   const { updatePass, toggle2FAStatus, isUpdating } = useSecurityLogic();
+  const t = useTranslations("Dashboard");
 
   const [is2FAEnabled, setIs2FAEnabled] = useState(
-    initialData?.twoFactorEnabled || false
+    initialData?.twoFactorEnabled || false,
   );
 
   const isSocialLogin = initialData?.isSocialLogin || false;
@@ -47,22 +49,22 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
     e.preventDefault();
 
     if (!isSocialLogin && !passwords.current) {
-      showAlert("Harap isi password saat ini!", "warning");
+      showAlert(t("settingsPage.currentPasswordRequired"), "warning");
       return;
     }
     if (passwords.new !== passwords.confirm) {
-      showAlert("Password baru tidak cocok!", "error");
+      showAlert(t("settingsPage.passwordMismatch"), "error");
       return;
     }
     if (passwords.new.length < 8) {
-      showAlert("Password minimal 8 karakter!", "warning");
+      showAlert(t("settingsPage.passwordMinLength"), "warning");
       return;
     }
 
     const success = await updatePass(
       passwords.current,
       passwords.new,
-      passwords.confirm
+      passwords.confirm,
     );
 
     if (success) {
@@ -88,24 +90,26 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
           "rounded-3xl p-8 shadow-sm",
           isDark
             ? "bg-card border border-gray-800"
-            : "bg-white border border-gray-100"
+            : "bg-white border border-gray-100",
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-2 flex items-center gap-3">
           <Lock className="w-6 h-6 text-bluelight" />
-          {isSocialLogin ? "Set Password" : "Change Password"}
+          {isSocialLogin
+            ? t("settingsPage.setPassword")
+            : t("settingsPage.changePassword")}
         </h2>
         <p className="text-[1.4em] text-grays mb-8">
           {isSocialLogin
-            ? "Karena Anda login via Google, silakan buat password untuk keamanan tambahan."
-            : "Pastikan password Anda kuat dan unik untuk menjaga akun tetap aman."}
+            ? t("settingsPage.socialLoginDesc")
+            : t("settingsPage.passwordDesc")}
         </p>
 
         <form onSubmit={handleSavePassword} className="space-y-6 max-w-2xl">
           {!isSocialLogin && (
             <div className="space-y-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                Current Password
+                {t("settingsPage.currentPassword")}
               </label>
               <div className="relative">
                 <KeyRound className="w-5 h-5 text-grays absolute left-4 top-1/2 -translate-y-1/2" />
@@ -118,7 +122,7 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                     "w-full pl-12 pr-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
                     isDark
                       ? "bg-card border border-gray-700"
-                      : "bg-white border border-gray-200"
+                      : "bg-white border border-gray-200",
                   )}
                   placeholder="••••••••"
                   required={!isSocialLogin}
@@ -130,7 +134,9 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                {isSocialLogin ? "New Password" : "New Password"}
+                {isSocialLogin
+                  ? t("settingsPage.newPassword")
+                  : t("settingsPage.newPassword")}
               </label>
               <input
                 type="password"
@@ -141,16 +147,16 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                   "w-full px-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
                   isDark
                     ? "bg-card border border-gray-700"
-                    : "bg-white border border-gray-200"
+                    : "bg-white border border-gray-200",
                 )}
-                placeholder="Minimum 8 characters"
+                placeholder={t("settingsPage.minChars")}
                 required
                 minLength={8}
               />
             </div>
             <div className="space-y-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                Confirm Password
+                {t("settingsPage.confirmPassword")}
               </label>
               <input
                 type="password"
@@ -161,9 +167,9 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
                   "w-full px-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
                   isDark
                     ? "bg-card border border-gray-700"
-                    : "bg-white border border-gray-200"
+                    : "bg-white border border-gray-200",
                 )}
-                placeholder="Re-type password"
+                placeholder={t("settingsPage.retypePassword")}
                 required
                 minLength={8}
               />
@@ -176,11 +182,13 @@ export default function SecuritySection({ initialData }: SecuritySectionProps) {
               disabled={isUpdating}
               className={clsx(
                 "bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg",
-                isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+                isDark ? "shadow-purple-900/30" : "shadow-blue-200",
               )}
             >
               {isUpdating && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isSocialLogin ? "Create Password" : "Update Password"}
+              {isSocialLogin
+                ? t("settingsPage.createPassword")
+                : t("settingsPage.updatePassword")}
             </button>
           </div>
         </form>

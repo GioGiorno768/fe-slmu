@@ -6,6 +6,7 @@ import { useAlert } from "@/hooks/useAlert";
 import { Loader2, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { NotificationHistoryList } from "@/components/dashboard/notifications";
 import { useNotificationHistory } from "@/hooks/useNotificationHistory";
 
@@ -20,6 +21,7 @@ export default function NotificationsPage() {
   const isDark = mounted && resolvedTheme === "dark";
 
   const { showAlert } = useAlert();
+  const t = useTranslations("Dashboard");
 
   const {
     notifications,
@@ -54,7 +56,7 @@ export default function NotificationsPage() {
           <div
             className={clsx(
               "p-3 rounded-2xl text-bluelight relative",
-              isDark ? "bg-blue-500/20" : "bg-blue-100"
+              isDark ? "bg-blue-500/20" : "bg-blue-100",
             )}
           >
             <Bell className="w-8 h-8" />
@@ -64,10 +66,10 @@ export default function NotificationsPage() {
               </span>
             )}
           </div>
-          Notifikasi
+          {t("notificationsPage.pageTitle")}
         </h1>
         <p className="text-[1.6em] text-grays mt-2 ml-2">
-          Lihat semua notifikasi dan pengumuman penting.
+          {t("notificationsPage.pageDesc")}
         </p>
       </div>
 

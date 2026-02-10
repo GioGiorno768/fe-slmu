@@ -6,6 +6,7 @@ import { Copy, Check, Share2 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 interface ReferralHeaderProps {
   referralLink: string;
@@ -20,6 +21,7 @@ export default function ReferralHeader({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -30,7 +32,7 @@ export default function ReferralHeader({
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
     setIsCopied(true);
-    showAlert("Link referral berhasil disalin!", "success");
+    showAlert(t("referralPage.copySuccess"), "success");
     setTimeout(() => setIsCopied(false), 2000);
   };
 
@@ -38,8 +40,8 @@ export default function ReferralHeader({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Join Shortlinkmu",
-          text: "Daftar dan dapatkan penghasilan tambahan!",
+          title: t("referralPage.shareTitle"),
+          text: t("referralPage.shareText"),
           url: referralLink,
         });
       } catch (err) {
@@ -47,7 +49,7 @@ export default function ReferralHeader({
       }
     } else {
       handleCopy();
-      showAlert("Browser tidak support share, link disalin manual.", "info");
+      showAlert(t("referralPage.browserNoShare"), "info");
     }
   };
 
@@ -62,14 +64,17 @@ export default function ReferralHeader({
       <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
         <div className="text-center lg:text-left space-y-4 max-w-2xl">
           <h1 className="text-[3em] font-bold leading-tight">
-            Ajak Teman, <span className="text-yellow-300">Dapat Cuan!</span>
+            {t("referralPage.title")}{" "}
+            <span className="text-yellow-300">
+              {t("referralPage.titleHighlight")}
+            </span>
           </h1>
           <p className="text-[1.6em] text-blue-100">
-            Dapatkan komisi{" "}
+            {t("referralPage.description")}{" "}
             <span className="font-bold text-white">
-              {commissionRate}% seumur hidup
+              {commissionRate}% {t("referralPage.descriptionRate")}
             </span>{" "}
-            dari setiap penghasilan teman yang Anda undang.
+            {t("referralPage.descriptionEnd")}
           </p>
         </div>
 
@@ -79,7 +84,7 @@ export default function ReferralHeader({
               "px-4 py-3 rounded-xl flex-1 truncate font-medium text-[1.4em]",
               isDark
                 ? "bg-slate-800/80 text-white border border-white/10"
-                : "bg-white text-shortblack"
+                : "bg-white text-shortblack",
             )}
           >
             {referralLink}
@@ -90,9 +95,9 @@ export default function ReferralHeader({
               "p-3 rounded-xl transition-colors",
               isDark
                 ? "bg-slate-700 text-blue-400 hover:bg-slate-600 border border-white/10"
-                : "bg-white text-bluelight hover:bg-blue-50"
+                : "bg-white text-bluelight hover:bg-blue-50",
             )}
-            title="Copy Link"
+            title={t("referralPage.copyLink")}
           >
             {isCopied ? (
               <Check className="w-5 h-5" />
@@ -103,7 +108,7 @@ export default function ReferralHeader({
           <button
             onClick={handleShare}
             className="p-3 bg-bluelight text-white border border-white/30 rounded-xl hover:bg-blue-700 transition-colors"
-            title="Share Link"
+            title={t("referralPage.shareLink")}
           >
             <Share2 className="w-5 h-5" />
           </button>

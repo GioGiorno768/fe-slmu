@@ -18,6 +18,7 @@ import clsx from "clsx";
 import { Link } from "@/i18n/routing";
 import type { PaymentMethod } from "@/types/type";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface WithdrawalMethodCardProps {
   method: PaymentMethod | null;
@@ -28,6 +29,7 @@ export default function WithdrawalMethodCard({
 }: WithdrawalMethodCardProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -152,12 +154,12 @@ export default function WithdrawalMethodCard({
             isDark ? "text-white" : "text-shortblack",
           )}
         >
-          Payment Method
+          {t("withdrawalPage.paymentMethod")}
         </h3>
         <Link
           href="/settings#payment"
           className="p-2 text-grays hover:text-bluelight hover:bg-blues rounded-xl transition-colors"
-          title="Change Method"
+          title={t("withdrawalPage.changeMethod")}
         >
           <Settings className="w-5 h-5" />
         </Link>
@@ -196,7 +198,7 @@ export default function WithdrawalMethodCard({
               <div className="relative z-10 flex justify-between items-start">
                 <div>
                   <span className="text-[1.2em] text-blue-100 font-medium block">
-                    Primary Account
+                    {t("withdrawalPage.primaryAccount")}
                   </span>
                   <span className="text-[1.8em] font-bold tracking-wide mt-1 block">
                     {method.provider}
@@ -237,7 +239,11 @@ export default function WithdrawalMethodCard({
                   <button
                     onClick={() => setShowDetail(!showDetail)}
                     className="p-1.5 rounded-lg text-blue-200 hover:text-white hover:bg-white/10 transition-colors"
-                    title={showDetail ? "Hide Number" : "Show Number"}
+                    title={
+                      showDetail
+                        ? t("withdrawalPage.hideNumber")
+                        : t("withdrawalPage.showNumber")
+                    }
                   >
                     {showDetail ? (
                       <EyeOff className="w-5 h-5" />
@@ -253,7 +259,7 @@ export default function WithdrawalMethodCard({
                     {method.accountName}
                   </p>
                   <span className="text-[1em] text-white/60 font-mono">
-                    Valid
+                    {t("withdrawalPage.valid")}
                   </span>
                 </div>
               </div>
@@ -280,8 +286,7 @@ export default function WithdrawalMethodCard({
                   isDark ? "text-green-300" : "text-green-800",
                 )}
               >
-                Akun terverifikasi. Pembayaran akan diproses otomatis ke
-                rekening ini.
+                {t("withdrawalPage.accountVerified")}
               </p>
             </div>
           </div>
@@ -314,10 +319,10 @@ export default function WithdrawalMethodCard({
                 isDark ? "text-white" : "text-shortblack",
               )}
             >
-              No Payment Method
+              {t("withdrawalPage.noPaymentMethod")}
             </h4>
             <p className="text-[1.4em] text-grays max-w-[250px] mx-auto leading-relaxed mb-8">
-              Anda belum mengatur metode pembayaran. Harap atur terlebih dahulu.
+              {t("withdrawalPage.noMethodDesc")}
             </p>
 
             <Link
@@ -327,7 +332,7 @@ export default function WithdrawalMethodCard({
                 isDark ? "bg-bluelight text-white" : "bg-shortblack text-white",
               )}
             >
-              Setup Now
+              {t("withdrawalPage.setupNow")}
             </Link>
           </div>
         )}

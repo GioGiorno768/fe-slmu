@@ -7,6 +7,7 @@ import { X, Check } from "lucide-react";
 import Image from "next/image";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 // Local avatar files (1-4)
 const AVATAR_IDS = [1, 2, 3, 4];
@@ -35,6 +36,7 @@ export default function AvatarSelectionModal({
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
 
   return (
     <AnimatePresence>
@@ -53,7 +55,7 @@ export default function AvatarSelectionModal({
             onClick={(e) => e.stopPropagation()}
             className={clsx(
               "w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]",
-              isDark ? "bg-card" : "bg-white"
+              isDark ? "bg-card" : "bg-white",
             )}
           >
             <div
@@ -61,17 +63,17 @@ export default function AvatarSelectionModal({
                 "px-8 py-6 flex justify-between items-center z-10",
                 isDark
                   ? "bg-card border-b border-gray-800"
-                  : "bg-white border-b border-gray-100"
+                  : "bg-white border-b border-gray-100",
               )}
             >
               <h2 className="text-[2em] font-bold text-shortblack">
-                Pilih Avatar
+                {t("settingsPage.chooseAvatar")}
               </h2>
               <button
                 onClick={onClose}
                 className={clsx(
                   "p-2 rounded-full text-grays transition-colors",
-                  isDark ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                  isDark ? "hover:bg-gray-800" : "hover:bg-gray-100",
                 )}
               >
                 <X className="w-6 h-6" />
@@ -99,14 +101,14 @@ export default function AvatarSelectionModal({
                         isSelected
                           ? "ring-4 ring-bluelight scale-105 shadow-lg"
                           : isDark
-                          ? "hover:scale-105 hover:shadow-md bg-card border-2 border-transparent hover:border-blue-500"
-                          : "hover:scale-105 hover:shadow-md bg-white border-2 border-transparent hover:border-blue-200"
+                            ? "hover:scale-105 hover:shadow-md bg-card border-2 border-transparent hover:border-blue-500"
+                            : "hover:scale-105 hover:shadow-md bg-white border-2 border-transparent hover:border-blue-200",
                       )}
                     >
                       <div
                         className={clsx(
                           "w-full h-full rounded-full overflow-hidden relative",
-                          isDark ? "bg-card" : "bg-white"
+                          isDark ? "bg-card" : "bg-white",
                         )}
                       >
                         {/* Image Next.js dengan URL yang sudah diperbaiki */}
@@ -122,7 +124,7 @@ export default function AvatarSelectionModal({
                         <div
                           className={clsx(
                             "absolute bottom-0 right-0 bg-bluelight text-white p-1.5 rounded-full border-2 shadow-sm",
-                            isDark ? "border-card" : "border-white"
+                            isDark ? "border-card" : "border-white",
                           )}
                         >
                           <Check className="w-4 h-4" />

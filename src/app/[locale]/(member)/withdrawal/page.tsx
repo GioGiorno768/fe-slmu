@@ -6,6 +6,7 @@ import { Loader2, Info } from "lucide-react";
 import { useWithdrawal } from "@/hooks/useWithdrawal";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 // Components
 import WithdrawalStatsCard from "@/components/dashboard/withdrawal/WithdrawalStatsCard";
@@ -18,6 +19,7 @@ import type { PaymentMethod } from "@/types/type";
 export default function WithdrawalPage() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -77,7 +79,7 @@ export default function WithdrawalPage() {
 
   const onConfirmRequest = async (
     amount: number,
-    usedMethod: PaymentMethod
+    usedMethod: PaymentMethod,
   ) => {
     await requestPayout(amount, usedMethod);
   };
@@ -100,36 +102,36 @@ export default function WithdrawalPage() {
           "rounded-2xl p-6 flex items-start gap-4 shadow-sm",
           isDark
             ? "bg-blue-500/10 border border-blue-500/20 text-blue-300"
-            : "bg-blue-50 border border-blue-100 text-blue-800"
+            : "bg-blue-50 border border-blue-100 text-blue-800",
         )}
       >
         <div
           className={clsx(
             "p-2 rounded-full shrink-0",
-            isDark ? "bg-blue-500/20" : "bg-blue-100"
+            isDark ? "bg-blue-500/20" : "bg-blue-100",
           )}
         >
           <Info
             className={clsx(
               "w-6 h-6",
-              isDark ? "text-blue-400" : "text-bluelight"
+              isDark ? "text-blue-400" : "text-bluelight",
             )}
           />
         </div>
         <div className="text-[1.4em] leading-relaxed">
           <p>
-            <span className="font-bold">Info Pembayaran:</span> Pembayaran akan
-            diproses paling lambat <strong>3-5 hari</strong> setelah permintaan
-            penarikan (tidak termasuk hari libur).
+            <span className="font-bold">{t("withdrawalPage.infoTitle")}</span>{" "}
+            {t.rich("withdrawalPage.infoDesc", {
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </p>
           <p
             className={clsx(
               "mt-2 text-[0.95em]",
-              isDark ? "text-blue-400/80" : "text-blue-700/80"
+              isDark ? "text-blue-400/80" : "text-blue-700/80",
             )}
           >
-            Jika dalam waktu 3 hari status selesai tapi belum terima dana,
-            silahkan hubungi kami.
+            {t("withdrawalPage.infoNote")}
           </p>
         </div>
       </div>
@@ -183,9 +185,9 @@ export default function WithdrawalPage() {
           setCancelModalData({ ...cancelModalData, isOpen: false })
         }
         onConfirm={onConfirmCancel}
-        title="Batalkan Penarikan?"
-        description="Saldo akan dikembalikan ke akun Anda. Tindakan ini tidak dapat dibatalkan."
-        confirmLabel="Ya, Batalkan"
+        title={t("withdrawalPage.cancelTitle")}
+        description={t("withdrawalPage.cancelDesc")}
+        confirmLabel={t("withdrawalPage.yesCancel")}
         type="warning"
         isLoading={isProcessing}
       />

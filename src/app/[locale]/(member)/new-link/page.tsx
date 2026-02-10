@@ -11,6 +11,7 @@ import { useLinks } from "@/hooks/useLinks";
 import type { Shortlink } from "@/types/type";
 import clsx from "clsx";
 import { Link as LinkIcon, Layers } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type CreateMode = "single" | "mass";
 
@@ -32,6 +33,7 @@ export default function NewLinkPage() {
   } = useLinks();
 
   const [createMode, setCreateMode] = useState<CreateMode>("single");
+  const t = useTranslations("Dashboard");
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<Shortlink | null>(null);
@@ -72,11 +74,11 @@ export default function NewLinkPage() {
             "flex items-center gap-2 px-6 py-3 rounded-lg text-[1.4em] font-semibold transition-all",
             createMode === "single"
               ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard shadow-lg shadow-lightpurple-dashboard/30"
-              : "text-grays hover:bg-subcard hover:text-shortblack"
+              : "text-grays hover:bg-subcard hover:text-shortblack",
           )}
         >
           <LinkIcon className="w-5 h-5" />
-          Single Link
+          {t("newLinkPage.singleLink")}
         </button>
         <button
           onClick={() => setCreateMode("mass")}
@@ -84,11 +86,11 @@ export default function NewLinkPage() {
             "flex items-center gap-2 px-6 py-3 rounded-lg text-[1.4em] font-semibold transition-all",
             createMode === "mass"
               ? "bg-gradient-to-r from-blue-background-gradient to-purple-background-gradient text-tx-blue-dashboard shadow-lg shadow-lightpurple-dashboard/30"
-              : "text-grays hover:bg-subcard hover:text-shortblack"
+              : "text-grays hover:bg-subcard hover:text-shortblack",
           )}
         >
           <Layers className="w-5 h-5" />
-          Mass Link
+          {t("newLinkPage.massLink")}
         </button>
       </div>
 
@@ -149,15 +151,19 @@ export default function NewLinkPage() {
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleConfirmStatus}
         title={
-          confirmData?.status === "active" ? "Disable Link?" : "Enable Link?"
+          confirmData?.status === "active"
+            ? t("newLinkPage.disableTitle")
+            : t("newLinkPage.enableTitle")
         }
         description={
           confirmData?.status === "active"
-            ? "Link ini tidak akan bisa diakses publik. Yakin?"
-            : "Link akan diaktifkan kembali."
+            ? t("newLinkPage.disableDesc")
+            : t("newLinkPage.enableDesc")
         }
         confirmLabel={
-          confirmData?.status === "active" ? "Ya, Disable" : "Ya, Enable"
+          confirmData?.status === "active"
+            ? t("newLinkPage.yesDisable")
+            : t("newLinkPage.yesEnable")
         }
         type={confirmData?.status === "active" ? "danger" : "success"}
         isLoading={isMutating}

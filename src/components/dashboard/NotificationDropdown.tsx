@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 // ... (Import Icon dll sama kayak file lama)
 import {
   Link2,
@@ -38,6 +38,7 @@ export default function NotificationDropdown({
 }: NotificationDropdownProps) {
   const locale = useLocale();
   const { showAlert } = useAlert();
+  const t = useTranslations("Dashboard");
 
   // Panggil Hook - now using category filter
   const {
@@ -59,23 +60,31 @@ export default function NotificationDropdown({
   // Kita bedain opsi filter buat User vs Admin
   const getFilterOptions = () => {
     const common = [
-      { id: "all", label: "Semua", icon: null },
-      { id: "payment", label: "Pembayaran", icon: Wallet },
-      { id: "account", label: "Akun", icon: User },
+      { id: "all", label: t("notifications.filterAll"), icon: null },
+      { id: "payment", label: t("notifications.filterPayment"), icon: Wallet },
+      { id: "account", label: t("notifications.filterAccount"), icon: User },
     ];
 
     if (role === "member") {
       return [
         ...common,
-        { id: "link", label: "Link", icon: Link2 },
-        { id: "event", label: "Event", icon: Calendar },
+        { id: "link", label: t("notifications.filterLink"), icon: Link2 },
+        { id: "event", label: t("notifications.filterEvent"), icon: Calendar },
       ];
     } else {
       // Admin Filters
       return [
         ...common,
-        { id: "link", label: "Reports", icon: ShieldAlert }, // Link jadi Reports
-        { id: "system", label: "Broadcast", icon: Megaphone }, // Tambah Broadcast
+        {
+          id: "link",
+          label: t("notifications.filterReports"),
+          icon: ShieldAlert,
+        },
+        {
+          id: "system",
+          label: t("notifications.filterBroadcast"),
+          icon: Megaphone,
+        },
       ];
     }
   };
@@ -86,7 +95,7 @@ export default function NotificationDropdown({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const [selectedNotif, setSelectedNotif] = useState<NotificationItem | null>(
-    null
+    null,
   );
 
   // Handle filter change - call backend API
@@ -160,10 +169,12 @@ export default function NotificationDropdown({
     const date = new Date(dateStr);
     const now = new Date();
     const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
-    if (diff < 60) return "Baru saja";
-    if (diff < 3600) return `${Math.floor(diff / 60)}m lalu`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}j lalu`;
-    return `${Math.floor(diff / 86400)}h lalu`;
+    if (diff < 60) return t("notifications.justNow");
+    if (diff < 3600)
+      return t("notifications.minutesAgo", { count: Math.floor(diff / 60) });
+    if (diff < 86400)
+      return t("notifications.hoursAgo", { count: Math.floor(diff / 3600) });
+    return t("notifications.daysAgo", { count: Math.floor(diff / 86400) });
   };
 
   const activeLabel = FILTER_OPTIONS.find((f) => f.id === activeFilter)?.label;
@@ -201,7 +212,7 @@ export default function NotificationDropdown({
                     <ArrowLeft className="w-5 h-5" />
                   </button>
                   <h3 className="text-[1.6em] font-bold text-shortblack">
-                    Detail
+                    {t("notifications.detail")}
                   </h3>
                 </div>
                 {/* Body Detail */}
@@ -211,7 +222,7 @@ export default function NotificationDropdown({
                       <div
                         className={clsx(
                           "w-16 h-16 rounded-2xl flex items-center justify-center",
-                          getBgColor(selectedNotif.type)
+                          getBgColor(selectedNotif.type),
                         )}
                       >
                         {getIcon(selectedNotif.type)}
@@ -235,7 +246,7 @@ export default function NotificationDropdown({
                           href={selectedNotif.actionUrl}
                           className="block w-full text-center bg-bluelight text-white font-bold py-3 rounded-xl text-[1.4em] hover:bg-blue-700 transition-colors"
                         >
-                          Proses Sekarang
+                          {t("notifications.processNow")}
                         </a>
                       </div>
                     )}
@@ -245,18 +256,19 @@ export default function NotificationDropdown({
                 <div className="p-4 border-t border-gray-100 dark:border-gray-dashboard/30 bg-subcard flex justify-between items-center shrink-0">
                   {selectedNotif.isGlobal ? (
                     <p className="text-[1.2em] text-gray-400 italic">
-                      📌 Pengumuman dari Admin
+                      {t("notifications.adminAnnouncement")}
                     </p>
                   ) : (
                     <button
                       onClick={() => {
                         removeNotification(selectedNotif.id);
                         setSelectedNotif(null);
-                        showAlert("Notifikasi dihapus.", "info");
+                        showAlert(t("notifications.notifDeleted"), "info");
                       }}
                       className="text-[1.3em] font-medium text-red-500 hover:bg-red-500/10 px-4 py-2 rounded-lg flex items-center gap-2"
                     >
-                      <Trash2 className="w-4 h-4" /> Hapus
+                      <Trash2 className="w-4 h-4" />{" "}
+                      {t("notifications.deleteNotif")}
                     </button>
                   )}
                 </div>
@@ -275,7 +287,7 @@ export default function NotificationDropdown({
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
                       <h3 className="text-[1.8em] font-bold text-shortblack">
-                        Notifications
+                        {t("notifications.title")}
                       </h3>
                       {unreadCount > 0 && (
                         <span className="bg-red-500 text-white text-[1.1em] font-bold px-2 py-0.5 rounded-full">
@@ -287,11 +299,15 @@ export default function NotificationDropdown({
                       <button
                         onClick={() => {
                           markAllRead();
-                          showAlert("Semua ditandai sudah dibaca.", "success");
+                          showAlert(
+                            t("notifications.allMarkedRead"),
+                            "success",
+                          );
                         }}
                         className="text-[1.2em] font-medium text-bluelight hover:underline flex items-center gap-1"
                       >
-                        <Check className="w-3 h-3" /> Mark read
+                        <Check className="w-3 h-3" />{" "}
+                        {t("notifications.markRead")}
                       </button>
                     )}
                   </div>
@@ -303,7 +319,9 @@ export default function NotificationDropdown({
                     >
                       <div className="flex items-center gap-2">
                         <Filter className="w-4 h-4 text-bluelight" />
-                        <span className="text-grays">Filter:</span>
+                        <span className="text-grays">
+                          {t("notifications.filter")}
+                        </span>
                         <span className="font-bold text-bluelight">
                           {activeLabel}
                         </span>
@@ -330,7 +348,7 @@ export default function NotificationDropdown({
                                 "flex items-center gap-2 w-full px-4 py-2.5 rounded-lg text-[1.3em] transition-all duration-300 text-left",
                                 activeFilter === option.id
                                   ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient bg-bluelight/10 text-bluelight dark:text-tx-blue-dashboard font-semibold"
-                                  : "text-shortblack dark:text-grays hover:text-bluelight hover:dark:text-tx-blue-dashboard hover:bg-subcard"
+                                  : "text-shortblack dark:text-grays hover:text-bluelight hover:dark:text-tx-blue-dashboard hover:bg-subcard",
                               )}
                             >
                               {activeFilter === option.id && (
@@ -372,7 +390,7 @@ export default function NotificationDropdown({
                     filteredNotifications.length === 0 ? (
                     <div className="p-8 text-center flex flex-col items-center gap-3 mt-10">
                       <p className="text-grays text-[1.4em]">
-                        Tidak ada notifikasi.
+                        {t("notifications.noNotifications")}
                       </p>
                     </div>
                   ) : (
@@ -382,7 +400,7 @@ export default function NotificationDropdown({
                         <>
                           <div className="px-5 py-2 bg-purple-500/10 border-b border-purple-500/20">
                             <span className="text-[1.1em] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wide flex items-center gap-1">
-                              📌 Pengumuman
+                              📌 {t("notifications.announcement")}
                             </span>
                           </div>
                           {pinnedNotifications.map((item) => (
@@ -395,7 +413,7 @@ export default function NotificationDropdown({
                                 <div
                                   className={clsx(
                                     "w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1",
-                                    getBgColor(item.type)
+                                    getBgColor(item.type),
                                   )}
                                 >
                                   <div className="scale-75">
@@ -425,7 +443,7 @@ export default function NotificationDropdown({
                           key={item.id}
                           className={clsx(
                             "p-5 hover:bg-subcard transition-colors cursor-pointer relative group",
-                            !item.isRead ? "bg-blue-500/10" : "bg-card"
+                            !item.isRead ? "bg-blue-500/10" : "bg-card",
                           )}
                           onClick={() => handleItemClick(item)}
                         >
@@ -433,7 +451,7 @@ export default function NotificationDropdown({
                             <div
                               className={clsx(
                                 "w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1",
-                                getBgColor(item.type)
+                                getBgColor(item.type),
                               )}
                             >
                               <div className="scale-75">
@@ -447,7 +465,7 @@ export default function NotificationDropdown({
                                     "text-[1.4em] font-bold leading-tight pr-2 truncate w-[80%]",
                                     item.isRead
                                       ? "text-shortblack"
-                                      : "text-bluelight"
+                                      : "text-bluelight",
                                   )}
                                 >
                                   {item.title}
@@ -483,14 +501,16 @@ export default function NotificationDropdown({
                       }/notifications`}
                       className="text-[1.3em] font-semibold text-bluelight hover:text-blue-700 transition-colors w-full py-1 block"
                     >
-                      Lihat Semua ({notifications.length})
+                      {t("notifications.viewAll", {
+                        count: notifications.length,
+                      })}
                     </a>
                   ) : (
                     <button
                       onClick={onClose}
                       className="text-[1.3em] font-semibold text-shortblack hover:text-bluelight transition-colors w-full py-1"
                     >
-                      Tutup
+                      {t("notifications.close")}
                     </button>
                   )}
                 </div>

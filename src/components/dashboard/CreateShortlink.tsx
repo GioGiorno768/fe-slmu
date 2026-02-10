@@ -66,7 +66,7 @@ export default function CreateShortlink({
   const getMinDateTimeLocal = () => {
     const localDate = new Date();
     localDate.setMinutes(
-      localDate.getMinutes() - localDate.getTimezoneOffset()
+      localDate.getMinutes() - localDate.getTimezoneOffset(),
     );
     return localDate.toISOString().slice(0, 16);
   };
@@ -194,7 +194,7 @@ export default function CreateShortlink({
 
   const handleSocialShare = (platform: (typeof socialPlatforms)[0]) => {
     if (!generatedLink) return;
-    const text = `Lihat link saya: ${generatedLink.shortUrl}`;
+    const text = `${t("createShortlinkCard.shareText")} ${generatedLink.shortUrl}`;
     const encodedUrl = encodeURIComponent(generatedLink.shortUrl);
     const encodedText = encodeURIComponent(text);
     const shareUrl =
@@ -208,15 +208,15 @@ export default function CreateShortlink({
     if (navigator.share && generatedLink) {
       try {
         await navigator.share({
-          title: "Link Saya",
-          text: `Lihat link saya: ${generatedLink.shortUrl}`,
+          title: t("createShortlinkCard.shareTitle"),
+          text: `${t("createShortlinkCard.shareText")} ${generatedLink.shortUrl}`,
           url: generatedLink.shortUrl,
         });
       } catch (err) {
-        console.error("Gagal share:", err);
+        console.error("Share failed:", err);
       }
     } else {
-      alert("Browser ini tidak mendukung fitur share.");
+      alert(t("createShortlinkCard.browserNoShare"));
     }
   };
 
@@ -248,7 +248,9 @@ export default function CreateShortlink({
             ) : (
             )} */}
             <Bolt className="w-4 h-4" />
-            <span className="hidden sm:inline-block">{isAdvancedOpen ? t("basicLink") : t("advancedLink")}</span>
+            <span className="hidden sm:inline-block">
+              {isAdvancedOpen ? t("basicLink") : t("advancedLink")}
+            </span>
           </button>
         </div>
 
@@ -331,7 +333,7 @@ export default function CreateShortlink({
                       {isLoadingLevels ? (
                         <span className="text-grays flex items-center gap-2">
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          Loading...
+                          {t("createShortlinkCard.loading")}
                         </span>
                       ) : (
                         <span className="text-shortblack">
@@ -366,8 +368,8 @@ export default function CreateShortlink({
                                 level.isLocked
                                   ? "text-gray-400 cursor-not-allowed"
                                   : formData.adsLevel === level.key
-                                  ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
-                                  : "text-shortblack hover:bg-subcard"
+                                    ? "dark:bg-gradient-to-r dark:from-blue-background-gradient dark:to-purple-background-gradient text-tx-blue-dashboard font-semibold"
+                                    : "text-shortblack hover:bg-subcard"
                               }`}
                             >
                               <span>{level.label}</span>

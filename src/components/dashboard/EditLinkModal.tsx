@@ -185,7 +185,7 @@ export default function EditLinkModal({
                 {/* Alias */}
                 <div>
                   <label className="block text-[1.4em] font-semibold text-shortblack mb-2">
-                    Alias (Custom URL)
+                    {t("aliasLabel")}
                   </label>
                   <div className="relative">
                     <input
@@ -204,7 +204,7 @@ export default function EditLinkModal({
                 {/* Password */}
                 <div>
                   <label className="block text-[1.4em] font-semibold text-shortblack mb-2">
-                    Password Protection
+                    {t("passwordLabel")}
                   </label>
                   <div className="relative">
                     <Lock className="w-5 h-5 text-grays absolute left-4 top-1/2 -translate-y-1/2" />

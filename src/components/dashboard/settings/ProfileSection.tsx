@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import AvatarSelectionModal from "./AvatarSelectionModal";
 import { useProfileLogic } from "@/hooks/useSettings";
 import { DEFAULT_AVATAR_URL } from "@/utils/avatarUtils";
+import { useTranslations } from "next-intl";
 
 interface ProfileSectionProps {
   initialData: UserProfile | null;
@@ -29,6 +30,7 @@ export default function ProfileSection({
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
 
   const { updateProfile, isUpdating } = useProfileLogic(type);
 
@@ -66,11 +68,11 @@ export default function ProfileSection({
           "rounded-3xl p-8 shadow-sm font-figtree",
           isDark
             ? "bg-card border border-gray-800"
-            : "bg-white border border-gray-100"
+            : "bg-white border border-gray-100",
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8">
-          Profile Information
+          {t("settingsPage.profileInfo")}
         </h2>
 
         <form onSubmit={handleSave} className="space-y-8">
@@ -80,7 +82,7 @@ export default function ProfileSection({
               <div
                 className={clsx(
                   "w-32 h-32 rounded-full bg-blues border-4 shadow-lg overflow-hidden relative",
-                  isDark ? "border-card" : "border-white"
+                  isDark ? "border-card" : "border-white",
                 )}
               >
                 <Image
@@ -104,7 +106,7 @@ export default function ProfileSection({
                 {formData.username}
               </h3>
               <p className="text-[1.4em] text-grays">
-                Klik ikon kamera untuk mengganti avatar.
+                {t("settingsPage.avatarHint")}
               </p>
             </div>
           </div>
@@ -113,7 +115,7 @@ export default function ProfileSection({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                Full Name
+                {t("settingsPage.fullName")}
               </label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
@@ -126,7 +128,7 @@ export default function ProfileSection({
                     "w-full pl-12 pr-4 py-3 rounded-xl text-shortblack focus:outline-none focus:ring-2 focus:ring-bluelight/50 text-[1.5em]",
                     isDark
                       ? "bg-card border border-gray-700"
-                      : "bg-white border border-gray-200"
+                      : "bg-white border border-gray-200",
                   )}
                 />
               </div>
@@ -134,7 +136,7 @@ export default function ProfileSection({
 
             <div className="space-y-2">
               <label className="text-[1.4em] font-medium text-shortblack">
-                Email Address
+                {t("settingsPage.emailAddress")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
@@ -148,7 +150,7 @@ export default function ProfileSection({
                     "w-full pl-12 pr-4 py-3 rounded-xl focus:outline-none text-[1.5em] cursor-not-allowed",
                     isDark
                       ? "bg-subcard border border-gray-700 text-gray-400"
-                      : "bg-gray-50 border border-gray-200 text-gray-500"
+                      : "bg-gray-50 border border-gray-200 text-gray-500",
                   )}
                 />
               </div>
@@ -162,7 +164,7 @@ export default function ProfileSection({
               disabled={isUpdating}
               className={clsx(
                 "bg-bluelight text-white px-8 py-3 rounded-xl font-semibold text-[1.5em] hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg",
-                isDark ? "shadow-purple-900/30" : "shadow-blue-200"
+                isDark ? "shadow-purple-900/30" : "shadow-blue-200",
               )}
             >
               {isUpdating ? (
@@ -170,7 +172,7 @@ export default function ProfileSection({
               ) : (
                 <Save className="w-5 h-5" />
               )}
-              Save Changes
+              {t("settingsPage.saveChanges")}
             </button>
           </div>
         </form>

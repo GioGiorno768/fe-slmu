@@ -22,6 +22,7 @@ import clsx from "clsx";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { convertFromUSD, getExchangeRates } from "@/utils/currency";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 // --- KONFIGURASI PAYMENT (Tetap di sini sesuai request lu) ---
 const PAYMENT_CONFIG = {
@@ -177,6 +178,7 @@ export default function WithdrawalRequestModal({
   const { showAlert } = useAlert();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -259,7 +261,7 @@ export default function WithdrawalRequestModal({
       setIsLoading(false);
       // Set first other method as default selection
       setSelectedOtherMethodId(
-        otherMethods.length > 0 ? otherMethods[0].id : null
+        otherMethods.length > 0 ? otherMethods[0].id : null,
       );
     }
   }, [isOpen, defaultMethod]);
@@ -268,11 +270,11 @@ export default function WithdrawalRequestModal({
   const handleNextStep = () => {
     if (!useDefault) {
       if (!selectedOtherMethod) {
-        showAlert("Pilih metode pembayaran yang valid.", "warning");
+        showAlert(t("withdrawalPage.selectValidMethod"), "warning");
         return;
       }
     } else if (!defaultMethod) {
-      showAlert("Metode pembayaran default belum diatur.", "error");
+      showAlert(t("withdrawalPage.defaultNotSet"), "error");
       return;
     }
     setStep(2);
@@ -311,19 +313,24 @@ export default function WithdrawalRequestModal({
         pmCurrency === "IDR"
           ? "Rp "
           : pmCurrency === "USD"
-          ? "$"
-          : pmCurrency + " ";
+            ? "$"
+            : pmCurrency + " ";
       const minFormatted =
         pmCurrency === "IDR"
           ? Math.round(minWithdrawalPM).toLocaleString("id-ID")
           : minWithdrawalPM.toFixed(2);
-      showAlert(`Minimal penarikan adalah ${pmSymbol}${minFormatted}`, "error");
+      showAlert(
+        t("withdrawalPage.minWithdrawal", {
+          amount: `${pmSymbol}${minFormatted}`,
+        }),
+        "error",
+      );
       return;
     }
 
     // Validate max in PM currency
     if (amountPM > maxWithdrawalPM) {
-      showAlert("Saldo tidak mencukupi.", "error");
+      showAlert(t("withdrawalPage.insufficientBalance"), "error");
       return;
     }
 
@@ -388,7 +395,7 @@ export default function WithdrawalRequestModal({
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             className={clsx(
               "w-full max-w-[50em] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]",
-              isDark ? "bg-card" : "bg-white"
+              isDark ? "bg-card" : "bg-white",
             )}
           >
             {/* Header */}
@@ -397,21 +404,23 @@ export default function WithdrawalRequestModal({
                 "px-8 py-6 border-b flex justify-between items-center z-10",
                 isDark
                   ? "border-gray-dashboard/30 bg-card"
-                  : "border-gray-100 bg-white"
+                  : "border-gray-100 bg-white",
               )}
             >
               <div>
                 <h2
                   className={clsx(
                     "text-[2em] font-bold",
-                    isDark ? "text-white" : "text-shortblack"
+                    isDark ? "text-white" : "text-shortblack",
                   )}
                 >
-                  Request Payout
+                  {t("withdrawalPage.requestPayoutTitle")}
                 </h2>
                 <p className="text-[1.4em] text-grays">
-                  Step {step} of 2:{" "}
-                  {step === 1 ? "Select Method" : "Confirm Amount"}
+                  {t("withdrawalPage.stepOf", { step: step })}{" "}
+                  {step === 1
+                    ? t("withdrawalPage.selectMethod")
+                    : t("withdrawalPage.confirmAmount")}
                 </p>
               </div>
               <button
@@ -420,7 +429,7 @@ export default function WithdrawalRequestModal({
                   "p-2 rounded-full transition-colors",
                   isDark
                     ? "hover:bg-gray-dashboard/50 text-gray-400"
-                    : "hover:bg-gray-100 text-grays"
+                    : "hover:bg-gray-100 text-grays",
                 )}
               >
                 <X className="w-6 h-6" />
@@ -445,8 +454,8 @@ export default function WithdrawalRequestModal({
                             ? "border-bluelight bg-blue-500/10"
                             : "border-bluelight bg-blue-50/50"
                           : isDark
-                          ? "border-gray-dashboard/50 hover:border-blue-500/50"
-                          : "border-gray-200 hover:border-blue-200"
+                            ? "border-gray-dashboard/50 hover:border-blue-500/50"
+                            : "border-gray-200 hover:border-blue-200",
                       )}
                     >
                       <div className="flex items-center gap-4">
@@ -461,11 +470,11 @@ export default function WithdrawalRequestModal({
                           <p
                             className={clsx(
                               "text-[1.6em] font-bold flex items-center gap-2",
-                              isDark ? "text-white" : "text-shortblack"
+                              isDark ? "text-white" : "text-shortblack",
                             )}
                           >
                             <Wallet className="w-5 h-5 text-bluelight" />
-                            Use Saved Method
+                            {t("withdrawalPage.useSavedMethod")}
                           </p>
                           <p className="text-[1.4em] text-grays mt-1">
                             {defaultMethod.provider} •{" "}
@@ -485,8 +494,8 @@ export default function WithdrawalRequestModal({
                           ? "border-bluelight bg-subcard shadow-lg"
                           : "border-bluelight bg-white shadow-md"
                         : isDark
-                        ? "border-gray-dashboard/50 hover:border-blue-500/50"
-                        : "border-gray-200 hover:border-blue-200"
+                          ? "border-gray-dashboard/50 hover:border-blue-500/50"
+                          : "border-gray-200 hover:border-blue-200",
                     )}
                   >
                     <div className="flex items-center gap-4 mb-4">
@@ -500,10 +509,10 @@ export default function WithdrawalRequestModal({
                       <span
                         className={clsx(
                           "text-[1.6em] font-bold",
-                          isDark ? "text-white" : "text-shortblack"
+                          isDark ? "text-white" : "text-shortblack",
                         )}
                       >
-                        Use Different Method
+                        {t("withdrawalPage.useDifferentMethod")}
                       </span>
                     </div>
 
@@ -530,8 +539,8 @@ export default function WithdrawalRequestModal({
                                       ? "border-bluelight bg-blue-500/10"
                                       : "border-bluelight bg-blue-50"
                                     : isDark
-                                    ? "border-gray-dashboard/50 hover:border-gray-dashboard"
-                                    : "border-gray-200 hover:border-gray-300"
+                                      ? "border-gray-dashboard/50 hover:border-gray-dashboard"
+                                      : "border-gray-200 hover:border-gray-300",
                                 )}
                               >
                                 <div
@@ -540,8 +549,8 @@ export default function WithdrawalRequestModal({
                                     selectedOtherMethodId === method.id
                                       ? "border-bluelight"
                                       : isDark
-                                      ? "border-gray-500"
-                                      : "border-gray-300"
+                                        ? "border-gray-500"
+                                        : "border-gray-300",
                                   )}
                                 >
                                   {selectedOtherMethodId === method.id && (
@@ -552,7 +561,7 @@ export default function WithdrawalRequestModal({
                                   <p
                                     className={clsx(
                                       "text-[1.4em] font-semibold",
-                                      isDark ? "text-white" : "text-shortblack"
+                                      isDark ? "text-white" : "text-shortblack",
                                     )}
                                   >
                                     {method.provider}
@@ -567,15 +576,15 @@ export default function WithdrawalRequestModal({
                           ) : (
                             <div className="text-center py-6 text-grays">
                               <p className="text-[1.4em]">
-                                Tidak ada metode pembayaran lain tersimpan.
+                                {t("withdrawalPage.noOtherMethods")}
                               </p>
                               <p className="text-[1.2em] mt-1">
-                                Tambahkan di{" "}
+                                {t("withdrawalPage.addInSettings")}{" "}
                                 <Link
                                   href="/settings#payment"
                                   className="text-bluelight underline"
                                 >
-                                  Settings
+                                  {t("withdrawalPage.settings")}
                                 </Link>
                               </p>
                             </div>
@@ -600,8 +609,8 @@ export default function WithdrawalRequestModal({
                     pmCurrency === "IDR"
                       ? "Rp"
                       : pmCurrency === "USD"
-                      ? "$"
-                      : pmCurrency;
+                        ? "$"
+                        : pmCurrency;
 
                   // Convert using PM currency
                   const pmRates = getExchangeRates();
@@ -613,7 +622,7 @@ export default function WithdrawalRequestModal({
                   const minWithdrawalPM =
                     pmCurrency === "IDR"
                       ? Math.ceil(
-                          convertToPMCurrency(minWithdrawalUSD) / 1000
+                          convertToPMCurrency(minWithdrawalUSD) / 1000,
                         ) * 1000
                       : convertToPMCurrency(minWithdrawalUSD);
 
@@ -641,7 +650,7 @@ export default function WithdrawalRequestModal({
                   const formatPM = (amount: number) => {
                     if (pmCurrency === "IDR") {
                       return `${pmSymbol} ${Math.round(amount).toLocaleString(
-                        "id-ID"
+                        "id-ID",
                       )}`;
                     }
                     return `${pmSymbol}${amount.toLocaleString(undefined, {
@@ -658,14 +667,14 @@ export default function WithdrawalRequestModal({
                           "flex items-center gap-2 px-4 py-2 rounded-xl border",
                           isDark
                             ? "bg-purple-500/10 text-purple-300 border-purple-500/20"
-                            : "bg-purple-50 text-purple-700 border-purple-100"
+                            : "bg-purple-50 text-purple-700 border-purple-100",
                         )}
                       >
                         <Wallet className="w-4 h-4" />
                         <span className="text-[1.2em] font-medium">
-                          Amount will be processed in{" "}
-                          <strong>{pmCurrency}</strong> (based on payment
-                          method)
+                          {t("withdrawalPage.amountProcessedIn")}{" "}
+                          <strong>{pmCurrency}</strong>{" "}
+                          {t("withdrawalPage.basedOnMethod")}
                         </span>
                       </div>
 
@@ -675,12 +684,12 @@ export default function WithdrawalRequestModal({
                           "p-5 rounded-2xl flex items-center justify-between border",
                           isDark
                             ? "bg-blue-500/10 border-blue-500/20"
-                            : "bg-blues border-blue-100"
+                            : "bg-blues border-blue-100",
                         )}
                       >
                         <div>
                           <p className="text-[1.2em] text-grays mb-0.5 uppercase tracking-wide font-medium">
-                            Available Balance
+                            {t("withdrawalPage.availableBalance")}
                           </p>
                           <p className="text-[2em] font-bold text-bluelight">
                             {formatPM(availableBalancePM)}
@@ -688,12 +697,12 @@ export default function WithdrawalRequestModal({
                         </div>
                         <div className="text-right">
                           <p className="text-[1.2em] text-grays mb-0.5 uppercase tracking-wide font-medium">
-                            Destination
+                            {t("withdrawalPage.destination")}
                           </p>
                           <p
                             className={clsx(
                               "text-[1.4em] font-semibold truncate max-w-[200px]",
-                              isDark ? "text-white" : "text-shortblack"
+                              isDark ? "text-white" : "text-shortblack",
                             )}
                           >
                             {useDefault && defaultMethod
@@ -713,10 +722,10 @@ export default function WithdrawalRequestModal({
                         <label
                           className={clsx(
                             "block text-[1.4em] font-bold mb-2",
-                            isDark ? "text-white" : "text-shortblack"
+                            isDark ? "text-white" : "text-shortblack",
                           )}
                         >
-                          Withdrawal Amount ({pmCurrency})
+                          {t("withdrawalPage.withdrawalAmount")} ({pmCurrency})
                         </label>
                         <div className="relative">
                           <span className="absolute left-5 top-1/2 -translate-y-1/2 text-[1.8em] font-bold text-grays">
@@ -731,7 +740,7 @@ export default function WithdrawalRequestModal({
                               "w-full pl-14 pr-5 py-3.5 rounded-2xl border-2 text-[2em] font-bold focus:outline-none focus:border-bluelight transition-colors",
                               isDark
                                 ? "bg-subcard border-gray-dashboard/50 text-white placeholder:text-gray-500"
-                                : "border-gray-200 text-shortblack placeholder:text-gray-300"
+                                : "border-gray-200 text-shortblack placeholder:text-gray-300",
                             )}
                             min={minWithdrawalPM}
                             max={maxWithdrawalPM}
@@ -744,14 +753,14 @@ export default function WithdrawalRequestModal({
                               setWithdrawAmount(
                                 pmCurrency === "IDR"
                                   ? Math.round(minWithdrawalPM).toString()
-                                  : minWithdrawalPM.toFixed(2)
+                                  : minWithdrawalPM.toFixed(2),
                               )
                             }
                             className={clsx(
                               "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
                               isDark
                                 ? "bg-gray-dashboard/50 text-gray-300 hover:bg-gray-dashboard"
-                                : "bg-gray-100 text-grays hover:bg-gray-200"
+                                : "bg-gray-100 text-grays hover:bg-gray-200",
                             )}
                           >
                             Min ({formatPM(minWithdrawalPM)})
@@ -762,14 +771,14 @@ export default function WithdrawalRequestModal({
                               setWithdrawAmount(
                                 pmCurrency === "IDR"
                                   ? Math.round(val).toString()
-                                  : val.toFixed(2)
+                                  : val.toFixed(2),
                               );
                             }}
                             className={clsx(
                               "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
                               isDark
                                 ? "bg-gray-dashboard/50 text-gray-300 hover:bg-gray-dashboard"
-                                : "bg-gray-100 text-grays hover:bg-gray-200"
+                                : "bg-gray-100 text-grays hover:bg-gray-200",
                             )}
                           >
                             50%
@@ -779,17 +788,18 @@ export default function WithdrawalRequestModal({
                               setWithdrawAmount(
                                 pmCurrency === "IDR"
                                   ? Math.round(maxWithdrawalPM).toString()
-                                  : maxWithdrawalPM.toFixed(2)
+                                  : maxWithdrawalPM.toFixed(2),
                               )
                             }
                             className={clsx(
                               "px-3 py-1.5 rounded-lg text-[1.1em] font-medium transition-colors",
                               isDark
                                 ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
-                                : "bg-blue-100 text-bluelight hover:bg-blue-200"
+                                : "bg-blue-100 text-bluelight hover:bg-blue-200",
                             )}
                           >
-                            Max ({formatPM(maxWithdrawalPM)})
+                            {t("withdrawalPage.max")} (
+                            {formatPM(maxWithdrawalPM)})
                           </button>
                         </div>
                       </div>
@@ -800,12 +810,12 @@ export default function WithdrawalRequestModal({
                           "space-y-2 pt-2 border-t",
                           isDark
                             ? "border-gray-dashboard/30"
-                            : "border-gray-100"
+                            : "border-gray-100",
                         )}
                       >
                         <div className="flex justify-between items-center">
                           <span className="text-[1.3em] text-grays">
-                            Fee Amount
+                            {t("withdrawalPage.feeAmount")}
                           </span>
                           <span className="text-[1.3em] text-grays">
                             {formatPM(feeInPM)}
@@ -815,15 +825,15 @@ export default function WithdrawalRequestModal({
                           <span
                             className={clsx(
                               "text-[1.4em] font-semibold",
-                              isDark ? "text-white" : "text-shortblack"
+                              isDark ? "text-white" : "text-shortblack",
                             )}
                           >
-                            Total Amount
+                            {t("withdrawalPage.totalAmount")}
                           </span>
                           <span
                             className={clsx(
                               "text-[1.6em] font-bold",
-                              isDark ? "text-white" : "text-shortblack"
+                              isDark ? "text-white" : "text-shortblack",
                             )}
                           >
                             {formatPM(totalAmount)}
@@ -836,14 +846,12 @@ export default function WithdrawalRequestModal({
                           "flex gap-2 items-start p-3 rounded-xl border",
                           isDark
                             ? "bg-orange-500/10 text-orange-300 border-orange-500/20"
-                            : "bg-orange-50 text-orange-700 border-orange-100"
+                            : "bg-orange-50 text-orange-700 border-orange-100",
                         )}
                       >
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                         <p className="text-[1.1em] leading-snug">
-                          Pastikan data akun sudah benar. Penarikan akan
-                          diproses dalam 24-48 jam kerja. Kesalahan input dapat
-                          menyebabkan dana hangus.
+                          {t("withdrawalPage.withdrawalWarning")}
                         </p>
                       </div>
                     </div>
@@ -858,7 +866,7 @@ export default function WithdrawalRequestModal({
                 "px-8 py-6 border-t flex justify-end gap-4",
                 isDark
                   ? "border-gray-dashboard/30 bg-subcard"
-                  : "border-gray-100 bg-gray-50"
+                  : "border-gray-100 bg-gray-50",
               )}
             >
               {step === 2 && (
@@ -869,10 +877,10 @@ export default function WithdrawalRequestModal({
                     "px-6 py-3 rounded-xl text-[1.6em] font-medium transition-colors",
                     isDark
                       ? "text-gray-300 hover:bg-gray-dashboard/50"
-                      : "text-grays hover:bg-gray-200"
+                      : "text-grays hover:bg-gray-200",
                   )}
                 >
-                  Back
+                  {t("withdrawalPage.back")}
                 </button>
               )}
 
@@ -881,7 +889,8 @@ export default function WithdrawalRequestModal({
                   onClick={handleNextStep}
                   className="bg-bluelight text-white px-8 py-3 rounded-xl text-[1.6em] font-bold hover:bg-opacity-90 transition-all flex items-center gap-2"
                 >
-                  Next Step <ArrowRight className="w-5 h-5" />
+                  {t("withdrawalPage.nextStep")}{" "}
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               ) : (
                 <button
@@ -889,7 +898,7 @@ export default function WithdrawalRequestModal({
                   disabled={isLoading}
                   className={clsx(
                     "bg-greenlight text-white px-8 py-3 rounded-xl text-[1.6em] font-bold hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 shadow-lg",
-                    isDark ? "shadow-green-900/30" : "shadow-green-200"
+                    isDark ? "shadow-green-900/30" : "shadow-green-200",
                   )}
                 >
                   {isLoading ? (
@@ -897,7 +906,7 @@ export default function WithdrawalRequestModal({
                   ) : (
                     <CheckCircle className="w-5 h-5" />
                   )}
-                  Confirm Withdrawal
+                  {t("withdrawalPage.confirmWithdrawal")}
                 </button>
               )}
             </div>

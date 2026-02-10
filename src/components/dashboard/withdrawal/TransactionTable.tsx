@@ -18,6 +18,7 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { getExchangeRates } from "@/utils/currency";
 import { motion, AnimatePresence } from "motion/react";
 import Pagination from "../Pagination";
+import { useTranslations } from "next-intl";
 
 interface TransactionTableProps {
   transactions: Transaction[];
@@ -53,6 +54,7 @@ export default function TransactionTable({
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -148,7 +150,7 @@ export default function TransactionTable({
   const formatAmountForCurrency = (
     usdAmount: number,
     currency: string,
-    savedLocalAmount?: number
+    savedLocalAmount?: number,
   ) => {
     // If we have a saved local amount (from database), use it directly
     // This ensures user sees the exact amount they requested
@@ -169,14 +171,16 @@ export default function TransactionTable({
     <div
       className={clsx(
         "rounded-3xl shadow-sm border mt-8 font-figtree",
-        isDark ? "bg-card border-gray-dashboard/30" : "bg-white border-gray-100"
+        isDark
+          ? "bg-card border-gray-dashboard/30"
+          : "bg-white border-gray-100",
       )}
     >
       {/* Header with Filters */}
       <div
         className={clsx(
           "p-6 md:p-8 border-b",
-          isDark ? "border-gray-dashboard/30" : "border-gray-100"
+          isDark ? "border-gray-dashboard/30" : "border-gray-100",
         )}
       >
         <div className="flex flex-col gap-6">
@@ -185,10 +189,10 @@ export default function TransactionTable({
             <h3
               className={clsx(
                 "text-[1.8em] font-bold",
-                isDark ? "text-white" : "text-shortblack"
+                isDark ? "text-white" : "text-shortblack",
               )}
             >
-              Transaction History
+              {t("withdrawalPage.transactionHistory")}
             </h3>
           </div>
 
@@ -199,14 +203,14 @@ export default function TransactionTable({
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
               <input
                 type="text"
-                placeholder="Search by Transaction ID..."
+                placeholder={t("withdrawalPage.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className={clsx(
                   "w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-bluelight/20 text-[1.4em] transition-all",
                   isDark
                     ? "bg-subcard border-gray-dashboard/50 text-white placeholder:text-gray-500"
-                    : "bg-white border-gray-200 text-shortblack"
+                    : "bg-white border-gray-200 text-shortblack",
                 )}
               />
             </div>
@@ -222,22 +226,24 @@ export default function TransactionTable({
                   "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[140px] justify-between",
                   isDark
                     ? "border-gray-dashboard/50 bg-subcard hover:bg-gray-dashboard/50"
-                    : "border-gray-200 bg-white hover:bg-slate-50"
+                    : "border-gray-200 bg-white hover:bg-slate-50",
                 )}
               >
                 <Calendar className="w-4 h-4 text-grays" />
                 <span
                   className={clsx(
                     "font-medium",
-                    isDark ? "text-white" : "text-shortblack"
+                    isDark ? "text-white" : "text-shortblack",
                   )}
                 >
-                  {sortOrder === "newest" ? "Terbaru" : "Terlama"}
+                  {sortOrder === "newest"
+                    ? t("withdrawalPage.newest")
+                    : t("withdrawalPage.oldest")}
                 </span>
                 <ChevronDown
                   className={clsx(
                     "w-4 h-4 text-grays transition-transform",
-                    isSortOpen && "rotate-180"
+                    isSortOpen && "rotate-180",
                   )}
                 />
               </button>
@@ -251,7 +257,7 @@ export default function TransactionTable({
                       "absolute top-full left-0 mt-2 w-full rounded-xl border shadow-lg z-20 overflow-hidden",
                       isDark
                         ? "bg-card border-gray-dashboard/50"
-                        : "bg-white border-gray-200"
+                        : "bg-white border-gray-200",
                     )}
                   >
                     <button
@@ -266,11 +272,11 @@ export default function TransactionTable({
                             ? "bg-blue-500/10 text-bluelight font-medium"
                             : "bg-blues text-bluelight font-medium"
                           : isDark
-                          ? "text-white hover:bg-gray-dashboard/50"
-                          : "text-shortblack hover:bg-blues"
+                            ? "text-white hover:bg-gray-dashboard/50"
+                            : "text-shortblack hover:bg-blues",
                       )}
                     >
-                      Terbaru
+                      {t("withdrawalPage.newest")}
                     </button>
                     <button
                       onClick={() => {
@@ -284,11 +290,11 @@ export default function TransactionTable({
                             ? "bg-blue-500/10 text-bluelight font-medium"
                             : "bg-blues text-bluelight font-medium"
                           : isDark
-                          ? "text-white hover:bg-gray-dashboard/50"
-                          : "text-shortblack hover:bg-blues"
+                            ? "text-white hover:bg-gray-dashboard/50"
+                            : "text-shortblack hover:bg-blues",
                       )}
                     >
-                      Terlama
+                      {t("withdrawalPage.oldest")}
                     </button>
                   </motion.div>
                 )}
@@ -306,22 +312,24 @@ export default function TransactionTable({
                   "flex items-center gap-2 px-4 py-3 rounded-xl border transition-colors text-[1.4em] min-w-[140px] justify-between",
                   isDark
                     ? "border-gray-dashboard/50 bg-subcard hover:bg-gray-dashboard/50"
-                    : "border-gray-200 bg-white hover:bg-slate-50"
+                    : "border-gray-200 bg-white hover:bg-slate-50",
                 )}
               >
                 <Filter className="w-4 h-4 text-grays" />
                 <span
                   className={clsx(
                     "font-medium truncate max-w-[80px]",
-                    isDark ? "text-white" : "text-shortblack"
+                    isDark ? "text-white" : "text-shortblack",
                   )}
                 >
-                  {methodFilter === "all" ? "Semua" : methodFilter}
+                  {methodFilter === "all"
+                    ? t("withdrawalPage.allFilter")
+                    : methodFilter}
                 </span>
                 <ChevronDown
                   className={clsx(
                     "w-4 h-4 text-grays transition-transform",
-                    isMethodOpen && "rotate-180"
+                    isMethodOpen && "rotate-180",
                   )}
                 />
               </button>
@@ -336,7 +344,7 @@ export default function TransactionTable({
                       "absolute top-full right-0 mt-2 w-48 rounded-xl border shadow-lg z-20 overflow-hidden max-h-60 overflow-y-auto",
                       isDark
                         ? "bg-card border-gray-dashboard/50"
-                        : "bg-white border-gray-200"
+                        : "bg-white border-gray-200",
                     )}
                   >
                     {paymentMethods.map((method) => (
@@ -353,11 +361,13 @@ export default function TransactionTable({
                               ? "bg-blue-500/10 text-bluelight font-medium"
                               : "bg-blues text-bluelight font-medium"
                             : isDark
-                            ? "text-white hover:bg-gray-dashboard/50"
-                            : "text-shortblack hover:bg-blues"
+                              ? "text-white hover:bg-gray-dashboard/50"
+                              : "text-shortblack hover:bg-blues",
                         )}
                       >
-                        {method === "all" ? "Semua Metode" : method}
+                        {method === "all"
+                          ? t("withdrawalPage.allMethods")
+                          : method}
                       </button>
                     ))}
                   </motion.div>
@@ -372,12 +382,12 @@ export default function TransactionTable({
       <div
         className={clsx(
           "divide-y",
-          isDark ? "divide-gray-dashboard/30" : "divide-gray-100"
+          isDark ? "divide-gray-dashboard/30" : "divide-gray-100",
         )}
       >
         {isLoading ? (
           <div className="p-12 text-center text-grays text-[1.4em]">
-            Loading data...
+            {t("withdrawalPage.loadingData")}
           </div>
         ) : transactions.length > 0 ? (
           transactions.map((tx) => (
@@ -387,7 +397,7 @@ export default function TransactionTable({
               animate={{ opacity: 1 }}
               className={clsx(
                 "p-5 md:p-6 transition-colors",
-                isDark ? "hover:bg-gray-dashboard/30" : "hover:bg-slate-50/50"
+                isDark ? "hover:bg-gray-dashboard/30" : "hover:bg-slate-50/50",
               )}
             >
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -401,7 +411,7 @@ export default function TransactionTable({
                     <span
                       className={clsx(
                         "px-3 py-1 rounded-full text-[1.1em] font-semibold border capitalize",
-                        getStatusStyle(tx.status)
+                        getStatusStyle(tx.status),
                       )}
                     >
                       {tx.status}
@@ -419,7 +429,7 @@ export default function TransactionTable({
                     <span
                       className={clsx(
                         "text-[1.4em] font-semibold",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       {tx.method}
@@ -430,7 +440,7 @@ export default function TransactionTable({
                         <span
                           className={clsx(
                             "text-[1.3em] font-medium",
-                            isDark ? "text-gray-300" : "text-shortblack"
+                            isDark ? "text-gray-300" : "text-shortblack",
                           )}
                         >
                           {tx.accountName}
@@ -451,7 +461,7 @@ export default function TransactionTable({
                     <div
                       className={clsx(
                         "text-[1.6em] font-bold flex items-center gap-2 justify-end",
-                        isDark ? "text-white" : "text-shortblack"
+                        isDark ? "text-white" : "text-shortblack",
                       )}
                     >
                       {tx.currency ? (
@@ -461,7 +471,7 @@ export default function TransactionTable({
                               "text-[0.7em] px-2 py-0.5 rounded-md font-medium",
                               isDark
                                 ? "bg-purple-500/20 text-purple-400"
-                                : "bg-purple-100 text-purple-600"
+                                : "bg-purple-100 text-purple-600",
                             )}
                           >
                             {tx.currency}
@@ -475,7 +485,7 @@ export default function TransactionTable({
                               ? tx.localAmount +
                                   (parseFloat(String(tx.fee)) || 0) *
                                     tx.exchangeRate
-                              : undefined
+                              : undefined,
                           )}
                         </>
                       ) : (
@@ -483,7 +493,7 @@ export default function TransactionTable({
                       )}
                     </div>
                     <div className="text-[1.2em] text-grays">
-                      Fee:{" "}
+                      {t("withdrawalPage.fee")}{" "}
                       {tx.currency
                         ? formatAmountForCurrency(
                             parseFloat(String(tx.fee)) || 0,
@@ -491,7 +501,7 @@ export default function TransactionTable({
                             tx.exchangeRate !== undefined
                               ? (parseFloat(String(tx.fee)) || 0) *
                                   tx.exchangeRate
-                              : undefined
+                              : undefined,
                           )
                         : formatCurrency(parseFloat(String(tx.fee)) || 0)}
                     </div>
@@ -506,9 +516,9 @@ export default function TransactionTable({
                           "p-2.5 rounded-xl transition-colors",
                           isDark
                             ? "text-red-400 hover:text-red-300 hover:bg-red-500/20"
-                            : "text-red-400 hover:text-red-600 hover:bg-red-50"
+                            : "text-red-400 hover:text-red-600 hover:bg-red-50",
                         )}
-                        title="Batalkan"
+                        title={t("withdrawalPage.cancel")}
                       >
                         <XCircle className="w-5 h-5" />
                       </button>
@@ -530,8 +540,8 @@ export default function TransactionTable({
           <div className="p-12 text-center">
             <div className="text-grays text-[1.4em]">
               {search || methodFilter !== "all"
-                ? "Tidak ada transaksi yang cocok dengan filter."
-                : "Belum ada riwayat transaksi."}
+                ? t("withdrawalPage.noMatchingTx")
+                : t("withdrawalPage.noTxHistory")}
             </div>
           </div>
         )}
@@ -542,7 +552,7 @@ export default function TransactionTable({
         <div
           className={clsx(
             "p-6 border-t",
-            isDark ? "border-gray-dashboard/30" : "border-gray-100"
+            isDark ? "border-gray-dashboard/30" : "border-gray-100",
           )}
         >
           <Pagination

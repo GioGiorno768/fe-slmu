@@ -18,6 +18,7 @@ import {
 import clsx from "clsx";
 import type { UserLevel, LevelConfig } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 interface LevelsGridProps {
   currentLevel: UserLevel;
@@ -40,6 +41,7 @@ const getIcon = (iconName: string): LucideIcon => {
 
 export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
   const currentIndex = levels.findIndex((l) => l.id === currentLevel);
 
   return (
@@ -49,14 +51,14 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/20 rounded-full mb-4">
           <Sparkles className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
           <span className="text-[1.2em] font-semibold text-indigo-600 dark:text-indigo-400">
-            All Levels
+            {t("levelsPage.allLevels")}
           </span>
         </div>
         <h2 className="text-[2.2em] font-bold text-shortblack">
-          Level & Benefits
+          {t("levelsPage.levelBenefits")}
         </h2>
         <p className="text-[1.4em] text-grays mt-2">
-          Unlock higher levels for better CPM rates and exclusive perks
+          {t("levelsPage.unlockDesc")}
         </p>
       </div>
 
@@ -79,8 +81,8 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 isCurrent
                   ? "bg-card border-bluelight shadow-[0_4px_24px_rgba(59,130,246,0.2)]"
                   : isUnlocked
-                  ? "bg-card border-gray-200 dark:border-gray-dashboard/30 shadow-md"
-                  : "bg-subcard border-gray-200/50 dark:border-gray-dashboard/20 shadow-sm"
+                    ? "bg-card border-gray-200 dark:border-gray-dashboard/30 shadow-md"
+                    : "bg-subcard border-gray-200/50 dark:border-gray-dashboard/20 shadow-sm",
               )}
             >
               {/* Current Level Badge */}
@@ -88,7 +90,7 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 bg-bluelight text-white px-4 py-1 rounded-full text-[1.1em] font-bold shadow-lg">
                     <Zap className="w-3.5 h-3.5 fill-current" />
-                    CURRENT
+                    {t("levelsPage.current")}
                   </span>
                 </div>
               )}
@@ -109,13 +111,13 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                     "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-4 shadow-lg",
                     isUnlocked
                       ? level.bgColor
-                      : "bg-gray-100 dark:bg-gray-dashboard/30"
+                      : "bg-gray-100 dark:bg-gray-dashboard/30",
                   )}
                 >
                   <Icon
                     className={clsx(
                       "w-8 h-8",
-                      isUnlocked ? level.iconColor : "text-gray-400"
+                      isUnlocked ? level.iconColor : "text-gray-400",
                     )}
                     fill={
                       level.id === "mythic" && isUnlocked
@@ -127,7 +129,7 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 <h3
                   className={clsx(
                     "text-[2em] font-bold mb-1",
-                    isUnlocked ? "text-shortblack" : "text-gray-400"
+                    isUnlocked ? "text-shortblack" : "text-gray-400",
                   )}
                 >
                   {level.name}
@@ -135,10 +137,11 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                 <p
                   className={clsx(
                     "text-[1.3em]",
-                    isUnlocked ? "text-grays" : "text-gray-400"
+                    isUnlocked ? "text-grays" : "text-gray-400",
                   )}
                 >
-                  Min. Earnings {formatCurrency(level.minEarnings)}
+                  {t("levelsPage.minEarnings")}{" "}
+                  {formatCurrency(level.minEarnings)}
                 </p>
               </div>
 
@@ -148,21 +151,21 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                   "rounded-2xl p-4 text-center mb-5 border",
                   isUnlocked
                     ? "bg-gradient-to-br from-slate-50 to-slate-100 dark:from-subcard dark:to-subcard border-slate-200 dark:border-gray-dashboard/30"
-                    : "bg-gray-100/50 dark:bg-gray-dashboard/20 border-gray-200/50 dark:border-gray-dashboard/20"
+                    : "bg-gray-100/50 dark:bg-gray-dashboard/20 border-gray-200/50 dark:border-gray-dashboard/20",
                 )}
               >
                 <p
                   className={clsx(
                     "text-[1.1em] uppercase font-semibold tracking-wider mb-1",
-                    isUnlocked ? "text-grays" : "text-gray-400"
+                    isUnlocked ? "text-grays" : "text-gray-400",
                   )}
                 >
-                  CPM Bonus
+                  {t("levelsPage.cpmBonus")}
                 </p>
                 <p
                   className={clsx(
                     "text-[2.2em] font-bold",
-                    isUnlocked ? level.iconColor : "text-gray-400"
+                    isUnlocked ? level.iconColor : "text-gray-400",
                   )}
                 >
                   +{level.cpmBonus}%
@@ -178,14 +181,14 @@ export default function LevelsGrid({ currentLevel, levels }: LevelsGridProps) {
                         "p-1 rounded-full shrink-0 mt-0.5",
                         isUnlocked
                           ? "bg-green-500/20 text-green-500 dark:text-green-400"
-                          : "bg-gray-200 dark:bg-gray-dashboard/30 text-gray-400"
+                          : "bg-gray-200 dark:bg-gray-dashboard/30 text-gray-400",
                       )}
                     >
                       <Check className="w-3 h-3" strokeWidth={3} />
                     </div>
                     <span
                       className={clsx(
-                        isUnlocked ? "text-shortblack" : "text-gray-400"
+                        isUnlocked ? "text-shortblack" : "text-gray-400",
                       )}
                     >
                       {benefit}

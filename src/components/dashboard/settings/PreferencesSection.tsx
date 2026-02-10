@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import { usePathname, useRouter } from "@/i18n/routing";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import clsx from "clsx";
 import Image from "next/image";
 import { useTheme } from "next-themes";
@@ -60,6 +60,7 @@ export default function PreferencesSection({
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
 
   const { showAlert } = useAlert();
   const router = useRouter();
@@ -154,7 +155,9 @@ export default function PreferencesSection({
       router.replace(targetPath, { locale: lang });
     });
     showAlert(
-      `Bahasa diganti ke ${lang === "id" ? "Indonesia" : "English"}`,
+      t("settingsPage.languageChanged", {
+        lang: lang === "id" ? "Indonesia" : "English",
+      }),
       "success",
     );
   };
@@ -192,14 +195,14 @@ export default function PreferencesSection({
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
           <Globe className="w-6 h-6 text-bluelight" />
-          General Preferences
+          {t("settingsPage.generalPreferences")}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* 1. Language Picker */}
           <div className="space-y-3">
             <label className="text-[1.4em] font-medium text-grays">
-              Display Language
+              {t("settingsPage.displayLanguage")}
             </label>
             <div className="flex gap-4">
               {LANGUAGE_OPTIONS.map((lang) => (
@@ -245,7 +248,7 @@ export default function PreferencesSection({
           {/* 2. Currency Picker */}
           <div className="space-y-3" ref={currencyRef}>
             <label className="text-[1.4em] font-medium text-grays">
-              Display Currency
+              {t("settingsPage.displayCurrency")}
             </label>
             <div className="relative">
               <button
@@ -305,7 +308,9 @@ export default function PreferencesSection({
                           setGlobalCurrency(curr.code);
                           setIsCurrencyOpen(false);
                           showAlert(
-                            `Mata uang diganti ke ${curr.label}`,
+                            t("settingsPage.currencyChanged", {
+                              currency: curr.label,
+                            }),
                             "success",
                           );
                         }}
@@ -351,7 +356,7 @@ export default function PreferencesSection({
               </AnimatePresence>
             </div>
             <p className="text-[1.2em] text-grays italic mt-1">
-              *Kurs dikonversi otomatis berdasarkan rate harian.
+              {t("settingsPage.currencyNote")}
             </p>
           </div>
         </div>

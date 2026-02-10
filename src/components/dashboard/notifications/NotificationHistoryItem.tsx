@@ -13,6 +13,7 @@ import { motion } from "motion/react";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import type { NotificationItem } from "@/types/type";
+import { useLocale, useTranslations } from "next-intl";
 
 interface NotificationHistoryItemProps {
   item: NotificationItem;
@@ -35,6 +36,9 @@ export default function NotificationHistoryItem({
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
+  const locale = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -114,7 +118,7 @@ export default function NotificationHistoryItem({
   };
 
   const formatTime = (dateStr: string) => {
-    return new Date(dateStr).toLocaleTimeString("id-ID", {
+    return new Date(dateStr).toLocaleTimeString(dateLocale, {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -132,8 +136,8 @@ export default function NotificationHistoryItem({
             ? "bg-card border-gray-800 hover:border-gray-700 hover:shadow-md"
             : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md"
           : isDark
-          ? "bg-blue-500/10 border-blue-500/30 hover:border-blue-500/50 hover:shadow-md"
-          : "bg-blue-50/50 border-blue-100 hover:border-blue-200 hover:shadow-md"
+            ? "bg-blue-500/10 border-blue-500/30 hover:border-blue-500/50 hover:shadow-md"
+            : "bg-blue-50/50 border-blue-100 hover:border-blue-200 hover:shadow-md",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -144,7 +148,7 @@ export default function NotificationHistoryItem({
         <div
           className={clsx(
             "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0 border",
-            getBgColor(item.type)
+            getBgColor(item.type),
           )}
         >
           {getIcon(item.type)}
@@ -157,7 +161,7 @@ export default function NotificationHistoryItem({
               <h4
                 className={clsx(
                   "text-[1.5em] font-bold leading-tight truncate",
-                  item.isRead ? "text-shortblack" : "text-bluelight"
+                  item.isRead ? "text-shortblack" : "text-bluelight",
                 )}
               >
                 {item.title}
@@ -169,7 +173,7 @@ export default function NotificationHistoryItem({
             <span
               className={clsx(
                 "text-[1.2em] font-mono text-grays px-2 py-1 rounded-md whitespace-nowrap flex-shrink-0",
-                isDark ? "bg-gray-800" : "bg-slate-100"
+                isDark ? "bg-gray-800" : "bg-slate-100",
               )}
             >
               {formatTime(item.timestamp)}
@@ -185,7 +189,7 @@ export default function NotificationHistoryItem({
               <span
                 className={clsx(
                   "text-[1em] font-bold px-2 py-0.5 rounded uppercase tracking-wide",
-                  getCategoryColor(item.category)
+                  getCategoryColor(item.category),
                 )}
               >
                 {item.category}
@@ -196,10 +200,10 @@ export default function NotificationHistoryItem({
                     "text-[1em] font-bold px-2 py-0.5 rounded uppercase tracking-wide",
                     isDark
                       ? "bg-purple-500/20 text-purple-400"
-                      : "bg-purple-100 text-purple-700"
+                      : "bg-purple-100 text-purple-700",
                   )}
                 >
-                  📌 Global
+                  {t("notificationsPage.global")}
                 </span>
               )}
             </div>
@@ -223,8 +227,8 @@ export default function NotificationHistoryItem({
                     ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : isDark
-                  ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                  : "bg-red-50 text-red-500 hover:bg-red-100"
+                    ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                    : "bg-red-50 text-red-500 hover:bg-red-100",
               )}
             >
               <Trash2 className="w-4 h-4" />

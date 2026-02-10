@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { AlertTriangle, X } from "lucide-react";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -21,11 +22,15 @@ export default function DeleteConfirmationModal({
   onClose,
   onConfirm,
   isDeleting = false,
-  title = "Hapus Notifikasi?",
-  message = "Notifikasi yang sudah dihapus tidak dapat dikembalikan.",
+  title,
+  message,
 }: DeleteConfirmationModalProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
+
+  const resolvedTitle = title || t("notificationsPage.deleteNotifTitle");
+  const resolvedMessage = message || t("notificationsPage.deleteNotifMessage");
 
   useEffect(() => {
     setMounted(true);
@@ -70,7 +75,7 @@ export default function DeleteConfirmationModal({
             <div
               className={clsx(
                 "rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden",
-                isDark ? "bg-card" : "bg-white"
+                isDark ? "bg-card" : "bg-white",
               )}
             >
               {/* Header */}
@@ -78,21 +83,21 @@ export default function DeleteConfirmationModal({
                 <div
                   className={clsx(
                     "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center",
-                    isDark ? "bg-red-500/20" : "bg-red-100"
+                    isDark ? "bg-red-500/20" : "bg-red-100",
                   )}
                 >
                   <AlertTriangle
                     className={clsx(
                       "w-8 h-8",
-                      isDark ? "text-red-400" : "text-red-500"
+                      isDark ? "text-red-400" : "text-red-500",
                     )}
                   />
                 </div>
                 <h3 className="text-[1.8em] font-bold text-shortblack mb-2">
-                  {title}
+                  {resolvedTitle}
                 </h3>
                 <p className="text-[1.3em] text-grays leading-relaxed">
-                  {message}
+                  {resolvedMessage}
                 </p>
               </div>
 
@@ -108,11 +113,11 @@ export default function DeleteConfirmationModal({
                         ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                         : "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : isDark
-                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                      : "bg-slate-100 text-shortblack hover:bg-slate-200"
+                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                        : "bg-slate-100 text-shortblack hover:bg-slate-200",
                   )}
                 >
-                  Batal
+                  {t("notificationsPage.cancel")}
                 </button>
                 <button
                   onClick={onConfirm}
@@ -121,10 +126,12 @@ export default function DeleteConfirmationModal({
                     "flex-1 py-3 rounded-xl text-[1.4em] font-semibold transition-colors",
                     isDeleting
                       ? "bg-red-300 text-white cursor-not-allowed"
-                      : "bg-red-500 text-white hover:bg-red-600"
+                      : "bg-red-500 text-white hover:bg-red-600",
                   )}
                 >
-                  {isDeleting ? "Menghapus..." : "Hapus"}
+                  {isDeleting
+                    ? t("notificationsPage.deleting")
+                    : t("notifications.deleteNotif")}
                 </button>
               </div>
             </div>

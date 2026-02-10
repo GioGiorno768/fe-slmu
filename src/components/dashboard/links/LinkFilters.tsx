@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import clsx from "clsx";
 import type { MemberLinkFilters } from "@/types/type";
+import { useTranslations } from "next-intl";
 
 interface LinkFiltersProps {
   filters: MemberLinkFilters;
@@ -18,6 +19,7 @@ interface LinkFiltersProps {
 }
 
 export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
+  const t = useTranslations("Dashboard");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [isLevelOpen, setIsLevelOpen] = useState(false);
@@ -50,45 +52,48 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
   }, []);
 
   const sortOptions = [
-    { label: "Newest", value: "newest" },
-    { label: "Oldest", value: "oldest" },
-    { label: "Most Views", value: "most_views" },
-    { label: "Least Views", value: "least_views" },
-    { label: "Most Earnings", value: "most_earnings" },
-    { label: "Least Earnings", value: "least_earnings" },
+    { label: t("linkList.sortNewest"), value: "newest" },
+    { label: t("linkList.sortOldest"), value: "oldest" },
+    { label: t("linkList.sortMostViews"), value: "most_views" },
+    { label: t("linkList.sortLeastViews"), value: "least_views" },
+    { label: t("linkList.sortMostEarnings"), value: "most_earnings" },
+    { label: t("linkList.sortLeastEarnings"), value: "least_earnings" },
   ];
 
   const statusOptions = [
-    { label: "All Status", value: "all" },
-    { label: "Active", value: "active" },
-    { label: "Disabled", value: "disabled" },
-    { label: "Expired", value: "expired" },
-    { label: "Password Protected", value: "password" },
+    { label: t("linkList.statusAll"), value: "all" },
+    { label: t("linkList.statusActive"), value: "active" },
+    { label: t("linkList.statusDisabled"), value: "disabled" },
+    { label: t("linkList.statusExpired"), value: "expired" },
+    { label: t("linkList.statusPassword"), value: "password" },
   ];
 
   const levelOptions = [
-    { label: "All Levels", value: "all" },
-    { label: "Low", value: "low" },
-    { label: "Medium", value: "medium" },
-    { label: "High", value: "high" },
-    { label: "Aggressive", value: "aggressive" },
+    { label: t("linkList.levelAll"), value: "all" },
+    { label: t("linkList.levelLow"), value: "low" },
+    { label: t("linkList.levelMedium"), value: "medium" },
+    { label: t("linkList.levelHigh"), value: "high" },
+    { label: t("linkList.levelAggressive"), value: "aggressive" },
   ];
 
   const getSortLabel = () => {
-    return sortOptions.find((o) => o.value === filters.sort)?.label || "Newest";
+    return (
+      sortOptions.find((o) => o.value === filters.sort)?.label ||
+      t("linkList.sortNewest")
+    );
   };
 
   const getStatusLabel = () => {
     return (
       statusOptions.find((o) => o.value === filters.status)?.label ||
-      "All Status"
+      t("linkList.statusAll")
     );
   };
 
   const getLevelLabel = () => {
     return (
       levelOptions.find((o) => o.value === filters.adsLevel)?.label ||
-      "All Levels"
+      t("linkList.levelAll")
     );
   };
 
@@ -97,7 +102,9 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
       <div className="flex flex-col gap-5">
         {/* Title Row */}
         <div className="flex items-center justify-between">
-          <h3 className="text-[1.8em] font-bold text-shortblack">My Links</h3>
+          <h3 className="text-[1.8em] font-bold text-shortblack">
+            {t("linkList.title")}
+          </h3>
         </div>
 
         {/* Filters Row */}
@@ -107,7 +114,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
             <input
               type="text"
-              placeholder="Search by title, URL, or alias..."
+              placeholder={t("linkList.searchPlaceholder")}
               value={filters.search || ""}
               onChange={(e) =>
                 setFilters({ ...filters, search: e.target.value })

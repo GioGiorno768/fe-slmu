@@ -15,6 +15,7 @@ import {
 import type { UserLevelProgress } from "@/types/type";
 import clsx from "clsx";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 interface CurrentLevelHeaderProps {
   data: UserLevelProgress;
@@ -65,9 +66,10 @@ const levelIconMap: Record<
 
 export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
   const earningsNeeded = Math.max(
     0,
-    data.nextLevelEarnings - data.currentEarnings
+    data.nextLevelEarnings - data.currentEarnings,
   );
 
   const levelConfig = levelIconMap[data.currentLevel] || levelIconMap.beginner;
@@ -84,7 +86,7 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
       <div
         className={clsx(
           "bg-gradient-to-r rounded-3xl p-8 text-white shadow-xl relative",
-          levelConfig.gradient
+          levelConfig.gradient,
         )}
       >
         {/* Background Decorations */}
@@ -97,7 +99,7 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
             <div
               className={clsx(
                 "w-28 h-28 rounded-3xl flex items-center justify-center shadow-2xl",
-                levelConfig.bgColor
+                levelConfig.bgColor,
               )}
             >
               <LevelIcon
@@ -113,11 +115,11 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
             {/* Title & Badge */}
             <div className="flex flex-col lg:flex-row items-center gap-4 mb-4">
               <h2 className="text-[2.8em] font-bold capitalize tracking-tight">
-                {data.currentLevel} Rank
+                {data.currentLevel} {t("levelsPage.rank")}
               </h2>
               <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 px-4 py-1.5 rounded-full text-[1.2em] font-semibold">
                 <Zap className="w-4 h-4 fill-current" />
-                Current Tier
+                {t("levelsPage.currentTier")}
               </span>
             </div>
 
@@ -125,15 +127,15 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
             <p className="text-[1.5em] text-white/80 mb-6">
               {earningsNeeded > 0 ? (
                 <>
-                  Keep pushing! You need{" "}
+                  {t("levelsPage.keepPushing")}{" "}
                   <span className="font-bold text-white">
                     {formatCurrency(earningsNeeded)}
                   </span>{" "}
-                  more earnings to reach the next level.
+                  {t("levelsPage.moreEarnings")}
                 </>
               ) : (
                 <span className="font-bold">
-                  🎉 You've reached the highest level!
+                  {t("levelsPage.highestLevel")}
                 </span>
               )}
             </p>
@@ -145,7 +147,10 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
                   <TrendingUp className="w-4 h-4" />
                   {formatCurrency(data.currentEarnings)}
                 </span>
-                <span>{formatCurrency(data.nextLevelEarnings)} (Target)</span>
+                <span>
+                  {formatCurrency(data.nextLevelEarnings)} (
+                  {t("levelsPage.target")})
+                </span>
               </div>
               <div className="h-3 bg-black/20 rounded-full overflow-hidden backdrop-blur-sm">
                 <motion.div
@@ -158,7 +163,7 @@ export default function CurrentLevelHeader({ data }: CurrentLevelHeaderProps) {
                 </motion.div>
               </div>
               <p className="text-right text-[1.1em] text-white/60">
-                {data.progressPercent.toFixed(1)}% Complete
+                {data.progressPercent.toFixed(1)}% {t("levelsPage.complete")}
               </p>
             </div>
           </div>

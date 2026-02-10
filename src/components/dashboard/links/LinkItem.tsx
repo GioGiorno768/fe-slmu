@@ -22,6 +22,7 @@ import type { Shortlink } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 interface LinkItemProps {
   link: Shortlink;
@@ -39,6 +40,7 @@ export default function LinkItem({
   const [copied, setCopied] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
 
   // Theme detection with next-themes
   const { theme } = useTheme();
@@ -140,7 +142,7 @@ export default function LinkItem({
                     isDark ? "text-gray-400" : "text-gray-500",
                   )}
                 >
-                  {link.title || "Untitled"}
+                  {link.title || t("linkList.untitled")}
                 </h3>
                 <span
                   className={clsx(
@@ -183,7 +185,7 @@ export default function LinkItem({
                         ? "hover:bg-gray-800 text-gray-400 hover:text-gray-300"
                         : "hover:bg-gray-100 text-gray-400 hover:text-gray-600",
                   )}
-                  title="Copy link"
+                  title={t("linkList.copyLink")}
                 >
                   {copied ? (
                     <Check className="w-4 h-4" />
@@ -269,7 +271,7 @@ export default function LinkItem({
                       )}
                     >
                       <Pencil className="w-4 h-4" />
-                      <span>Edit Link</span>
+                      <span>{t("linkList.editLink")}</span>
                     </button>
                     <button
                       onClick={() => {
@@ -293,7 +295,9 @@ export default function LinkItem({
                         <Eye className="w-4 h-4" />
                       )}
                       <span>
-                        {link.status === "active" ? "Disable" : "Enable"}
+                        {link.status === "active"
+                          ? t("linkList.disable")
+                          : t("linkList.enable")}
                       </span>
                     </button>
                   </motion.div>
@@ -369,7 +373,7 @@ export default function LinkItem({
                 isDark ? "text-cyan-400" : "text-cyan-600",
               )}
             >
-              {formatNumber(link.totalClicks)} views
+              {formatNumber(link.totalClicks)} {t("linkList.views")}
             </span>
           </div>
 
@@ -416,7 +420,7 @@ export default function LinkItem({
                   isDark ? "text-amber-400" : "text-amber-600",
                 )}
               >
-                Protected
+                {t("linkList.protected")}
               </span>
             </div>
           )}
@@ -434,14 +438,16 @@ export default function LinkItem({
       >
         <div className="flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />
-          <span>Created {formatLinkDate(link.dateCreated)}</span>
+          <span>
+            {t("linkList.created")} {formatLinkDate(link.dateCreated)}
+          </span>
         </div>
         <div className="flex items-center gap-1.5">
           <Calendar className="w-3.5 h-3.5" />
           <span>
             {link.dateExpired
-              ? `Expires ${formatLinkDate(link.dateExpired)}`
-              : "No expiration"}
+              ? `${t("linkList.expires")} ${formatLinkDate(link.dateExpired)}`
+              : t("linkList.noExpiration")}
           </span>
         </div>
       </div>

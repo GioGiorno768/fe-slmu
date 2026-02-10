@@ -14,6 +14,7 @@ import {
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import type { NotificationItem } from "@/types/type";
+import { useLocale, useTranslations } from "next-intl";
 
 interface NotificationDetailModalProps {
   isOpen: boolean;
@@ -38,6 +39,9 @@ export default function NotificationDetailModal({
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
+  const locale = useLocale();
+  const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
   // Close on ESC
   useEffect(() => {
@@ -95,18 +99,18 @@ export default function NotificationDetailModal({
   };
 
   const getCategoryLabel = (category: string) => {
-    const labels: Record<string, string> = {
-      payment: "Pembayaran",
-      link: "Link",
-      account: "Akun",
-      event: "Event",
-      system: "Sistem",
+    const keyMap: Record<string, string> = {
+      payment: "notificationsPage.categoryPayment",
+      link: "notificationsPage.categoryLink",
+      account: "notificationsPage.categoryAccount",
+      event: "notificationsPage.categoryEvent",
+      system: "notificationsPage.categorySystem",
     };
-    return labels[category] || category;
+    return keyMap[category] ? t(keyMap[category]) : category;
   };
 
   const formatDateTime = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString("id-ID", {
+    return new Date(dateStr).toLocaleString(dateLocale, {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -135,7 +139,7 @@ export default function NotificationDetailModal({
             onClick={(e) => e.stopPropagation()}
             className={clsx(
               "rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col",
-              isDark ? "bg-card" : "bg-white"
+              isDark ? "bg-card" : "bg-white",
             )}
           >
             {/* Header */}
@@ -144,17 +148,17 @@ export default function NotificationDetailModal({
                 "px-6 py-5 flex items-center justify-between",
                 isDark
                   ? "bg-card border-b border-gray-800"
-                  : "bg-white border-b border-gray-100"
+                  : "bg-white border-b border-gray-100",
               )}
             >
               <h2 className="text-[1.8em] font-bold text-shortblack">
-                Detail Notifikasi
+                {t("notificationsPage.detailTitle")}
               </h2>
               <button
                 onClick={onClose}
                 className={clsx(
                   "p-2 rounded-full text-grays transition-colors",
-                  isDark ? "hover:bg-gray-800" : "hover:bg-slate-100"
+                  isDark ? "hover:bg-gray-800" : "hover:bg-slate-100",
                 )}
               >
                 <X className="w-5 h-5" />
@@ -169,7 +173,7 @@ export default function NotificationDetailModal({
                   <div
                     className={clsx(
                       "w-16 h-16 rounded-2xl flex items-center justify-center",
-                      getBgColor(notification.type)
+                      getBgColor(notification.type),
                     )}
                   >
                     {getIcon(notification.type)}
@@ -186,11 +190,13 @@ export default function NotificationDetailModal({
                             ? "bg-gray-700 text-gray-400"
                             : "bg-gray-100 text-gray-600"
                           : isDark
-                          ? "bg-blue-500/20 text-blue-400"
-                          : "bg-blue-100 text-blue-700"
+                            ? "bg-blue-500/20 text-blue-400"
+                            : "bg-blue-100 text-blue-700",
                       )}
                     >
-                      {notification.isRead ? "Sudah Dibaca" : "Belum Dibaca"}
+                      {notification.isRead
+                        ? t("notificationsPage.statusRead")
+                        : t("notificationsPage.statusUnread")}
                     </span>
                   </div>
                 </div>
@@ -205,7 +211,7 @@ export default function NotificationDetailModal({
                       "text-[1.1em] font-bold px-3 py-1 rounded-full uppercase tracking-wide",
                       isDark
                         ? "bg-gray-700 text-gray-300"
-                        : "bg-slate-100 text-grays"
+                        : "bg-slate-100 text-grays",
                     )}
                   >
                     {getCategoryLabel(notification.category)}
@@ -216,7 +222,7 @@ export default function NotificationDetailModal({
                 <div
                   className={clsx(
                     "rounded-2xl p-5",
-                    isDark ? "bg-subcard" : "bg-slate-50"
+                    isDark ? "bg-subcard" : "bg-slate-50",
                   )}
                 >
                   <p className="text-[1.4em] text-shortblack leading-relaxed whitespace-pre-wrap">
@@ -232,12 +238,12 @@ export default function NotificationDetailModal({
                 "px-6 py-4 flex justify-between items-center",
                 isDark
                   ? "bg-subcard border-t border-gray-800"
-                  : "bg-slate-50 border-t border-gray-100"
+                  : "bg-slate-50 border-t border-gray-100",
               )}
             >
               {notification.isGlobal ? (
                 <p className="text-[1.2em] text-gray-400 italic">
-                  📌 Pengumuman dari Admin
+                  {t("notifications.adminAnnouncement")}
                 </p>
               ) : (
                 <button
@@ -250,19 +256,21 @@ export default function NotificationDetailModal({
                         ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                         : "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : isDark
-                      ? "text-red-400 hover:bg-red-500/10"
-                      : "text-red-500 hover:bg-red-50"
+                        ? "text-red-400 hover:bg-red-500/10"
+                        : "text-red-500 hover:bg-red-50",
                   )}
                 >
                   <Trash2 className="w-4 h-4" />
-                  {isDeleting ? "Menghapus..." : "Hapus"}
+                  {isDeleting
+                    ? t("notificationsPage.deleting")
+                    : t("notifications.deleteNotif")}
                 </button>
               )}
               <button
                 onClick={onClose}
                 className="text-[1.3em] font-semibold text-grays hover:text-shortblack px-4 py-2 rounded-lg transition-colors"
               >
-                Tutup
+                {t("notifications.close")}
               </button>
             </div>
           </motion.div>

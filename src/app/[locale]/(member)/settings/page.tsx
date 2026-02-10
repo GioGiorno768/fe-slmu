@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { User, Lock, CreditCard, Settings2, Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 // Section Components
 import ProfileSection from "@/components/dashboard/settings/ProfileSection";
@@ -26,9 +27,18 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
+// Map tab ids to translation keys
+const TAB_KEYS: Record<TabId, string> = {
+  profile: "settingsPage.profile",
+  security: "settingsPage.security",
+  payment: "settingsPage.payment",
+  preferences: "settingsPage.preferences",
+};
+
 export default function SettingsPage() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -113,7 +123,7 @@ export default function SettingsPage() {
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree pb-10">
       <h1 className="text-[2.5em] font-bold text-shortblack mb-8">
-        Account Settings
+        {t("settingsPage.accountSettings")}
       </h1>
 
       <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -123,7 +133,7 @@ export default function SettingsPage() {
             "w-full lg:w-[280px] flex-shrink-0 rounded-3xl p-4 shadow-sm z-20 sticky sm:top-[15em] top-[10em]",
             isDark
               ? "bg-card border border-gray-800"
-              : "bg-white border border-gray-100"
+              : "bg-white border border-gray-100",
           )}
         >
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
@@ -139,11 +149,11 @@ export default function SettingsPage() {
                       ? isDark
                         ? "bg-bluelight text-white shadow-md shadow-purple-900/30"
                         : "bg-bluelight text-white shadow-md shadow-blue-200"
-                      : "text-grays hover:bg-blues hover:text-shortblack"
+                      : "text-grays hover:bg-blues hover:text-shortblack",
                   )}
                 >
                   <tab.icon className="w-5 h-5" />
-                  {tab.label}
+                  {t(TAB_KEYS[tab.id])}
                 </button>
               );
             })}

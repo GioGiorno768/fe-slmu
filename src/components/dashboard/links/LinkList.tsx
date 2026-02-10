@@ -7,6 +7,7 @@ import LinkFilters from "./LinkFilters";
 import Pagination from "../Pagination";
 import type { Shortlink, MemberLinkFilters } from "@/types/type";
 import Spinner from "../Spinner";
+import { useTranslations } from "next-intl";
 
 interface LinkListProps {
   links: Shortlink[];
@@ -36,6 +37,7 @@ export default function LinkList({
   onEdit,
   onToggleStatus,
 }: LinkListProps) {
+  const t = useTranslations("Dashboard");
   // Show spinner for initial load OR during refetch
   const showLoading = isLoading || isFetching;
 
@@ -48,7 +50,7 @@ export default function LinkList({
           <Spinner />
         ) : links.length === 0 ? (
           <p className="text-center text-grays py-8">
-            No links found matching criteria.
+            {t("linkList.noLinksFound")}
           </p>
         ) : (
           links.map((link) => (

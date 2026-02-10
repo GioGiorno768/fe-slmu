@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 import type { ReferredUser } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 interface ReferralTableProps {
   users: ReferredUser[];
@@ -26,10 +27,11 @@ export default function ReferralTable({ users }: ReferralTableProps) {
 
   // 💱 Currency context
   const { format: formatCurrency } = useCurrency();
+  const t = useTranslations("Dashboard");
 
   // 1. Filter Data (Search by name only)
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // 2. Reset Page kalau search berubah
@@ -53,7 +55,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
       {/* Header */}
       <div className="p-6 border-b border-gray-100 dark:border-gray-dashboard/30 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h3 className="text-[1.8em] font-semibold text-shortblack">
-          Daftar Teman
+          {t("referralPage.friendsList")}
         </h3>
 
         {/* Search Bar */}
@@ -61,7 +63,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-grays" />
           <input
             type="text"
-            placeholder="Cari user..."
+            placeholder={t("referralPage.searchUser")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-3 rounded-xl bg-subcard border border-gray-200 dark:border-gray-dashboard/30 focus:outline-none focus:ring-2 focus:ring-bluelight/20 focus:border-bluelight text-[1.4em] text-shortblack placeholder:text-gray-400 transition-all shadow-sm"
@@ -99,10 +101,12 @@ export default function ReferralTable({ users }: ReferralTableProps) {
                           "px-2 py-0.5 rounded-full text-[1em] font-medium whitespace-nowrap",
                           user.status === "active"
                             ? "bg-green-500/20 text-green-700 dark:text-green-400"
-                            : "bg-gray-100 dark:bg-gray-dashboard/30 text-gray-500 dark:text-gray-400"
+                            : "bg-gray-100 dark:bg-gray-dashboard/30 text-gray-500 dark:text-gray-400",
                         )}
                       >
-                        {user.status === "active" ? "Aktif" : "Tidak Aktif"}
+                        {user.status === "active"
+                          ? t("referralPage.active")
+                          : t("referralPage.inactive")}
                       </span>
                     </div>
 
@@ -110,7 +114,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
                     <div className="flex items-center gap-1 text-grays text-[1.2em] mt-0.5">
                       <Calendar className="w-3 h-3" />
                       <span>
-                        Bergabung{" "}
+                        {t("referralPage.joined")}{" "}
                         {new Date(user.dateJoined).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "short",
@@ -124,7 +128,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
                 {/* Right Side - Earnings */}
                 <div className="text-right flex-shrink-0">
                   <div className="text-[1em] text-grays mb-0.5 hidden sm:block">
-                    Penghasilan
+                    {t("referralPage.earnings")}
                   </div>
                   <div className="font-bold text-bluelight text-[1.5em] sm:text-[1.6em]">
                     {formatCurrency(user.totalEarningsForMe)}
@@ -140,12 +144,11 @@ export default function ReferralTable({ users }: ReferralTableProps) {
             </div>
             <p className="text-grays text-[1.4em]">
               {searchTerm
-                ? "User tidak ditemukan."
-                : "Belum ada teman yang diajak."}
+                ? t("referralPage.userNotFound")
+                : t("referralPage.noFriendsYet")}
             </p>
             <p className="text-gray-400 text-[1.2em] mt-1">
-              {!searchTerm &&
-                "Bagikan link referral Anda untuk mengajak teman!"}
+              {!searchTerm && t("referralPage.shareToInvite")}
             </p>
           </div>
         )}
@@ -170,7 +173,7 @@ export default function ReferralTable({ users }: ReferralTableProps) {
                 "w-8 h-8 rounded-lg text-[1.2em] font-bold transition-all",
                 currentPage === page
                   ? "bg-bluelight text-white shadow-md shadow-blue-200 dark:shadow-blue-900/30"
-                  : "bg-subcard border border-gray-200 dark:border-gray-dashboard/30 text-shortblack hover:bg-blues"
+                  : "bg-subcard border border-gray-200 dark:border-gray-dashboard/30 text-shortblack hover:bg-blues",
               )}
             >
               {page}

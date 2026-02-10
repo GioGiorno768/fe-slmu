@@ -21,6 +21,7 @@ import { useTheme } from "next-themes";
 import type { SavedPaymentMethod } from "@/types/type";
 import ConfirmationModal from "../ConfirmationModal";
 import { usePaymentLogic } from "@/hooks/useSettings";
+import { useTranslations } from "next-intl";
 import type { PaymentMethodTemplate } from "@/services/paymentTemplateService";
 import {
   groupTemplatesByType,
@@ -48,6 +49,7 @@ export default function PaymentSection() {
   }, []);
 
   const isDark = mounted && resolvedTheme === "dark";
+  const t = useTranslations("Dashboard");
 
   // Hook with templates from API
   const {
@@ -178,7 +180,9 @@ export default function PaymentSection() {
             : "bg-white border border-gray-100",
         )}
       >
-        <h2 className="text-[2em] font-bold text-shortblack">Saved Methods</h2>
+        <h2 className="text-[2em] font-bold text-shortblack">
+          {t("settingsPage.savedMethods")}
+        </h2>
 
         {methods.length === 0 ? (
           <div
@@ -187,9 +191,7 @@ export default function PaymentSection() {
               isDark ? "border-gray-700" : "border-gray-200",
             )}
           >
-            <p className="text-[1.4em]">
-              Belum ada metode pembayaran yang disimpan.
-            </p>
+            <p className="text-[1.4em]">{t("settingsPage.noSavedMethods")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -215,7 +217,8 @@ export default function PaymentSection() {
                   {/* Badge Default */}
                   {method.isDefault && (
                     <div className="absolute top-0 right-0 bg-bluelight text-white text-[1.1em] px-4 py-1 rounded-bl-2xl rounded-tr-2xl font-bold flex items-center gap-1 shadow-sm">
-                      <Star className="w-3 h-3 fill-current" /> Default
+                      <Star className="w-3 h-3 fill-current" />{" "}
+                      {t("settingsPage.default")}
                     </div>
                   )}
 
@@ -274,7 +277,8 @@ export default function PaymentSection() {
                           isDark ? "hover:bg-blue-500/10" : "hover:bg-blue-50",
                         )}
                       >
-                        <CheckCircle className="w-4 h-4" /> Set Default
+                        <CheckCircle className="w-4 h-4" />{" "}
+                        {t("settingsPage.setDefault")}
                       </button>
                     )}
                     <button
@@ -285,7 +289,7 @@ export default function PaymentSection() {
                         isDark ? "hover:bg-red-500/10" : "hover:bg-red-50",
                       )}
                     >
-                      <Trash2 className="w-4 h-4" /> Delete
+                      <Trash2 className="w-4 h-4" /> {t("settingsPage.delete")}
                     </button>
                   </div>
                 </motion.div>
@@ -311,7 +315,8 @@ export default function PaymentSection() {
         )}
       >
         <h2 className="text-[2em] font-bold text-shortblack mb-8 flex items-center gap-3">
-          <Plus className="w-6 h-6 text-bluelight" /> Add New Method
+          <Plus className="w-6 h-6 text-bluelight" />{" "}
+          {t("settingsPage.addNewMethod")}
         </h2>
 
         {templates.length === 0 ? (
@@ -321,9 +326,7 @@ export default function PaymentSection() {
               isDark ? "border-gray-700" : "border-gray-200",
             )}
           >
-            <p className="text-[1.4em]">
-              Tidak ada template pembayaran tersedia saat ini.
-            </p>
+            <p className="text-[1.4em]">{t("settingsPage.noTemplates")}</p>
           </div>
         ) : (
           <form onSubmit={handleAddSubmit} className="space-y-8">
@@ -356,7 +359,10 @@ export default function PaymentSection() {
                       {config.label}
                     </span>
                     <span className="text-[1.1em] text-grays">
-                      {count} provider{count !== 1 ? "s" : ""}
+                      {count}{" "}
+                      {count !== 1
+                        ? t("settingsPage.providers")
+                        : t("settingsPage.provider")}
                     </span>
                   </button>
                 );
@@ -375,7 +381,7 @@ export default function PaymentSection() {
               {/* Provider Select */}
               <div className="space-y-2">
                 <label className="text-[1.4em] font-bold text-shortblack">
-                  Select Provider
+                  {t("settingsPage.selectProvider")}
                 </label>
                 <div className="relative">
                   <select
@@ -401,7 +407,7 @@ export default function PaymentSection() {
                 {/* Selected template info */}
                 {selectedTemplate && (
                   <div className="flex items-center gap-2 mt-2 text-[1.2em] text-grays">
-                    <span>Currency:</span>
+                    <span>{t("settingsPage.currency")}</span>
                     <span
                       className={clsx(
                         "px-2 py-0.5 rounded font-medium",
@@ -413,7 +419,10 @@ export default function PaymentSection() {
                       {selectedTemplate.currency}
                     </span>
                     <span className="mx-2">•</span>
-                    <span>Fee: ${Number(selectedTemplate.fee).toFixed(2)}</span>
+                    <span>
+                      {t("settingsPage.fee")} $
+                      {Number(selectedTemplate.fee).toFixed(2)}
+                    </span>
                   </div>
                 )}
               </div>
@@ -428,7 +437,7 @@ export default function PaymentSection() {
               {/* Account Name */}
               <div className="space-y-2">
                 <label className="text-[1.4em] font-medium text-grays">
-                  Account Name
+                  {t("settingsPage.accountName")}
                 </label>
                 <div className="relative">
                   <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-grays" />
@@ -444,7 +453,7 @@ export default function PaymentSection() {
                         ? "bg-card border border-gray-700"
                         : "bg-white border border-gray-200",
                     )}
-                    placeholder="e.g. Kevin Ragil"
+                    placeholder={t("settingsPage.accountNamePlaceholder")}
                     required
                   />
                 </div>
@@ -453,7 +462,8 @@ export default function PaymentSection() {
               {/* Account Number */}
               <div className="space-y-2">
                 <label className="text-[1.4em] font-medium text-grays">
-                  {selectedTemplate?.input_label || "Account Number / ID"}
+                  {selectedTemplate?.input_label ||
+                    t("settingsPage.accountNumberLabel")}
                 </label>
                 <input
                   type={getHtmlInputType(
@@ -496,7 +506,7 @@ export default function PaymentSection() {
                 ) : (
                   <Save className="w-6 h-6" />
                 )}
-                Save Method
+                {t("settingsPage.saveMethod")}
               </button>
             </div>
           </form>
@@ -512,9 +522,9 @@ export default function PaymentSection() {
           setDeleteId(null);
         }}
         isLoading={isProcessing}
-        title="Hapus Metode?"
-        description="Yakin ingin menghapus metode pembayaran ini? Tindakan ini tidak bisa dibatalkan."
-        confirmLabel="Hapus"
+        title={t("settingsPage.deleteMethodTitle")}
+        description={t("settingsPage.deleteMethodDesc")}
+        confirmLabel={t("settingsPage.deleteConfirm")}
         type="danger"
       />
     </div>

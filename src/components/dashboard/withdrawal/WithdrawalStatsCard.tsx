@@ -15,6 +15,7 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 import type { WithdrawalStats } from "@/types/type";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 interface WithdrawalStatsCardProps {
   stats: WithdrawalStats | null;
@@ -29,6 +30,7 @@ export default function WithdrawalStatsCard({
 }: WithdrawalStatsCardProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("Dashboard");
 
   useEffect(() => {
     setMounted(true);
@@ -87,7 +89,7 @@ export default function WithdrawalStatsCard({
         "rounded-3xl shadow-sm h-full flex flex-col relative overflow-hidden font-figtree",
         isDark
           ? "bg-card border border-gray-dashboard/30 shadow-black/20"
-          : "bg-white border border-gray-100 shadow-slate-500/20"
+          : "bg-white border border-gray-100 shadow-slate-500/20",
       )}
     >
       {/* Header Section (Judul & Tombol) */}
@@ -96,14 +98,14 @@ export default function WithdrawalStatsCard({
           <h2
             className={clsx(
               "text-[1.8em] font-bold flex items-center gap-2",
-              isDark ? "text-white" : "text-shortblack"
+              isDark ? "text-white" : "text-shortblack",
             )}
           >
             <Wallet className="w-6 h-6 text-bluelight" />
-            Finance Overview
+            {t("withdrawalPage.financeOverview")}
           </h2>
           <p className="text-[1.3em] text-grays mt-1">
-            Manage your earnings and payouts.
+            {t("withdrawalPage.financeDesc")}
           </p>
         </div>
 
@@ -114,10 +116,10 @@ export default function WithdrawalStatsCard({
             "hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em]",
             "hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
             "md:flex items-center gap-2 shadow-md",
-            isDark ? "shadow-blue-900/30" : "shadow-blue-200"
+            isDark ? "shadow-blue-900/30" : "shadow-blue-200",
           )}
         >
-          <span>Request Payout</span>
+          <span>{t("withdrawalPage.requestPayout")}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
@@ -129,7 +131,7 @@ export default function WithdrawalStatsCard({
             "rounded-2xl gap-8 flex flex-col md:flex-row justify-between items-center p-6 shadow-sm relative overflow-hidden",
             isDark
               ? "bg-subcard shadow-black/30"
-              : "bg-white shadow-slate-400/50"
+              : "bg-white shadow-slate-400/50",
           )}
         >
           {/* Dekorasi blob kecil */}
@@ -138,13 +140,13 @@ export default function WithdrawalStatsCard({
               "w-24 h-24 md:order-2 rounded-full flex items-center mr-4 justify-center shadow-inner",
               isDark
                 ? "bg-blue-500/10 border border-blue-500/20"
-                : "bg-blue-50 border border-blue-100"
+                : "bg-blue-50 border border-blue-100",
             )}
           >
             <div
               className={clsx(
                 "w-16 h-16 rounded-full flex items-center justify-center text-bluelight",
-                isDark ? "bg-blue-500/20" : "bg-blue-100"
+                isDark ? "bg-blue-500/20" : "bg-blue-100",
               )}
             >
               <Wallet2 className="w-8 h-8" />
@@ -152,27 +154,27 @@ export default function WithdrawalStatsCard({
           </div>
           <div className="flex flex-col gap-4">
             <p className="text-[1.4em] font-medium text-grays mb-1 flex items-center gap-2">
-              Available Balance
+              {t("withdrawalPage.availableBalance")}
               <span
                 className={clsx(
                   "text-[0.8em] px-2 py-0.5 rounded-md font-bold flex items-center gap-1",
                   isDark
                     ? "bg-green-500/20 text-green-400"
-                    : "bg-green-100 text-green-700"
+                    : "bg-green-100 text-green-700",
                 )}
               >
-                <TrendingUp className="w-3 h-3" /> Ready
+                <TrendingUp className="w-3 h-3" /> {t("withdrawalPage.ready")}
               </span>
             </p>
             <h1 className="text-[4.5em] font-bold text-bluelight tracking-tight leading-none my-2">
               {formatCurrency(stats?.availableBalance || 0)}
             </h1>
             <p className="text-[1.3em] text-grays opacity-80">
-              Minimum payout threshold:{" "}
+              {t("withdrawalPage.minPayoutThreshold")}{" "}
               <span
                 className={clsx(
                   "font-semibold",
-                  isDark ? "text-white" : "text-shortblack"
+                  isDark ? "text-white" : "text-shortblack",
                 )}
               >
                 {formatLocalAmount(displayMinWithdrawal)}
@@ -186,10 +188,10 @@ export default function WithdrawalStatsCard({
               "md:hidden lg:hidden bg-bluelight text-white px-6 py-3 rounded-xl font-bold text-[1.4em]",
               "hover:bg-opacity-90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300",
               "flex items-center gap-2 shadow-md",
-              isDark ? "shadow-blue-900/30" : "shadow-blue-200"
+              isDark ? "shadow-blue-900/30" : "shadow-blue-200",
             )}
           >
-            <span>Request Payout</span>
+            <span>{t("withdrawalPage.requestPayout")}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -205,19 +207,19 @@ export default function WithdrawalStatsCard({
                 "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
                 isDark
                   ? "bg-orange-500/20 text-orange-400 border border-orange-500/20"
-                  : "bg-orange-50 text-orange-500 border border-orange-100"
+                  : "bg-orange-50 text-orange-500 border border-orange-100",
               )}
             >
               <Clock className="w-6 h-6" />
             </div>
             <div>
               <p className="text-[1.2em] text-grays uppercase font-semibold tracking-wider mb-0.5">
-                Pending
+                {t("withdrawalPage.pending")}
               </p>
               <p
                 className={clsx(
                   "text-[1.8em] font-bold leading-none",
-                  isDark ? "text-white" : "text-shortblack"
+                  isDark ? "text-white" : "text-shortblack",
                 )}
               >
                 {formatCurrency(stats?.pendingWithdrawn || 0)}
@@ -227,7 +229,7 @@ export default function WithdrawalStatsCard({
           <div
             className={clsx(
               "w-[0.15em] rounded-full",
-              isDark ? "bg-blue-500/20" : "bg-blue-100"
+              isDark ? "bg-blue-500/20" : "bg-blue-100",
             )}
           ></div>
           {/* Total Withdrawn */}
@@ -237,19 +239,19 @@ export default function WithdrawalStatsCard({
                 "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0",
                 isDark
                   ? "bg-green-500/20 text-green-400 border border-green-500/20"
-                  : "bg-green-50 text-green-600 border border-green-100"
+                  : "bg-green-50 text-green-600 border border-green-100",
               )}
             >
               <CheckCircle className="w-6 h-6" />
             </div>
             <div>
               <p className="text-[1.2em] text-grays uppercase font-semibold tracking-wider mb-0.5">
-                Withdrawn
+                {t("withdrawalPage.withdrawn")}
               </p>
               <p
                 className={clsx(
                   "text-[1.8em] font-bold leading-none",
-                  isDark ? "text-white" : "text-shortblack"
+                  isDark ? "text-white" : "text-shortblack",
                 )}
               >
                 {formatCurrency(stats?.totalWithdrawn || 0)}
