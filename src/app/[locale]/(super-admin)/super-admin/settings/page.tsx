@@ -23,6 +23,7 @@ import ReferralSettingsSection from "@/components/dashboard/super-admin/settings
 import SecuritySettingsSection from "@/components/dashboard/super-admin/settings/SecuritySettingsSection";
 import GeneralSettingsSection from "@/components/dashboard/super-admin/settings/GeneralSettingsSection";
 import SelfClickSettings from "@/components/dashboard/admin/settings/SelfClickSettings";
+import VisitorCooldownSettings from "@/components/dashboard/admin/settings/VisitorCooldownSettings";
 import TokenSettings from "@/components/dashboard/admin/settings/TokenSettings";
 import CpcRatesSettings from "@/components/dashboard/admin/settings/CpcRatesSettings";
 import GlobalNotificationSection from "@/components/dashboard/super-admin/settings/GlobalNotificationSection";
@@ -102,7 +103,7 @@ export default function SuperAdminSettingsPage() {
             "w-full lg:w-[280px] shrink-0 rounded-3xl p-4 shadow-sm z-20 sticky sm:top-[15em] top-[10em]",
             isDark
               ? "bg-card border border-gray-800"
-              : "bg-white border border-gray-100"
+              : "bg-white border border-gray-100",
           )}
         >
           <div className="grid lg:grid-cols-1 grid-cols-2 gap-2">
@@ -121,10 +122,10 @@ export default function SuperAdminSettingsPage() {
                         ? "bg-bluelight text-white shadow-md shadow-purple-900/30"
                         : "bg-bluelight text-white shadow-md shadow-blue-200"
                       : isDisabled
-                      ? isDark
-                        ? "text-gray-600 cursor-not-allowed"
-                        : "text-gray-300 cursor-not-allowed"
-                      : "text-grays hover:bg-blues hover:text-shortblack"
+                        ? isDark
+                          ? "text-gray-600 cursor-not-allowed"
+                          : "text-gray-300 cursor-not-allowed"
+                        : "text-grays hover:bg-blues hover:text-shortblack",
                   )}
                 >
                   <tab.icon className="w-5 h-5" />
@@ -133,7 +134,7 @@ export default function SuperAdminSettingsPage() {
                     <span
                       className={clsx(
                         "ml-auto text-[0.8em] text-gray-400 px-2 py-0.5 rounded-full hidden sm:block",
-                        isDark ? "bg-gray-800" : "bg-gray-100"
+                        isDark ? "bg-gray-800" : "bg-gray-100",
                       )}
                     >
                       Soon
@@ -165,6 +166,7 @@ export default function SuperAdminSettingsPage() {
               {activeTab === "links" && (
                 <>
                   <SelfClickSettings />
+                  <VisitorCooldownSettings />
                   <TokenSettings />
                 </>
               )}
