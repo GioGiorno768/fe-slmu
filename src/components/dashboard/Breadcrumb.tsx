@@ -49,7 +49,9 @@ export default function Breadcrumb() {
   const pathSegments = pathname.split("/").filter(Boolean);
   const currentSegment = pathSegments[pathSegments.length - 1] || "dashboard";
   const currentPageInfo = breadcrumbNameMap[currentSegment];
-  const pageTitle = currentPageInfo ? currentPageInfo.label : "Dashboard";
+  const pageTitle = currentPageInfo
+    ? currentPageInfo.label
+    : t("breadcrumbDashboard");
 
   return (
     <div className="lg:text-[10px] text-[8px] font-figtree">
@@ -68,7 +70,7 @@ export default function Breadcrumb() {
               className="flex items-center gap-2 hover:text-bluelight transition-colors"
             >
               <Home className="w-[1em] h-[1em]" />
-              <span>Home</span>
+              <span>{t("breadcrumbHome")}</span>
             </Link>
           </li>
 

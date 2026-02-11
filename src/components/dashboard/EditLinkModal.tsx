@@ -109,10 +109,10 @@ export default function EditLinkModal({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Alias validation: only alphanumeric, no spaces/symbols, max 20 chars
+  // Alias validation: only alphanumeric + dash + underscore (alpha_dash), min 4 / max 20 chars
   const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-      .replace(/[^a-zA-Z0-9]/g, "") // Remove non-alphanumeric
+      .replace(/[^a-zA-Z0-9_-]/g, "") // Allow alpha_dash only
       .slice(0, 20); // Max 20 characters
     setFormData({ ...formData, alias: value });
   };
@@ -195,9 +195,18 @@ export default function EditLinkModal({
                       onChange={handleAliasChange}
                       autoComplete="off"
                       maxLength={20}
-                      className="w-full text-[1.5em] px-5 py-3 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack placeholder:text-grays"
+                      className="w-full text-[1.5em] px-5 py-3 pr-22 rounded-xl border border-gray-dashboard/30 bg-subcard focus:bg-card focus:outline-none focus:ring-2 focus:ring-bluelight/50 focus:border-bluelight transition-all text-shortblack placeholder:text-grays"
                       placeholder="e.g., my-awesome-link"
                     />
+                    <span
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 text-[1.1em] font-mono pointer-events-none ${
+                        formData.alias.length > 0 && formData.alias.length < 4
+                          ? "text-red-500"
+                          : "text-grays"
+                      }`}
+                    >
+                      {formData.alias.length}/4-20
+                    </span>
                   </div>
                 </div>
 
