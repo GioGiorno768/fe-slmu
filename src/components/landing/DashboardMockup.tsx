@@ -13,15 +13,15 @@ export default function DashboardMockup() {
         <div className="absolute -inset-4 bg-gradient-to-r from-blue-100/50 via-purple-100/30 to-blue-100/50 rounded-3xl blur-2xl"></div>
 
         {/* Main container */}
-        <div className="relative rounded-2xl overflow-hidden bg-white shadow-2xl shadow-slate-200/80 border border-slate-100">
+        <div className="relative rounded-2xl overflow-hidden bg-white shadow-2xl shadow-slate-200/80">
           {/* Browser Top Bar */}
-          <div className="h-10 bg-slate-50 border-b border-slate-100 flex items-center px-4 gap-2">
+          <div className="h-10 bg-slate-50 flex items-center px-4 gap-2">
             <div className="flex gap-2">
               <div className="size-3 rounded-full bg-red-400/80"></div>
               <div className="size-3 rounded-full bg-amber-400/80"></div>
               <div className="size-3 rounded-full bg-green-400/80"></div>
             </div>
-            <div className="ml-4 flex-1 max-w-xl">
+            <div className="ml-4 flex-1 w-full">
               <div className="h-6 bg-white rounded-md border border-slate-200 flex items-center justify-center text-[10px] text-slate-400 select-none px-3">
                 <svg
                   className="w-3 h-3 mr-1 text-green-500"
@@ -42,9 +42,11 @@ export default function DashboardMockup() {
           {/* Dashboard Screenshot */}
           <div className="relative w-full">
             <Image
-              src="/landing/dashboard.png"
+              src="/landing/dashboard-no-ads.png"
               alt="Shortlinkmu Dashboard Preview - Analytics, Earnings, and Links Management"
-              width={1920}
+              // width={2980}
+              // height={1920}
+              width={1910}
               height={1080}
               className="w-full h-auto"
               priority

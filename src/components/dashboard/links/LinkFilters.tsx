@@ -230,7 +230,7 @@ export default function LinkFilters({ filters, setFilters }: LinkFiltersProps) {
           </div>
 
           {/* Ads Level Filter Dropdown */}
-          <div className="relative" ref={levelRef}>
+          <div className="relative hidden" ref={levelRef}>
             <button
               onClick={() => {
                 setIsLevelOpen(!isLevelOpen);

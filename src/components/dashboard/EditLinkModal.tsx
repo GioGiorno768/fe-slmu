@@ -247,9 +247,7 @@ export default function EditLinkModal({
                 </div>
 
                 {/* Dropdown Ads Level */}
-                <div className="relative " ref={adLevelRef}>
-                  {" "}
-                  {/* pb-20 biar ada ruang buat dropdown */}
+                {/* <div className="relative" ref={adLevelRef}>
                   <label className="block text-[1.4em] font-semibold text-shortblack mb-2">
                     {t("adsLevel")}
                   </label>
@@ -334,7 +332,7 @@ export default function EditLinkModal({
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </div> */}
               </div>
 
               {/* Footer / Submit Button */}

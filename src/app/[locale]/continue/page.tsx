@@ -116,7 +116,7 @@ export default function ContinuePage() {
       );
 
       // Success! Redirect to destination (open in new tab)
-      window.open(originalUrl, "_blank");
+      window.open(originalUrl, "_self");
     } catch (err: any) {
       const status = err.response?.status;
       const msg = err.response?.data?.message || err.message;

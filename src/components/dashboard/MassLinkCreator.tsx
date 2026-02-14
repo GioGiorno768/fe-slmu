@@ -271,10 +271,10 @@ export default function MassLinkCreator() {
           </div>
 
           {/* Ads Level Selection */}
-          <div className="flex items-center gap-4">
-            {/* <span className="text-[1.4em] font-medium text-shortblack">
+          {/* <div className="items-center gap-4 flex">
+            <span className="text-[1.4em] font-medium text-shortblack">
               {t("massLinkCard.adsLevel")}
-            </span> */}
+            </span>
             <div className="relative flex-1 max-w-xs" ref={adsLevelRef}>
               <button
                 type="button"

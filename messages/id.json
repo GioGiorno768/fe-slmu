@@ -159,6 +159,10 @@
         "title": "Kustomisasi Lanjutan",
         "desc": "Alias kustom, proteksi password, tanggal kadaluarsa, dan lainnya."
       },
+      "cleanUI": {
+        "title": "Dashboard Intuitif",
+        "desc": "Pantau performa link, statistik klik, dan pendapatan dalam satu tampilan modern dan minimalis."
+      },
       "multiAds": {
         "title": "Multi-Level Iklan",
         "desc": "Pilih level iklan (1-5 langkah) untuk memaksimalkan pendapatan Anda."

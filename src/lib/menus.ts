@@ -26,7 +26,7 @@ import type { Role, NavItem } from "@/types/type";
 // === MENU MEMBER (Gak berubah) ===
 export const getMemberMenu = (t: any): NavItem[] => [
   { icon: LayoutDashboard, label: t("title"), href: "/dashboard" },
-  { icon: Megaphone, label: t("adsInfo"), href: "/ads-info" },
+  // { icon: Megaphone, label: t("adsInfo"), href: "/ads-info" },
   {
     icon: Link2,
     label: t("myLinks"),

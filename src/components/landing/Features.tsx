@@ -9,6 +9,7 @@ import {
   Settings,
   Zap,
   Headphones,
+  Sparkles,
 } from "lucide-react";
 import FeaturesClient from "./FeaturesClient";
 import { getTranslations } from "next-intl/server";
@@ -55,10 +56,15 @@ export default async function Features() {
       title: t("customization.title"),
       desc: t("customization.desc"),
     },
+    // {
+    //   icon: Zap,
+    //   title: t("multiAds.title"),
+    //   desc: t("multiAds.desc"),
+    // },
     {
-      icon: Zap,
-      title: t("multiAds.title"),
-      desc: t("multiAds.desc"),
+      icon: Sparkles,
+      title: t("cleanUI.title"),
+      desc: t("cleanUI.desc"),
     },
     {
       icon: Wallet,

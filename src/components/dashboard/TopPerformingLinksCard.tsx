@@ -169,152 +169,83 @@ export default function TopPerformingLinksCard({
             {sortedLinks.map((link, index) => (
               <div
                 key={link.id}
-                className={clsx(
-                  "transition-all duration-200 rounded-2xl relative z-10 mb-2",
-                  expandedId === link.id ? "bg-subcard" : "hover:bg-subcard",
-                )}
+                className="group rounded-2xl p-3.5 transition-all duration-200 hover:bg-subcard"
               >
-                {/* Main Row */}
-                <div
-                  onClick={() => toggleAccordion(link.id)}
-                  className="flex items-center gap-3 p-4 cursor-pointer group"
-                >
+                {/* Top: Rank + Title + External Link */}
+                <div className="flex items-center gap-3">
                   {/* Rank Badge */}
                   <div
                     className={clsx(
-                      "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                      "w-9 h-9 rounded-xl flex items-center justify-center shrink-0",
                       index === 0 && sortBy === "highest"
-                        ? "bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-yellow-200"
+                        ? "bg-gradient-to-br from-yellow-400 to-amber-500 shadow-sm shadow-yellow-500/30"
                         : index === 1 && sortBy === "highest"
-                          ? "bg-gradient-to-br from-slate-300 to-slate-400 shadow-md shadow-slate-200"
+                          ? "bg-gradient-to-br from-slate-300 to-slate-400 shadow-sm shadow-slate-400/30"
                           : index === 2 && sortBy === "highest"
-                            ? "bg-gradient-to-br from-orange-400 to-amber-600 shadow-md shadow-orange-200"
+                            ? "bg-gradient-to-br from-orange-400 to-amber-600 shadow-sm shadow-orange-400/30"
                             : "bg-blues",
                     )}
                   >
                     {sortBy === "lowest" ? (
-                      <TrendingDown className="w-5 h-5 text-red-500" />
+                      <TrendingDown className="w-4 h-4 text-red-500" />
                     ) : index === 0 ? (
-                      <Trophy className="w-5 h-5 text-white" />
+                      <Trophy className="w-4 h-4 text-white" />
                     ) : index === 1 ? (
-                      <Medal className="w-5 h-5 text-white" />
+                      <Medal className="w-4 h-4 text-white" />
                     ) : index === 2 ? (
-                      <Medal className="w-5 h-5 text-white" />
+                      <Medal className="w-4 h-4 text-white" />
                     ) : (
-                      <Link2 className="w-4 h-4 text-bluelight" />
+                      <Link2 className="w-3.5 h-3.5 text-bluelight" />
                     )}
                   </div>
 
                   {/* Link Info */}
                   <div className="flex-1 min-w-0">
-                    <p
-                      className={clsx(
-                        "text-[1.35em] font-semibold truncate transition-colors",
-                        expandedId === link.id
-                          ? "text-bluelight"
-                          : "text-shortblack group-hover:text-bluelight",
-                      )}
-                    >
+                    <p className="text-[1.3em] font-semibold text-shortblack truncate group-hover:text-bluelight transition-colors">
                       {link.title}
                     </p>
-                    <p className="text-[1.15em] text-grays truncate">
+                    <p className="text-[1.1em] text-grays truncate">
                       {link.shortUrl}
                     </p>
                   </div>
 
-                  {/* Earnings Badge */}
-                  {/* <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-100 rounded-full">
-                    <Coins className="w-3.5 h-3.5 text-green-600" />
-                    <span className="text-[1.15em] font-bold text-green-700">
-                      ${link.totalEarnings.toFixed(2)}
-                    </span>
-                  </div> */}
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2">
-                    <a
-                      onClick={(e) => e.stopPropagation()}
-                      href={link.shortUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 rounded-lg hover:bg-card transition-colors group/p2"
-                    >
-                      <ExternalLink className="w-4 h-4 text-bluelight group-hover/p2:text-tx-blue-dashboard" />
-                    </a>
-                    <ChevronDown
-                      className={clsx(
-                        "w-4 h-4 text-grays transition-transform duration-300",
-                        expandedId === link.id && "rotate-180 text-bluelight",
-                      )}
-                    />
-                  </div>
+                  {/* External Link */}
+                  <a
+                    href={link.shortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg hover:bg-card transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    <ExternalLink className="w-4 h-4 text-grays group-hover:text-bluelight transition-colors" />
+                  </a>
                 </div>
 
-                {/* Accordion Detail - Simplified */}
-                <AnimatePresence>
-                  {expandedId === link.id && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-4 pb-4">
-                        <div className="flex flex-wrap items-center gap-4 pt-2">
-                          {/* Views */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
-                            <Eye className="w-4 h-4 text-bluelight" />
-                            <div className="flex flex-col">
-                              <span className="text-[1em] text-grays">
-                                {t("topLinks.views")}
-                              </span>
-                              <span className="text-[1.2em] font-bold text-shortblack">
-                                {link.validViews.toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Earnings (Mobile) */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
-                            <Coins className="w-4 h-4 text-green-600" />
-                            <div className="flex flex-col">
-                              <span className="text-[1em] text-grays">
-                                {t("topLinks.earned")}
-                              </span>
-                              <span className="text-[1.2em] font-bold text-tx-blue-dashboard">
-                                ${link.totalEarnings.toFixed(5)}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Ads Level */}
-                          <div className="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
-                            <Megaphone className="w-4 h-4 text-purple-500" />
-                            <div className="flex flex-col">
-                              <span className="text-[1em] text-grays">
-                                {t("topLinks.level")}
-                              </span>
-                              <span className="text-[1.2em] font-bold text-shortblack capitalize">
-                                {link.adsLevel}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* View in Links */}
-                          {/* <Link
-                            onClick={(e) => e.stopPropagation()}
-                            href={`/new-link?highlight=${link.id}`}
-                            className="ml-auto flex items-center gap-1.5 px-4 py-2 bg-bluelight text-white rounded-xl text-[1.1em] font-semibold hover:bg-bluelight/90 transition-colors"
-                          >
-                            <span>Detail</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Link> */}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Bottom: Inline Stats */}
+                <div className="flex items-center gap-3 mt-2 ml-12 flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <Eye className="w-3.5 h-3.5 text-bluelight" />
+                    <span className="text-[1.1em] font-medium text-grays">
+                      {link.validViews.toLocaleString()}
+                    </span>
+                    <span className="text-[1em] text-grays/50">
+                      {t("topLinks.views").toLowerCase()}
+                    </span>
+                  </div>
+                  <span className="text-grays/25">•</span>
+                  <div className="flex items-center gap-1.5">
+                    <Coins className="w-3.5 h-3.5 text-green-500" />
+                    <span className="text-[1.1em] font-semibold text-tx-blue-dashboard">
+                      ${link.totalEarnings.toFixed(5)}
+                    </span>
+                  </div>
+                  <span className="text-grays/25">•</span>
+                  {/* <div className="flex items-center gap-1.5">
+                    <Megaphone className="w-3.5 h-3.5 text-purple-500" />
+                    <span className="text-[1.1em] font-medium text-grays capitalize">
+                      {link.adsLevel}
+                    </span>
+                  </div> */}
+                </div>
               </div>
             ))}
           </div>
