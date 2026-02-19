@@ -3,7 +3,7 @@ import { Figtree, Manrope, Poppins } from "next/font/google";
 import "../globals.css"; // Perhatikan path naik satu level (../)
 import LenisScrollProvider from "../LenisProvider"; // Sesuaikan path jika perlu
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import { getMessages, getTranslations, getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Suspense } from "react";
@@ -32,6 +32,7 @@ const poppins = Poppins({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.layout");
+  const locale = await getLocale();
 
   return {
     metadataBase: new URL("https://shortlinkmu.com"),
@@ -65,7 +66,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Shortlinkmu",
       title: t("defaultTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com",
+      url: `https://shortlinkmu.com/${locale}`,
       locale: "id_ID",
       alternateLocale: "en_US",
       images: [
@@ -98,7 +99,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
 
     alternates: {
-      canonical: "https://shortlinkmu.com",
+      canonical: `https://shortlinkmu.com/${locale}`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id",
         "en-US": "https://shortlinkmu.com/en",

@@ -5,10 +5,11 @@ import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { FileText, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.termsOfService");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -16,14 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/terms-of-service",
+      url: `https://shortlinkmu.com/${locale}/terms-of-service`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/terms-of-service",
+      canonical: `https://shortlinkmu.com/${locale}/terms-of-service`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/terms-of-service",
         "en-US": "https://shortlinkmu.com/en/terms-of-service",

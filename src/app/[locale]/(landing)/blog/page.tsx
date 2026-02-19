@@ -5,10 +5,11 @@ import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import BlogContent from "@/components/landing/BlogContent";
 import { BookOpen } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.blog");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -16,14 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/blog",
+      url: `https://shortlinkmu.com/${locale}/blog`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/blog",
+      canonical: `https://shortlinkmu.com/${locale}/blog`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/blog",
         "en-US": "https://shortlinkmu.com/en/blog",

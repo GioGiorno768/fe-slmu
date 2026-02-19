@@ -13,10 +13,11 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "@/i18n/routing";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.contact");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -24,14 +25,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/contact",
+      url: `https://shortlinkmu.com/${locale}/contact`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/contact",
+      canonical: `https://shortlinkmu.com/${locale}/contact`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/contact",
         "en-US": "https://shortlinkmu.com/en/contact",

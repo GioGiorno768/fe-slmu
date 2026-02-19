@@ -5,10 +5,11 @@ import Navbar from "@/components/landing/Navbar";
 import ReportAbuseForm from "@/components/landing/ReportAbuseForm";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { ShieldAlert, AlertTriangle, CheckCircle, Clock } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.reportAbuse");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -16,14 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/report-abuse",
+      url: `https://shortlinkmu.com/${locale}/report-abuse`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/report-abuse",
+      canonical: `https://shortlinkmu.com/${locale}/report-abuse`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/report-abuse",
         "en-US": "https://shortlinkmu.com/en/report-abuse",

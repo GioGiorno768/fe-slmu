@@ -5,10 +5,11 @@ import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.privacyPolicy");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -16,14 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/privacy-policy",
+      url: `https://shortlinkmu.com/${locale}/privacy-policy`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/privacy-policy",
+      canonical: `https://shortlinkmu.com/${locale}/privacy-policy`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/privacy-policy",
         "en-US": "https://shortlinkmu.com/en/privacy-policy",

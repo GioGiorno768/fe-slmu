@@ -14,10 +14,11 @@ import {
   Shield,
   Clock,
 } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.payoutRates");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -25,14 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/payout-rates",
+      url: `https://shortlinkmu.com/${locale}/payout-rates`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/payout-rates",
+      canonical: `https://shortlinkmu.com/${locale}/payout-rates`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/payout-rates",
         "en-US": "https://shortlinkmu.com/en/payout-rates",

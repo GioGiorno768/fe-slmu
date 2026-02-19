@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import BlogArticleContent from "@/components/landing/BlogArticleContent";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 interface ArticleMeta {
   slug: string;
@@ -29,6 +29,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const t = await getTranslations("Landing.Blog");
+  const locale = await getLocale();
   const articles = t.raw("articles") as ArticleMeta[];
   const article = articles.find((a) => a.slug === slug);
 
@@ -40,7 +41,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${article.title} | Shortlinkmu`,
       description: article.excerpt,
-      url: `https://shortlinkmu.com/blog/${slug}`,
+      url: `https://shortlinkmu.com/${locale}/blog/${slug}`,
       type: "article",
       publishedTime: article.date,
       authors: [article.author],
@@ -50,7 +51,7 @@ export async function generateMetadata({
       description: article.excerpt,
     },
     alternates: {
-      canonical: `https://shortlinkmu.com/blog/${slug}`,
+      canonical: `https://shortlinkmu.com/${locale}/blog/${slug}`,
       languages: {
         "id-ID": `https://shortlinkmu.com/id/blog/${slug}`,
         "en-US": `https://shortlinkmu.com/en/blog/${slug}`,

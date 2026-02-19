@@ -4,10 +4,11 @@ import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import RegisterForm from "@/components/auth/RegisterForm";
 import AuthPageCheck from "@/components/auth/AuthPageCheck";
 import RegistrationCheck from "@/components/auth/RegistrationCheck";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata.register");
+  const locale = await getLocale();
   return {
     title: t("title"),
     description: t("description"),
@@ -15,14 +16,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: "https://shortlinkmu.com/register",
+      url: `https://shortlinkmu.com/${locale}/register`,
     },
     twitter: {
       title: t("ogTitle"),
       description: t("ogDescription"),
     },
     alternates: {
-      canonical: "https://shortlinkmu.com/register",
+      canonical: `https://shortlinkmu.com/${locale}/register`,
       languages: {
         "id-ID": "https://shortlinkmu.com/id/register",
         "en-US": "https://shortlinkmu.com/en/register",
