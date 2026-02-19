@@ -1,4 +1,5 @@
 // Server Component - No "use client" for SEO
+import type { Metadata } from "next";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import PayoutRatesTable from "@/components/landing/PayoutRatesTable";
@@ -14,6 +15,31 @@ import {
   Clock,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata.payoutRates");
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "https://shortlinkmu.com/payout-rates",
+    },
+    twitter: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    alternates: {
+      canonical: "https://shortlinkmu.com/payout-rates",
+      languages: {
+        "id-ID": "https://shortlinkmu.com/id/payout-rates",
+        "en-US": "https://shortlinkmu.com/en/payout-rates",
+      },
+    },
+  };
+}
 
 // Static data - rendered on server for SEO
 const payoutRates = [

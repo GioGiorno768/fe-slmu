@@ -12,9 +12,116 @@ import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
   const t = await getTranslations("Landing.Tagline");
+  const faq = await getTranslations("Landing.FAQ");
+
+  // ── JSON-LD Structured Data ──
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Shortlinkmu",
+    url: "https://shortlinkmu.com",
+    description:
+      "Platform URL shortener terpercaya di Indonesia. Perpendek link dan hasilkan uang dari setiap klik.",
+  };
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Shortlinkmu",
+    url: "https://shortlinkmu.com",
+    logo: "https://shortlinkmu.com/landing/logo.svg",
+    description:
+      "Platform URL shortener terpercaya di Indonesia untuk memperpendek link dan menghasilkan uang.",
+    sameAs: [
+      "https://youtube.com/@shortlinkmu",
+      "https://t.me/shortlinkmu",
+      "https://instagram.com/shortlinkmu",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "support@shortlinkmu.com",
+      contactType: "customer support",
+      availableLanguage: ["Indonesian", "English"],
+    },
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: faq("q1.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q1.answer"),
+        },
+      },
+      {
+        "@type": "Question",
+        name: faq("q2.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q2.answer"),
+        },
+      },
+      {
+        "@type": "Question",
+        name: faq("q3.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q3.answer"),
+        },
+      },
+      {
+        "@type": "Question",
+        name: faq("q4.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q4.answer"),
+        },
+      },
+      {
+        "@type": "Question",
+        name: faq("q5.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q5.answer"),
+        },
+      },
+      {
+        "@type": "Question",
+        name: faq("q6.question"),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq("q6.answer"),
+        },
+      },
+    ],
+  };
 
   return (
     <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+
       <main className="min-h-screen flex flex-col bg-white">
         {/* Navbar - handles its own fixed position and scroll state */}
         <Navbar />

@@ -102,7 +102,7 @@ export default function PayoutRatesTable({ rates }: PayoutRatesTableProps) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full py-3.5 pl-12 pr-4 bg-white border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
+            className="w-full py-3.5 pl-12 pr-4 bg-white border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all text-slate-800"
             placeholder={t("searchPlaceholder")}
           />
         </div>

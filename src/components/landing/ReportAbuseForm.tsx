@@ -129,7 +129,7 @@ export default function ReportAbuseForm() {
               name="url"
               value={formData.url}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all text-slate-800"
               placeholder={t("urlPlaceholder")}
               required
               disabled={status === "loading"}
@@ -152,7 +152,7 @@ export default function ReportAbuseForm() {
               name="reason"
               value={formData.reason}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all appearance-none"
+              className="w-full py-3 pl-12 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all appearance-none text-slate-800"
               required
               disabled={status === "loading"}
             >
@@ -191,7 +191,7 @@ export default function ReportAbuseForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all"
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all text-slate-800"
               placeholder={t("emailPlaceholder")}
               disabled={status === "loading"}
             />
@@ -217,7 +217,7 @@ export default function ReportAbuseForm() {
               rows={4}
               value={formData.details}
               onChange={handleChange}
-              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all resize-none"
+              className="w-full py-3 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-bluelanding/30 focus:border-bluelanding transition-all resize-none text-slate-800"
               placeholder={t("detailsPlaceholder")}
               disabled={status === "loading"}
             />

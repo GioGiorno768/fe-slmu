@@ -200,6 +200,7 @@ export default async function middleware(request: NextRequest) {
       "terms-of-service",
       "privacy-policy",
       "report-abuse",
+      "blog",
       "faq",
       // Auth pages
       "forgot-password",

@@ -1,10 +1,36 @@
 // Server Component - No "use client" for SEO
+import type { Metadata } from "next";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata.privacyPolicy");
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "https://shortlinkmu.com/privacy-policy",
+    },
+    twitter: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    alternates: {
+      canonical: "https://shortlinkmu.com/privacy-policy",
+      languages: {
+        "id-ID": "https://shortlinkmu.com/id/privacy-policy",
+        "en-US": "https://shortlinkmu.com/en/privacy-policy",
+      },
+    },
+  };
+}
 
 // Define section configurations
 const sectionKeys = [

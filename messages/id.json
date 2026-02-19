@@ -24,6 +24,7 @@
     "payoutRates": "Tarif Bayaran",
     "about": "Tentang",
     "contact": "Kontak",
+    "blog": "Blog",
     "company": "Perusahaan",
     "termsOfService": "Syarat Layanan",
     "privacyPolicy": "Kebijakan Privasi",
@@ -677,6 +678,308 @@
         "errorMessage": "Terjadi kesalahan. Silakan coba lagi.",
         "connectionError": "Gagal mengirim laporan. Periksa koneksi Anda."
       }
+    },
+    "Blog": {
+      "badge": "Blog & Artikel",
+      "title1": "Tips & Panduan",
+      "title2": "Shortlink",
+      "subtitle": "Pelajari cara memaksimalkan penghasilan dari shortlink, tips SEO, dan strategi monetisasi terbaru.",
+      "allCategories": "Semua",
+      "category_tutorial": "Tutorial",
+      "category_tips": "Tips & Trik",
+      "category_updates": "Updates",
+      "category_seo": "SEO",
+      "category_monetize": "Monetisasi",
+      "readMore": "Baca Selengkapnya",
+      "minRead": "menit baca",
+      "articles": [
+        {
+          "slug": "how-to-earn-money-from-shortlinks",
+          "category": "tutorial",
+          "title": "Cara Menghasilkan Uang dari Shortlink di 2026",
+          "excerpt": "Panduan lengkap langkah demi langkah untuk mulai menghasilkan pendapatan pasif dengan memperpendek dan membagikan link.",
+          "author": "Tim Shortlinkmu",
+          "date": "15 Feb 2026",
+          "readTime": 8
+        },
+        {
+          "slug": "what-is-cpm-publisher-guide",
+          "category": "tutorial",
+          "title": "Apa itu CPM? Panduan Lengkap untuk Publisher",
+          "excerpt": "Pahami konsep CPM (Cost Per Mille) dan bagaimana pengaruhnya terhadap penghasilan shortlink Anda.",
+          "author": "Tim Shortlinkmu",
+          "date": "12 Feb 2026",
+          "readTime": 6
+        },
+        {
+          "slug": "5-tips-boost-shortlink-earnings",
+          "category": "tips",
+          "title": "5 Tips Ampuh Meningkatkan Penghasilan Shortlink",
+          "excerpt": "Strategi terbukti berdasarkan data dari top earner Shortlinkmu untuk meningkatkan klik dan pendapatan.",
+          "author": "Tim Shortlinkmu",
+          "date": "10 Feb 2026",
+          "readTime": 5
+        },
+        {
+          "slug": "seo-optimization-for-shortlinks",
+          "category": "seo",
+          "title": "Optimasi SEO untuk Shortlink: Panduan Dasar",
+          "excerpt": "Pelajari cara mengoptimasi shortlink agar lebih mudah ditemukan di mesin pencari dan sosial media.",
+          "author": "Tim Shortlinkmu",
+          "date": "08 Feb 2026",
+          "readTime": 7
+        },
+        {
+          "slug": "social-media-monetization-strategy",
+          "category": "monetize",
+          "title": "Strategi Monetisasi Sosial Media dengan Shortlink",
+          "excerpt": "Cara efektif menggunakan shortlink di Instagram, TikTok, YouTube, dan platform lainnya untuk menghasilkan uang.",
+          "author": "Tim Shortlinkmu",
+          "date": "05 Feb 2026",
+          "readTime": 6
+        },
+        {
+          "slug": "latest-shortlinkmu-features-update",
+          "category": "updates",
+          "title": "Update Fitur Terbaru Shortlinkmu Februari 2026",
+          "excerpt": "Shortlinkmu meluncurkan fitur baru: statistik real-time, custom alias, dan peningkatan rate CPM untuk Asia.",
+          "author": "Tim Shortlinkmu",
+          "date": "01 Feb 2026",
+          "readTime": 4
+        }
+      ],
+      "cta": {
+        "title": "Siap Mulai Menghasilkan?",
+        "subtitle": "Daftar gratis dan mulai monetisasi link Anda sekarang juga.",
+        "button": "Daftar Gratis"
+      },
+      "backToBlog": "Kembali ke Blog",
+      "tableOfContents": "Daftar Isi",
+      "shareArticle": "Bagikan Artikel",
+      "relatedArticles": "Artikel Terkait",
+      "articleDetails": {
+        "how-to-earn-money-from-shortlinks": {
+          "sections": [
+            {
+              "heading": "Apa itu Shortlink dan Cara Kerjanya?",
+              "paragraphs": [
+                "Shortlink adalah layanan yang memperpendek URL panjang menjadi link yang lebih ringkas dan mudah dibagikan. Namun di balik itu, terdapat model monetisasi yang memungkinkan publisher mendapatkan bayaran setiap kali seseorang mengklik link tersebut.",
+                "Cara kerjanya sederhana: Anda mendaftar di platform seperti Shortlinkmu, memperpendek link apapun, lalu membagikannya. Setiap kali pengunjung mengklik link Anda, mereka akan melihat iklan singkat sebelum diarahkan ke tujuan. Anda dibayar berdasarkan jumlah tayangan iklan (CPM)."
+              ]
+            },
+            {
+              "heading": "Langkah 1: Daftar Akun Shortlinkmu",
+              "paragraphs": [
+                "Kunjungi shortlinkmu.com dan klik tombol 'Daftar Gratis'. Proses pendaftaran cepat dan hanya membutuhkan email, username, dan password. Setelah verifikasi email, akun Anda langsung aktif.",
+                "Pastikan menggunakan email aktif karena semua notifikasi pembayaran dan update penting akan dikirim ke sana."
+              ]
+            },
+            {
+              "heading": "Langkah 2: Perpendek Link Pertama Anda",
+              "paragraphs": [
+                "Setelah login, masuk ke dashboard dan gunakan fitur 'Buat Link Baru'. Paste URL yang ingin Anda pendekkan — bisa link artikel, video YouTube, download file, atau apapun.",
+                "Anda juga bisa membuat custom alias agar link terlihat lebih profesional, misalnya shortlinkmu.com/tips-keuangan."
+              ]
+            },
+            {
+              "heading": "Langkah 3: Bagikan dan Hasilkan Uang",
+              "paragraphs": [
+                "Bagikan shortlink Anda di berbagai platform: grup WhatsApp, Telegram, forum, komentar YouTube, bio Instagram, atau thread Twitter. Semakin banyak klik yang Anda dapatkan, semakin besar penghasilan.",
+                "Tips penting: fokus pada konten yang bernilai. Jangan spam — bagikan link yang benar-benar bermanfaat bagi audiens Anda. Ini akan membangun kepercayaan dan meningkatkan engagement jangka panjang."
+              ]
+            },
+            {
+              "heading": "Tips Memaksimalkan Penghasilan",
+              "paragraphs": [
+                "Target audiens dari negara dengan CPM tinggi seperti Amerika Serikat ($8–$15 CPM) dan Eropa. Buat konten dalam bahasa Inggris untuk menjangkau pasar global.",
+                "Gunakan analitik Shortlinkmu untuk memantau performa link. Pelajari jam-jam terbaik untuk posting, platform mana yang paling menghasilkan, dan jenis konten apa yang paling banyak di-klik.",
+                "Konsistensi adalah kunci. Publisher top di Shortlinkmu menghasilkan $300–$1000 per bulan dengan membagikan 5–10 link berkualitas setiap hari."
+              ]
+            }
+          ]
+        },
+        "what-is-cpm-publisher-guide": {
+          "sections": [
+            {
+              "heading": "Pengertian CPM (Cost Per Mille)",
+              "paragraphs": [
+                "CPM adalah singkatan dari Cost Per Mille, yang berarti biaya per seribu tayangan iklan. Dalam konteks shortlink, CPM menentukan berapa banyak Anda dibayar untuk setiap 1.000 kali pengunjung melihat iklan melalui link Anda.",
+                "Misalnya, jika CPM untuk Indonesia adalah $2, artinya Anda mendapatkan $2 untuk setiap 1.000 klik dari pengunjung Indonesia."
+              ]
+            },
+            {
+              "heading": "Faktor yang Mempengaruhi CPM",
+              "paragraphs": [
+                "Lokasi geografis pengunjung adalah faktor terbesar. Traffic dari AS, UK, dan negara Eropa memiliki CPM tertinggi ($5–$15), sedangkan traffic Asia Tenggara biasanya $1–$3.",
+                "Faktor lain termasuk jenis perangkat (desktop biasanya lebih tinggi dari mobile), waktu kunjungan (jam kerja cenderung lebih tinggi), dan kualitas traffic (pengunjung organic vs. bot)."
+              ]
+            },
+            {
+              "heading": "Cara Menghitung Penghasilan dari CPM",
+              "paragraphs": [
+                "Rumus sederhana: Penghasilan = (Jumlah Klik / 1.000) × CPM Rate. Jadi jika Anda mendapat 10.000 klik dari AS dengan CPM $8, penghasilan Anda = (10.000 / 1.000) × $8 = $80.",
+                "Di Shortlinkmu, Anda bisa melihat rate CPM terbaru untuk 35+ negara di halaman Tarif Bayaran. Rate diupdate secara berkala mengikuti kondisi pasar iklan."
+              ]
+            },
+            {
+              "heading": "Strategi Mendapatkan Traffic CPM Tinggi",
+              "paragraphs": [
+                "Buat konten dalam bahasa Inggris untuk menarik pengunjung dari negara CPM tinggi. Konten review produk, tutorial teknologi, dan tips keuangan sangat populer di pasar global.",
+                "Manfaatkan platform seperti Reddit, Quora, dan forum internasional untuk menjangkau audiens global. Pastikan konten Anda memberikan nilai nyata agar tidak dianggap spam."
+              ]
+            }
+          ]
+        },
+        "5-tips-boost-shortlink-earnings": {
+          "sections": [
+            {
+              "heading": "1. Pilih Niche yang Tepat",
+              "paragraphs": [
+                "Fokus pada niche dengan demand tinggi: teknologi, keuangan, gaming, dan entertainment adalah niche dengan traffic paling besar. Konsistensi di satu niche membangun audiens loyal.",
+                "Riset keyword populer menggunakan Google Trends untuk menemukan topik yang sedang trending. Buat konten yang relevan dan sertakan shortlink Anda secara natural."
+              ]
+            },
+            {
+              "heading": "2. Diversifikasi Platform",
+              "paragraphs": [
+                "Jangan hanya mengandalkan satu platform. Sebar konten Anda di WhatsApp, Telegram, Facebook, Twitter, TikTok, dan YouTube. Setiap platform memiliki karakteristik audiens yang berbeda.",
+                "Buat konten yang sesuai format masing-masing platform: video pendek untuk TikTok, thread untuk Twitter, dan post panjang untuk Facebook Groups."
+              ]
+            },
+            {
+              "heading": "3. Gunakan Analitik untuk Optimasi",
+              "paragraphs": [
+                "Dashboard Shortlinkmu menyediakan data real-time tentang klik, lokasi pengunjung, dan performa setiap link. Gunakan data ini untuk mengindentifikasi apa yang berhasil dan apa yang tidak.",
+                "A/B test judul dan deskripsi link Anda. Kadang perubahan kecil pada copywriting bisa meningkatkan CTR (Click-Through Rate) hingga 2-3x lipat."
+              ]
+            },
+            {
+              "heading": "4. Waktu Posting yang Strategis",
+              "paragraphs": [
+                "Posting di jam-jam prime time ketika audiens target Anda paling aktif. Untuk audiens Indonesia, jam 7-9 pagi dan 7-10 malam adalah waktu terbaik.",
+                "Untuk target audiens global, sesuaikan dengan timezone negara CPM tinggi — posting jam 8-10 pagi EST untuk menjangkau audiens Amerika."
+              ]
+            },
+            {
+              "heading": "5. Bangun Aset Jangka Panjang",
+              "paragraphs": [
+                "Buat blog, channel YouTube, atau akun sosial media yang menghasilkan traffic organik. Ini lebih sustainable dibanding spam link di berbagai tempat.",
+                "Konten evergreen (selalu relevan) seperti tutorial dan panduan akan terus menghasilkan klik dan penghasilan berbulan-bulan setelah dipublish."
+              ]
+            }
+          ]
+        },
+        "seo-optimization-for-shortlinks": {
+          "sections": [
+            {
+              "heading": "Mengapa SEO Penting untuk Publisher Shortlink?",
+              "paragraphs": [
+                "SEO (Search Engine Optimization) membantu konten Anda ditemukan oleh orang-orang yang mencari informasi di Google. Traffic organik dari mesin pencari adalah traffic berkualitas tinggi yang gratis dan berkelanjutan.",
+                "Publisher shortlink yang memahami SEO bisa mendapatkan ribuan klik per hari tanpa harus terus-menerus mempromosikan link secara manual."
+              ]
+            },
+            {
+              "heading": "Riset Keyword yang Efektif",
+              "paragraphs": [
+                "Gunakan tools gratis seperti Google Keyword Planner, Ubersuggest, atau Google Trends untuk menemukan keyword dengan volume pencarian tinggi tapi persaingan rendah.",
+                "Fokus pada long-tail keyword (frasa 3-5 kata) yang lebih spesifik. Misalnya, 'cara download video TikTok tanpa watermark' lebih mudah diranking daripada hanya 'download video'."
+              ]
+            },
+            {
+              "heading": "Optimasi On-Page",
+              "paragraphs": [
+                "Pastikan judul, meta description, dan heading mengandung keyword target. Namun tetap natural — Google semakin pintar mendeteksi keyword stuffing.",
+                "Buat konten yang komprehensif dan menjawab pertanyaan pengguna secara lengkap. Google memprioritaskan konten yang memberikan pengalaman pengguna terbaik."
+              ]
+            },
+            {
+              "heading": "Optimasi Link dan Anchor Text",
+              "paragraphs": [
+                "Gunakan anchor text yang deskriptif saat menyisipkan shortlink. Hindari anchor text generik seperti 'klik di sini'. Sebagai gantinya, gunakan teks yang menjelaskan apa yang akan ditemukan pengunjung.",
+                "Tempatkan shortlink secara natural di dalam konten. Link yang relevan dengan konteks artikel akan menghasilkan CTR lebih tinggi dibanding link yang dipaksa masuk."
+              ]
+            },
+            {
+              "heading": "Membangun Backlink Berkualitas",
+              "paragraphs": [
+                "Backlink dari website berkualitas membantu meningkatkan otoritas domain Anda. Guest posting, kolaborasi konten, dan kontribusi di forum adalah cara efektif membangun backlink.",
+                "Fokus pada kualitas, bukan kuantitas. Satu backlink dari website otoritatif lebih berharga daripada 100 backlink dari website spam."
+              ]
+            }
+          ]
+        },
+        "social-media-monetization-strategy": {
+          "sections": [
+            {
+              "heading": "Mengapa Sosial Media Ideal untuk Shortlink?",
+              "paragraphs": [
+                "Platform sosial media memiliki miliaran pengguna aktif yang terus mencari konten menarik. Dengan strategi yang tepat, Anda bisa menjangkau ribuan hingga jutaan orang dan mengkonversinya menjadi klik yang menghasilkan uang.",
+                "Kelebihan utama sosial media adalah virality — satu konten yang tepat bisa dibagikan berulang kali, menghasilkan klik eksponensial tanpa effort tambahan."
+              ]
+            },
+            {
+              "heading": "Strategi untuk Instagram",
+              "paragraphs": [
+                "Gunakan link di bio untuk mengarahkan followers ke shortlink Anda. Buat konten carousel atau Reels yang menarik dan arahkan penonton ke 'link di bio' untuk informasi selengkapnya.",
+                "Manfaatkan Instagram Stories dengan fitur link sticker untuk langsung menyematkan shortlink. Buat highlight story yang berisi kumpulan konten bermanfaat dengan link terkait."
+              ]
+            },
+            {
+              "heading": "Strategi untuk TikTok",
+              "paragraphs": [
+                "TikTok adalah mesin traffic terbesar saat ini. Buat video pendek yang informatif dan arahkan penonton ke link di bio. Gunakan tren dan hashtag populer untuk meningkatkan jangkauan.",
+                "Konten 'tutorial singkat' dan 'cara mudah' sangat populer di TikTok. Selesaikan video dengan CTA yang jelas: 'Link ada di bio untuk panduan lengkapnya!'"
+              ]
+            },
+            {
+              "heading": "Strategi untuk YouTube",
+              "paragraphs": [
+                "Sematkan shortlink di deskripsi video dan pinned comment. Buat konten video yang memberikan nilai dan secara natural mengarahkan penonton ke link terkait.",
+                "YouTube Shorts juga bisa menjadi sumber traffic besar. Buat versi pendek dari konten utama dan arahkan ke link di komentar atau deskripsi channel."
+              ]
+            },
+            {
+              "heading": "Strategi untuk Telegram dan WhatsApp",
+              "paragraphs": [
+                "Buat channel Telegram dengan niche spesifik dan bagikan konten berkualitas secara rutin. Sertakan shortlink yang relevan dengan setiap posting.",
+                "Di WhatsApp, manfaatkan grup dan status untuk membagikan link. Pastikan konten bermanfaat agar tidak dikeluarkan dari grup — kualitas selalu lebih penting daripada kuantitas."
+              ]
+            }
+          ]
+        },
+        "latest-shortlinkmu-features-update": {
+          "sections": [
+            {
+              "heading": "Statistik Real-Time",
+              "paragraphs": [
+                "Kini Anda bisa memantau performa link secara real-time langsung dari dashboard. Data klik, lokasi pengunjung, dan penghasilan diupdate setiap detik tanpa perlu refresh halaman.",
+                "Fitur ini memungkinkan Anda membuat keputusan lebih cepat tentang strategi promosi dan mengidentifikasi link mana yang paling menghasilkan."
+              ]
+            },
+            {
+              "heading": "Custom Alias",
+              "paragraphs": [
+                "Fitur custom alias telah ditingkatkan! Sekarang Anda bisa membuat shortlink dengan nama custom yang lebih panjang dan mendukung karakter khusus.",
+                "Link dengan custom alias terlihat lebih profesional dan meningkatkan kepercayaan pengunjung. Contoh: shortlinkmu.com/promo-spesial lebih menarik dari kode acak."
+              ]
+            },
+            {
+              "heading": "Peningkatan Rate CPM Asia",
+              "paragraphs": [
+                "Kabar baik! Rate CPM untuk region Asia telah meningkat signifikan. Indonesia naik 15%, India naik 20%, dan Filipina naik 18% dibanding bulan lalu.",
+                "Peningkatan ini sejalan dengan pertumbuhan pasar iklan digital di Asia dan kemitraan baru kami dengan ad network premium."
+              ]
+            },
+            {
+              "heading": "Pencairan Lebih Cepat",
+              "paragraphs": [
+                "Minimum pencairan tetap rendah dan proses pencairan kini lebih cepat. Dana masuk ke rekening Anda dalam 1-3 hari kerja via bank transfer, PayPal, atau cryptocurrency.",
+                "Kami juga menambahkan dukungan untuk metode pembayaran baru termasuk DANA dan GoPay untuk kemudahan publisher Indonesia."
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "Dashboard": {
@@ -1254,5 +1557,83 @@
     "title": "Halaman Tidak Ditemukan",
     "subtitle": "Maaf, kami tidak bisa menemukan halaman yang Anda cari.",
     "goHome": "Kembali ke halaman"
+  },
+  "Metadata": {
+    "layout": {
+      "defaultTitle": "Shortlinkmu — Perpendek Link & Hasilkan Uang",
+      "description": "Platform URL shortener terpercaya di Indonesia. Perpendek link, bagikan ke sosial media, dan dapatkan penghasilan dari setiap klik. Gratis, cepat, dan mudah digunakan.",
+      "ogDescription": "Platform URL shortener terpercaya di Indonesia. Perpendek link dan dapatkan penghasilan dari setiap klik.",
+      "ogImageAlt": "Shortlinkmu — Perpendek Link & Hasilkan Uang"
+    },
+    "about": {
+      "title": "Tentang Kami",
+      "description": "Kenali Shortlinkmu lebih dekat — platform URL shortener terpercaya di Indonesia yang membantu kamu memperpendek link dan menghasilkan uang dari setiap klik.",
+      "ogTitle": "Tentang Kami — Shortlinkmu",
+      "ogDescription": "Kenali Shortlinkmu lebih dekat — platform URL shortener terpercaya di Indonesia.",
+      "keywords": "tentang shortlinkmu, about shortlinkmu, url shortener Indonesia, platform perpendek link"
+    },
+    "contact": {
+      "title": "Hubungi Kami",
+      "description": "Butuh bantuan? Hubungi tim Shortlinkmu melalui email support atau billing. Respon cepat dalam 24 jam untuk semua pertanyaan dan masalah kamu.",
+      "ogTitle": "Hubungi Kami — Shortlinkmu",
+      "ogDescription": "Butuh bantuan? Hubungi tim Shortlinkmu. Respon cepat dalam 24 jam.",
+      "keywords": "kontak shortlinkmu, hubungi shortlinkmu, support shortlinkmu, customer service shortlinkmu"
+    },
+    "payoutRates": {
+      "title": "Tarif Bayaran CPM",
+      "description": "Lihat tarif CPM terbaru Shortlinkmu untuk 35+ negara. Rate tertinggi hingga $15 CPM dengan pencairan harian via PayPal, Bank, dan Crypto.",
+      "ogTitle": "Tarif Bayaran CPM — Shortlinkmu",
+      "ogDescription": "Lihat tarif CPM terbaru untuk 35+ negara. Rate hingga $15 CPM.",
+      "keywords": "tarif cpm shortlinkmu, payout rates shortlink, rate bayaran shortlink Indonesia, cpm terbaik"
+    },
+    "termsOfService": {
+      "title": "Syarat dan Ketentuan",
+      "description": "Baca syarat dan ketentuan penggunaan Shortlinkmu. Termasuk aturan penggunaan, pembayaran, dan kebijakan akun.",
+      "ogTitle": "Syarat dan Ketentuan — Shortlinkmu",
+      "ogDescription": "Syarat dan ketentuan penggunaan platform Shortlinkmu.",
+      "keywords": "syarat ketentuan shortlinkmu, terms of service shortlink, aturan shortlinkmu"
+    },
+    "privacyPolicy": {
+      "title": "Kebijakan Privasi",
+      "description": "Kebijakan privasi Shortlinkmu menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda.",
+      "ogTitle": "Kebijakan Privasi — Shortlinkmu",
+      "ogDescription": "Bagaimana Shortlinkmu melindungi dan mengelola data Anda.",
+      "keywords": "kebijakan privasi shortlinkmu, privacy policy shortlink, perlindungan data shortlinkmu"
+    },
+    "reportAbuse": {
+      "title": "Laporkan Penyalahgunaan",
+      "description": "Laporkan link mencurigakan atau berbahaya di Shortlinkmu. Tim kami akan meninjau dalam 24 jam.",
+      "ogTitle": "Laporkan Penyalahgunaan — Shortlinkmu",
+      "ogDescription": "Laporkan link mencurigakan. Tim kami siap meninjau dalam 24 jam.",
+      "keywords": "laporkan penyalahgunaan shortlinkmu, report abuse shortlink, link berbahaya"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Masuk ke akun Shortlinkmu untuk mengelola shortlink dan melihat penghasilan Anda.",
+      "ogTitle": "Login — Shortlinkmu",
+      "ogDescription": "Masuk ke akun Shortlinkmu untuk mengelola shortlink dan melihat penghasilan Anda.",
+      "keywords": "login shortlinkmu, masuk akun shortlink, shortlink login Indonesia"
+    },
+    "register": {
+      "title": "Daftar Gratis",
+      "description": "Buat akun Shortlinkmu gratis dan mulai hasilkan uang dari setiap klik shortlink Anda.",
+      "ogTitle": "Daftar Gratis — Shortlinkmu",
+      "ogDescription": "Buat akun Shortlinkmu gratis dan mulai hasilkan uang dari setiap klik shortlink Anda.",
+      "keywords": "daftar shortlinkmu, register shortlink, buat akun shortlink gratis, shortlink Indonesia daftar"
+    },
+    "forgotPassword": {
+      "title": "Lupa Password",
+      "description": "Reset password akun Shortlinkmu Anda. Masukkan email untuk menerima link reset password.",
+      "ogTitle": "Lupa Password — Shortlinkmu",
+      "ogDescription": "Reset password akun Shortlinkmu Anda. Masukkan email untuk menerima link reset password.",
+      "keywords": "lupa password shortlinkmu, reset password shortlink, forgot password shortlinkmu"
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Tips, panduan, dan informasi terbaru seputar shortlink, monetisasi link, dan strategi digital dari Shortlinkmu.",
+      "ogTitle": "Blog — Shortlinkmu",
+      "ogDescription": "Tips, panduan, dan informasi terbaru seputar shortlink dan monetisasi dari Shortlinkmu.",
+      "keywords": "blog shortlinkmu, tips shortlink, panduan monetisasi link, tutorial shortlink Indonesia"
+    }
   }
 }

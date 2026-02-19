@@ -24,6 +24,7 @@
     "payoutRates": "Payout Rates",
     "about": "About",
     "contact": "Contact",
+    "blog": "Blog",
     "company": "Company",
     "termsOfService": "Terms of Service",
     "privacyPolicy": "Privacy Policy",
@@ -677,6 +678,308 @@
         "errorMessage": "Something went wrong. Please try again.",
         "connectionError": "Failed to submit report. Please check your connection."
       }
+    },
+    "Blog": {
+      "badge": "Blog & Articles",
+      "title1": "Tips & Guides for",
+      "title2": "Shortlinks",
+      "subtitle": "Learn how to maximize your shortlink earnings, SEO tips, and the latest monetization strategies.",
+      "allCategories": "All",
+      "category_tutorial": "Tutorial",
+      "category_tips": "Tips & Tricks",
+      "category_updates": "Updates",
+      "category_seo": "SEO",
+      "category_monetize": "Monetization",
+      "readMore": "Read More",
+      "minRead": "min read",
+      "articles": [
+        {
+          "slug": "how-to-earn-money-from-shortlinks",
+          "category": "tutorial",
+          "title": "How to Earn Money from Shortlinks in 2026",
+          "excerpt": "A complete step-by-step guide to start earning passive income by shortening and sharing links.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 15, 2026",
+          "readTime": 8
+        },
+        {
+          "slug": "what-is-cpm-publisher-guide",
+          "category": "tutorial",
+          "title": "What is CPM? A Complete Guide for Publishers",
+          "excerpt": "Understand the CPM (Cost Per Mille) concept and how it affects your shortlink earnings.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 12, 2026",
+          "readTime": 6
+        },
+        {
+          "slug": "5-tips-boost-shortlink-earnings",
+          "category": "tips",
+          "title": "5 Proven Tips to Boost Your Shortlink Earnings",
+          "excerpt": "Data-driven strategies from Shortlinkmu top earners to increase clicks and revenue.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 10, 2026",
+          "readTime": 5
+        },
+        {
+          "slug": "seo-optimization-for-shortlinks",
+          "category": "seo",
+          "title": "SEO Optimization for Shortlinks: A Beginner's Guide",
+          "excerpt": "Learn how to optimize your shortlinks for better discoverability on search engines and social media.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 08, 2026",
+          "readTime": 7
+        },
+        {
+          "slug": "social-media-monetization-strategy",
+          "category": "monetize",
+          "title": "Social Media Monetization with Shortlinks",
+          "excerpt": "Effective ways to use shortlinks on Instagram, TikTok, YouTube, and other platforms to earn money.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 05, 2026",
+          "readTime": 6
+        },
+        {
+          "slug": "latest-shortlinkmu-features-update",
+          "category": "updates",
+          "title": "Shortlinkmu Latest Features Update — February 2026",
+          "excerpt": "Shortlinkmu launches new features: real-time statistics, custom aliases, and improved CPM rates for Asia.",
+          "author": "Shortlinkmu Team",
+          "date": "Feb 01, 2026",
+          "readTime": 4
+        }
+      ],
+      "cta": {
+        "title": "Ready to Start Earning?",
+        "subtitle": "Sign up for free and start monetizing your links today.",
+        "button": "Sign Up Free"
+      },
+      "backToBlog": "Back to Blog",
+      "tableOfContents": "Table of Contents",
+      "shareArticle": "Share Article",
+      "relatedArticles": "Related Articles",
+      "articleDetails": {
+        "how-to-earn-money-from-shortlinks": {
+          "sections": [
+            {
+              "heading": "What is a Shortlink and How Does It Work?",
+              "paragraphs": [
+                "A shortlink is a service that shortens long URLs into compact, easily shareable links. Behind this simplicity lies a monetization model that allows publishers to earn money every time someone clicks their link.",
+                "The process is simple: you register on a platform like Shortlinkmu, shorten any link, and share it. Every time a visitor clicks your link, they see a brief ad before being redirected to the destination. You get paid based on the number of ad impressions (CPM)."
+              ]
+            },
+            {
+              "heading": "Step 1: Create Your Shortlinkmu Account",
+              "paragraphs": [
+                "Visit shortlinkmu.com and click 'Sign Up Free'. Registration is quick — you only need an email, username, and password. After email verification, your account is instantly active.",
+                "Make sure to use an active email address as all payment notifications and important updates will be sent there."
+              ]
+            },
+            {
+              "heading": "Step 2: Shorten Your First Link",
+              "paragraphs": [
+                "After logging in, go to your dashboard and use the 'Create New Link' feature. Paste the URL you want to shorten — it can be an article, YouTube video, file download, or anything.",
+                "You can also create a custom alias to make your link look more professional, for example shortlinkmu.com/finance-tips."
+              ]
+            },
+            {
+              "heading": "Step 3: Share and Earn Money",
+              "paragraphs": [
+                "Share your shortlinks across multiple platforms: WhatsApp groups, Telegram, forums, YouTube comments, Instagram bio, or Twitter threads. The more clicks you get, the more you earn.",
+                "Important tip: focus on valuable content. Don't spam — share links that are genuinely useful to your audience. This builds trust and increases long-term engagement."
+              ]
+            },
+            {
+              "heading": "Tips to Maximize Your Earnings",
+              "paragraphs": [
+                "Target audiences from high-CPM countries like the United States ($8–$15 CPM) and Europe. Create content in English to reach the global market.",
+                "Use Shortlinkmu analytics to monitor link performance. Learn the best posting times, which platforms generate the most revenue, and what type of content gets the most clicks.",
+                "Consistency is key. Top publishers on Shortlinkmu earn $300–$1000 per month by sharing 5–10 quality links every day."
+              ]
+            }
+          ]
+        },
+        "what-is-cpm-publisher-guide": {
+          "sections": [
+            {
+              "heading": "Understanding CPM (Cost Per Mille)",
+              "paragraphs": [
+                "CPM stands for Cost Per Mille, meaning cost per thousand ad impressions. In the context of shortlinks, CPM determines how much you get paid for every 1,000 times a visitor views an ad through your link.",
+                "For example, if the CPM for Indonesia is $2, that means you earn $2 for every 1,000 clicks from Indonesian visitors."
+              ]
+            },
+            {
+              "heading": "Factors That Affect CPM",
+              "paragraphs": [
+                "Geographic location of visitors is the biggest factor. Traffic from the US, UK, and European countries has the highest CPM ($5–$15), while Southeast Asian traffic is typically $1–$3.",
+                "Other factors include device type (desktop is usually higher than mobile), visit timing (business hours tend to be higher), and traffic quality (organic visitors vs. bots)."
+              ]
+            },
+            {
+              "heading": "How to Calculate Your CPM Earnings",
+              "paragraphs": [
+                "Simple formula: Earnings = (Number of Clicks / 1,000) × CPM Rate. So if you get 10,000 clicks from the US with a CPM of $8, your earnings = (10,000 / 1,000) × $8 = $80.",
+                "On Shortlinkmu, you can view the latest CPM rates for 35+ countries on the Payout Rates page. Rates are updated regularly to reflect ad market conditions."
+              ]
+            },
+            {
+              "heading": "Strategies for Getting High-CPM Traffic",
+              "paragraphs": [
+                "Create content in English to attract visitors from high-CPM countries. Product reviews, tech tutorials, and finance tips are very popular in global markets.",
+                "Leverage platforms like Reddit, Quora, and international forums to reach a global audience. Make sure your content provides real value so it's not considered spam."
+              ]
+            }
+          ]
+        },
+        "5-tips-boost-shortlink-earnings": {
+          "sections": [
+            {
+              "heading": "1. Choose the Right Niche",
+              "paragraphs": [
+                "Focus on high-demand niches: technology, finance, gaming, and entertainment are the niches with the most traffic. Consistency in one niche builds a loyal audience.",
+                "Research popular keywords using Google Trends to find trending topics. Create relevant content and include your shortlinks naturally."
+              ]
+            },
+            {
+              "heading": "2. Diversify Your Platforms",
+              "paragraphs": [
+                "Don't rely on just one platform. Spread your content across WhatsApp, Telegram, Facebook, Twitter, TikTok, and YouTube. Each platform has different audience characteristics.",
+                "Create content suited to each platform's format: short videos for TikTok, threads for Twitter, and long-form posts for Facebook Groups."
+              ]
+            },
+            {
+              "heading": "3. Use Analytics for Optimization",
+              "paragraphs": [
+                "Shortlinkmu's dashboard provides real-time data on clicks, visitor locations, and performance per link. Use this data to identify what works and what doesn't.",
+                "A/B test your link titles and descriptions. Sometimes small copywriting changes can increase CTR (Click-Through Rate) by 2-3x."
+              ]
+            },
+            {
+              "heading": "4. Strategic Posting Times",
+              "paragraphs": [
+                "Post during prime time when your target audience is most active. For Indonesian audiences, 7-9 AM and 7-10 PM are the best times.",
+                "For global audiences, adjust to high-CPM country timezones — post at 8-10 AM EST to reach American audiences."
+              ]
+            },
+            {
+              "heading": "5. Build Long-Term Assets",
+              "paragraphs": [
+                "Create a blog, YouTube channel, or social media accounts that generate organic traffic. This is more sustainable than spamming links everywhere.",
+                "Evergreen content (always relevant) like tutorials and guides will continue generating clicks and revenue months after being published."
+              ]
+            }
+          ]
+        },
+        "seo-optimization-for-shortlinks": {
+          "sections": [
+            {
+              "heading": "Why SEO Matters for Shortlink Publishers",
+              "paragraphs": [
+                "SEO (Search Engine Optimization) helps your content get found by people searching for information on Google. Organic traffic from search engines is high-quality, free, and sustainable.",
+                "Shortlink publishers who understand SEO can get thousands of clicks per day without constantly promoting links manually."
+              ]
+            },
+            {
+              "heading": "Effective Keyword Research",
+              "paragraphs": [
+                "Use free tools like Google Keyword Planner, Ubersuggest, or Google Trends to find keywords with high search volume but low competition.",
+                "Focus on long-tail keywords (3-5 word phrases) that are more specific. For example, 'how to download TikTok videos without watermark' is easier to rank than just 'download video'."
+              ]
+            },
+            {
+              "heading": "On-Page Optimization",
+              "paragraphs": [
+                "Make sure your title, meta description, and headings contain your target keyword. But keep it natural — Google is increasingly smart at detecting keyword stuffing.",
+                "Create comprehensive content that fully answers user questions. Google prioritizes content that provides the best user experience."
+              ]
+            },
+            {
+              "heading": "Link and Anchor Text Optimization",
+              "paragraphs": [
+                "Use descriptive anchor text when inserting shortlinks. Avoid generic anchor text like 'click here'. Instead, use text that describes what the visitor will find.",
+                "Place shortlinks naturally within your content. Links relevant to the article context will generate higher CTR than forced links."
+              ]
+            },
+            {
+              "heading": "Building Quality Backlinks",
+              "paragraphs": [
+                "Backlinks from quality websites help increase your domain authority. Guest posting, content collaboration, and forum contributions are effective ways to build backlinks.",
+                "Focus on quality, not quantity. One backlink from an authoritative website is worth more than 100 backlinks from spam sites."
+              ]
+            }
+          ]
+        },
+        "social-media-monetization-strategy": {
+          "sections": [
+            {
+              "heading": "Why Social Media is Ideal for Shortlinks",
+              "paragraphs": [
+                "Social media platforms have billions of active users constantly seeking interesting content. With the right strategy, you can reach thousands to millions of people and convert them into money-generating clicks.",
+                "The main advantage of social media is virality — one great piece of content can be shared repeatedly, generating exponential clicks without additional effort."
+              ]
+            },
+            {
+              "heading": "Instagram Strategy",
+              "paragraphs": [
+                "Use your bio link to direct followers to your shortlinks. Create engaging carousel content or Reels and direct viewers to 'link in bio' for more information.",
+                "Leverage Instagram Stories with the link sticker feature to directly embed shortlinks. Create story highlights with collections of useful content and related links."
+              ]
+            },
+            {
+              "heading": "TikTok Strategy",
+              "paragraphs": [
+                "TikTok is the biggest traffic machine right now. Create short informative videos and direct viewers to the link in bio. Use trending sounds and popular hashtags to increase reach.",
+                "'Quick tutorials' and 'easy how-to' content perform extremely well on TikTok. End your video with a clear CTA: 'Link in bio for the full guide!'"
+              ]
+            },
+            {
+              "heading": "YouTube Strategy",
+              "paragraphs": [
+                "Embed shortlinks in video descriptions and pinned comments. Create video content that provides value and naturally directs viewers to related links.",
+                "YouTube Shorts can also be a huge traffic source. Create short versions of your main content and direct to links in comments or channel description."
+              ]
+            },
+            {
+              "heading": "Telegram and WhatsApp Strategy",
+              "paragraphs": [
+                "Create a Telegram channel with a specific niche and share quality content regularly. Include relevant shortlinks with every post.",
+                "On WhatsApp, leverage groups and status to share links. Make sure your content is valuable so you don't get removed from groups — quality always matters more than quantity."
+              ]
+            }
+          ]
+        },
+        "latest-shortlinkmu-features-update": {
+          "sections": [
+            {
+              "heading": "Real-Time Statistics",
+              "paragraphs": [
+                "You can now monitor link performance in real-time directly from your dashboard. Click data, visitor locations, and earnings update every second without needing to refresh.",
+                "This feature allows you to make faster decisions about your promotion strategy and identify which links generate the most revenue."
+              ]
+            },
+            {
+              "heading": "Custom Alias",
+              "paragraphs": [
+                "The custom alias feature has been upgraded! You can now create shortlinks with longer custom names and support for special characters.",
+                "Links with custom aliases look more professional and increase visitor trust. Example: shortlinkmu.com/special-promo is much more appealing than a random code."
+              ]
+            },
+            {
+              "heading": "Increased CPM Rates for Asia",
+              "paragraphs": [
+                "Great news! CPM rates for the Asian region have increased significantly. Indonesia is up 15%, India up 20%, and Philippines up 18% compared to last month.",
+                "This increase aligns with the growing digital advertising market in Asia and our new partnerships with premium ad networks."
+              ]
+            },
+            {
+              "heading": "Faster Withdrawals",
+              "paragraphs": [
+                "Minimum withdrawal remains low and the process is now faster. Funds reach your account within 1-3 business days via bank transfer, PayPal, or cryptocurrency.",
+                "We've also added support for new payment methods including DANA and GoPay for the convenience of Indonesian publishers."
+              ]
+            }
+          ]
+        }
+      }
     }
   },
   "Dashboard": {
@@ -1254,5 +1557,83 @@
     "title": "Page Not Found",
     "subtitle": "Sorry, we couldn't find the page you were looking for.",
     "goHome": "Go back page"
+  },
+  "Metadata": {
+    "layout": {
+      "defaultTitle": "Shortlinkmu — Shorten Links & Earn Money",
+      "description": "Indonesia's trusted URL shortener platform. Shorten links, share on social media, and earn money from every click. Free, fast, and easy to use.",
+      "ogDescription": "trusted URL shortener platform. Shorten links and earn money from every click.",
+      "ogImageAlt": "Shortlinkmu — Shorten Links & Earn Money"
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Learn more about Shortlinkmu — Indonesia's trusted URL shortener platform that helps you shorten links and earn money from every click.",
+      "ogTitle": "About Us — Shortlinkmu",
+      "ogDescription": "Learn more about Shortlinkmu — Indonesia's trusted URL shortener platform.",
+      "keywords": "about shortlinkmu, url shortener Indonesia, link shortening platform, earn money from links"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Need help? Contact the Shortlinkmu team via email support or billing. Fast response within 24 hours for all your questions and issues.",
+      "ogTitle": "Contact Us — Shortlinkmu",
+      "ogDescription": "Need help? Contact the Shortlinkmu team. Fast response within 24 hours.",
+      "keywords": "contact shortlinkmu, shortlinkmu support, customer service shortlinkmu, help shortlinkmu"
+    },
+    "payoutRates": {
+      "title": "CPM Payout Rates",
+      "description": "View Shortlinkmu's latest CPM rates for 35+ countries. Highest rates up to $15 CPM with daily payouts via PayPal, Bank, and Crypto.",
+      "ogTitle": "CPM Payout Rates — Shortlinkmu",
+      "ogDescription": "View latest CPM rates for 35+ countries. Up to $15 CPM.",
+      "keywords": "shortlinkmu cpm rates, shortlink payout rates, best cpm url shortener, highest paying link shortener"
+    },
+    "termsOfService": {
+      "title": "Terms of Service",
+      "description": "Read Shortlinkmu's terms of service. Includes usage rules, payment terms, and account policies.",
+      "ogTitle": "Terms of Service — Shortlinkmu",
+      "ogDescription": "Terms and conditions for using the Shortlinkmu platform.",
+      "keywords": "shortlinkmu terms of service, shortlink terms, shortlinkmu rules"
+    },
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "description": "Shortlinkmu's privacy policy explains how we collect, use, and protect your data.",
+      "ogTitle": "Privacy Policy — Shortlinkmu",
+      "ogDescription": "How Shortlinkmu protects and manages your data.",
+      "keywords": "shortlinkmu privacy policy, shortlink data protection, shortlinkmu data policy"
+    },
+    "reportAbuse": {
+      "title": "Report Abuse",
+      "description": "Report suspicious or harmful links on Shortlinkmu. Our team will review within 24 hours.",
+      "ogTitle": "Report Abuse — Shortlinkmu",
+      "ogDescription": "Report suspicious links. Our team reviews within 24 hours.",
+      "keywords": "report abuse shortlinkmu, report harmful link, shortlink abuse report"
+    },
+    "login": {
+      "title": "Login",
+      "description": "Sign in to your Shortlinkmu account to manage your shortlinks and view your earnings.",
+      "ogTitle": "Login — Shortlinkmu",
+      "ogDescription": "Sign in to your Shortlinkmu account to manage your shortlinks and view your earnings.",
+      "keywords": "login shortlinkmu, sign in shortlink, shortlink account login"
+    },
+    "register": {
+      "title": "Sign Up Free",
+      "description": "Create a free Shortlinkmu account and start earning money from every click on your shortlinks.",
+      "ogTitle": "Sign Up Free — Shortlinkmu",
+      "ogDescription": "Create a free Shortlinkmu account and start earning money from every click on your shortlinks.",
+      "keywords": "register shortlinkmu, sign up shortlink, create shortlink account free, join shortlinkmu"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Reset your Shortlinkmu account password. Enter your email to receive a password reset link.",
+      "ogTitle": "Forgot Password — Shortlinkmu",
+      "ogDescription": "Reset your Shortlinkmu account password. Enter your email to receive a password reset link.",
+      "keywords": "forgot password shortlinkmu, reset password shortlink, shortlinkmu password recovery"
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Tips, guides, and the latest information about shortlinks, link monetization, and digital strategies from Shortlinkmu.",
+      "ogTitle": "Blog — Shortlinkmu",
+      "ogDescription": "Tips, guides, and the latest information about shortlinks and monetization from Shortlinkmu.",
+      "keywords": "shortlinkmu blog, shortlink tips, link monetization guide, url shortener tutorial"
+    }
   }
 }

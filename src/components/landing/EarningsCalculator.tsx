@@ -55,7 +55,22 @@ export default function EarningsCalculator() {
   const cpmPercent = ((cpm - 1) / (12 - 1)) * 100;
 
   if (!mounted) {
-    return null;
+    // SSR placeholder: render the heading so crawlers can see it
+    return (
+      <section className="py-20 md:py-28 bg-slate-50/50 font-poppins">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 md:mb-14">
+            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-3 text-slate-800">
+              {t("title")}{" "}
+              <span className="text-bluelanding">{t("titleHighlight")}</span>
+            </h2>
+            <p className="text-slate-500 text-sm md:text-base max-w-lg mx-auto">
+              {t("subtitle")}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (

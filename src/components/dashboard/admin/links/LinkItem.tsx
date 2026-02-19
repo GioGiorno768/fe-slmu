@@ -88,7 +88,7 @@ LinkItemProps) {
               <div className="flex items-center gap-2">
                 {/* 2. Link Short URL: Stop Propagation biar gak trigger select pas diklik */}
                 <a
-                  href={`http://${link.shortUrl}`}
+                  href={`${link.shortUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}

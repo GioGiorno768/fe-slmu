@@ -13,7 +13,7 @@ export default function BackdoorPage() {
   return (
     // NO LoginCheck wrapper - always accessible even when login is disabled
     <AuthPageCheck>
-      <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree">
+      <main className="h-screen overflow-hidden grid grid-cols-1 lg:grid-cols-2 font-figtree bg-white">
         <AuthBranding
           title={
             isCodeVerified

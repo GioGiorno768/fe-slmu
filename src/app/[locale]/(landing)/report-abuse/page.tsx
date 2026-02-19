@@ -1,10 +1,36 @@
 // Server Component - No "use client" for SEO
+import type { Metadata } from "next";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import ReportAbuseForm from "@/components/landing/ReportAbuseForm";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { ShieldAlert, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata.reportAbuse");
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "https://shortlinkmu.com/report-abuse",
+    },
+    twitter: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    alternates: {
+      canonical: "https://shortlinkmu.com/report-abuse",
+      languages: {
+        "id-ID": "https://shortlinkmu.com/id/report-abuse",
+        "en-US": "https://shortlinkmu.com/en/report-abuse",
+      },
+    },
+  };
+}
 
 export default async function ReportAbuse() {
   const t = await getTranslations("Landing.ReportAbuse");

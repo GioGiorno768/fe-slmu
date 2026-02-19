@@ -1,10 +1,36 @@
 // Server Component - No "use client" for SEO
+import type { Metadata } from "next";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
 import { FileText, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata.termsOfService");
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "https://shortlinkmu.com/terms-of-service",
+    },
+    twitter: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    alternates: {
+      canonical: "https://shortlinkmu.com/terms-of-service",
+      languages: {
+        "id-ID": "https://shortlinkmu.com/id/terms-of-service",
+        "en-US": "https://shortlinkmu.com/en/terms-of-service",
+      },
+    },
+  };
+}
 
 // Define which sections have lists and notes
 const sectionsWithList = ["account", "prohibited", "earnings", "limitation"];

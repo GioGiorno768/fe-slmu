@@ -22,6 +22,7 @@ export default function Footer() {
     { name: t("payoutRates"), href: "/payout-rates" },
     { name: t("about"), href: "/about" },
     { name: t("contact"), href: "/contact" },
+    { name: t("blog"), href: "/blog" },
   ];
 
   const company = [
@@ -122,6 +123,7 @@ export default function Footer() {
               href="https://youtube.com/@shortlinkmu"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Shortlinkmu di YouTube"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Youtube
@@ -130,6 +132,7 @@ export default function Footer() {
               href="https://t.me/shortlinkmu"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Shortlinkmu di Telegram"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Telegram
@@ -138,6 +141,7 @@ export default function Footer() {
               href="https://instagram.com/shortlinkmu"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Shortlinkmu di Instagram"
               className="text-slate-500 text-sm hover:text-slate-600 transition-colors"
             >
               Instagram

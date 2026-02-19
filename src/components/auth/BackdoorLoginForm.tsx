@@ -166,7 +166,7 @@ export default function BackdoorLoginForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
+              className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white text-black transition-all"
               placeholder="admin@example.com"
               required
               disabled={loading}
@@ -186,7 +186,7 @@ export default function BackdoorLoginForm() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all"
+              className="w-full pl-12 pr-12 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white text-black transition-all"
               placeholder="••••••••"
               required
               disabled={loading}

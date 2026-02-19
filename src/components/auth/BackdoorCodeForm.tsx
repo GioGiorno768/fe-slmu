@@ -91,7 +91,7 @@ export default function BackdoorCodeForm({
                 setCode(e.target.value);
                 setError("");
               }}
-              className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all text-lg tracking-widest"
+              className="w-full text-black pl-12 pr-4 py-3.5 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-600 focus:bg-white transition-all text-lg tracking-widest"
               placeholder="••••••••"
               required
               disabled={loading}

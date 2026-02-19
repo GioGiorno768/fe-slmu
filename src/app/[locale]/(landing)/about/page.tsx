@@ -1,4 +1,5 @@
 // Server Component - No "use client" for SEO
+import type { Metadata } from "next";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import { AnimateOnView } from "@/components/landing/AnimateWrappers";
@@ -15,6 +16,31 @@ import {
   Heart,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata.about");
+  return {
+    title: t("title"),
+    description: t("description"),
+    keywords: t("keywords").split(", "),
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "https://shortlinkmu.com/about",
+    },
+    twitter: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+    },
+    alternates: {
+      canonical: "https://shortlinkmu.com/about",
+      languages: {
+        "id-ID": "https://shortlinkmu.com/id/about",
+        "en-US": "https://shortlinkmu.com/en/about",
+      },
+    },
+  };
+}
 
 export default async function AboutPage() {
   const t = await getTranslations("Landing.About");

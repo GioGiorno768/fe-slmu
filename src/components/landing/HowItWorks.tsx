@@ -1,23 +1,10 @@
-"use client";
+// Server Component - SEO friendly
+import FeaturesClient from "./FeaturesClient";
+import { HowItWorksAuthLink, HowItWorksStepCard } from "./HowItWorksClient";
+import { getTranslations } from "next-intl/server";
 
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
-import { Link } from "@/i18n/routing";
-import authService from "@/services/authService";
-import { useTranslations } from "next-intl";
-
-export default function HowItWorks() {
-  const t = useTranslations("Landing.HowItWorks");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [dashboardPath, setDashboardPath] = useState("/dashboard");
-
-  useEffect(() => {
-    setIsAuthenticated(authService.isAuthenticated());
-    if (authService.isAuthenticated()) {
-      setDashboardPath(authService.getRedirectPath());
-    }
-  }, []);
+export default async function HowItWorks() {
+  const t = await getTranslations("Landing.HowItWorks");
 
   const steps = [
     {
@@ -137,81 +124,31 @@ export default function HowItWorks() {
   return (
     <section id="how-it-works" className="py-20 md:py-28 bg-white font-poppins">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header - SSR rendered for SEO */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12 md:mb-16">
           <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-2 text-slate-800"
-            >
-              {t("title")}{" "}
-              <span className="text-bluelanding">{t("titleHighlight")}</span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-slate-500 text-base md:text-lg font-light"
-            >
-              {t("subtitle")}
-            </motion.p>
+            <FeaturesClient>
+              <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-semibold tracking-tight mb-2 text-slate-800">
+                {t("title")}{" "}
+                <span className="text-bluelanding">{t("titleHighlight")}</span>
+              </h2>
+            </FeaturesClient>
+            <FeaturesClient delay={0.1}>
+              <p className="text-slate-500 text-base md:text-lg font-light">
+                {t("subtitle")}
+              </p>
+            </FeaturesClient>
           </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <Link
-              href={isAuthenticated ? dashboardPath : "/register"}
-              className="inline-flex items-center gap-2 text-bluelanding hover:text-blue-600 font-medium text-sm transition-colors group"
-            >
-              {isAuthenticated ? t("goToDashboard") : t("createAccount")}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </motion.div>
+          <HowItWorksAuthLink
+            createAccountLabel={t("createAccount")}
+            goToDashboardLabel={t("goToDashboard")}
+          />
         </div>
 
-        {/* Steps */}
+        {/* Steps - Client component for animations */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {steps.map((step, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.15 }}
-              className="group"
-            >
-              <div
-                className={`relative h-full bg-gradient-to-br ${step.color} rounded-2xl p-5 overflow-hidden transition-transform hover:scale-[1.02] duration-300 ease-in-out shadow-lg hover:shadow-xl`}
-              >
-                {/* Background icon decoration */}
-                <div className="absolute -bottom-4 -right-4 w-28 h-28 text-white/10 pointer-events-none">
-                  {step.bgIcon}
-                </div>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-
-                {/* Number */}
-                <div className="text-white/20 text-5xl font-bold mb-4">
-                  {step.number}
-                </div>
-
-                {/* Content Card */}
-                <div className="relative z-10 mb-5">{step.content}</div>
-
-                {/* Title & Desc */}
-                <div className="relative z-10">
-                  <h3 className="text-lg font-semibold text-white mb-1">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-white/70">{step.desc}</p>
-                </div>
-              </div>
-            </motion.div>
+            <HowItWorksStepCard key={idx} step={step} delay={idx * 0.15} />
           ))}
         </div>
       </div>

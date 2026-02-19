@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Link as LinkIcon,
   ClipboardCopy,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 import { useAlert } from "@/hooks/useAlert";
 import * as linkService from "@/services/linkService";
+import { isAuthenticated } from "@/services/authService";
 import { Link } from "@/i18n/routing";
 import Toast from "@/components/common/Toast";
 import { AnimatePresence, motion } from "motion/react";
@@ -92,12 +94,27 @@ export default function HeroShortLink() {
     setShowErrorModal(false);
 
     try {
-      const data = await linkService.createGuestLink(
-        urlInput,
-        aliasInput || undefined,
-      );
+      let shortUrl: string;
+
+      if (isAuthenticated()) {
+        // Authenticated user → use createLink (no guest rate limit)
+        const data = await linkService.createLink({
+          url: urlInput,
+          alias: aliasInput || undefined,
+          adsLevel: "low", // Default ad level for landing page
+        });
+        shortUrl = data.shortUrl;
+      } else {
+        // Guest user → use createGuestLink
+        const data = await linkService.createGuestLink(
+          urlInput,
+          aliasInput || undefined,
+        );
+        shortUrl = data.shortUrl;
+      }
+
       // Add to history
-      setCreatedLinks((prev) => [...prev, data.shortUrl]);
+      setCreatedLinks((prev) => [...prev, shortUrl]);
       setCurrentLinkIndex(createdLinks.length); // Point to the new link
       setShowForm(false);
       setUrlInput("");
@@ -325,14 +342,14 @@ export default function HeroShortLink() {
                 <p className="text-xs text-white/60 mb-1">
                   {t("yourShortLink")}
                 </p>
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <a
                     href={`https://${currentLink}`}
                     target="_blank"
                     rel="noopener"
-                    className="text-base sm:text-lg font-semibold text-white hover:text-white/90 truncate flex items-center gap-2 group min-w-0"
+                    className="text-sm sm:text-lg font-semibold text-white hover:text-white/90 truncate flex items-center gap-2 group min-w-0"
                   >
-                    <span className="truncate">{currentLink}</span>
+                    <span className="truncate text-center">{currentLink}</span>
                     <ExternalLink className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 </div>
@@ -405,54 +422,56 @@ export default function HeroShortLink() {
         )}
       </AnimatePresence>
 
-      {/* Error Modal */}
-      {showErrorModal && (
-        <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
-          onClick={() => setShowErrorModal(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl"
-            onClick={(e) => e.stopPropagation()}
+      {/* Error Modal — rendered via Portal to escape stacking context */}
+      {showErrorModal &&
+        createPortal(
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[99999] flex items-center justify-center p-4"
+            onClick={() => setShowErrorModal(false)}
           >
-            <button
-              onClick={() => setShowErrorModal(false)}
-              className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="relative bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-              <OctagonAlert className="w-6 h-6 text-red-500" />
-            </div>
-
-            <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">
-              {t("limitReached")}
-            </h3>
-            <p className="text-gray-500 text-center text-sm mb-5 leading-relaxed">
-              {error}
-            </p>
-
-            <div className="flex flex-col gap-2">
-              <Link
-                href="/register"
-                className="w-full py-2.5 px-4 bg-bluelanding text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
-              >
-                <UserPlus className="w-4 h-4" />
-                {t("signUpFree")}
-              </Link>
               <button
                 onClick={() => setShowErrorModal(false)}
-                className="w-full py-2.5 px-4 text-gray-500 font-medium text-center hover:text-gray-700 transition-colors text-sm"
+                className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100"
               >
-                {t("close")}
+                <X className="w-4 h-4" />
               </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+
+              <div className="w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                <OctagonAlert className="w-6 h-6 text-red-500" />
+              </div>
+
+              <h3 className="text-lg font-semibold text-center text-gray-900 mb-2">
+                {t("limitReached")}
+              </h3>
+              <p className="text-gray-500 text-center text-sm mb-5 leading-relaxed">
+                {error}
+              </p>
+
+              <div className="flex flex-col gap-2">
+                <Link
+                  href="/register"
+                  className="w-full py-2.5 px-4 bg-bluelanding text-white font-medium text-center rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2 text-sm"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  {t("signUpFree")}
+                </Link>
+                <button
+                  onClick={() => setShowErrorModal(false)}
+                  className="w-full py-2.5 px-4 text-gray-500 font-medium text-center hover:text-gray-700 transition-colors text-sm"
+                >
+                  {t("close")}
+                </button>
+              </div>
+            </motion.div>
+          </div>,
+          document.body,
+        )}
 
       <Toast
         message={toast.message}
