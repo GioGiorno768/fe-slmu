@@ -27,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: {
         "id-ID": "https://shortlinkmu.com/id/login",
         "en-US": "https://shortlinkmu.com/en/login",
+        "x-default": "https://shortlinkmu.com/en/login",
       },
     },
   };

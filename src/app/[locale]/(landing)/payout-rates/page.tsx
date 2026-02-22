@@ -37,6 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: {
         "id-ID": "https://shortlinkmu.com/id/payout-rates",
         "en-US": "https://shortlinkmu.com/en/payout-rates",
+        "x-default": "https://shortlinkmu.com/en/payout-rates",
       },
     },
   };

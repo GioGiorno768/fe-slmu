@@ -55,6 +55,7 @@ export async function generateMetadata({
       languages: {
         "id-ID": `https://shortlinkmu.com/id/blog/${slug}`,
         "en-US": `https://shortlinkmu.com/en/blog/${slug}`,
+        "x-default": `https://shortlinkmu.com/en/blog/${slug}`,
       },
     },
   };

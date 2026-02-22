@@ -103,10 +103,19 @@ export async function generateMetadata(): Promise<Metadata> {
       languages: {
         "id-ID": "https://shortlinkmu.com/id",
         "en-US": "https://shortlinkmu.com/en",
+        "x-default": "https://shortlinkmu.com/en",
       },
     },
 
     category: "technology",
+
+    themeColor: "#350e8f",
+
+    appleWebApp: {
+      capable: true,
+      title: "Shortlinkmu",
+      statusBarStyle: "default",
+    },
   };
 }
 
